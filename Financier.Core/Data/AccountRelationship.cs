@@ -13,7 +13,7 @@ namespace Financier.Data
         public int DestinationAccountId { get; set; }
         public AccountRelationshipType Type { get; set; }
 
-        public Account SourceAcount { get; set; }
+        public Account SourceAccount { get; set; }
         public Account DestinationAccount { get; set; }
     }
 }
