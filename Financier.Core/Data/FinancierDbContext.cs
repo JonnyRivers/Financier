@@ -10,6 +10,7 @@ namespace Financier.Data
         }
 
         public DbSet<Account> Accounts { get; set; }
+        public DbSet<AccountRelationship> AccountRelationships { get; set; }
         public DbSet<Currency> Currencies { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
     }

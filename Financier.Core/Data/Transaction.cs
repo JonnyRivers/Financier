@@ -11,6 +11,7 @@ namespace Financier.Data
         public int TransactionId { get; set; }
         public int CreditAccountId { get; set; }
         public int DebitAccountId { get; set; }
+        public DateTime At { get; set; }
         public decimal CreditAmount { get; set; }
         public decimal DebitAmount { get; set; }
 
