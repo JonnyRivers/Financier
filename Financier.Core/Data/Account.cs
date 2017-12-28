@@ -10,6 +10,7 @@ namespace Financier.Data
         [Key]
         public int AccountId { get; set; }
         public string Name { get; set; }
+        [Required]
         public int CurrencyId { get; set; }
 
         public Currency Currency { get; set; }

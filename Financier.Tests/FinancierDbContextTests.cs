@@ -280,6 +280,7 @@ namespace Financier.Tests
             }
         }
 
+        // TODO - move this
         private static decimal GetSingleAccountBalance(FinancierDbContext dbContext, int accountId)
         {
             IEnumerable<Transaction> creditTransactions = dbContext.Transactions.Where(t => t.CreditAccountId == accountId);
@@ -292,6 +293,7 @@ namespace Financier.Tests
             return balance;
         }
 
+        // TODO - move this
         private static decimal GetFullAccountBalance(FinancierDbContext dbContext, int accountId)
         {
             IEnumerable<int> logicalAccountIds = dbContext.AccountRelationships.Where(r => r.SourceAccountId == accountId && r.Type == AccountRelationshipType.PhysicalToLogical).Select(r => r.DestinationAccountId);
