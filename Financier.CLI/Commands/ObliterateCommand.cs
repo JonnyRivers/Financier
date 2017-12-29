@@ -9,7 +9,7 @@ namespace Financier.CLI.Commands
     {
         public static void Configure(CommandLineApplication command)
         {
-            command.Description = "Ensure the database is created";
+            command.Description = "Ensure the database is obliterated";
 
             CommandOption databaseOption = command.Option(
                 "-d|--database",
