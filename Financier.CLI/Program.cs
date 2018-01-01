@@ -14,6 +14,7 @@ namespace Financier.CLI
 
             app.Command("create", Commands.CreateCommand.Configure);
             app.Command("obliterate", Commands.ObliterateCommand.Configure);
+            app.Command("populate", Commands.PopulateCommand.Configure);
 
             return app.Execute(args);
         }
