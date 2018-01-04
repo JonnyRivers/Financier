@@ -137,7 +137,7 @@ namespace Financier.Tests
         }
 
         [TestMethod]
-        public void TestCreateAcountRelationships()
+        public void TestCreateAccountRelationships()
         {
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {

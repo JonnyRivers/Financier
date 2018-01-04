@@ -4,6 +4,5 @@
     {
         void Create();
         void Obliterate();
-        void Populate();
     }
 }

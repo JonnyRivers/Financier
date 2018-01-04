@@ -17,4 +17,10 @@
     <ProjectReference Include="..\Financier.Core\Financier.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="TestData\Valid.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

@@ -48,32 +48,5 @@ namespace Financier.Services
 
             m_logger.LogInformation("Database is obliterated");
         }
-
-        public void Populate()
-        {
-            m_dbContext.Database.EnsureDeleted();
-            m_logger.LogInformation("Database is obliterated");
-
-            m_dbContext.Database.EnsureCreated();
-            m_logger.LogInformation("Database is created");
-
-            var dollar = new Currency
-            {
-                Name = "US Dollar",
-                ShortName = "USD",
-                Symbol = "$"
-            };
-            m_dbContext.Currencies.Add(dollar);
-            var sterling = new Currency
-            {
-                Name = "UK Sterling",
-                ShortName = "GBP",
-                Symbol = "£"
-            };
-            m_dbContext.Currencies.Add(sterling);
-            m_dbContext.SaveChanges();
-
-            m_logger.LogInformation("Populated database with default currencies");
-        }
     }
 }

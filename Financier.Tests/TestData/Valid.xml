@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Data>
+  <Currency name="US Dollar" shortName="USD" symbol="$"/>
+  <Currency name="UK Sterling" shortName="GBP" symbol="£"/>
+  <Account name="Checking" currency="USD"/>
+  <Account name="Income" currency="USD"/>
+  <Account name="Rent Prepayment" currency="USD"/>
+  <AccountRelationship source="Checking" destination="Rent Prepayment" type="PhysicalToLogical"/>
+  <Transaction credit="Income" debit="Checking" at="2018-01-01" creditAmount="100.00" debitAmount="100.00"/>
+  <Transaction credit="Checking" debit="Rent Prepayment" at="2018-01-02" creditAmount="50.00" debitAmount="50.00"/>
+</Data>

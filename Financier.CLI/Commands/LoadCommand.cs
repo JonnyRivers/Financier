@@ -5,15 +5,20 @@ using System;
 
 namespace Financier.CLI.Commands
 {
-    public class PopulateCommand
+    public class LoadCommand
     {
         public static void Configure(CommandLineApplication command)
         {
-            command.Description = "Populate the database";
+            command.Description = "Populate the database from a file";
 
             CommandOption databaseOption = command.Option(
                 "-d|--database",
                 "The name of the database to use",
+                CommandOptionType.SingleValue);
+
+            CommandOption pathOption = command.Option(
+                "-p|--path",
+                "The path to the file to load from",
                 CommandOptionType.SingleValue);
 
             command.OnExecute(() =>
@@ -22,12 +27,13 @@ namespace Financier.CLI.Commands
                 var serviceCollection = ServiceCollectionSetup.SetupCoreServices(databaseName);
 
                 // Application services
-                serviceCollection.AddTransient<IDatabaseCreationService, DatabaseCreationService>();
+                serviceCollection.AddTransient<IDatabaseSerializationService, DatabaseSerializationService>();
 
                 IServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
 
-                IDatabaseCreationService databaseCreationService = serviceProvider.GetRequiredService<IDatabaseCreationService>();
-                databaseCreationService.Populate();
+                string path = pathOption.Value();
+                IDatabaseSerializationService databaseCreationService = serviceProvider.GetRequiredService<IDatabaseSerializationService>();
+                databaseCreationService.Load(path);
 
                 return 0;
             });
