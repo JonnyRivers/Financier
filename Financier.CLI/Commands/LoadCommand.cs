@@ -27,7 +27,7 @@ namespace Financier.CLI.Commands
                 var serviceCollection = ServiceCollectionSetup.SetupCoreServices(databaseName);
 
                 // Application services
-                serviceCollection.AddTransient<IDatabaseSerializationService, DatabaseSerializationService>();
+                serviceCollection.AddTransient<IDatabaseSerializationService, DatabaseSerializationXmlService>();
 
                 IServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
 
