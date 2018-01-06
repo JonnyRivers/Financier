@@ -6,6 +6,6 @@
   <Account name="Income" currency="USD"/>
   <Account name="Rent Prepayment" currency="USD"/>
   <AccountRelationship source="Checking" destination="Rent Prepayment" type="PhysicalToLogical"/>
-  <Transaction credit="Income" debit="Checking" at="2018-01-01" creditAmount="100.00" debitAmount="100.00"/>
-  <Transaction credit="Checking" debit="Rent Prepayment" at="2018-01-02" creditAmount="50.00" debitAmount="50.00"/>
+  <Transaction credit="Income" debit="Checking" at="2018-01-01 09:00:00" creditAmount="100.00" debitAmount="100.00"/>
+  <Transaction credit="Checking" debit="Rent Prepayment" at="2018-01-02 08:30:00" creditAmount="50.00" debitAmount="50.00"/>
 </Data>

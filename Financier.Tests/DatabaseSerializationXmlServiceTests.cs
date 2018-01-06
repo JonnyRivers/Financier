@@ -57,13 +57,53 @@ namespace Financier.Tests
                 Assert.AreEqual(100m, transactions[0].CreditAmount);
                 Assert.AreEqual("Checking", transactions[0].DebitAccount.Name);
                 Assert.AreEqual(100m, transactions[0].DebitAmount);
-                Assert.AreEqual(new DateTime(2018, 1, 1), transactions[0].At);
+                Assert.AreEqual(new DateTime(2018, 1, 1, 9, 0, 0), transactions[0].At);
 
                 Assert.AreEqual("Checking", transactions[1].CreditAccount.Name);
                 Assert.AreEqual(50m, transactions[1].CreditAmount);
                 Assert.AreEqual("Rent Prepayment", transactions[1].DebitAccount.Name);
                 Assert.AreEqual(50m, transactions[1].DebitAmount);
-                Assert.AreEqual(new DateTime(2018, 1, 2), transactions[1].At);
+                Assert.AreEqual(new DateTime(2018, 1, 2, 8, 30, 0), transactions[1].At);
+            }
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void TestIncompleteAccountElementFailure()
+        {
+            TestLoadFailure("TestData/IncompleteAccount.xml");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void TestIncompleteAccountRelationshipElementFailure()
+        {
+            TestLoadFailure("TestData/IncompleteAccountRelationship.xml");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void TestIncompleteCurrencyElementFailure()
+        {
+            TestLoadFailure("TestData/IncompleteCurrency.xml");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void TestIncompleteTransactionElementFailure()
+        {
+            TestLoadFailure("TestData/IncompleteTransaction.xml");
+        }
+
+        private void TestLoadFailure(string path)
+        {
+            ILoggerFactory loggerFactory = new LoggerFactory();
+            ILogger<DatabaseSerializationXmlService> logger = loggerFactory.CreateLogger<DatabaseSerializationXmlService>();
+
+            using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
+            {
+                var service = new DatabaseSerializationXmlService(logger, sqliteMemoryWrapper.DbContext);
+                service.Load(path);
             }
         }
     }

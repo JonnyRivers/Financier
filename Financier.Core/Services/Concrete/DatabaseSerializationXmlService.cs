@@ -57,13 +57,27 @@ namespace Financier.Services
             throw new System.NotImplementedException();
         }
 
+        private static XAttribute GetRequiredAttribute(XElement element, string attributeName)
+        {
+            XAttribute attribute = element.Attribute(XName.Get(attributeName));
+            if (attribute == null)
+            {
+                throw new ArgumentException(
+                    $"Required attribute {attributeName} is missing",
+                    nameof(element)
+                );
+            }
+
+            return attribute;
+        }
+
         private static Currency CurrencyFromElement(XElement element)
         {
             var currency = new Currency
             {
-                Name = element.Attribute(XName.Get("name")).Value,
-                ShortName = element.Attribute(XName.Get("shortName")).Value,
-                Symbol = element.Attribute(XName.Get("symbol")).Value
+                Name = GetRequiredAttribute(element, "name").Value,
+                ShortName = GetRequiredAttribute(element, "shortName").Value,
+                Symbol = GetRequiredAttribute(element, "symbol").Value
             };
 
             return currency;
@@ -71,10 +85,11 @@ namespace Financier.Services
 
         private static Account AccountFromElement(XElement element, Dictionary<string, Currency> currenciesByShortName)
         {
+            string currencyShortName = GetRequiredAttribute(element, "currency").Value;
             var account = new Account
             {
-                Currency = currenciesByShortName[element.Attribute(XName.Get("currency")).Value],
-                Name = element.Attribute(XName.Get("name")).Value
+                Currency = currenciesByShortName[currencyShortName],
+                Name = GetRequiredAttribute(element, "name").Value
             };
 
             return account;
@@ -82,11 +97,15 @@ namespace Financier.Services
 
         private static AccountRelationship AccountRelationshipFromElement(XElement element, Dictionary<string, Account> accountsByShortName)
         {
+            string destinationAccountName = GetRequiredAttribute(element, "destination").Value;
+            string sourceAcountName = GetRequiredAttribute(element, "source").Value;
+            string type = GetRequiredAttribute(element, "type").Value;
+
             var accountRelationship = new AccountRelationship
             {
-                DestinationAccount = accountsByShortName[element.Attribute(XName.Get("destination")).Value],
-                SourceAccount = accountsByShortName[element.Attribute(XName.Get("source")).Value],
-                Type = (AccountRelationshipType)Enum.Parse(typeof(AccountRelationshipType), element.Attribute(XName.Get("type")).Value)
+                DestinationAccount = accountsByShortName[destinationAccountName],
+                SourceAccount = accountsByShortName[sourceAcountName],
+                Type = (AccountRelationshipType)Enum.Parse(typeof(AccountRelationshipType), type)
             };
 
             return accountRelationship;
@@ -94,13 +113,19 @@ namespace Financier.Services
 
         private static Transaction TransactionFromElement(XElement element, Dictionary<string, Account> accountsByShortName)
         {
+            string at = GetRequiredAttribute(element, "at").Value;
+            string creditAccountName = GetRequiredAttribute(element, "credit").Value;
+            string creditAmount = GetRequiredAttribute(element, "creditAmount").Value;
+            string debitAccountName = GetRequiredAttribute(element, "debit").Value;
+            string debitAmount = GetRequiredAttribute(element, "debitAmount").Value;
+
             var transaction = new Transaction
             {
-                At = DateTime.Parse(element.Attribute(XName.Get("at")).Value),
-                CreditAccount = accountsByShortName[element.Attribute(XName.Get("credit")).Value],
-                CreditAmount = Decimal.Parse(element.Attribute(XName.Get("creditAmount")).Value),
-                DebitAccount = accountsByShortName[element.Attribute(XName.Get("debit")).Value],
-                DebitAmount = Decimal.Parse(element.Attribute(XName.Get("debitAmount")).Value)
+                At = DateTime.Parse(at),
+                CreditAccount = accountsByShortName[creditAccountName],
+                CreditAmount = Decimal.Parse(creditAmount),
+                DebitAccount = accountsByShortName[debitAccountName],
+                DebitAmount = Decimal.Parse(debitAmount)
             };
 
             return transaction;
