@@ -54,7 +54,26 @@ namespace Financier.Services
 
         public void Save(string path)
         {
-            throw new System.NotImplementedException();
+            List<Currency> currencies = m_dbContext.Currencies.ToList();
+            List<XElement> currencyElements = currencies.Select(ElementFromCurrency).ToList();
+
+            List<Account> accounts = m_dbContext.Accounts.ToList();
+            List<XElement> accountElements = accounts.Select(ElementFromAccount).ToList();
+
+            List<AccountRelationship> accountRelationships = m_dbContext.AccountRelationships.ToList();
+            List<XElement> accountRelationshipElements = accountRelationships.Select(ElementFromAccountRelationship).ToList();
+
+            List<Transaction> transactions = m_dbContext.Transactions.ToList();
+            List<XElement> transactionElements = transactions.Select(ElementFromTransaction).ToList();
+
+            var document = new XDocument(
+                new XElement(XName.Get("Data"),
+                    currencyElements,
+                    accountElements,
+                    accountRelationshipElements,
+                    transactionElements)
+            );
+            document.Save(path);
         }
 
         private static XAttribute GetRequiredAttribute(XElement element, string attributeName)
@@ -83,6 +102,17 @@ namespace Financier.Services
             return currency;
         }
 
+        private static XElement ElementFromCurrency(Currency currency)
+        {
+            var element = new XElement(XName.Get("Currency"),
+                new XAttribute(XName.Get("name"), currency.Name),
+                new XAttribute(XName.Get("shortName"), currency.ShortName),
+                new XAttribute(XName.Get("symbol"), currency.Symbol)
+            );
+
+            return element;
+        }
+
         private static Account AccountFromElement(XElement element, Dictionary<string, Currency> currenciesByShortName)
         {
             string currencyShortName = GetRequiredAttribute(element, "currency").Value;
@@ -93,6 +123,16 @@ namespace Financier.Services
             };
 
             return account;
+        }
+
+        private static XElement ElementFromAccount(Account account)
+        {
+            var element = new XElement(XName.Get("Account"),
+                new XAttribute(XName.Get("name"), account.Name),
+                new XAttribute(XName.Get("currency"), account.Currency.ShortName)
+            );
+
+            return element;
         }
 
         private static AccountRelationship AccountRelationshipFromElement(XElement element, Dictionary<string, Account> accountsByShortName)
@@ -109,6 +149,17 @@ namespace Financier.Services
             };
 
             return accountRelationship;
+        }
+
+        private static XElement ElementFromAccountRelationship(AccountRelationship accountRelationship)
+        {
+            var element = new XElement(XName.Get("AccountRelationship"),
+                new XAttribute(XName.Get("destination"), accountRelationship.DestinationAccount.Name),
+                new XAttribute(XName.Get("source"), accountRelationship.SourceAccount.Name),
+                new XAttribute(XName.Get("type"), accountRelationship.Type.ToString())
+            );
+
+            return element;
         }
 
         private static Transaction TransactionFromElement(XElement element, Dictionary<string, Account> accountsByShortName)
@@ -129,6 +180,19 @@ namespace Financier.Services
             };
 
             return transaction;
+        }
+
+        private static XElement ElementFromTransaction(Transaction transaction)
+        {
+            var element = new XElement(XName.Get("Transaction"),
+                new XAttribute(XName.Get("at"), transaction.At),
+                new XAttribute(XName.Get("credit"), transaction.CreditAccount.Name),
+                new XAttribute(XName.Get("creditAmount"), transaction.CreditAmount),
+                new XAttribute(XName.Get("debit"), transaction.DebitAccount.Name),
+                new XAttribute(XName.Get("debitAmount"), transaction.DebitAmount)
+            );
+
+            return element;
         }
     }
 }
