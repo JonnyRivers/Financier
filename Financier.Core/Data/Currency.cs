@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Financier.Data
 {
@@ -15,5 +12,7 @@ namespace Financier.Data
         public string ShortName { get; set; }
         [Required]
         public string Symbol { get; set; }
+        [Required]
+        public bool IsPrimary { get; set; }
     }
 }

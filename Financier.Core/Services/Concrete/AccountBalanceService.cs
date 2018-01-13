@@ -27,8 +27,8 @@ namespace Financier.Services
             IEnumerable<Transaction> creditTransactions = m_dbContext.Transactions.Where(t => relevantAccountIds.Contains(t.CreditAccountId));
             IEnumerable<Transaction> debitTransactions = m_dbContext.Transactions.Where(t => relevantAccountIds.Contains(t.DebitAccountId));
 
-            decimal creditBalance = creditTransactions.Sum(t => t.CreditAmount);
-            decimal debitBalance = debitTransactions.Sum(t => t.DebitAmount);
+            decimal creditBalance = creditTransactions.Sum(t => t.Amount);
+            decimal debitBalance = debitTransactions.Sum(t => t.Amount);
             decimal balance = creditBalance - debitBalance;
 
             return balance;

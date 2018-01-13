@@ -55,15 +55,13 @@ namespace Financier.Tests
                 Assert.AreEqual(AccountRelationshipType.PhysicalToLogical, accountRelationships[0].Type);
 
                 Assert.AreEqual("Income", transactions[0].CreditAccount.Name);
-                Assert.AreEqual(100m, transactions[0].CreditAmount);
+                Assert.AreEqual(100m, transactions[0].Amount);
                 Assert.AreEqual("Checking", transactions[0].DebitAccount.Name);
-                Assert.AreEqual(100m, transactions[0].DebitAmount);
                 Assert.AreEqual(new DateTime(2018, 1, 1, 9, 0, 0), transactions[0].At);
 
                 Assert.AreEqual("Checking", transactions[1].CreditAccount.Name);
-                Assert.AreEqual(50m, transactions[1].CreditAmount);
+                Assert.AreEqual(50m, transactions[1].Amount);
                 Assert.AreEqual("Rent Prepayment", transactions[1].DebitAccount.Name);
-                Assert.AreEqual(50m, transactions[1].DebitAmount);
                 Assert.AreEqual(new DateTime(2018, 1, 2, 8, 30, 0), transactions[1].At);
             }
         }
@@ -124,7 +122,8 @@ namespace Financier.Tests
             {
                 Name = "US Dollar",
                 ShortName = "USD",
-                Symbol = "$"
+                Symbol = "$",
+                IsPrimary = true
             };
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
@@ -170,12 +169,14 @@ namespace Financier.Tests
             {
                 Name = "US Dollar",
                 ShortName = "USD",
-                Symbol = "$"
+                Symbol = "$",
+                IsPrimary = true
             };
             var checkingAccount = new Account
             {
                 Name = "Checking",
-                Currency = usdCurrency
+                Currency = usdCurrency,
+                Type = AccountType.Asset
             };
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
@@ -221,17 +222,20 @@ namespace Financier.Tests
             {
                 Name = "US Dollar",
                 ShortName = "USD",
-                Symbol = "$"
+                Symbol = "$",
+                IsPrimary = true
             };
             var checkingAccount = new Account
             {
                 Name = "Checking",
-                Currency = usdCurrency
+                Currency = usdCurrency,
+                Type = AccountType.Asset
             };
             var rentPrepaymentAccount = new Account
             {
                 Name = "Rent Prepayment",
-                Currency = usdCurrency
+                Currency = usdCurrency,
+                Type = AccountType.Asset
             };
             var accountRelationship = new AccountRelationship
             {
@@ -288,17 +292,20 @@ namespace Financier.Tests
             {
                 Name = "US Dollar",
                 ShortName = "USD",
-                Symbol = "$"
+                Symbol = "$",
+                IsPrimary = true
             };
             var checkingAccount = new Account
             {
                 Name = "Checking",
-                Currency = usdCurrency
+                Currency = usdCurrency,
+                Type = AccountType.Asset
             };
             var rentPrepaymentAccount = new Account
             {
                 Name = "Rent Prepayment",
-                Currency = usdCurrency
+                Currency = usdCurrency,
+                Type = AccountType.Asset
             };
             var accountRelationship = new AccountRelationship
             {
@@ -309,9 +316,8 @@ namespace Financier.Tests
             var transaction = new Transaction
             {
                 CreditAccount = checkingAccount,
-                CreditAmount = 10m,
+                Amount = 10m,
                 DebitAccount = rentPrepaymentAccount,
-                DebitAmount = 10m,
                 At = new DateTime(2018, 1, 1, 8, 30, 0)
             };
 
@@ -350,9 +356,8 @@ namespace Financier.Tests
                 Assert.AreEqual(1, transactions.Count);
 
                 Assert.AreEqual(checkingAccount.Name, transactions[0].CreditAccount.Name);
-                Assert.AreEqual(transaction.CreditAmount, transactions[0].CreditAmount);
+                Assert.AreEqual(transaction.Amount, transactions[0].Amount);
                 Assert.AreEqual(rentPrepaymentAccount.Name, transactions[0].DebitAccount.Name);
-                Assert.AreEqual(transaction.DebitAmount, transactions[0].DebitAmount);
                 Assert.AreEqual(transaction.At, transactions[0].At);
             }
         }

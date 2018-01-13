@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Financier.Data
 {
@@ -10,7 +7,10 @@ namespace Financier.Data
         [Key]
         public int AccountId { get; set; }
         [Required]
+        public AccountType Type { get; set; }
+        [Required]
         public string Name { get; set; }
+        [Required]
         public int CurrencyId { get; set; }
 
         public Currency Currency { get; set; }

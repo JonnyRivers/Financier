@@ -2,6 +2,7 @@
 using Financier.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
 namespace Financier.Tests
 {
@@ -20,7 +21,8 @@ namespace Financier.Tests
                 {
                     Name = "US Dollar",
                     ShortName = "USD",
-                    Symbol = "$"
+                    Symbol = "$",
+                    IsPrimary = true
                 };
 
                 sqliteMemoryWrapper.DbContext.Currencies.Add(usdCurrency);
@@ -29,7 +31,8 @@ namespace Financier.Tests
                 var checkingAccount = new Account
                 {
                     Name = "Checking",
-                    Currency = usdCurrency
+                    Currency = usdCurrency,
+                    Type = AccountType.Asset
                 };
 
                 sqliteMemoryWrapper.DbContext.Accounts.Add(checkingAccount);
@@ -55,7 +58,8 @@ namespace Financier.Tests
                 {
                     Name = "US Dollar",
                     ShortName = "USD",
-                    Symbol = "$"
+                    Symbol = "$",
+                    IsPrimary = true
                 };
 
                 sqliteMemoryWrapper.DbContext.Currencies.Add(usdCurrency);
@@ -64,12 +68,14 @@ namespace Financier.Tests
                 var incomeAccount = new Account
                 {
                     Name = "Income",
-                    Currency = usdCurrency
+                    Currency = usdCurrency,
+                    Type = AccountType.Income
                 };
                 var checkingAccount = new Account
                 {
                     Name = "Checking",
-                    Currency = usdCurrency
+                    Currency = usdCurrency,
+                    Type = AccountType.Asset
                 };
 
                 sqliteMemoryWrapper.DbContext.Accounts.Add(incomeAccount);
@@ -82,8 +88,8 @@ namespace Financier.Tests
                     {
                         CreditAccount = incomeAccount,
                         DebitAccount = checkingAccount,
-                        CreditAmount = 100m,
-                        DebitAmount = 100m
+                        Amount = 100m,
+                        At = new DateTime(2018, 1, 1, 8, 30, 1)
                     }
                 };
 
@@ -110,7 +116,8 @@ namespace Financier.Tests
                 {
                     Name = "US Dollar",
                     ShortName = "USD",
-                    Symbol = "$"
+                    Symbol = "$",
+                    IsPrimary = true
                 };
 
                 sqliteMemoryWrapper.DbContext.Currencies.Add(usdCurrency);
@@ -119,17 +126,20 @@ namespace Financier.Tests
                 var incomeAccount = new Account
                 {
                     Name = "Income",
-                    Currency = usdCurrency
+                    Currency = usdCurrency,
+                    Type = AccountType.Income
                 };
                 var checkingAccount = new Account
                 {
                     Name = "Checking",
-                    Currency = usdCurrency
+                    Currency = usdCurrency,
+                    Type = AccountType.Asset
                 };
                 var rentPrepaymentAccount = new Account
                 {
                     Name = "Rent Prepayment",
-                    Currency = usdCurrency
+                    Currency = usdCurrency,
+                    Type = AccountType.Asset
                 };
 
                 sqliteMemoryWrapper.DbContext.Accounts.Add(incomeAccount);
@@ -143,15 +153,15 @@ namespace Financier.Tests
                     {
                         CreditAccount = incomeAccount,
                         DebitAccount = checkingAccount,
-                        CreditAmount = 100m,
-                        DebitAmount = 100m
+                        Amount = 100m,
+                        At = new DateTime(2018, 1, 1, 8, 30, 0)
                     },
                     new Transaction
                     {
                         CreditAccount = checkingAccount,
                         DebitAccount = rentPrepaymentAccount,
-                        CreditAmount = 60m,
-                        DebitAmount = 60m
+                        Amount = 60m,
+                        At = new DateTime(2018, 1, 1, 8, 31, 0)
                     }
                 };
 

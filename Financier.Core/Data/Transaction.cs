@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace Financier.Data
 {
@@ -9,14 +7,14 @@ namespace Financier.Data
     {
         [Key]
         public int TransactionId { get; set; }
+        [Required]
         public int CreditAccountId { get; set; }
+        [Required]
         public int DebitAccountId { get; set; }
         [Required]
+        public decimal Amount { get; set; }
+        [Required]
         public DateTime At { get; set; }
-        [Required]
-        public decimal CreditAmount { get; set; }
-        [Required]
-        public decimal DebitAmount { get; set; }
 
         public Account CreditAccount { get; set; }
         public Account DebitAccount { get; set; }

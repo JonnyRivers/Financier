@@ -26,14 +26,16 @@ namespace Financier.Services
                 {
                     Name = "US Dollar",
                     ShortName = "USD",
-                    Symbol = "$"
+                    Symbol = "$",
+                    IsPrimary = true
                 };
                 m_dbContext.Currencies.Add(dollar);
                 var sterling = new Currency
                 {
                     Name = "UK Sterling",
                     ShortName = "GBP",
-                    Symbol = "£"
+                    Symbol = "£",
+                    IsPrimary = false
                 };
                 m_dbContext.Currencies.Add(sterling);
                 m_dbContext.SaveChanges();

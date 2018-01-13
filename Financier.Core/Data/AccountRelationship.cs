@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Financier.Data
 {
@@ -14,6 +10,7 @@ namespace Financier.Data
         public int SourceAccountId { get; set; }
         [Required]
         public int DestinationAccountId { get; set; }
+        [Required]
         public AccountRelationshipType Type { get; set; }
 
         public Account SourceAccount { get; set; }

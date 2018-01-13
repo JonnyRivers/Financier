@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Financier.Data
+﻿namespace Financier.Data
 {
     public enum AccountRelationshipType
     {

@@ -96,7 +96,8 @@ namespace Financier.Services
             {
                 Name = GetRequiredAttribute(element, "name").Value,
                 ShortName = GetRequiredAttribute(element, "shortName").Value,
-                Symbol = GetRequiredAttribute(element, "symbol").Value
+                Symbol = GetRequiredAttribute(element, "symbol").Value,
+                IsPrimary = Boolean.Parse(GetRequiredAttribute(element, "isPrimary").Value)
             };
 
             return currency;
@@ -107,7 +108,8 @@ namespace Financier.Services
             var element = new XElement(XName.Get("Currency"),
                 new XAttribute(XName.Get("name"), currency.Name),
                 new XAttribute(XName.Get("shortName"), currency.ShortName),
-                new XAttribute(XName.Get("symbol"), currency.Symbol)
+                new XAttribute(XName.Get("symbol"), currency.Symbol),
+                new XAttribute(XName.Get("isPrimary"), currency.IsPrimary)
             );
 
             return element;
@@ -119,7 +121,8 @@ namespace Financier.Services
             var account = new Account
             {
                 Currency = currenciesByShortName[currencyShortName],
-                Name = GetRequiredAttribute(element, "name").Value
+                Name = GetRequiredAttribute(element, "name").Value,
+                Type = (AccountType)Enum.Parse(typeof(AccountType), GetRequiredAttribute(element, "type").Value)
             };
 
             return account;
@@ -129,7 +132,8 @@ namespace Financier.Services
         {
             var element = new XElement(XName.Get("Account"),
                 new XAttribute(XName.Get("name"), account.Name),
-                new XAttribute(XName.Get("currency"), account.Currency.ShortName)
+                new XAttribute(XName.Get("currency"), account.Currency.ShortName),
+                new XAttribute(XName.Get("type"), account.Type)
             );
 
             return element;
@@ -166,17 +170,15 @@ namespace Financier.Services
         {
             string at = GetRequiredAttribute(element, "at").Value;
             string creditAccountName = GetRequiredAttribute(element, "credit").Value;
-            string creditAmount = GetRequiredAttribute(element, "creditAmount").Value;
+            string amount = GetRequiredAttribute(element, "amount").Value;
             string debitAccountName = GetRequiredAttribute(element, "debit").Value;
-            string debitAmount = GetRequiredAttribute(element, "debitAmount").Value;
 
             var transaction = new Transaction
             {
                 At = DateTime.Parse(at),
                 CreditAccount = accountsByShortName[creditAccountName],
-                CreditAmount = Decimal.Parse(creditAmount),
-                DebitAccount = accountsByShortName[debitAccountName],
-                DebitAmount = Decimal.Parse(debitAmount)
+                Amount = Decimal.Parse(amount),
+                DebitAccount = accountsByShortName[debitAccountName]
             };
 
             return transaction;
@@ -187,9 +189,8 @@ namespace Financier.Services
             var element = new XElement(XName.Get("Transaction"),
                 new XAttribute(XName.Get("at"), transaction.At),
                 new XAttribute(XName.Get("credit"), transaction.CreditAccount.Name),
-                new XAttribute(XName.Get("creditAmount"), transaction.CreditAmount),
-                new XAttribute(XName.Get("debit"), transaction.DebitAccount.Name),
-                new XAttribute(XName.Get("debitAmount"), transaction.DebitAmount)
+                new XAttribute(XName.Get("amount"), transaction.Amount),
+                new XAttribute(XName.Get("debit"), transaction.DebitAccount.Name)
             );
 
             return element;

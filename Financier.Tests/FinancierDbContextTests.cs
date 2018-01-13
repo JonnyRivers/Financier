@@ -29,7 +29,8 @@ namespace Financier.Tests
                 {
                     Name = "US Dollar",
                     ShortName = "USD",
-                    Symbol = "$"
+                    Symbol = "$",
+                    IsPrimary = true
                 };
 
                 sqliteMemoryWrapper.DbContext.Currencies.Add(usdCurrency);
@@ -54,7 +55,8 @@ namespace Financier.Tests
                 {
                     Name = "US Dollar",
                     ShortName = "USD",
-                    Symbol = "$"
+                    Symbol = "$",
+                    IsPrimary = true
                 };
 
                 sqliteMemoryWrapper.DbContext.Currencies.Add(usdCurrency);
@@ -63,7 +65,8 @@ namespace Financier.Tests
                 var checkingAccount = new Account
                 {
                     Name = "Checking",
-                    Currency = usdCurrency
+                    Currency = usdCurrency,
+                    Type = AccountType.Asset
                 };
 
                 sqliteMemoryWrapper.DbContext.Accounts.Add(checkingAccount);
@@ -89,7 +92,8 @@ namespace Financier.Tests
                 {
                     Name = "US Dollar",
                     ShortName = "USD",
-                    Symbol = "$"
+                    Symbol = "$",
+                    IsPrimary = true
                 };
 
                 sqliteMemoryWrapper.DbContext.Currencies.Add(usdCurrency);
@@ -98,12 +102,14 @@ namespace Financier.Tests
                 var incomeAccount = new Account
                 {
                     Name = "Income",
-                    Currency = usdCurrency
+                    Currency = usdCurrency,
+                    Type = AccountType.Income
                 };
                 var checkingAccount = new Account
                 {
                     Name = "Checking",
-                    Currency = usdCurrency
+                    Currency = usdCurrency,
+                    Type = AccountType.Asset
                 };
 
                 sqliteMemoryWrapper.DbContext.Accounts.Add(incomeAccount);
@@ -113,10 +119,9 @@ namespace Financier.Tests
                 var transaction = new Transaction
                 {
                     CreditAccount = incomeAccount,
-                    CreditAmount = 10m,
                     DebitAccount = checkingAccount,
-                    DebitAmount = 10m,
-                    At = DateTime.Now
+                    Amount = 10m,
+                    At = new DateTime(2018, 1, 1, 8, 30, 1)
                 };
 
                 sqliteMemoryWrapper.DbContext.Transactions.Add(transaction);
@@ -130,9 +135,8 @@ namespace Financier.Tests
                 Assert.AreEqual(1, currencies.Count);
                 Assert.AreEqual(1, transactions.Count);
                 Assert.AreEqual(transaction.CreditAccount.AccountId, transactions[0].CreditAccount.AccountId);
-                Assert.AreEqual(transaction.CreditAmount, transactions[0].CreditAmount);
+                Assert.AreEqual(transaction.Amount, transactions[0].Amount);
                 Assert.AreEqual(transaction.DebitAccount.AccountId, transactions[0].DebitAccount.AccountId);
-                Assert.AreEqual(transaction.DebitAmount, transactions[0].DebitAmount);
             }
         }
 
@@ -145,7 +149,8 @@ namespace Financier.Tests
                 {
                     Name = "US Dollar",
                     ShortName = "USD",
-                    Symbol = "$"
+                    Symbol = "$",
+                    IsPrimary = true
                 };
 
                 sqliteMemoryWrapper.DbContext.Currencies.Add(usdCurrency);
@@ -154,17 +159,20 @@ namespace Financier.Tests
                 var checkingAccount = new Account
                 {
                     Name = "Checking",
-                    Currency = usdCurrency
+                    Currency = usdCurrency,
+                    Type = AccountType.Asset
                 };
                 var rentPrepaymentAccount = new Account
                 {
                     Name = "Rent Prepayment",
-                    Currency = usdCurrency
+                    Currency = usdCurrency,
+                    Type = AccountType.Asset
                 };
                 var rentExpenseAccount = new Account
                 {
                     Name = "Rent Expense",
-                    Currency = usdCurrency
+                    Currency = usdCurrency,
+                    Type = AccountType.Expense
                 };
 
                 sqliteMemoryWrapper.DbContext.Accounts.Add(checkingAccount);
