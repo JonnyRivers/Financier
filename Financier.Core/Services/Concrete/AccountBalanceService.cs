@@ -1,9 +1,7 @@
 ﻿using Financier.Data;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Financier.Services
 {
@@ -20,7 +18,9 @@ namespace Financier.Services
 
         public decimal GetBalance(int accountId)
         {
-            IEnumerable<int> logicalAccountIds = m_dbContext.AccountRelationships.Where(r => r.SourceAccountId == accountId && r.Type == AccountRelationshipType.PhysicalToLogical).Select(r => r.DestinationAccountId);
+            IEnumerable<int> logicalAccountIds = m_dbContext.AccountRelationships
+                .Where(r => r.SourceAccountId == accountId && r.Type == AccountRelationshipType.PhysicalToLogical)
+                .Select(r => r.DestinationAccountId);
             var relevantAccountIds = new HashSet<int>(logicalAccountIds);
             relevantAccountIds.Add(accountId);
 
