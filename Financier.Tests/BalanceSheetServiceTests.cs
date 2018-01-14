@@ -256,5 +256,116 @@ namespace Financier.Tests
                 Assert.AreEqual(0, balanceSheetAtEndLiabilities[0].Balance);
             }
         }
+
+        [TestMethod]
+        public void TestBalanceSheetWithLogicalAccounts()
+        {
+            ILoggerFactory loggerFactory = new LoggerFactory();
+            ILogger<BalanceSheetService> logger = loggerFactory.CreateLogger<BalanceSheetService>();
+
+            using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
+            {
+                var usdCurrency = new Currency
+                {
+                    Name = "US Dollar",
+                    ShortName = "USD",
+                    Symbol = "$",
+                    IsPrimary = true
+                };
+
+                sqliteMemoryWrapper.DbContext.Currencies.Add(usdCurrency);
+                sqliteMemoryWrapper.DbContext.SaveChanges();
+
+                var checkingAccount = new Account
+                {
+                    Name = "Checking",
+                    Currency = usdCurrency,
+                    Type = AccountType.Asset
+                };
+                var incomeAccount = new Account
+                {
+                    Name = "Income",
+                    Currency = usdCurrency,
+                    Type = AccountType.Income
+                };
+                var rentPrepaymentAccount = new Account
+                {
+                    Name = "Rent Prepayment",
+                    Currency = usdCurrency,
+                    Type = AccountType.Asset
+                };
+                var groceriesPrepaymentAccount = new Account
+                {
+                    Name = "Groceries Prepayment",
+                    Currency = usdCurrency,
+                    Type = AccountType.Asset
+                };
+
+                sqliteMemoryWrapper.DbContext.Accounts.Add(checkingAccount);
+                sqliteMemoryWrapper.DbContext.Accounts.Add(incomeAccount);
+                sqliteMemoryWrapper.DbContext.Accounts.Add(rentPrepaymentAccount);
+                sqliteMemoryWrapper.DbContext.Accounts.Add(groceriesPrepaymentAccount);
+                sqliteMemoryWrapper.DbContext.SaveChanges();
+
+                var checkingToRentPrepaymentRelationship = new AccountRelationship
+                {
+                    SourceAccount = checkingAccount,
+                    DestinationAccount = rentPrepaymentAccount,
+                    Type = AccountRelationshipType.PhysicalToLogical
+                };
+                var checkingToGroceriesPrepaymentRelationship = new AccountRelationship
+                {
+                    SourceAccount = checkingAccount,
+                    DestinationAccount = groceriesPrepaymentAccount,
+                    Type = AccountRelationshipType.PhysicalToLogical
+                };
+
+                sqliteMemoryWrapper.DbContext.AccountRelationships.Add(checkingToRentPrepaymentRelationship);
+                sqliteMemoryWrapper.DbContext.AccountRelationships.Add(checkingToGroceriesPrepaymentRelationship);
+                sqliteMemoryWrapper.DbContext.SaveChanges();
+
+                var transactions = new Transaction[]
+                {
+                    new Transaction
+                    {
+                        CreditAccount = incomeAccount,
+                        DebitAccount = checkingAccount,
+                        Amount = 100m,
+                        At = new DateTime(2018, 1, 1)
+                    },// income=100CR,checking=100DR
+                    new Transaction
+                    {
+                        CreditAccount = checkingAccount,
+                        DebitAccount = rentPrepaymentAccount,
+                        Amount = 40m,
+                        At = new DateTime(2018, 1, 1)
+                    },// income=100CR,(checking=60DR,rent-prepayment=40DR)=100DR
+                    new Transaction
+                    {
+                        CreditAccount = checkingAccount,
+                        DebitAccount = groceriesPrepaymentAccount,
+                        Amount = 20m,
+                        At = new DateTime(2018, 1, 1)
+                    }// income=100CR,(checking=40DR,rent-prepayment=40DR,groceries-prepayment=20DR)=100DR
+                };
+                sqliteMemoryWrapper.DbContext.Transactions.AddRange(transactions);
+                sqliteMemoryWrapper.DbContext.SaveChanges();
+
+                var balanceSheetService = new BalanceSheetService(logger, sqliteMemoryWrapper.DbContext);
+
+                BalanceSheet balanceSheet = balanceSheetService.Generate(new DateTime(2018, 1, 1));
+                List<BalanceSheetItem> balanceSheetAssets = balanceSheet.Assets.ToList();
+                List<BalanceSheetItem> balanceSheetLiabilities = balanceSheet.Liabilities.ToList();
+
+                Assert.AreEqual(usdCurrency.Symbol, balanceSheet.CurrencySymbol);
+                Assert.AreEqual(100, balanceSheet.TotalAssets);
+                Assert.AreEqual(0, balanceSheet.TotalLiabilities);
+                Assert.AreEqual(100, balanceSheet.NetWorth);
+                Assert.AreEqual(1, balanceSheetAssets.Count);
+                Assert.AreEqual(0, balanceSheetLiabilities.Count);
+                Assert.AreEqual(checkingAccount.Name, balanceSheetAssets[0].Name);
+                Assert.AreEqual(100, balanceSheetAssets[0].Balance);
+            }
+        }
     }
 }
