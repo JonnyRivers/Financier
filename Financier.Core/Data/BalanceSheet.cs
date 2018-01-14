@@ -8,26 +8,27 @@ namespace Financier.Data
         internal BalanceSheet(
             string currencySymbol,
             IEnumerable<BalanceSheetItem> assets,
-            IEnumerable<BalanceSheetItem> liabilities,
-            IEnumerable<BalanceSheetItem> equities)
+            IEnumerable<BalanceSheetItem> liabilities)
         {
             CurrencySymbol = currencySymbol;
 
             Assets = assets;
             Liabilities = liabilities;
-            Equities = equities;
 
             TotalAssets = Assets.Sum(a => a.Balance);
-            TotalLiabilitiesAndEquity = Liabilities.Sum(l => l.Balance) + Equities.Sum(e => e.Balance);
+            TotalLiabilities = Liabilities.Sum(l => l.Balance);
+
+            NetWorth = TotalAssets - TotalLiabilities;
         }
 
         public string CurrencySymbol { get; }
 
         public IEnumerable<BalanceSheetItem> Assets { get; }
         public IEnumerable<BalanceSheetItem> Liabilities { get; }
-        public IEnumerable<BalanceSheetItem> Equities { get; }
 
         public decimal TotalAssets { get; }
-        public decimal TotalLiabilitiesAndEquity { get; }
+        public decimal TotalLiabilities { get; }
+
+        public decimal NetWorth { get; }
     }
 }

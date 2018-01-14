@@ -1,9 +1,10 @@
 ﻿using Financier.Data;
+using System;
 
 namespace Financier.Services
 {
     public interface IBalanceSheetService
     {
-        BalanceSheet Generate();
+        BalanceSheet Generate(DateTime at);
     }
 }

@@ -18,7 +18,7 @@ namespace Financier.Services
             m_dbContext = dbContext;
         }
 
-        public BalanceSheet Generate()
+        public BalanceSheet Generate(DateTime at)
         {
             // TODO: this is implemented in terms of very low level (data layer) concepts.
             // This should be implemented in terms of other services.
@@ -40,18 +40,16 @@ namespace Financier.Services
                         !logicalAccountIds.Contains(a.AccountId) && 
                         (
                          a.Type == AccountType.Asset || 
-                         a.Type == AccountType.Capital || 
                          a.Type == AccountType.Liability)
                         )
                     .ToList();
 
             var assets = new List<BalanceSheetItem>();
             var liabilities = new List<BalanceSheetItem>();
-            var equities = new List<BalanceSheetItem>();
             foreach (Account interestingAccount in interestingAccounts)
             {
                 // TODO: we are hitting the database too much
-                var item = new BalanceSheetItem(interestingAccount.Name, GetBalance(interestingAccount));
+                var item = new BalanceSheetItem(interestingAccount.Name, GetBalance(interestingAccount, at));
 
                 if(interestingAccount.Type == AccountType.Asset)
                 {
@@ -61,16 +59,13 @@ namespace Financier.Services
                 {
                     liabilities.Add(item);
                 }
-                else if (interestingAccount.Type == AccountType.Capital)
-                {
-                    equities.Add(item);
-                }
             }
 
-            return new BalanceSheet(primaryCurrency.Symbol, assets, liabilities, equities);
+            return new BalanceSheet(primaryCurrency.Symbol, assets, liabilities);
         }
 
-        private decimal GetBalance(Account account)
+        // TODO: centralize this
+        private decimal GetBalance(Account account, DateTime at)
         {
             IEnumerable<int> logicalAccountIds = m_dbContext.AccountRelationships
                 .Where(r => r.SourceAccountId == account.AccountId && r.Type == AccountRelationshipType.PhysicalToLogical)
@@ -78,8 +73,14 @@ namespace Financier.Services
             var relevantAccountIds = new HashSet<int>(logicalAccountIds);
             relevantAccountIds.Add(account.AccountId);
 
-            IEnumerable<Transaction> creditTransactions = m_dbContext.Transactions.Where(t => relevantAccountIds.Contains(t.CreditAccountId));
-            IEnumerable<Transaction> debitTransactions = m_dbContext.Transactions.Where(t => relevantAccountIds.Contains(t.DebitAccountId));
+            IEnumerable<Transaction> creditTransactions = m_dbContext.Transactions
+                .Where(t => 
+                    relevantAccountIds.Contains(t.CreditAccountId) &&
+                    t.At <= at);
+            IEnumerable<Transaction> debitTransactions = m_dbContext.Transactions
+                .Where(t => 
+                    relevantAccountIds.Contains(t.DebitAccountId) &&
+                    t.At <= at);
 
             decimal creditBalance = creditTransactions.Sum(t => t.Amount);
             decimal debitBalance = debitTransactions.Sum(t => t.Amount);
@@ -92,6 +93,7 @@ namespace Financier.Services
             return debitBalance - creditBalance;
         }
 
+        // TODO: move this
         private static bool IsCreditAccount(Account account)
         {
             return (
