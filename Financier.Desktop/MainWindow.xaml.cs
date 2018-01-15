@@ -1,17 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Financier.Desktop.ViewModels;
+using Microsoft.Extensions.Logging;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Financier.Desktop
 {
@@ -20,9 +9,17 @@ namespace Financier.Desktop
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        private ILogger<MainWindow> _logger;
+        private IMainWindowViewModel _viewModel;
+
+        public MainWindow(ILogger<MainWindow> logger, IMainWindowViewModel viewModel)
         {
             InitializeComponent();
+
+            _logger = logger;
+            _viewModel = viewModel;
+
+            DataContext = viewModel;
         }
     }
 }
