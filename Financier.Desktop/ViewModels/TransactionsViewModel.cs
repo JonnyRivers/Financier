@@ -1,5 +1,6 @@
 ﻿using Financier.Data;
 using Financier.Desktop.Commands;
+using Financier.Desktop.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -19,6 +20,7 @@ namespace Financier.Desktop.ViewModels
                 .Take(20)
                 .Select(t =>
                     new TransactionViewModel(
+                        t.TransactionId,
                         t.CreditAccount.Name,
                         t.DebitAccount.Name,
                         t.Amount,
@@ -55,7 +57,8 @@ namespace Financier.Desktop.ViewModels
 
         private void EditExecute(object obj)
         {
-
+            var transactionWindow = new TransactionWindow(SelectedTransaction);
+            bool? result = transactionWindow.ShowDialog();
         }
 
         private bool EditCanExecute(object obj)
