@@ -11,6 +11,20 @@ namespace Financier.Desktop.ViewModels
 {
     public class TransactionEditViewModel : BaseViewModel, ITransactionEditViewModel
     {
+        public TransactionEditViewModel(FinancierDbContext dbContext)
+        {
+            m_dbContext = dbContext;
+            m_transactionId = 0;
+
+            Accounts = m_dbContext.Accounts.OrderBy(a => a.Name).ToList();
+
+            // TODO: take selections from last transaction?
+            SelectedCreditAccount = Accounts.First();// TODO: handle no accounts
+            SelectedDebitAccount = Accounts.First();// TODO: handle no accounts
+            Amount = 0m;
+            At = DateTime.Now;
+        }
+
         public TransactionEditViewModel(FinancierDbContext dbContext, int transactionId)
         {
             m_dbContext = dbContext;
@@ -100,12 +114,27 @@ namespace Financier.Desktop.ViewModels
 
         private void OKExecute(object obj)
         {
-            Transaction transaction = m_dbContext.Transactions.Single(t => t.TransactionId == m_transactionId);
-            transaction.CreditAccountId = SelectedCreditAccount.AccountId;
-            transaction.DebitAccountId = SelectedDebitAccount.AccountId;
-            transaction.Amount = Amount;
-            transaction.At = At;
-            m_dbContext.SaveChanges();
+            if (m_transactionId != 0)
+            {
+                Transaction transaction = m_dbContext.Transactions.Single(t => t.TransactionId == m_transactionId);
+                transaction.CreditAccountId = SelectedCreditAccount.AccountId;
+                transaction.DebitAccountId = SelectedDebitAccount.AccountId;
+                transaction.Amount = Amount;
+                transaction.At = At;
+                m_dbContext.SaveChanges();
+            }
+            else
+            {
+                var transaction = new Transaction
+                {
+                    CreditAccountId = SelectedCreditAccount.AccountId,
+                    DebitAccountId = SelectedDebitAccount.AccountId,
+                    Amount = Amount,
+                    At = At,
+                };
+                m_dbContext.Transactions.Add(transaction);
+                m_dbContext.SaveChanges();
+            }
         }
 
         private void CancelExecute(object obj)

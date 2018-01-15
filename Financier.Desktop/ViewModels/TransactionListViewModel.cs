@@ -49,7 +49,15 @@ namespace Financier.Desktop.ViewModels
 
         private void CreateExecute(object obj)
         {
-            
+            IWindowFactory windowFactory = IoC.ServiceProvider.Instance.GetRequiredService<IWindowFactory>();
+            Window transactionEditWindow = windowFactory.CreateTransactionCreateWindow();
+
+            bool? result = transactionEditWindow.ShowDialog();
+
+            if (result.HasValue && result.Value)
+            {
+                PopulateTransactions();
+            }
         }
 
         private void EditExecute(object obj)
@@ -72,7 +80,21 @@ namespace Financier.Desktop.ViewModels
 
         private void DeleteExecute(object obj)
         {
-            
+            // TODO: build a proper confirm dialog
+            MessageBoxResult confirmResult = MessageBox.Show(
+                "Are you sure you want to delete this transaction?  This cannot be undone.", 
+                "Really delete transaction?", 
+                MessageBoxButton.YesNo
+            );
+
+            if(confirmResult == MessageBoxResult.Yes)
+            {
+                Transaction transaction = m_dbContext.Transactions.Single(t => t.TransactionId == SelectedTransaction.TransactionId);
+                m_dbContext.Transactions.Remove(transaction);
+                m_dbContext.SaveChanges();
+
+                PopulateTransactions();
+            }
         }
 
         private bool DeleteCanExecute(object obj)

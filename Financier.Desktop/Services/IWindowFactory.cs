@@ -11,6 +11,7 @@ namespace Financier.Desktop.Services
     public interface IWindowFactory
     {
         Window CreateMainWindow();
+        Window CreateTransactionCreateWindow();
         Window CreateTransactionEditWindow(int transactionId);
     }
 }
