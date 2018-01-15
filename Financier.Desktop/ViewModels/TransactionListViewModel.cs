@@ -18,22 +18,16 @@ namespace Financier.Desktop.ViewModels
     {
         public TransactionListViewModel(FinancierDbContext dbContext)
         {
-            IEnumerable<ITransactionItemViewModel> transactionVMs = dbContext.Transactions
-                .OrderByDescending(t => t.TransactionId)
-                .Take(20)
-                .Select(t =>
-                    new TransactionItemViewModel(
-                        t.TransactionId,
-                        t.CreditAccount.Name,
-                        t.DebitAccount.Name,
-                        t.Amount,
-                        t.At));
-            Transactions = new ObservableCollection<ITransactionItemViewModel>(transactionVMs);
+            m_dbContext = dbContext;
+
+            PopulateTransactions();
         }
+
+        private FinancierDbContext m_dbContext;
 
         private ITransactionItemViewModel m_selectedTransaction;
 
-        public ObservableCollection<ITransactionItemViewModel> Transactions { get; }
+        public ObservableCollection<ITransactionItemViewModel> Transactions { get; set; }
         public ITransactionItemViewModel SelectedTransaction
         {
             get { return m_selectedTransaction; }
@@ -61,9 +55,14 @@ namespace Financier.Desktop.ViewModels
         private void EditExecute(object obj)
         {
             IWindowFactory windowFactory = IoC.ServiceProvider.Instance.GetRequiredService<IWindowFactory>();
-            Window transactionEditWindow = windowFactory.CreateTransactionEditWindow(SelectedTransaction);
+            Window transactionEditWindow = windowFactory.CreateTransactionEditWindow(SelectedTransaction.TransactionId);
 
             bool? result = transactionEditWindow.ShowDialog();
+
+            if(result.HasValue && result.Value)
+            {
+                PopulateTransactions();
+            }
         }
 
         private bool EditCanExecute(object obj)
@@ -79,6 +78,22 @@ namespace Financier.Desktop.ViewModels
         private bool DeleteCanExecute(object obj)
         {
             return (SelectedTransaction != null);
+        }
+
+        private void PopulateTransactions()
+        {
+            IEnumerable<ITransactionItemViewModel> transactionVMs = m_dbContext.Transactions
+                .OrderByDescending(t => t.TransactionId)
+                .Take(20)
+                .Select(t =>
+                    new TransactionItemViewModel(
+                        t.TransactionId,
+                        t.CreditAccount.Name,
+                        t.DebitAccount.Name,
+                        t.Amount,
+                        t.At));
+            Transactions = new ObservableCollection<ITransactionItemViewModel>(transactionVMs);
+            OnPropertyChanged(nameof(Transactions));
         }
     }
 }

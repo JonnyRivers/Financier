@@ -26,5 +26,10 @@ namespace Financier.Desktop.Views
 
             DataContext = viewModel;
         }
+
+        private void OnOK(object sender, RoutedEventArgs e)
+        {
+            DialogResult = true;
+        }
     }
 }

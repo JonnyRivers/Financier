@@ -25,9 +25,10 @@ namespace Financier.Desktop.Services
             return mainWindow;
         }
 
-        public Window CreateTransactionEditWindow(ITransactionItemViewModel itemViewModel)
+        public Window CreateTransactionEditWindow(int transactionId)
         {
-            ITransactionEditViewModel transactionEditViewModel = new TransactionEditViewModel(itemViewModel);
+            FinancierDbContext dbContext = IoC.ServiceProvider.Instance.GetRequiredService<FinancierDbContext>();
+            ITransactionEditViewModel transactionEditViewModel = new TransactionEditViewModel(dbContext, transactionId);
             Window transactionEditWindow = new TransactionEditWindow(transactionEditViewModel);
 
             return transactionEditWindow;
