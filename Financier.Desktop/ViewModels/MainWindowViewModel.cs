@@ -10,20 +10,11 @@ namespace Financier.Desktop.ViewModels
 {
     public class MainWindowViewModel : BaseViewModel, IMainWindowViewModel
     {
-        public MainWindowViewModel(FinancierDbContext dbContext)
+        public MainWindowViewModel(ITransactionsViewModel transactionsViewModel)
         {
-            IEnumerable<ITransactionViewModel> transactionVMs = dbContext.Transactions
-                .OrderByDescending(t => t.TransactionId)
-                .Take(20)
-                .Select(t =>
-                    new TransactionViewModel(
-                        t.CreditAccount.Name,
-                        t.DebitAccount.Name,
-                        t.Amount,
-                        t.At));
-            Transactions = new ObservableCollection<ITransactionViewModel>(transactionVMs);
+            TransactionsViewModel = transactionsViewModel;
         }
 
-        public ObservableCollection<ITransactionViewModel> Transactions { get; }
+        public ITransactionsViewModel TransactionsViewModel { get; }
     }
 }

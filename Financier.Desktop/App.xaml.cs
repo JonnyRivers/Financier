@@ -1,5 +1,6 @@
 ﻿using Financier.Data;
 using Financier.Desktop.ViewModels;
+using Financier.Desktop.Views;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -40,9 +41,11 @@ namespace Financier.Desktop
                 ServiceLifetime.Transient);
 
             // View models
+            serviceCollection.AddTransient<ITransactionsViewModel, TransactionsViewModel>();
             serviceCollection.AddTransient<IMainWindowViewModel, MainWindowViewModel>();
 
             // Views
+            serviceCollection.AddTransient<TransactionsControl>();
             serviceCollection.AddTransient<MainWindow>();
 
             IServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();

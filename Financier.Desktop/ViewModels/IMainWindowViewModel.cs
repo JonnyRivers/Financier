@@ -9,6 +9,6 @@ namespace Financier.Desktop.ViewModels
 {
     public interface IMainWindowViewModel
     {
-        ObservableCollection<ITransactionViewModel> Transactions { get; }
+        ITransactionsViewModel TransactionsViewModel { get; }
     }
 }

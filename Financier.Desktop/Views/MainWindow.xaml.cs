@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Logging;
 using System.Windows;
 
-namespace Financier.Desktop
+namespace Financier.Desktop.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
