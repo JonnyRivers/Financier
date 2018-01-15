@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Financier.Desktop.ViewModels
 {
-    public interface ITransactionViewModel
+    public interface ITransactionItemViewModel
     {
         int TransactionId { get; set; }
         string CreditAccountName { get; set; }

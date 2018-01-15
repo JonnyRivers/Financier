@@ -1,7 +1,7 @@
 ﻿using Financier.Data;
+using Financier.Desktop.Services;
 using Financier.Desktop.ViewModels;
 using Financier.Desktop.Views;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
@@ -18,39 +18,9 @@ namespace Financier.Desktop
         {
             base.OnStartup(e);
 
-            IServiceProvider serviceProvider = BuildServiceProvider();
-            Window mainWindow = serviceProvider.GetRequiredService<MainWindow>();
+            IWindowFactory windowFactory = IoC.ServiceProvider.Instance.GetRequiredService<IWindowFactory>();
+            Window mainWindow = windowFactory.CreateMainWindow();
             mainWindow.Show();
-        }
-
-        private IServiceProvider BuildServiceProvider()
-        {
-            var serviceCollection = new ServiceCollection();
-
-            // Framework services
-            ILoggerFactory loggerFactory = new LoggerFactory().AddDebug();
-            serviceCollection.AddSingleton(loggerFactory);
-            serviceCollection.AddLogging();
-
-            string connectionString =
-                @"Server=(localdb)\mssqllocaldb;" +
-                $"Database=Financier_FamilyFortunesTest;" +
-                "Trusted_Connection=True;";
-            serviceCollection.AddDbContext<FinancierDbContext>(
-                options => options.UseSqlServer(connectionString),
-                ServiceLifetime.Transient);
-
-            // View models
-            serviceCollection.AddTransient<ITransactionsViewModel, TransactionsViewModel>();
-            serviceCollection.AddTransient<IMainWindowViewModel, MainWindowViewModel>();
-
-            // Views
-            serviceCollection.AddTransient<TransactionsControl>();
-            serviceCollection.AddTransient<MainWindow>();
-
-            IServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
-
-            return serviceProvider;
         }
     }
 }

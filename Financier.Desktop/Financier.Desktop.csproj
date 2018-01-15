@@ -117,35 +117,40 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Commands\RelayCommand.cs" />
+    <Compile Include="IoC\ServiceProvider.cs" />
+    <Compile Include="Services\IWindowFactory.cs" />
+    <Compile Include="Services\WindowFactory.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\IMainWindowViewModel.cs" />
-    <Compile Include="ViewModels\ITransactionsViewModel.cs" />
-    <Compile Include="ViewModels\ITransactionViewModel.cs" />
+    <Compile Include="ViewModels\ITransactionEditViewModel.cs" />
+    <Compile Include="ViewModels\ITransactionListViewModel.cs" />
+    <Compile Include="ViewModels\ITransactionItemViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
-    <Compile Include="ViewModels\TransactionsViewModel.cs" />
-    <Compile Include="ViewModels\TransactionViewModel.cs" />
+    <Compile Include="ViewModels\TransactionEditViewModel.cs" />
+    <Compile Include="ViewModels\TransactionListViewModel.cs" />
+    <Compile Include="ViewModels\TransactionItemViewModel.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\TransactionsControl.xaml.cs">
-      <DependentUpon>TransactionsControl.xaml</DependentUpon>
+    <Compile Include="Views\TransactionListControl.xaml.cs">
+      <DependentUpon>TransactionListControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Views\TransactionWindow.xaml.cs">
-      <DependentUpon>TransactionWindow.xaml</DependentUpon>
+    <Compile Include="Views\TransactionEditWindow.xaml.cs">
+      <DependentUpon>TransactionEditWindow.xaml</DependentUpon>
     </Compile>
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\TransactionsControl.xaml">
+    <Page Include="Views\TransactionListControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\TransactionWindow.xaml">
+    <Page Include="Views\TransactionEditWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Financier.Desktop.ViewModels
 {
-    public class TransactionViewModel : BaseViewModel, ITransactionViewModel
+    public class TransactionItemViewModel : BaseViewModel, ITransactionItemViewModel
     {
-        public TransactionViewModel(int transactionId, string creditAccountName, string debitAccountName, decimal amount, DateTime at)
+        public TransactionItemViewModel(int transactionId, string creditAccountName, string debitAccountName, decimal amount, DateTime at)
         {
             TransactionId = transactionId;
             CreditAccountName = creditAccountName;

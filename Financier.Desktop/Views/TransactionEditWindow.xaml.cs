@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Financier.Desktop.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,19 +11,20 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace Financier.Desktop.Views
 {
     /// <summary>
-    /// Interaction logic for TransactionsViewControl.xaml
+    /// Interaction logic for TransactionWindow.xaml
     /// </summary>
-    public partial class TransactionsControl : UserControl
+    public partial class TransactionEditWindow : Window
     {
-        public TransactionsControl()
+        public TransactionEditWindow(ITransactionEditViewModel viewModel)
         {
             InitializeComponent();
+
+            DataContext = viewModel;
         }
     }
 }

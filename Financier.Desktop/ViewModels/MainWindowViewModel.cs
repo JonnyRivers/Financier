@@ -10,11 +10,11 @@ namespace Financier.Desktop.ViewModels
 {
     public class MainWindowViewModel : BaseViewModel, IMainWindowViewModel
     {
-        public MainWindowViewModel(ITransactionsViewModel transactionsViewModel)
+        public MainWindowViewModel(ITransactionListViewModel transactionListViewModel)
         {
-            TransactionsViewModel = transactionsViewModel;
+            TransactionListViewModel = transactionListViewModel;
         }
 
-        public ITransactionsViewModel TransactionsViewModel { get; }
+        public ITransactionListViewModel TransactionListViewModel { get; }
     }
 }

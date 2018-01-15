@@ -8,10 +8,10 @@ using System.Windows.Input;
 
 namespace Financier.Desktop.ViewModels
 {
-    public interface ITransactionsViewModel
+    public interface ITransactionListViewModel
     {
-        ObservableCollection<ITransactionViewModel> Transactions { get; }
-        ITransactionViewModel SelectedTransaction { get; }
+        ObservableCollection<ITransactionItemViewModel> Transactions { get; }
+        ITransactionItemViewModel SelectedTransaction { get; }
 
         ICommand CreateCommand { get; }
         ICommand EditCommand { get; }

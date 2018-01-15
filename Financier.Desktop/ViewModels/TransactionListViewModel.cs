@@ -1,37 +1,40 @@
 ﻿using Financier.Data;
 using Financier.Desktop.Commands;
+using Financier.Desktop.Services;
 using Financier.Desktop.Views;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Financier.Desktop.ViewModels
 {
-    public class TransactionsViewModel : BaseViewModel, ITransactionsViewModel
+    public class TransactionListViewModel : BaseViewModel, ITransactionListViewModel
     {
-        public TransactionsViewModel(FinancierDbContext dbContext)
+        public TransactionListViewModel(FinancierDbContext dbContext)
         {
-            IEnumerable<ITransactionViewModel> transactionVMs = dbContext.Transactions
+            IEnumerable<ITransactionItemViewModel> transactionVMs = dbContext.Transactions
                 .OrderByDescending(t => t.TransactionId)
                 .Take(20)
                 .Select(t =>
-                    new TransactionViewModel(
+                    new TransactionItemViewModel(
                         t.TransactionId,
                         t.CreditAccount.Name,
                         t.DebitAccount.Name,
                         t.Amount,
                         t.At));
-            Transactions = new ObservableCollection<ITransactionViewModel>(transactionVMs);
+            Transactions = new ObservableCollection<ITransactionItemViewModel>(transactionVMs);
         }
 
-        private ITransactionViewModel m_selectedTransaction;
+        private ITransactionItemViewModel m_selectedTransaction;
 
-        public ObservableCollection<ITransactionViewModel> Transactions { get; }
-        public ITransactionViewModel SelectedTransaction
+        public ObservableCollection<ITransactionItemViewModel> Transactions { get; }
+        public ITransactionItemViewModel SelectedTransaction
         {
             get { return m_selectedTransaction; }
             set
@@ -57,8 +60,10 @@ namespace Financier.Desktop.ViewModels
 
         private void EditExecute(object obj)
         {
-            var transactionWindow = new TransactionWindow(SelectedTransaction);
-            bool? result = transactionWindow.ShowDialog();
+            IWindowFactory windowFactory = IoC.ServiceProvider.Instance.GetRequiredService<IWindowFactory>();
+            Window transactionEditWindow = windowFactory.CreateTransactionEditWindow(SelectedTransaction);
+
+            bool? result = transactionEditWindow.ShowDialog();
         }
 
         private bool EditCanExecute(object obj)

@@ -9,7 +9,7 @@
     <Grid>
         <TabControl>
             <TabItem Header="Transactions">
-                <views:TransactionsControl DataContext="{Binding TransactionsViewModel}"/>
+                <views:TransactionListControl DataContext="{Binding TransactionListViewModel}"/>
             </TabItem>
         </TabControl>
     </Grid>
