@@ -5,25 +5,32 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Financier.Desktop"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="Financier for Windows™" Height="400" Width="810">
     <Grid>
-        <ItemsControl ItemsSource="{Binding Transactions}">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <Grid Margin="0,0,0,5">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="{Binding CreditAccountName}"/>
-                        <TextBlock Grid.Column="1" Text="{Binding DebitAccountName}"/>
-                        <TextBlock Grid.Column="2" Text="{Binding Amount}"/>
-                        <TextBlock Grid.Column="3" Text="{Binding At}"/>
-                    </Grid>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
+        <TabControl>
+            <TabItem Header="Transactions">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Margin="5" Grid.Row="0" Orientation="Horizontal">
+                        <Button Margin="5">Create New Transaction</Button>
+                        <Button Margin="5">Edit Selected Transaction</Button>
+                        <Button Margin="5">Delete Selected Transaction</Button>
+                    </StackPanel>
+                    <ListView Grid.Row="1" ItemsSource="{Binding Transactions}">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Credit Account" Width="250" DisplayMemberBinding="{Binding CreditAccountName}"/>
+                                <GridViewColumn Header="Debit Account" Width="250" DisplayMemberBinding="{Binding DebitAccountName}"/>
+                                <GridViewColumn Header="Amount" Width="100" DisplayMemberBinding="{Binding Amount}"/>
+                                <GridViewColumn Header="At" Width="160" DisplayMemberBinding="{Binding At}"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </Grid>
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>

@@ -13,6 +13,8 @@ namespace Financier.Desktop.ViewModels
         public MainWindowViewModel(FinancierDbContext dbContext)
         {
             IEnumerable<ITransactionViewModel> transactionVMs = dbContext.Transactions
+                .OrderByDescending(t => t.TransactionId)
+                .Take(20)
                 .Select(t =>
                     new TransactionViewModel(
                         t.CreditAccount.Name,
