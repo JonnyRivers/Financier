@@ -7,21 +7,25 @@ namespace Financier.Desktop.ViewModels
         public TransactionItemViewModel(
             int transactionId, 
             string creditAccountName, 
-            string debitAccountName, 
+            string debitAccountName,
+            DateTime at,
             decimal amount, 
-            DateTime at)
+            decimal balance
+            )
         {
             TransactionId = transactionId;
             CreditAccountName = creditAccountName;
             DebitAccountName = debitAccountName;
-            Amount = amount;
             At = at;
+            Amount = amount;
+            Balance = balance;
         }
 
         public int TransactionId { get; }
         public string CreditAccountName { get; }
         public string DebitAccountName { get; }
-        public decimal Amount { get; }
         public DateTime At { get; }
+        public decimal Amount { get; }
+        public decimal Balance { get; }
     }
 }

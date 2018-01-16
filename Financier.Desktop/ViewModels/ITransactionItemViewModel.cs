@@ -7,7 +7,8 @@ namespace Financier.Desktop.ViewModels
         int TransactionId { get; }
         string CreditAccountName { get; }
         string DebitAccountName { get; }
-        decimal Amount { get; }
         DateTime At { get; }
+        decimal Amount { get; }
+        decimal Balance { get; }
     }
 }

@@ -132,10 +132,12 @@
     <Compile Include="ViewModels\IAccountListViewModel.cs" />
     <Compile Include="ViewModels\IAccountOverviewViewModel.cs" />
     <Compile Include="ViewModels\IMainWindowViewModel.cs" />
+    <Compile Include="ViewModels\ITransactionAccountFilterViewModel.cs" />
     <Compile Include="ViewModels\ITransactionEditViewModel.cs" />
     <Compile Include="ViewModels\ITransactionListViewModel.cs" />
     <Compile Include="ViewModels\ITransactionItemViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
+    <Compile Include="ViewModels\TransactionAccountFilterViewModel.cs" />
     <Compile Include="ViewModels\TransactionEditViewModel.cs" />
     <Compile Include="ViewModels\TransactionListViewModel.cs" />
     <Compile Include="ViewModels\TransactionItemViewModel.cs" />
