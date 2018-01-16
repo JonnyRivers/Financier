@@ -60,7 +60,12 @@ namespace Financier.Desktop.ViewModels
 
         private void EditExecute(object obj)
         {
-            
+            IWindowFactory windowFactory = IoC.ServiceProvider.Instance.GetRequiredService<IWindowFactory>();
+            Window accountEditWindow = windowFactory.CreateAccountEditWindow(SelectedAccount.AccountId);
+
+            accountEditWindow.ShowDialog();
+
+            PopulateAccounts();
         }
 
         private bool EditCanExecute(object obj)

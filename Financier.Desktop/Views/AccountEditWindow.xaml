@@ -1,0 +1,22 @@
+﻿<Window x:Class="Financier.Desktop.Views.AccountEditWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:views="clr-namespace:Financier.Desktop.Views"
+        mc:Ignorable="d"
+        Title="Account" Height="300" Width="810">
+    <Grid>
+        <TabControl>
+            <TabItem Header="Overview">
+                <views:AccountOverviewControl DataContext="{Binding AccountOverviewViewModel}"/>
+            </TabItem>
+            <TabItem Header="Transactions">
+                <views:TransactionListControl DataContext="{Binding TransactionListViewModel}"/>
+            </TabItem>
+            <TabItem Header="Relationships">
+                
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>

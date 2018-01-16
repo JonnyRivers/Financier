@@ -4,11 +4,6 @@ using Financier.Desktop.Views;
 using Financier.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace Financier.Desktop.Services
@@ -20,10 +15,10 @@ namespace Financier.Desktop.Services
             ILogger<MainWindow> mainWindowLogger = IoC.ServiceProvider.Instance.GetRequiredService<ILogger<MainWindow>>();
             FinancierDbContext dbContext = IoC.ServiceProvider.Instance.GetRequiredService<FinancierDbContext>();
             IAccountBalanceService accountBalanceService = IoC.ServiceProvider.Instance.GetRequiredService<IAccountBalanceService>();
-            IAccountListViewModel accountListViewModel = new AccountListViewModel(dbContext, accountBalanceService);
-            ITransactionListViewModel transactionListViewModel = new TransactionListViewModel(dbContext);
-            MainWindowViewModel mainWindowViewModel = new MainWindowViewModel(accountListViewModel, transactionListViewModel);
-            Window mainWindow = new MainWindow(mainWindowLogger, mainWindowViewModel);
+            var accountListViewModel = new AccountListViewModel(dbContext, accountBalanceService);
+            var transactionListViewModel = new TransactionListViewModel(dbContext);
+            var mainWindowViewModel = new MainWindowViewModel(accountListViewModel, transactionListViewModel);
+            var mainWindow = new MainWindow(mainWindowLogger, mainWindowViewModel);
 
             return mainWindow;
         }
@@ -31,17 +26,28 @@ namespace Financier.Desktop.Services
         public Window CreateAccountCreateWindow()
         {
             FinancierDbContext dbContext = IoC.ServiceProvider.Instance.GetRequiredService<FinancierDbContext>();
-            IAccountCreateViewModel accountCreateViewModel = new AccountCreateViewModel(dbContext);
-            Window transactionEditWindow = new AccountCreateWindow(accountCreateViewModel);
+            var accountCreateViewModel = new AccountCreateViewModel(dbContext);
+            var transactionEditWindow = new AccountCreateWindow(accountCreateViewModel);
 
             return transactionEditWindow;
+        }
+
+        public Window CreateAccountEditWindow(int accountId)
+        {
+            FinancierDbContext dbContext = IoC.ServiceProvider.Instance.GetRequiredService<FinancierDbContext>();
+            var accountOverviewViewModel = new AccountOverviewViewModel(dbContext, accountId);
+            var transactionListViewModel = new TransactionListViewModel(dbContext, accountId);
+            var accountEditViewModel = new AccountEditViewModel(accountOverviewViewModel, transactionListViewModel);
+            var accountEditWindow = new AccountEditWindow(accountEditViewModel);
+
+            return accountEditWindow;
         }
 
         public Window CreateTransactionCreateWindow()
         {
             FinancierDbContext dbContext = IoC.ServiceProvider.Instance.GetRequiredService<FinancierDbContext>();
-            ITransactionEditViewModel transactionEditViewModel = new TransactionEditViewModel(dbContext);
-            Window transactionEditWindow = new TransactionEditWindow(transactionEditViewModel);
+            var transactionEditViewModel = new TransactionEditViewModel(dbContext);
+            var transactionEditWindow = new TransactionEditWindow(transactionEditViewModel);
 
             return transactionEditWindow;
         }
@@ -49,8 +55,8 @@ namespace Financier.Desktop.Services
         public Window CreateTransactionEditWindow(int transactionId)
         {
             FinancierDbContext dbContext = IoC.ServiceProvider.Instance.GetRequiredService<FinancierDbContext>();
-            ITransactionEditViewModel transactionEditViewModel = new TransactionEditViewModel(dbContext, transactionId);
-            Window transactionEditWindow = new TransactionEditWindow(transactionEditViewModel);
+            var transactionEditViewModel = new TransactionEditViewModel(dbContext, transactionId);
+            var transactionEditWindow = new TransactionEditWindow(transactionEditViewModel);
 
             return transactionEditWindow;
         }

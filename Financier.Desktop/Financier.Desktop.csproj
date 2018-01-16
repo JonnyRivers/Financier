@@ -121,12 +121,16 @@
     <Compile Include="Services\IWindowFactory.cs" />
     <Compile Include="Services\WindowFactory.cs" />
     <Compile Include="ViewModels\AccountCreateViewModel.cs" />
+    <Compile Include="ViewModels\AccountEditViewModel.cs" />
     <Compile Include="ViewModels\AccountItemViewModel.cs" />
     <Compile Include="ViewModels\AccountListViewModel.cs" />
+    <Compile Include="ViewModels\AccountOverviewViewModel.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\IAccountCreateViewModel.cs" />
+    <Compile Include="ViewModels\IAccountEditViewModel.cs" />
     <Compile Include="ViewModels\IAccountItemViewModel.cs" />
     <Compile Include="ViewModels\IAccountListViewModel.cs" />
+    <Compile Include="ViewModels\IAccountOverviewViewModel.cs" />
     <Compile Include="ViewModels\IMainWindowViewModel.cs" />
     <Compile Include="ViewModels\ITransactionEditViewModel.cs" />
     <Compile Include="ViewModels\ITransactionListViewModel.cs" />
@@ -138,8 +142,14 @@
     <Compile Include="Views\AccountCreateWindow.xaml.cs">
       <DependentUpon>AccountCreateWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\AccountEditWindow.xaml.cs">
+      <DependentUpon>AccountEditWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\AccountListControl.xaml.cs">
       <DependentUpon>AccountListControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\AccountOverviewControl.xaml.cs">
+      <DependentUpon>AccountOverviewControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -158,9 +168,17 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\AccountEditWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\AccountListControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\AccountOverviewControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

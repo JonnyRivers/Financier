@@ -13,6 +13,7 @@ namespace Financier.Desktop.Services
         Window CreateMainWindow();
 
         Window CreateAccountCreateWindow();
+        Window CreateAccountEditWindow(int accountId);
 
         Window CreateTransactionCreateWindow();
         Window CreateTransactionEditWindow(int transactionId);
