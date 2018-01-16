@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Financier.Desktop.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="810">
+             d:DesignHeight="600" d:DesignWidth="910">
     <UserControl.Resources>
         <DataTemplate x:Key="AccountFilterComboBoxItemTemplate">
             <StackPanel>
@@ -26,6 +26,9 @@
                       ItemsSource="{Binding AccountFilters}" 
                       SelectedItem="{Binding SelectedAccountFilter}"
                       ItemTemplate="{StaticResource AccountFilterComboBoxItemTemplate}"/>
+            <CheckBox Margin="5" 
+                      IsChecked="{Binding IncludeLogicalAccounts}" 
+                      IsEnabled="{Binding AccountFilterHasLogicalAccounts}">Include Logical Accounts</CheckBox>
         </StackPanel>
         <StackPanel Margin="5" Grid.Row="1" Orientation="Horizontal">
             <TextBlock Margin="5">Actions:</TextBlock>
@@ -36,10 +39,11 @@
         <ListView Grid.Row="2" SelectedItem="{Binding SelectedTransaction}" ItemsSource="{Binding Transactions}">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Credit Account" Width="250" DisplayMemberBinding="{Binding CreditAccountName}"/>
-                    <GridViewColumn Header="Debit Account" Width="250" DisplayMemberBinding="{Binding DebitAccountName}"/>
-                    <GridViewColumn Header="Amount" Width="100" DisplayMemberBinding="{Binding Amount}"/>
+                    <GridViewColumn Header="Credit Account" Width="240" DisplayMemberBinding="{Binding CreditAccountName}"/>
+                    <GridViewColumn Header="Debit Account" Width="240" DisplayMemberBinding="{Binding DebitAccountName}"/>
                     <GridViewColumn Header="At" Width="160" DisplayMemberBinding="{Binding At}"/>
+                    <GridViewColumn Header="Amount" Width="100" DisplayMemberBinding="{Binding Amount}"/>
+                    <GridViewColumn Header="Balance" Width="100" DisplayMemberBinding="{Binding Balance}"/>
                 </GridView>
             </ListView.View>
         </ListView>

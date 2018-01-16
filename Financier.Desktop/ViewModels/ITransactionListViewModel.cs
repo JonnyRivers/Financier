@@ -12,6 +12,8 @@ namespace Financier.Desktop.ViewModels
     {
         IEnumerable<ITransactionAccountFilterViewModel> AccountFilters { get; }
         ITransactionAccountFilterViewModel SelectedAccountFilter { get; }
+        bool IncludeLogicalAccounts { get; }
+        bool AccountFilterHasLogicalAccounts { get; }
 
         ObservableCollection<ITransactionItemViewModel> Transactions { get; }
         ITransactionItemViewModel SelectedTransaction { get; }
