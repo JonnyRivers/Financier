@@ -3,6 +3,5 @@
     public interface IAccountEditViewModel
     {
         IAccountOverviewViewModel AccountOverviewViewModel { get; }
-        ITransactionListViewModel TransactionListViewModel { get; }
     }
 }

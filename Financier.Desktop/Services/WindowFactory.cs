@@ -36,8 +36,7 @@ namespace Financier.Desktop.Services
         {
             FinancierDbContext dbContext = IoC.ServiceProvider.Instance.GetRequiredService<FinancierDbContext>();
             var accountOverviewViewModel = new AccountOverviewViewModel(dbContext, accountId);
-            var transactionListViewModel = new TransactionListViewModel(dbContext, accountId);
-            var accountEditViewModel = new AccountEditViewModel(accountOverviewViewModel, transactionListViewModel);
+            var accountEditViewModel = new AccountEditViewModel(accountOverviewViewModel);
             var accountEditWindow = new AccountEditWindow(accountEditViewModel);
 
             return accountEditWindow;

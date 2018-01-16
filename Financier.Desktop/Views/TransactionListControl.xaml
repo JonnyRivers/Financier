@@ -6,17 +6,34 @@
              xmlns:local="clr-namespace:Financier.Desktop.Views"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="810">
+    <UserControl.Resources>
+        <DataTemplate x:Key="AccountFilterComboBoxItemTemplate">
+            <StackPanel>
+                <TextBlock Text="{Binding Name}"/>
+            </StackPanel>
+        </DataTemplate>
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <StackPanel Margin="5" Grid.Row="0" Orientation="Horizontal">
+            <TextBlock Margin="5">Account Filter: </TextBlock>
+            <ComboBox Margin="5" 
+                      Width="200"
+                      ItemsSource="{Binding AccountFilters}" 
+                      SelectedItem="{Binding SelectedAccountFilter}"
+                      ItemTemplate="{StaticResource AccountFilterComboBoxItemTemplate}"/>
+        </StackPanel>
+        <StackPanel Margin="5" Grid.Row="1" Orientation="Horizontal">
+            <TextBlock Margin="5">Actions:</TextBlock>
             <Button Margin="5" Command="{Binding CreateCommand}">Create New Transaction</Button>
             <Button Margin="5" Command="{Binding EditCommand}">Edit Selected Transaction</Button>
             <Button Margin="5" Command="{Binding DeleteCommand}">Delete Selected Transaction</Button>
         </StackPanel>
-        <ListView Grid.Row="1" SelectedItem="{Binding SelectedTransaction}" ItemsSource="{Binding Transactions}">
+        <ListView Grid.Row="2" SelectedItem="{Binding SelectedTransaction}" ItemsSource="{Binding Transactions}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Credit Account" Width="250" DisplayMemberBinding="{Binding CreditAccountName}"/>

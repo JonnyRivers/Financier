@@ -12,7 +12,7 @@
                 <views:AccountOverviewControl DataContext="{Binding AccountOverviewViewModel}"/>
             </TabItem>
             <TabItem Header="Transactions">
-                <views:TransactionListControl DataContext="{Binding TransactionListViewModel}"/>
+                
             </TabItem>
             <TabItem Header="Relationships">
                 

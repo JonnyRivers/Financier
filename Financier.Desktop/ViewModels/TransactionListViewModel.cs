@@ -16,22 +16,56 @@ namespace Financier.Desktop.ViewModels
 {
     public class TransactionListViewModel : BaseViewModel, ITransactionListViewModel
     {
-        public TransactionListViewModel(FinancierDbContext dbContext) : this(dbContext, 0)
-        {
-        }
-
-        public TransactionListViewModel(FinancierDbContext dbContext, int accountId)
+        public TransactionListViewModel(FinancierDbContext dbContext)
         {
             m_dbContext = dbContext;
-            m_accountId = accountId;
+
+            List<Account> accounts = m_dbContext.Accounts.ToList();
+            HashSet<int> accountIdsWithLogicalRelationships = new HashSet<int>(
+                m_dbContext.AccountRelationships
+                    .Where(ar => ar.Type == AccountRelationshipType.PhysicalToLogical)
+                    .Select(ar => ar.SourceAccountId)
+            );
+
+            var accountFilters = new List<ITransactionAccountFilterViewModel>();
+            m_nullAccountFilter = new TransactionAccountFilterViewModel(0, "(All Accounts)", false);
+            accountFilters.Add(m_nullAccountFilter);
+            accountFilters.AddRange(
+                accounts
+                    .OrderBy(a => a.Name)
+                    .Select(a =>
+                        new TransactionAccountFilterViewModel(
+                            a.AccountId,
+                            a.Name,
+                            accountIdsWithLogicalRelationships.Contains(a.AccountId)))
+            );
+            AccountFilters = accountFilters;
+            SelectedAccountFilter = m_nullAccountFilter;
 
             PopulateTransactions();
         }
 
         private FinancierDbContext m_dbContext;
-        private int m_accountId;
 
+        private ITransactionAccountFilterViewModel m_nullAccountFilter;
+        private ITransactionAccountFilterViewModel m_selectedAccountFilter;
         private ITransactionItemViewModel m_selectedTransaction;
+
+        public IEnumerable<ITransactionAccountFilterViewModel> AccountFilters { get; }
+        public ITransactionAccountFilterViewModel SelectedAccountFilter
+        {
+            get { return m_selectedAccountFilter; }
+            set
+            {
+                if (m_selectedAccountFilter != value)
+                {
+                    m_selectedAccountFilter = value;
+
+                    OnPropertyChanged();
+                    PopulateTransactions();
+                }
+            }
+        }
 
         public ObservableCollection<ITransactionItemViewModel> Transactions { get; set; }
         public ITransactionItemViewModel SelectedTransaction
@@ -110,7 +144,7 @@ namespace Financier.Desktop.ViewModels
 
         private void PopulateTransactions()
         {
-            if (m_accountId == 0)
+            if (SelectedAccountFilter == m_nullAccountFilter)
             {
                 IEnumerable<ITransactionItemViewModel> transactionVMs = m_dbContext.Transactions
                 .OrderByDescending(t => t.TransactionId)
@@ -128,7 +162,7 @@ namespace Financier.Desktop.ViewModels
             {
                 IEnumerable<ITransactionItemViewModel> transactionVMs = m_dbContext.Transactions
                 .OrderByDescending(t => t.TransactionId)
-                .Where(t => t.CreditAccountId == m_accountId || t.DebitAccountId == m_accountId)
+                .Where(t => t.CreditAccountId == SelectedAccountFilter.AccountId || t.DebitAccountId == SelectedAccountFilter.AccountId)
                 .Take(20)
                 .Select(t =>
                     new TransactionItemViewModel(

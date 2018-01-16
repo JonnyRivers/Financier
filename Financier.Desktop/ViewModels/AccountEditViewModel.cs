@@ -3,16 +3,13 @@
     public class AccountEditViewModel : IAccountEditViewModel
     {
         public AccountEditViewModel(
-            IAccountOverviewViewModel accountOverviewViewModel,
-            ITransactionListViewModel transactionListViewModel
+            IAccountOverviewViewModel accountOverviewViewModel
             
         )
         {
             AccountOverviewViewModel = accountOverviewViewModel;
-            TransactionListViewModel = transactionListViewModel;
         }
 
         public IAccountOverviewViewModel AccountOverviewViewModel { get; }
-        public ITransactionListViewModel TransactionListViewModel { get; }
     }
 }
