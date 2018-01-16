@@ -16,14 +16,20 @@ namespace Financier.Desktop.ViewModels
 {
     public class TransactionListViewModel : BaseViewModel, ITransactionListViewModel
     {
-        public TransactionListViewModel(FinancierDbContext dbContext)
+        public TransactionListViewModel(FinancierDbContext dbContext) : this(dbContext, 0)
+        {
+        }
+
+        public TransactionListViewModel(FinancierDbContext dbContext, int accountId)
         {
             m_dbContext = dbContext;
+            m_accountId = accountId;
 
             PopulateTransactions();
         }
 
         private FinancierDbContext m_dbContext;
+        private int m_accountId;
 
         private ITransactionItemViewModel m_selectedTransaction;
 
@@ -104,7 +110,9 @@ namespace Financier.Desktop.ViewModels
 
         private void PopulateTransactions()
         {
-            IEnumerable<ITransactionItemViewModel> transactionVMs = m_dbContext.Transactions
+            if (m_accountId == 0)
+            {
+                IEnumerable<ITransactionItemViewModel> transactionVMs = m_dbContext.Transactions
                 .OrderByDescending(t => t.TransactionId)
                 .Take(20)
                 .Select(t =>
@@ -114,7 +122,24 @@ namespace Financier.Desktop.ViewModels
                         t.DebitAccount.Name,
                         t.Amount,
                         t.At));
-            Transactions = new ObservableCollection<ITransactionItemViewModel>(transactionVMs);
+                Transactions = new ObservableCollection<ITransactionItemViewModel>(transactionVMs);
+            }
+            else
+            {
+                IEnumerable<ITransactionItemViewModel> transactionVMs = m_dbContext.Transactions
+                .OrderByDescending(t => t.TransactionId)
+                .Where(t => t.CreditAccountId == m_accountId || t.DebitAccountId == m_accountId)
+                .Take(20)
+                .Select(t =>
+                    new TransactionItemViewModel(
+                        t.TransactionId,
+                        t.CreditAccount.Name,
+                        t.DebitAccount.Name,
+                        t.Amount,
+                        t.At));
+                Transactions = new ObservableCollection<ITransactionItemViewModel>(transactionVMs);
+            }
+            
             OnPropertyChanged(nameof(Transactions));
         }
     }
