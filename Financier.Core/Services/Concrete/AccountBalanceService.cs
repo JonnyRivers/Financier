@@ -29,7 +29,7 @@ namespace Financier.Services
 
             decimal creditBalance = creditTransactions.Sum(t => t.Amount);
             decimal debitBalance = debitTransactions.Sum(t => t.Amount);
-            decimal balance = creditBalance - debitBalance;
+            decimal balance = debitBalance - creditBalance;
 
             return balance;
         }

@@ -1,6 +1,7 @@
 ﻿using Financier.Data;
 using Financier.Desktop.ViewModels;
 using Financier.Desktop.Views;
+using Financier.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
@@ -18,8 +19,10 @@ namespace Financier.Desktop.Services
         {
             ILogger<MainWindow> mainWindowLogger = IoC.ServiceProvider.Instance.GetRequiredService<ILogger<MainWindow>>();
             FinancierDbContext dbContext = IoC.ServiceProvider.Instance.GetRequiredService<FinancierDbContext>();
+            IAccountBalanceService accountBalanceService = IoC.ServiceProvider.Instance.GetRequiredService<IAccountBalanceService>();
+            IAccountListViewModel accountListViewModel = new AccountListViewModel(dbContext, accountBalanceService);
             ITransactionListViewModel transactionListViewModel = new TransactionListViewModel(dbContext);
-            MainWindowViewModel mainWindowViewModel = new MainWindowViewModel(transactionListViewModel);
+            MainWindowViewModel mainWindowViewModel = new MainWindowViewModel(accountListViewModel, transactionListViewModel);
             Window mainWindow = new MainWindow(mainWindowLogger, mainWindowViewModel);
 
             return mainWindow;

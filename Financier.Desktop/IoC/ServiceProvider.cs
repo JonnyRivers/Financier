@@ -2,6 +2,7 @@
 using Financier.Desktop.Services;
 using Financier.Desktop.ViewModels;
 using Financier.Desktop.Views;
+using Financier.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -44,6 +45,8 @@ namespace Financier.Desktop.IoC
             serviceCollection.AddDbContext<FinancierDbContext>(
                 options => options.UseSqlServer(connectionString),
                 ServiceLifetime.Transient);
+
+            serviceCollection.AddTransient<IAccountBalanceService, AccountBalanceService>();
 
             serviceCollection.AddTransient<IWindowFactory, WindowFactory>();
 

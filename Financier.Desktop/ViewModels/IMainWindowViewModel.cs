@@ -9,6 +9,7 @@ namespace Financier.Desktop.ViewModels
 {
     public interface IMainWindowViewModel
     {
+        IAccountListViewModel AccountListViewModel { get; }
         ITransactionListViewModel TransactionListViewModel { get; }
     }
 }

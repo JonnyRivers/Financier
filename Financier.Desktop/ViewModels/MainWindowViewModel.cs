@@ -1,20 +1,17 @@
-﻿using Financier.Data;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Financier.Desktop.ViewModels
+﻿namespace Financier.Desktop.ViewModels
 {
     public class MainWindowViewModel : BaseViewModel, IMainWindowViewModel
     {
-        public MainWindowViewModel(ITransactionListViewModel transactionListViewModel)
+        public MainWindowViewModel(
+            IAccountListViewModel accountListViewModel,
+            ITransactionListViewModel transactionListViewModel
+        )
         {
+            AccountListViewModel = accountListViewModel;
             TransactionListViewModel = transactionListViewModel;
         }
 
+        public IAccountListViewModel AccountListViewModel { get; }
         public ITransactionListViewModel TransactionListViewModel { get; }
     }
 }

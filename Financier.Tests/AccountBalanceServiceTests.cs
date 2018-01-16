@@ -100,7 +100,7 @@ namespace Financier.Tests
 
                 decimal checkingAccountBalance = accountBalanceService.GetBalance(checkingAccount.AccountId);
 
-                Assert.AreEqual(-100m, checkingAccountBalance);
+                Assert.AreEqual(100m, checkingAccountBalance);
             }
         }
 
@@ -182,7 +182,7 @@ namespace Financier.Tests
 
                 decimal checkingAccountBalance = accountBalanceService.GetBalance(checkingAccount.AccountId);
 
-                Assert.AreEqual(-100m, checkingAccountBalance);
+                Assert.AreEqual(100m, checkingAccountBalance);
             }
         }
     }

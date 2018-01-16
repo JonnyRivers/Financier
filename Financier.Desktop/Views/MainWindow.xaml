@@ -8,6 +8,9 @@
         Title="Financier for Windows™" Height="400" Width="810">
     <Grid>
         <TabControl>
+            <TabItem Header="Accounts">
+                <views:AccountListControl DataContext="{Binding AccountListViewModel}"/>
+            </TabItem>
             <TabItem Header="Transactions">
                 <views:TransactionListControl DataContext="{Binding TransactionListViewModel}"/>
             </TabItem>
