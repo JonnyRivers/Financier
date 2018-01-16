@@ -28,6 +28,15 @@ namespace Financier.Desktop.Services
             return mainWindow;
         }
 
+        public Window CreateAccountCreateWindow()
+        {
+            FinancierDbContext dbContext = IoC.ServiceProvider.Instance.GetRequiredService<FinancierDbContext>();
+            IAccountCreateViewModel accountCreateViewModel = new AccountCreateViewModel(dbContext);
+            Window transactionEditWindow = new AccountCreateWindow(accountCreateViewModel);
+
+            return transactionEditWindow;
+        }
+
         public Window CreateTransactionCreateWindow()
         {
             FinancierDbContext dbContext = IoC.ServiceProvider.Instance.GetRequiredService<FinancierDbContext>();

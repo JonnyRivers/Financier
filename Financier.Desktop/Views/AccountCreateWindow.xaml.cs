@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace Financier.Desktop.Views
 {
     /// <summary>
-    /// Interaction logic for TransactionWindow.xaml
+    /// Interaction logic for AccountCreateWindow.xaml
     /// </summary>
-    public partial class TransactionEditWindow : Window
+    public partial class AccountCreateWindow : Window
     {
-        public TransactionEditWindow(ITransactionEditViewModel viewModel)
+        public AccountCreateWindow(IAccountCreateViewModel viewModel)
         {
             InitializeComponent();
 

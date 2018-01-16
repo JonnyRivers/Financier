@@ -1,9 +1,12 @@
 ﻿using Financier.Data;
 using Financier.Desktop.Commands;
+using Financier.Desktop.Services;
 using Financier.Services;
+using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Financier.Desktop.ViewModels
@@ -44,7 +47,15 @@ namespace Financier.Desktop.ViewModels
 
         private void CreateExecute(object obj)
         {
-            
+            IWindowFactory windowFactory = IoC.ServiceProvider.Instance.GetRequiredService<IWindowFactory>();
+            Window accountCreateWindow = windowFactory.CreateAccountCreateWindow();
+
+            bool? result = accountCreateWindow.ShowDialog();
+
+            if (result.HasValue && result.Value)
+            {
+                PopulateAccounts();
+            }
         }
 
         private void EditExecute(object obj)
