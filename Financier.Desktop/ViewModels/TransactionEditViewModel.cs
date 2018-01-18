@@ -3,40 +3,36 @@ using Financier.Desktop.Commands;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace Financier.Desktop.ViewModels
 {
     public class TransactionEditViewModel : BaseViewModel, ITransactionEditViewModel
     {
-        public TransactionEditViewModel(FinancierDbContext dbContext)
-        {
-            m_dbContext = dbContext;
-            m_transactionId = 0;
-
-            Accounts = m_dbContext.Accounts.OrderBy(a => a.Name).ToList();
-
-            // TODO: take selections from last transaction?
-            SelectedCreditAccount = Accounts.First();// TODO: handle no accounts
-            SelectedDebitAccount = Accounts.First();// TODO: handle no accounts
-            Amount = 0m;
-            At = DateTime.Now;
-        }
-
-        public TransactionEditViewModel(FinancierDbContext dbContext, int transactionId)
+        public TransactionEditViewModel(FinancierDbContext dbContext, int transactionId = 0)
         {
             m_dbContext = dbContext;
             m_transactionId = transactionId;
 
-            Transaction transaction = m_dbContext.Transactions.Single(t => t.TransactionId == m_transactionId);
             Accounts = m_dbContext.Accounts.OrderBy(a => a.Name).ToList();
 
-            SelectedCreditAccount = Accounts.Single(a => a.AccountId == transaction.CreditAccountId);
-            SelectedDebitAccount = Accounts.Single(a => a.AccountId == transaction.DebitAccountId);
-            Amount = transaction.Amount;
-            At = transaction.At;
+            if (m_transactionId != 0)
+            {
+                Transaction transaction = m_dbContext.Transactions.Single(t => t.TransactionId == m_transactionId);
+
+                SelectedCreditAccount = Accounts.Single(a => a.AccountId == transaction.CreditAccountId);
+                SelectedDebitAccount = Accounts.Single(a => a.AccountId == transaction.DebitAccountId);
+                Amount = transaction.Amount;
+                At = transaction.At;
+            }
+            else
+            {
+                // TODO: take selections from last transaction?
+                SelectedCreditAccount = Accounts.First();// TODO: handle no accounts
+                SelectedDebitAccount = Accounts.First();// TODO: handle no accounts
+                Amount = 0m;
+                At = DateTime.Now;
+            }
         }
 
         private FinancierDbContext m_dbContext;
@@ -121,7 +117,7 @@ namespace Financier.Desktop.ViewModels
                 transaction.DebitAccountId = SelectedDebitAccount.AccountId;
                 transaction.Amount = Amount;
                 transaction.At = At;
-                m_dbContext.SaveChanges();
+                
             }
             else
             {
@@ -133,8 +129,9 @@ namespace Financier.Desktop.ViewModels
                     At = At,
                 };
                 m_dbContext.Transactions.Add(transaction);
-                m_dbContext.SaveChanges();
             }
+
+            m_dbContext.SaveChanges();
         }
 
         private void CancelExecute(object obj)

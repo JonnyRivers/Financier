@@ -50,7 +50,7 @@ namespace Financier.Desktop.IoC
 
             serviceCollection.AddTransient<IWindowFactory, WindowFactory>();
 
-            // Constructing view models and models via the service provider seems like a step too far
+            // Constructing view models and views via the service provider seems like a step too far
 
             IServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
 

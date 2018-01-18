@@ -26,17 +26,16 @@ namespace Financier.Desktop.Services
         public Window CreateAccountCreateWindow()
         {
             FinancierDbContext dbContext = IoC.ServiceProvider.Instance.GetRequiredService<FinancierDbContext>();
-            var accountCreateViewModel = new AccountCreateViewModel(dbContext);
-            var transactionEditWindow = new AccountCreateWindow(accountCreateViewModel);
+            var accountEditViewModel = new AccountEditViewModel(dbContext);
+            var accountEditWindow = new AccountEditWindow(accountEditViewModel);
 
-            return transactionEditWindow;
+            return accountEditWindow;
         }
 
         public Window CreateAccountEditWindow(int accountId)
         {
             FinancierDbContext dbContext = IoC.ServiceProvider.Instance.GetRequiredService<FinancierDbContext>();
-            var accountOverviewViewModel = new AccountOverviewViewModel(dbContext, accountId);
-            var accountEditViewModel = new AccountEditViewModel(accountOverviewViewModel);
+            var accountEditViewModel = new AccountEditViewModel(dbContext, accountId);
             var accountEditWindow = new AccountEditWindow(accountEditViewModel);
 
             return accountEditWindow;
