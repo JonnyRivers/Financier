@@ -123,12 +123,10 @@
     <Compile Include="ViewModels\Concrete\AccountEditViewModel.cs" />
     <Compile Include="ViewModels\Concrete\AccountItemViewModel.cs" />
     <Compile Include="ViewModels\Concrete\AccountListViewModel.cs" />
-    <Compile Include="ViewModels\Concrete\AccountOverviewViewModel.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IAccountEditViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IAccountItemViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IAccountListViewModel.cs" />
-    <Compile Include="ViewModels\Abstract\IAccountOverviewViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IMainWindowViewModel.cs" />
     <Compile Include="ViewModels\Abstract\ITransactionAccountFilterViewModel.cs" />
     <Compile Include="ViewModels\Abstract\ITransactionEditViewModel.cs" />
@@ -144,9 +142,6 @@
     </Compile>
     <Compile Include="Views\AccountListControl.xaml.cs">
       <DependentUpon>AccountListControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\AccountOverviewControl.xaml.cs">
-      <DependentUpon>AccountOverviewControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -168,10 +163,6 @@
     <Page Include="Views\AccountListControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\AccountOverviewControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

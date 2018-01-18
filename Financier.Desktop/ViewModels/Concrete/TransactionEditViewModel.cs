@@ -1,5 +1,7 @@
 ﻿using Financier.Data;
 using Financier.Desktop.Commands;
+using Financier.Services;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,12 +11,17 @@ namespace Financier.Desktop.ViewModels
 {
     public class TransactionEditViewModel : BaseViewModel, ITransactionEditViewModel
     {
-        public TransactionEditViewModel(FinancierDbContext dbContext)
+        public TransactionEditViewModel(
+            ILogger<TransactionEditViewModel> logger, 
+            IAccountService accountService,
+            ITransactionService transactionService)
         {
-            m_dbContext = dbContext;
+            m_logger = logger;
+            m_accountService = accountService;
+            m_transactionService = transactionService;
             m_transactionId = 0;
 
-            Accounts = m_dbContext.Accounts.OrderBy(a => a.Name).ToList();
+            Accounts = m_accountService.GetAll().OrderBy(a => a.Name).ToList();
 
             // TODO: take selections from last transaction?
             SelectedCreditAccount = Accounts.First();// TODO: handle no accounts
@@ -23,7 +30,9 @@ namespace Financier.Desktop.ViewModels
             At = DateTime.Now;
         }
 
-        private FinancierDbContext m_dbContext;
+        private ILogger<TransactionEditViewModel> m_logger;
+        private IAccountService m_accountService;
+        private ITransactionService m_transactionService;
 
         private int m_transactionId;
         private Account m_selectedCreditAccount;
@@ -42,7 +51,7 @@ namespace Financier.Desktop.ViewModels
                 {
                     m_transactionId = value;
 
-                    Transaction transaction = m_dbContext.Transactions.Single(t => t.TransactionId == m_transactionId);
+                    Transaction transaction = m_transactionService.Get(m_transactionId);
 
                     SelectedCreditAccount = Accounts.Single(a => a.AccountId == transaction.CreditAccountId);
                     SelectedDebitAccount = Accounts.Single(a => a.AccountId == transaction.DebitAccountId);
@@ -119,12 +128,13 @@ namespace Financier.Desktop.ViewModels
         {
             if (m_transactionId != 0)
             {
-                Transaction transaction = m_dbContext.Transactions.Single(t => t.TransactionId == m_transactionId);
+                Transaction transaction = m_transactionService.Get(m_transactionId);
                 transaction.CreditAccountId = SelectedCreditAccount.AccountId;
                 transaction.DebitAccountId = SelectedDebitAccount.AccountId;
                 transaction.Amount = Amount;
                 transaction.At = At;
-                
+
+                m_transactionService.Update(transaction);
             }
             else
             {
@@ -135,10 +145,9 @@ namespace Financier.Desktop.ViewModels
                     Amount = Amount,
                     At = At,
                 };
-                m_dbContext.Transactions.Add(transaction);
-            }
 
-            m_dbContext.SaveChanges();
+                m_transactionService.Create(transaction);
+            }
         }
 
         private void CancelExecute(object obj)

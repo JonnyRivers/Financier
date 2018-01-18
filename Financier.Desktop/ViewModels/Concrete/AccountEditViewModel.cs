@@ -1,5 +1,6 @@
 ﻿using Financier.Data;
 using Financier.Desktop.Commands;
+using Financier.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,20 +10,22 @@ namespace Financier.Desktop.ViewModels
 {
     public class AccountEditViewModel : IAccountEditViewModel
     {
-        public AccountEditViewModel(FinancierDbContext dbContext)
+        public AccountEditViewModel(IAccountService accountService, ICurrencyService currencyService)
         {
-            m_dbContext = dbContext;
+            m_accountService = accountService;
+            m_currencyService = currencyService;
             m_accountId = 0;
 
             AccountTypes = Enum.GetValues(typeof(AccountType)).Cast<AccountType>();
-            Currencies = m_dbContext.Currencies.ToList();
+            Currencies = m_currencyService.GetAll();
 
             Name = "New Account";
             SelectedAccountType = AccountType.Asset;
-            SelectedCurrency = Currencies.Single(c => c.IsPrimary);
+            SelectedCurrency = m_currencyService.GetPrimary();
         }
 
-        private FinancierDbContext m_dbContext;
+        private IAccountService m_accountService;
+        private ICurrencyService m_currencyService;
         private int m_accountId;
 
         public IEnumerable<AccountType> AccountTypes { get; }
@@ -37,7 +40,7 @@ namespace Financier.Desktop.ViewModels
                 {
                     m_accountId = value;
 
-                    Account account = m_dbContext.Accounts.Single(a => a.AccountId == m_accountId);
+                    Account account = m_accountService.Get(m_accountId);
                     Name = account.Name;
                     SelectedAccountType = account.Type;
                     SelectedCurrency = account.Currency;
@@ -56,11 +59,12 @@ namespace Financier.Desktop.ViewModels
         {
             if (m_accountId != 0)
             {
-                Account account = m_dbContext.Accounts.Single(a => a.AccountId == m_accountId);
+                Account account = m_accountService.Get(m_accountId);
                 account.Name = Name;
                 account.Type = SelectedAccountType;
                 account.CurrencyId = SelectedCurrency.CurrencyId;
-                
+
+                m_accountService.Update(account);
             }
             else
             {
@@ -70,10 +74,9 @@ namespace Financier.Desktop.ViewModels
                     Type = SelectedAccountType,
                     CurrencyId = SelectedCurrency.CurrencyId
                 };
-                m_dbContext.Accounts.Add(account);
-            }
 
-            m_dbContext.SaveChanges();
+                m_accountService.Create(account);
+            }
         }
 
         private void CancelExecute(object obj)

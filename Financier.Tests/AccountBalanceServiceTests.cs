@@ -7,13 +7,13 @@ using System;
 namespace Financier.Tests
 {
     [TestClass]
-    public class AccountBalanceServiceTests
+    public class AccountServiceTests
     {
         [TestMethod]
         public void TestGetBalanceNoTransactions()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<AccountBalanceService> logger = loggerFactory.CreateLogger<AccountBalanceService>();
+            ILogger<AccountService> logger = loggerFactory.CreateLogger<AccountService>();
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
@@ -38,9 +38,9 @@ namespace Financier.Tests
                 sqliteMemoryWrapper.DbContext.Accounts.Add(checkingAccount);
                 sqliteMemoryWrapper.DbContext.SaveChanges();
 
-                var accountBalanceService = new AccountBalanceService(logger, sqliteMemoryWrapper.DbContext);
+                var accountService = new AccountService(logger, sqliteMemoryWrapper.DbContext);
 
-                decimal checkingAccountBalance = accountBalanceService.GetBalance(checkingAccount.AccountId);
+                decimal checkingAccountBalance = accountService.GetBalance(checkingAccount.AccountId);
 
                 Assert.AreEqual(0, checkingAccountBalance);
             }
@@ -50,7 +50,7 @@ namespace Financier.Tests
         public void TestGetBalanceUnlinked()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<AccountBalanceService> logger = loggerFactory.CreateLogger<AccountBalanceService>();
+            ILogger<AccountService> logger = loggerFactory.CreateLogger<AccountService>();
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
@@ -96,9 +96,9 @@ namespace Financier.Tests
                 sqliteMemoryWrapper.DbContext.Transactions.AddRange(transactions);
                 sqliteMemoryWrapper.DbContext.SaveChanges();
 
-                var accountBalanceService = new AccountBalanceService(logger, sqliteMemoryWrapper.DbContext);
+                var accountService = new AccountService(logger, sqliteMemoryWrapper.DbContext);
 
-                decimal checkingAccountBalance = accountBalanceService.GetBalance(checkingAccount.AccountId);
+                decimal checkingAccountBalance = accountService.GetBalance(checkingAccount.AccountId);
 
                 Assert.AreEqual(100m, checkingAccountBalance);
             }
@@ -108,7 +108,7 @@ namespace Financier.Tests
         public void TestGetBalanceWithLogical()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<AccountBalanceService> logger = loggerFactory.CreateLogger<AccountBalanceService>();
+            ILogger<AccountService> logger = loggerFactory.CreateLogger<AccountService>();
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
@@ -178,9 +178,9 @@ namespace Financier.Tests
                 sqliteMemoryWrapper.DbContext.AccountRelationships.Add(checkingToRentPrepaymentRelationship);
                 sqliteMemoryWrapper.DbContext.SaveChanges();
 
-                var accountBalanceService = new AccountBalanceService(logger, sqliteMemoryWrapper.DbContext);
+                var accountService = new AccountService(logger, sqliteMemoryWrapper.DbContext);
 
-                decimal checkingAccountBalance = accountBalanceService.GetBalance(checkingAccount.AccountId);
+                decimal checkingAccountBalance = accountService.GetBalance(checkingAccount.AccountId);
 
                 Assert.AreEqual(100m, checkingAccountBalance);
             }

@@ -1,12 +1,11 @@
 ﻿using Financier.Data;
 using Financier.Desktop.Commands;
 using Financier.Desktop.Services;
-using Microsoft.Extensions.DependencyInjection;
+using Financier.Services;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows;
 using System.Windows.Input;
 
 namespace Financier.Desktop.ViewModels
@@ -14,19 +13,28 @@ namespace Financier.Desktop.ViewModels
     public class TransactionListViewModel : BaseViewModel, ITransactionListViewModel
     {
         private ILogger<AccountListViewModel> m_logger;
-        private FinancierDbContext m_dbContext;
+        private IAccountService m_accountService;
+        private IAccountRelationshipService m_accountRelationshipService;
+        private ITransactionService m_transactionService;
         private IViewService m_viewService;
 
-        public TransactionListViewModel(ILogger<AccountListViewModel> logger, FinancierDbContext dbContext, IViewService viewService)
+        public TransactionListViewModel(
+            ILogger<AccountListViewModel> logger, 
+            IAccountService accountService,
+            IAccountRelationshipService accountRelationshipService,
+            ITransactionService transactionService,
+            IViewService viewService)
         {
             m_logger = logger;
-            m_dbContext = dbContext;
+            m_accountService = accountService;
+            m_accountRelationshipService = accountRelationshipService;
+            m_transactionService = transactionService;
             m_viewService = viewService;
 
-            List<Account> accounts = m_dbContext.Accounts.ToList();
+            IEnumerable<Account> accounts = m_accountService.GetAll();
             HashSet<int> accountIdsWithLogicalRelationships = new HashSet<int>(
-                m_dbContext.AccountRelationships
-                    .Where(ar => ar.Type == AccountRelationshipType.PhysicalToLogical)
+                m_accountRelationshipService
+                    .GetAll(AccountRelationshipType.PhysicalToLogical)
                     .Select(ar => ar.SourceAccountId)
             );
 
@@ -144,9 +152,7 @@ namespace Financier.Desktop.ViewModels
         {
             if(m_viewService.OpenTransactionDeleteConfirmationView())
             {
-                Transaction transaction = m_dbContext.Transactions.Single(t => t.TransactionId == SelectedTransaction.TransactionId);
-                m_dbContext.Transactions.Remove(transaction);
-                m_dbContext.SaveChanges();
+                m_transactionService.Delete(SelectedTransaction.TransactionId);
 
                 PopulateTransactions();
             }
@@ -161,38 +167,26 @@ namespace Financier.Desktop.ViewModels
         {
             if (SelectedAccountFilter == m_nullAccountFilter)
             {
-                IEnumerable<ITransactionItemViewModel> transactionVMs = m_dbContext.Transactions
-                .OrderByDescending(t => t.TransactionId)
-                .Take(100)
-                .Select(t =>
-                    new TransactionItemViewModel(
-                        t.TransactionId,
-                        t.CreditAccount.Name,
-                        t.DebitAccount.Name,
-                        t.At,
-                        t.Amount,
-                        0));
+                IEnumerable<Transaction> transactions = m_transactionService
+                    .GetAll()
+                    .OrderByDescending(t => t.TransactionId)
+                    .Take(100);
+                IEnumerable<ITransactionItemViewModel> transactionVMs = transactions
+                    .Select(t =>
+                        new TransactionItemViewModel(
+                            t.TransactionId,
+                            t.CreditAccount.Name,
+                            t.DebitAccount.Name,
+                            t.At,
+                            t.Amount,
+                            0));
                 Transactions = new ObservableCollection<ITransactionItemViewModel>(transactionVMs);
             }
             else
             {
-                var relevantAccountIds = new HashSet<int>();
-                relevantAccountIds.Add(SelectedAccountFilter.AccountId);
-                if (AccountFilterHasLogicalAccounts && IncludeLogicalAccounts)
-                {
-                    IEnumerable<int> logicalAccountIds = m_dbContext.AccountRelationships
-                        .Where(r => r.SourceAccountId == SelectedAccountFilter.AccountId &&
-                                    r.Type == AccountRelationshipType.PhysicalToLogical)
-                        .Select(r => r.DestinationAccountId);
-                    foreach (int logicalAccountId in logicalAccountIds)
-                        relevantAccountIds.Add(logicalAccountId);
-                }
-
-                List<Transaction> transactions = m_dbContext.Transactions
-                    .Where(t => relevantAccountIds.Contains(t.CreditAccountId) ||
-                                relevantAccountIds.Contains(t.DebitAccountId))
-                    .OrderBy(t => t.TransactionId)
-                    .ToList();
+                IEnumerable<Transaction> transactions = m_transactionService
+                    .GetAll(SelectedAccountFilter.AccountId, IncludeLogicalAccounts);
+                
                 var itemVMs = new List<ITransactionItemViewModel>();
                 decimal balance = 0;
                 foreach(Transaction transaction in transactions)

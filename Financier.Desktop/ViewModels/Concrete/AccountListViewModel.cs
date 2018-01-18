@@ -2,12 +2,10 @@
 using Financier.Desktop.Commands;
 using Financier.Desktop.Services;
 using Financier.Services;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows;
 using System.Windows.Input;
 
 namespace Financier.Desktop.ViewModels
@@ -15,19 +13,16 @@ namespace Financier.Desktop.ViewModels
     public class AccountListViewModel : BaseViewModel, IAccountListViewModel
     {
         private ILogger<AccountListViewModel> m_logger;
-        private FinancierDbContext m_dbContext;
-        private IAccountBalanceService m_accountBalanceService;
+        private IAccountService m_accountService;
         private IViewService m_viewService;
 
         public AccountListViewModel(
             ILogger<AccountListViewModel> logger,
-            FinancierDbContext dbContext, 
-            IAccountBalanceService accountBalanceService,
+            IAccountService accountService,
             IViewService viewService)
         {
             m_logger = logger;
-            m_dbContext = dbContext;
-            m_accountBalanceService = accountBalanceService;
+            m_accountService = accountService;
             m_viewService = viewService;
 
             PopulateAccounts();
@@ -77,9 +72,9 @@ namespace Financier.Desktop.ViewModels
 
         private void PopulateAccounts()
         {
-            // It is much more efficient to batch the balance retrieval.
-            // We are hitting the database for each account rather than once.
-            IEnumerable<IAccountItemViewModel> accountVMs = m_dbContext.Accounts
+            // TODO: batch balance retrieval
+            IEnumerable<Account> accounts = m_accountService.GetAll();
+            IEnumerable<IAccountItemViewModel> accountVMs = accounts
                 .OrderBy(a => a.Name)
                 .Select(a =>
                     new AccountItemViewModel(
@@ -87,7 +82,7 @@ namespace Financier.Desktop.ViewModels
                         a.Name,
                         a.Type,
                         a.Currency.Name,
-                        m_accountBalanceService.GetBalance(a.AccountId)));
+                        m_accountService.GetBalance(a.AccountId)));
             Accounts = new ObservableCollection<IAccountItemViewModel>(accountVMs);
             OnPropertyChanged(nameof(Accounts));
         }

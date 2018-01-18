@@ -46,10 +46,12 @@ namespace Financier.Desktop.IoC
                 options => options.UseSqlServer(connectionString),
                 ServiceLifetime.Transient);
 
-            serviceCollection.AddTransient<IAccountBalanceService, AccountBalanceService>();
-            
+            serviceCollection.AddTransient<IAccountService, AccountService>();
+            serviceCollection.AddTransient<ICurrencyService, CurrencyService>();
+
             serviceCollection.AddTransient<IViewService, ViewService>();
 
+            // TODO: some view models are constructed without IoC
             serviceCollection.AddTransient<IAccountEditViewModel, AccountEditViewModel>();
             serviceCollection.AddTransient<IAccountListViewModel, AccountListViewModel>();
             serviceCollection.AddTransient<ITransactionEditViewModel, TransactionEditViewModel>();
