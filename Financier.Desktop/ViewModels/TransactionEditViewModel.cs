@@ -9,30 +9,18 @@ namespace Financier.Desktop.ViewModels
 {
     public class TransactionEditViewModel : BaseViewModel, ITransactionEditViewModel
     {
-        public TransactionEditViewModel(FinancierDbContext dbContext, int transactionId = 0)
+        public TransactionEditViewModel(FinancierDbContext dbContext)
         {
             m_dbContext = dbContext;
-            m_transactionId = transactionId;
+            m_transactionId = 0;
 
             Accounts = m_dbContext.Accounts.OrderBy(a => a.Name).ToList();
 
-            if (m_transactionId != 0)
-            {
-                Transaction transaction = m_dbContext.Transactions.Single(t => t.TransactionId == m_transactionId);
-
-                SelectedCreditAccount = Accounts.Single(a => a.AccountId == transaction.CreditAccountId);
-                SelectedDebitAccount = Accounts.Single(a => a.AccountId == transaction.DebitAccountId);
-                Amount = transaction.Amount;
-                At = transaction.At;
-            }
-            else
-            {
-                // TODO: take selections from last transaction?
-                SelectedCreditAccount = Accounts.First();// TODO: handle no accounts
-                SelectedDebitAccount = Accounts.First();// TODO: handle no accounts
-                Amount = 0m;
-                At = DateTime.Now;
-            }
+            // TODO: take selections from last transaction?
+            SelectedCreditAccount = Accounts.First();// TODO: handle no accounts
+            SelectedDebitAccount = Accounts.First();// TODO: handle no accounts
+            Amount = 0m;
+            At = DateTime.Now;
         }
 
         private FinancierDbContext m_dbContext;
@@ -44,6 +32,25 @@ namespace Financier.Desktop.ViewModels
         private DateTime m_at;
 
         public IEnumerable<Account> Accounts { get; }
+
+        public int TransactionId
+        {
+            get { return m_transactionId; }
+            set
+            {
+                if (value != m_transactionId)
+                {
+                    m_transactionId = value;
+
+                    Transaction transaction = m_dbContext.Transactions.Single(t => t.TransactionId == m_transactionId);
+
+                    SelectedCreditAccount = Accounts.Single(a => a.AccountId == transaction.CreditAccountId);
+                    SelectedDebitAccount = Accounts.Single(a => a.AccountId == transaction.DebitAccountId);
+                    Amount = transaction.Amount;
+                    At = transaction.At;
+                }
+            }
+        }
 
         public Account SelectedCreditAccount
         {

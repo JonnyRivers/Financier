@@ -3,6 +3,7 @@ using Financier.Desktop.Commands;
 using Financier.Desktop.Services;
 using Financier.Services;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -13,16 +14,24 @@ namespace Financier.Desktop.ViewModels
 {
     public class AccountListViewModel : BaseViewModel, IAccountListViewModel
     {
-        public AccountListViewModel(FinancierDbContext dbContext, IAccountBalanceService accountBalanceService)
+        private ILogger<AccountListViewModel> m_logger;
+        private FinancierDbContext m_dbContext;
+        private IAccountBalanceService m_accountBalanceService;
+        private IViewService m_viewService;
+
+        public AccountListViewModel(
+            ILogger<AccountListViewModel> logger,
+            FinancierDbContext dbContext, 
+            IAccountBalanceService accountBalanceService,
+            IViewService viewService)
         {
+            m_logger = logger;
             m_dbContext = dbContext;
             m_accountBalanceService = accountBalanceService;
+            m_viewService = viewService;
 
             PopulateAccounts();
         }
-
-        private FinancierDbContext m_dbContext;
-        private IAccountBalanceService m_accountBalanceService;
 
         private IAccountItemViewModel m_selectedAccount;
 
@@ -47,12 +56,7 @@ namespace Financier.Desktop.ViewModels
 
         private void CreateExecute(object obj)
         {
-            IWindowFactory windowFactory = IoC.ServiceProvider.Instance.GetRequiredService<IWindowFactory>();
-            Window accountCreateWindow = windowFactory.CreateAccountCreateWindow();
-
-            bool? result = accountCreateWindow.ShowDialog();
-
-            if (result.HasValue && result.Value)
+            if (m_viewService.OpenAccountCreateView())
             {
                 PopulateAccounts();
             }
@@ -60,12 +64,10 @@ namespace Financier.Desktop.ViewModels
 
         private void EditExecute(object obj)
         {
-            IWindowFactory windowFactory = IoC.ServiceProvider.Instance.GetRequiredService<IWindowFactory>();
-            Window accountEditWindow = windowFactory.CreateAccountEditWindow(SelectedAccount.AccountId);
-
-            accountEditWindow.ShowDialog();
-
-            PopulateAccounts();
+            if (m_viewService.OpenAccountEditView(SelectedAccount.AccountId))
+            {
+                PopulateAccounts();
+            }
         }
 
         private bool EditCanExecute(object obj)

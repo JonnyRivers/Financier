@@ -13,6 +13,8 @@ namespace Financier.Desktop.ViewModels
         IEnumerable<AccountType> AccountTypes { get; }
         IEnumerable<Currency> Currencies { get; }
 
+        int AccountId { get; set; }
+
         string Name { get; set; }
         AccountType SelectedAccountType { get; set; }
         Currency SelectedCurrency { get; set; }

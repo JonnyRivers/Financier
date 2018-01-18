@@ -9,6 +9,8 @@ namespace Financier.Desktop.ViewModels
     {
         IEnumerable<Account> Accounts { get; }
 
+        int TransactionId { get; set; }
+
         Account SelectedCreditAccount { get; set; }
         Account SelectedDebitAccount { get; set; }
         decimal Amount { get; set; }

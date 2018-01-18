@@ -118,8 +118,8 @@
     </ApplicationDefinition>
     <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="IoC\ServiceProvider.cs" />
-    <Compile Include="Services\IWindowFactory.cs" />
-    <Compile Include="Services\WindowFactory.cs" />
+    <Compile Include="Services\IViewService.cs" />
+    <Compile Include="Services\ViewService.cs" />
     <Compile Include="ViewModels\AccountEditViewModel.cs" />
     <Compile Include="ViewModels\AccountItemViewModel.cs" />
     <Compile Include="ViewModels\AccountListViewModel.cs" />

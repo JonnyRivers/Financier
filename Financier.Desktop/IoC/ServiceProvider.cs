@@ -47,10 +47,16 @@ namespace Financier.Desktop.IoC
                 ServiceLifetime.Transient);
 
             serviceCollection.AddTransient<IAccountBalanceService, AccountBalanceService>();
+            
+            serviceCollection.AddTransient<IViewService, ViewService>();
 
-            serviceCollection.AddTransient<IWindowFactory, WindowFactory>();
-
-            // Constructing view models and views via the service provider seems like a step too far
+            serviceCollection.AddTransient<IAccountEditViewModel, AccountEditViewModel>();
+            serviceCollection.AddTransient<IAccountListViewModel, AccountListViewModel>();
+            serviceCollection.AddTransient<ITransactionEditViewModel, TransactionEditViewModel>();
+            serviceCollection.AddTransient<ITransactionListViewModel, TransactionListViewModel>();
+            serviceCollection.AddTransient<IMainWindowViewModel, MainWindowViewModel>();
+            
+            // Constructing views via the service provider seems like a step too far
 
             IServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
 

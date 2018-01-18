@@ -18,9 +18,8 @@ namespace Financier.Desktop
         {
             base.OnStartup(e);
 
-            IWindowFactory windowFactory = IoC.ServiceProvider.Instance.GetRequiredService<IWindowFactory>();
-            Window mainWindow = windowFactory.CreateMainWindow();
-            mainWindow.Show();
+            IViewService viewService = IoC.ServiceProvider.Instance.GetRequiredService<IViewService>();
+            viewService.OpenMainView();
         }
     }
 }

@@ -9,27 +9,17 @@ namespace Financier.Desktop.ViewModels
 {
     public class AccountEditViewModel : IAccountEditViewModel
     {
-        public AccountEditViewModel(FinancierDbContext dbContext, int accountId = 0)
+        public AccountEditViewModel(FinancierDbContext dbContext)
         {
             m_dbContext = dbContext;
-            m_accountId = accountId;
+            m_accountId = 0;
 
             AccountTypes = Enum.GetValues(typeof(AccountType)).Cast<AccountType>();
             Currencies = m_dbContext.Currencies.ToList();
 
-            if (m_accountId != 0)
-            {
-                Account account = dbContext.Accounts.Single(a => a.AccountId == m_accountId);
-                Name = account.Name;
-                SelectedAccountType = account.Type;
-                SelectedCurrency = account.Currency;
-            }
-            else
-            {
-                Name = "New Account";
-                SelectedAccountType = AccountType.Asset;
-                SelectedCurrency = Currencies.Single(c => c.IsPrimary);
-            }
+            Name = "New Account";
+            SelectedAccountType = AccountType.Asset;
+            SelectedCurrency = Currencies.Single(c => c.IsPrimary);
         }
 
         private FinancierDbContext m_dbContext;
@@ -37,6 +27,23 @@ namespace Financier.Desktop.ViewModels
 
         public IEnumerable<AccountType> AccountTypes { get; }
         public IEnumerable<Currency> Currencies { get; }
+
+        public int AccountId
+        {
+            get { return m_accountId; }
+            set
+            {
+                if(value != m_accountId)
+                {
+                    m_accountId = value;
+
+                    Account account = m_dbContext.Accounts.Single(a => a.AccountId == m_accountId);
+                    Name = account.Name;
+                    SelectedAccountType = account.Type;
+                    SelectedCurrency = account.Currency;
+                }
+            }
+        }
 
         public string Name { get; set; }
         public AccountType SelectedAccountType { get; set; }
