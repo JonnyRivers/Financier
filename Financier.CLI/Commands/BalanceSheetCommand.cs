@@ -28,7 +28,9 @@ namespace Financier.CLI.Commands
                 var serviceCollection = ServiceCollectionSetup.SetupCoreServices(databaseName);
 
                 // Application services
-                serviceCollection.AddTransient<IBalanceSheetService, BalanceSheetService>();
+                serviceCollection.AddSingleton<IAccountService, AccountService>();
+                serviceCollection.AddSingleton<ICurrencyService, CurrencyService>();
+                serviceCollection.AddSingleton<IBalanceSheetService, BalanceSheetService>();
 
                 IServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
 
