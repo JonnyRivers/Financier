@@ -1,4 +1,4 @@
-﻿using Financier.Data;
+﻿using Financier.Entities;
 using Financier.Desktop.Services;
 using Financier.Desktop.ViewModels;
 using Financier.Desktop.Views;
@@ -46,11 +46,21 @@ namespace Financier.Desktop.IoC
                 options => options.UseSqlServer(connectionString),
                 ServiceLifetime.Transient);
 
-            serviceCollection.AddTransient<IAccountBalanceService, AccountBalanceService>();
+            serviceCollection.AddSingleton<IAccountService, AccountService>();
+            serviceCollection.AddSingleton<IAccountRelationshipService, AccountRelationshipService>();
+            serviceCollection.AddSingleton<ICurrencyService, CurrencyService>();
+            serviceCollection.AddSingleton<ITransactionService, TransactionService>();
 
-            serviceCollection.AddTransient<IWindowFactory, WindowFactory>();
+            serviceCollection.AddSingleton<IViewService, ViewService>();
 
-            // Constructing view models and models via the service provider seems like a step too far
+            // TODO: some view models are constructed without IoC
+            serviceCollection.AddTransient<IAccountEditViewModel, AccountEditViewModel>();
+            serviceCollection.AddTransient<IAccountListViewModel, AccountListViewModel>();
+            serviceCollection.AddTransient<ITransactionEditViewModel, TransactionEditViewModel>();
+            serviceCollection.AddTransient<ITransactionListViewModel, TransactionListViewModel>();
+            serviceCollection.AddTransient<IMainWindowViewModel, MainWindowViewModel>();
+            
+            // Constructing views via the service provider seems like a step too far
 
             IServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
 

@@ -16,15 +16,25 @@ using System.Windows.Shapes;
 namespace Financier.Desktop.Views
 {
     /// <summary>
-    /// Interaction logic for AccountEditWindow.xaml
+    /// Interaction logic for AccountCreateWindow.xaml
     /// </summary>
     public partial class AccountEditWindow : Window
     {
-        public AccountEditWindow(IAccountEditViewModel accountEditViewModel)
+        public AccountEditWindow(IAccountEditViewModel viewModel)
         {
             InitializeComponent();
 
-            DataContext = accountEditViewModel;
+            DataContext = viewModel;
+        }
+
+        private void OnOK(object sender, RoutedEventArgs e)
+        {
+            DialogResult = true;
+        }
+
+        private void OnCancel(object sender, RoutedEventArgs e)
+        {
+            DialogResult = false;
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Financier.Data;
+﻿using Financier.Entities;
 using Financier.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -19,7 +19,7 @@ namespace Financier.Tests
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
-                var usdCurrency = new Currency
+                var usdCurrency = new Entities.Currency
                 {
                     Name = "US Dollar",
                     ShortName = "USD",
@@ -50,7 +50,7 @@ namespace Financier.Tests
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
-                var usdCurrency = new Currency
+                var usdCurrency = new Entities.Currency
                 {
                     Name = "US Dollar",
                     ShortName = "USD",
@@ -61,35 +61,35 @@ namespace Financier.Tests
                 sqliteMemoryWrapper.DbContext.Currencies.Add(usdCurrency);
                 sqliteMemoryWrapper.DbContext.SaveChanges();
 
-                var checkingAccount = new Account
+                var checkingAccount = new Entities.Account
                 {
                     Name = "Checking",
                     Currency = usdCurrency,
-                    Type = AccountType.Asset
+                    Type = Entities.AccountType.Asset
                 };
-                var incomeAccount = new Account
+                var incomeAccount = new Entities.Account
                 {
                     Name = "Income",
                     Currency = usdCurrency,
-                    Type = AccountType.Income
+                    Type = Entities.AccountType.Income
                 };
-                var capitalAccount = new Account
+                var capitalAccount = new Entities.Account
                 {
                     Name = "Capital",
                     Currency = usdCurrency,
-                    Type = AccountType.Capital
+                    Type = Entities.AccountType.Capital
                 };
-                var rentAccount = new Account
+                var rentAccount = new Entities.Account
                 {
                     Name = "Rent",
                     Currency = usdCurrency,
-                    Type = AccountType.Expense
+                    Type = Entities.AccountType.Expense
                 };
-                var creditCardAccount = new Account
+                var creditCardAccount = new Entities.Account
                 {
                     Name = "Credit Card",
                     Currency = usdCurrency,
-                    Type = AccountType.Liability
+                    Type = Entities.AccountType.Liability
                 };
 
                 sqliteMemoryWrapper.DbContext.Accounts.Add(checkingAccount);
@@ -125,7 +125,7 @@ namespace Financier.Tests
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
-                var usdCurrency = new Currency
+                var usdCurrency = new Entities.Currency
                 {
                     Name = "US Dollar",
                     ShortName = "USD",
@@ -136,35 +136,35 @@ namespace Financier.Tests
                 sqliteMemoryWrapper.DbContext.Currencies.Add(usdCurrency);
                 sqliteMemoryWrapper.DbContext.SaveChanges();
 
-                var checkingAccount = new Account
+                var checkingAccount = new Entities.Account
                 {
                     Name = "Checking",
                     Currency = usdCurrency,
-                    Type = AccountType.Asset
+                    Type = Entities.AccountType.Asset
                 };
-                var incomeAccount = new Account
+                var incomeAccount = new Entities.Account
                 {
                     Name = "Income",
                     Currency = usdCurrency,
-                    Type = AccountType.Income
+                    Type = Entities.AccountType.Income
                 };
-                var capitalAccount = new Account
+                var capitalAccount = new Entities.Account
                 {
                     Name = "Capital",
                     Currency = usdCurrency,
-                    Type = AccountType.Capital
+                    Type = Entities.AccountType.Capital
                 };
-                var rentAccount = new Account
+                var rentAccount = new Entities.Account
                 {
                     Name = "Rent",
                     Currency = usdCurrency,
-                    Type = AccountType.Expense
+                    Type = Entities.AccountType.Expense
                 };
-                var creditCardAccount = new Account
+                var creditCardAccount = new Entities.Account
                 {
                     Name = "Credit Card",
                     Currency = usdCurrency,
-                    Type = AccountType.Liability
+                    Type = Entities.AccountType.Liability
                 };
 
                 sqliteMemoryWrapper.DbContext.Accounts.Add(checkingAccount);
@@ -174,30 +174,30 @@ namespace Financier.Tests
                 sqliteMemoryWrapper.DbContext.Accounts.Add(creditCardAccount);
                 sqliteMemoryWrapper.DbContext.SaveChanges();
 
-                var transactions = new Transaction[]
+                var transactions = new Entities.Transaction[]
                 {
-                    new Transaction
+                    new Entities.Transaction
                     {
                         CreditAccount = capitalAccount,
                         DebitAccount = checkingAccount,
                         Amount = 100m,
                         At = new DateTime(2018, 1, 1)
                     },// capital=100CR,checking=100DR
-                    new Transaction
+                    new Entities.Transaction
                     {
                         CreditAccount = creditCardAccount,
                         DebitAccount = rentAccount,
                         Amount = 40m,
                         At = new DateTime(2018, 1, 2)
                     },// capital=100CR,checking=100DR,credit-card=40CR,rent=40DR
-                    new Transaction
+                    new Entities.Transaction
                     {
                         CreditAccount = checkingAccount,
                         DebitAccount = creditCardAccount,
                         Amount = 40m,
                         At = new DateTime(2018, 1, 3)
                     },// capital=100CR,checking=60DR,rent=40DR
-                    new Transaction
+                    new Entities.Transaction
                     {
                         CreditAccount = incomeAccount,
                         DebitAccount = checkingAccount,
@@ -265,7 +265,7 @@ namespace Financier.Tests
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
-                var usdCurrency = new Currency
+                var usdCurrency = new Entities.Currency
                 {
                     Name = "US Dollar",
                     ShortName = "USD",
@@ -276,29 +276,29 @@ namespace Financier.Tests
                 sqliteMemoryWrapper.DbContext.Currencies.Add(usdCurrency);
                 sqliteMemoryWrapper.DbContext.SaveChanges();
 
-                var checkingAccount = new Account
+                var checkingAccount = new Entities.Account
                 {
                     Name = "Checking",
                     Currency = usdCurrency,
-                    Type = AccountType.Asset
+                    Type = Entities.AccountType.Asset
                 };
-                var incomeAccount = new Account
+                var incomeAccount = new Entities.Account
                 {
                     Name = "Income",
                     Currency = usdCurrency,
-                    Type = AccountType.Income
+                    Type = Entities.AccountType.Income
                 };
-                var rentPrepaymentAccount = new Account
+                var rentPrepaymentAccount = new Entities.Account
                 {
                     Name = "Rent Prepayment",
                     Currency = usdCurrency,
-                    Type = AccountType.Asset
+                    Type = Entities.AccountType.Asset
                 };
-                var groceriesPrepaymentAccount = new Account
+                var groceriesPrepaymentAccount = new Entities.Account
                 {
                     Name = "Groceries Prepayment",
                     Currency = usdCurrency,
-                    Type = AccountType.Asset
+                    Type = Entities.AccountType.Asset
                 };
 
                 sqliteMemoryWrapper.DbContext.Accounts.Add(checkingAccount);
@@ -324,23 +324,23 @@ namespace Financier.Tests
                 sqliteMemoryWrapper.DbContext.AccountRelationships.Add(checkingToGroceriesPrepaymentRelationship);
                 sqliteMemoryWrapper.DbContext.SaveChanges();
 
-                var transactions = new Transaction[]
+                var transactions = new Entities.Transaction[]
                 {
-                    new Transaction
+                    new Entities.Transaction
                     {
                         CreditAccount = incomeAccount,
                         DebitAccount = checkingAccount,
                         Amount = 100m,
                         At = new DateTime(2018, 1, 1)
                     },// income=100CR,checking=100DR
-                    new Transaction
+                    new Entities.Transaction
                     {
                         CreditAccount = checkingAccount,
                         DebitAccount = rentPrepaymentAccount,
                         Amount = 40m,
                         At = new DateTime(2018, 1, 1)
                     },// income=100CR,(checking=60DR,rent-prepayment=40DR)=100DR
-                    new Transaction
+                    new Entities.Transaction
                     {
                         CreditAccount = checkingAccount,
                         DebitAccount = groceriesPrepaymentAccount,

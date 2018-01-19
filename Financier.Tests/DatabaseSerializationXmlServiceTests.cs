@@ -1,4 +1,4 @@
-﻿using Financier.Data;
+﻿using Financier.Entities;
 using Financier.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -23,10 +23,10 @@ namespace Financier.Tests
                 var service = new DatabaseSerializationXmlService(logger, sqliteMemoryWrapper.DbContext);
                 service.Load("TestData/Valid.xml");
 
-                List<Account> accounts = sqliteMemoryWrapper.DbContext.Accounts.ToList();
-                List<AccountRelationship> accountRelationships = sqliteMemoryWrapper.DbContext.AccountRelationships.ToList();
-                List<Currency> currencies = sqliteMemoryWrapper.DbContext.Currencies.ToList();
-                List<Transaction> transactions = sqliteMemoryWrapper.DbContext.Transactions.ToList();
+                List<Entities.Account> accounts = sqliteMemoryWrapper.DbContext.Accounts.ToList();
+                List<Entities.AccountRelationship> accountRelationships = sqliteMemoryWrapper.DbContext.AccountRelationships.ToList();
+                List<Entities.Currency> currencies = sqliteMemoryWrapper.DbContext.Currencies.ToList();
+                List<Entities.Transaction> transactions = sqliteMemoryWrapper.DbContext.Transactions.ToList();
 
                 Assert.AreEqual(3, accounts.Count);
                 Assert.AreEqual(1, accountRelationships.Count);
@@ -52,7 +52,7 @@ namespace Financier.Tests
 
                 Assert.AreEqual("Checking", accountRelationships[0].SourceAccount.Name);
                 Assert.AreEqual("Rent Prepayment", accountRelationships[0].DestinationAccount.Name);
-                Assert.AreEqual(AccountRelationshipType.PhysicalToLogical, accountRelationships[0].Type);
+                Assert.AreEqual(Entities.AccountRelationshipType.PhysicalToLogical, accountRelationships[0].Type);
 
                 Assert.AreEqual("Income", transactions[0].CreditAccount.Name);
                 Assert.AreEqual(100m, transactions[0].Amount);
@@ -118,7 +118,7 @@ namespace Financier.Tests
             ILoggerFactory loggerFactory = new LoggerFactory();
             ILogger<DatabaseSerializationXmlService> logger = loggerFactory.CreateLogger<DatabaseSerializationXmlService>();
 
-            var usdCurrency = new Currency
+            var usdCurrency = new Entities.Currency
             {
                 Name = "US Dollar",
                 ShortName = "USD",
@@ -140,10 +140,10 @@ namespace Financier.Tests
                 var service = new DatabaseSerializationXmlService(logger, sqliteMemoryWrapper.DbContext);
                 service.Load(path);
 
-                List<Account> accounts = sqliteMemoryWrapper.DbContext.Accounts.ToList();
-                List<AccountRelationship> accountRelationships = sqliteMemoryWrapper.DbContext.AccountRelationships.ToList();
-                List<Currency> currencies = sqliteMemoryWrapper.DbContext.Currencies.ToList();
-                List<Transaction> transactions = sqliteMemoryWrapper.DbContext.Transactions.ToList();
+                List<Entities.Account> accounts = sqliteMemoryWrapper.DbContext.Accounts.ToList();
+                List<Entities.AccountRelationship> accountRelationships = sqliteMemoryWrapper.DbContext.AccountRelationships.ToList();
+                List<Entities.Currency> currencies = sqliteMemoryWrapper.DbContext.Currencies.ToList();
+                List<Entities.Transaction> transactions = sqliteMemoryWrapper.DbContext.Transactions.ToList();
 
                 Assert.AreEqual(0, accounts.Count);
                 Assert.AreEqual(0, accountRelationships.Count);
@@ -165,18 +165,18 @@ namespace Financier.Tests
             ILoggerFactory loggerFactory = new LoggerFactory();
             ILogger<DatabaseSerializationXmlService> logger = loggerFactory.CreateLogger<DatabaseSerializationXmlService>();
 
-            var usdCurrency = new Currency
+            var usdCurrency = new Entities.Currency
             {
                 Name = "US Dollar",
                 ShortName = "USD",
                 Symbol = "$",
                 IsPrimary = true
             };
-            var checkingAccount = new Account
+            var checkingAccount = new Entities.Account
             {
                 Name = "Checking",
                 Currency = usdCurrency,
-                Type = AccountType.Asset
+                Type = Entities.AccountType.Asset
             };
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
@@ -196,10 +196,10 @@ namespace Financier.Tests
                 var service = new DatabaseSerializationXmlService(logger, sqliteMemoryWrapper.DbContext);
                 service.Load(path);
 
-                List<Account> accounts = sqliteMemoryWrapper.DbContext.Accounts.ToList();
-                List<AccountRelationship> accountRelationships = sqliteMemoryWrapper.DbContext.AccountRelationships.ToList();
-                List<Currency> currencies = sqliteMemoryWrapper.DbContext.Currencies.ToList();
-                List<Transaction> transactions = sqliteMemoryWrapper.DbContext.Transactions.ToList();
+                List<Entities.Account> accounts = sqliteMemoryWrapper.DbContext.Accounts.ToList();
+                List<Entities.AccountRelationship> accountRelationships = sqliteMemoryWrapper.DbContext.AccountRelationships.ToList();
+                List<Entities.Currency> currencies = sqliteMemoryWrapper.DbContext.Currencies.ToList();
+                List<Entities.Transaction> transactions = sqliteMemoryWrapper.DbContext.Transactions.ToList();
 
                 Assert.AreEqual(1, accounts.Count);
                 Assert.AreEqual(0, accountRelationships.Count);
@@ -218,30 +218,30 @@ namespace Financier.Tests
             ILoggerFactory loggerFactory = new LoggerFactory();
             ILogger<DatabaseSerializationXmlService> logger = loggerFactory.CreateLogger<DatabaseSerializationXmlService>();
 
-            var usdCurrency = new Currency
+            var usdCurrency = new Entities.Currency
             {
                 Name = "US Dollar",
                 ShortName = "USD",
                 Symbol = "$",
                 IsPrimary = true
             };
-            var checkingAccount = new Account
+            var checkingAccount = new Entities.Account
             {
                 Name = "Checking",
                 Currency = usdCurrency,
-                Type = AccountType.Asset
+                Type = Entities.AccountType.Asset
             };
-            var rentPrepaymentAccount = new Account
+            var rentPrepaymentAccount = new Entities.Account
             {
                 Name = "Rent Prepayment",
                 Currency = usdCurrency,
-                Type = AccountType.Asset
+                Type = Entities.AccountType.Asset
             };
-            var accountRelationship = new AccountRelationship
+            var accountRelationship = new Entities.AccountRelationship
             {
                 SourceAccount = checkingAccount,
                 DestinationAccount = rentPrepaymentAccount,
-                Type = AccountRelationshipType.PhysicalToLogical
+                Type = Entities.AccountRelationshipType.PhysicalToLogical
             };
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
@@ -265,10 +265,10 @@ namespace Financier.Tests
                 var service = new DatabaseSerializationXmlService(logger, sqliteMemoryWrapper.DbContext);
                 service.Load(path);
 
-                List<Account> accounts = sqliteMemoryWrapper.DbContext.Accounts.ToList();
-                List<AccountRelationship> accountRelationships = sqliteMemoryWrapper.DbContext.AccountRelationships.ToList();
-                List<Currency> currencies = sqliteMemoryWrapper.DbContext.Currencies.ToList();
-                List<Transaction> transactions = sqliteMemoryWrapper.DbContext.Transactions.ToList();
+                List<Entities.Account> accounts = sqliteMemoryWrapper.DbContext.Accounts.ToList();
+                List<Entities.AccountRelationship> accountRelationships = sqliteMemoryWrapper.DbContext.AccountRelationships.ToList();
+                List<Entities.Currency> currencies = sqliteMemoryWrapper.DbContext.Currencies.ToList();
+                List<Entities.Transaction> transactions = sqliteMemoryWrapper.DbContext.Transactions.ToList();
 
                 Assert.AreEqual(2, accounts.Count);
                 Assert.AreEqual(1, accountRelationships.Count);
@@ -288,32 +288,32 @@ namespace Financier.Tests
             ILoggerFactory loggerFactory = new LoggerFactory();
             ILogger<DatabaseSerializationXmlService> logger = loggerFactory.CreateLogger<DatabaseSerializationXmlService>();
 
-            var usdCurrency = new Currency
+            var usdCurrency = new Entities.Currency
             {
                 Name = "US Dollar",
                 ShortName = "USD",
                 Symbol = "$",
                 IsPrimary = true
             };
-            var checkingAccount = new Account
+            var checkingAccount = new Entities.Account
             {
                 Name = "Checking",
                 Currency = usdCurrency,
-                Type = AccountType.Asset
+                Type = Entities.AccountType.Asset
             };
-            var rentPrepaymentAccount = new Account
+            var rentPrepaymentAccount = new Entities.Account
             {
                 Name = "Rent Prepayment",
                 Currency = usdCurrency,
-                Type = AccountType.Asset
+                Type = Entities.AccountType.Asset
             };
-            var accountRelationship = new AccountRelationship
+            var accountRelationship = new Entities.AccountRelationship
             {
                 SourceAccount = checkingAccount,
                 DestinationAccount = rentPrepaymentAccount,
-                Type = AccountRelationshipType.PhysicalToLogical
+                Type = Entities.AccountRelationshipType.PhysicalToLogical
             };
-            var transaction = new Transaction
+            var transaction = new Entities.Transaction
             {
                 CreditAccount = checkingAccount,
                 Amount = 10m,
@@ -345,10 +345,10 @@ namespace Financier.Tests
                 var service = new DatabaseSerializationXmlService(logger, sqliteMemoryWrapper.DbContext);
                 service.Load(path);
 
-                List<Account> accounts = sqliteMemoryWrapper.DbContext.Accounts.ToList();
-                List<AccountRelationship> accountRelationships = sqliteMemoryWrapper.DbContext.AccountRelationships.ToList();
-                List<Currency> currencies = sqliteMemoryWrapper.DbContext.Currencies.ToList();
-                List<Transaction> transactions = sqliteMemoryWrapper.DbContext.Transactions.ToList();
+                List<Entities.Account> accounts = sqliteMemoryWrapper.DbContext.Accounts.ToList();
+                List<Entities.AccountRelationship> accountRelationships = sqliteMemoryWrapper.DbContext.AccountRelationships.ToList();
+                List<Entities.Currency> currencies = sqliteMemoryWrapper.DbContext.Currencies.ToList();
+                List<Entities.Transaction> transactions = sqliteMemoryWrapper.DbContext.Transactions.ToList();
 
                 Assert.AreEqual(2, accounts.Count);
                 Assert.AreEqual(1, accountRelationships.Count);

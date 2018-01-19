@@ -118,40 +118,30 @@
     </ApplicationDefinition>
     <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="IoC\ServiceProvider.cs" />
-    <Compile Include="Services\IWindowFactory.cs" />
-    <Compile Include="Services\WindowFactory.cs" />
-    <Compile Include="ViewModels\AccountCreateViewModel.cs" />
-    <Compile Include="ViewModels\AccountEditViewModel.cs" />
-    <Compile Include="ViewModels\AccountItemViewModel.cs" />
-    <Compile Include="ViewModels\AccountListViewModel.cs" />
-    <Compile Include="ViewModels\AccountOverviewViewModel.cs" />
+    <Compile Include="Services\Abstract\IViewService.cs" />
+    <Compile Include="Services\Concrete\ViewService.cs" />
+    <Compile Include="ViewModels\Concrete\AccountEditViewModel.cs" />
+    <Compile Include="ViewModels\Concrete\AccountItemViewModel.cs" />
+    <Compile Include="ViewModels\Concrete\AccountListViewModel.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
-    <Compile Include="ViewModels\IAccountCreateViewModel.cs" />
-    <Compile Include="ViewModels\IAccountEditViewModel.cs" />
-    <Compile Include="ViewModels\IAccountItemViewModel.cs" />
-    <Compile Include="ViewModels\IAccountListViewModel.cs" />
-    <Compile Include="ViewModels\IAccountOverviewViewModel.cs" />
-    <Compile Include="ViewModels\IMainWindowViewModel.cs" />
-    <Compile Include="ViewModels\ITransactionAccountFilterViewModel.cs" />
-    <Compile Include="ViewModels\ITransactionEditViewModel.cs" />
-    <Compile Include="ViewModels\ITransactionListViewModel.cs" />
-    <Compile Include="ViewModels\ITransactionItemViewModel.cs" />
-    <Compile Include="ViewModels\MainWindowViewModel.cs" />
-    <Compile Include="ViewModels\TransactionAccountFilterViewModel.cs" />
-    <Compile Include="ViewModels\TransactionEditViewModel.cs" />
-    <Compile Include="ViewModels\TransactionListViewModel.cs" />
-    <Compile Include="ViewModels\TransactionItemViewModel.cs" />
-    <Compile Include="Views\AccountCreateWindow.xaml.cs">
-      <DependentUpon>AccountCreateWindow.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="ViewModels\Abstract\IAccountEditViewModel.cs" />
+    <Compile Include="ViewModels\Abstract\IAccountItemViewModel.cs" />
+    <Compile Include="ViewModels\Abstract\IAccountListViewModel.cs" />
+    <Compile Include="ViewModels\Abstract\IMainWindowViewModel.cs" />
+    <Compile Include="ViewModels\Abstract\ITransactionAccountFilterViewModel.cs" />
+    <Compile Include="ViewModels\Abstract\ITransactionEditViewModel.cs" />
+    <Compile Include="ViewModels\Abstract\ITransactionListViewModel.cs" />
+    <Compile Include="ViewModels\Abstract\ITransactionItemViewModel.cs" />
+    <Compile Include="ViewModels\Concrete\MainWindowViewModel.cs" />
+    <Compile Include="ViewModels\Concrete\TransactionAccountFilterViewModel.cs" />
+    <Compile Include="ViewModels\Concrete\TransactionEditViewModel.cs" />
+    <Compile Include="ViewModels\Concrete\TransactionListViewModel.cs" />
+    <Compile Include="ViewModels\Concrete\TransactionItemViewModel.cs" />
     <Compile Include="Views\AccountEditWindow.xaml.cs">
       <DependentUpon>AccountEditWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\AccountListControl.xaml.cs">
       <DependentUpon>AccountListControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\AccountOverviewControl.xaml.cs">
-      <DependentUpon>AccountOverviewControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -166,10 +156,6 @@
     <Compile Include="Views\TransactionEditWindow.xaml.cs">
       <DependentUpon>TransactionEditWindow.xaml</DependentUpon>
     </Compile>
-    <Page Include="Views\AccountCreateWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\AccountEditWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -177,10 +163,6 @@
     <Page Include="Views\AccountListControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\AccountOverviewControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

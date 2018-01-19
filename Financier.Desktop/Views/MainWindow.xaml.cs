@@ -9,14 +9,12 @@ namespace Financier.Desktop.Views
     /// </summary>
     public partial class MainWindow : Window
     {
-        private ILogger<MainWindow> _logger;
         private IMainWindowViewModel _viewModel;
 
-        public MainWindow(ILogger<MainWindow> logger, IMainWindowViewModel viewModel)
+        public MainWindow(IMainWindowViewModel viewModel)
         {
             InitializeComponent();
-
-            _logger = logger;
+            
             _viewModel = viewModel;
 
             DataContext = viewModel;

@@ -1,4 +1,4 @@
-﻿using Financier.Data;
+﻿using Financier.Entities;
 using Microsoft.Extensions.Logging;
 using System.Linq;
 
@@ -22,7 +22,7 @@ namespace Financier.Services
 
             if (!m_dbContext.Currencies.Any())
             {
-                var dollar = new Currency
+                var dollar = new Entities.Currency
                 {
                     Name = "US Dollar",
                     ShortName = "USD",
@@ -30,7 +30,7 @@ namespace Financier.Services
                     IsPrimary = true
                 };
                 m_dbContext.Currencies.Add(dollar);
-                var sterling = new Currency
+                var sterling = new Entities.Currency
                 {
                     Name = "UK Sterling",
                     ShortName = "GBP",
