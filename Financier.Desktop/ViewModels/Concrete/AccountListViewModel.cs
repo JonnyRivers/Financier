@@ -1,5 +1,4 @@
-﻿using Financier.Entities;
-using Financier.Desktop.Commands;
+﻿using Financier.Desktop.Commands;
 using Financier.Desktop.Services;
 using Financier.Services;
 using Microsoft.Extensions.Logging;
@@ -82,7 +81,7 @@ namespace Financier.Desktop.ViewModels
                         a.Name,
                         a.Type,
                         a.Currency.Name,
-                        m_accountService.GetBalance(a.AccountId)));
+                        a.Balance));
             Accounts = new ObservableCollection<IAccountItemViewModel>(accountVMs);
             OnPropertyChanged(nameof(Accounts));
         }

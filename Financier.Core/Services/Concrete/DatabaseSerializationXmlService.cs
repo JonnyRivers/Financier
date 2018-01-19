@@ -36,18 +36,18 @@ namespace Financier.Services
             Dictionary<string, Entities.Currency> currenciesByShortName = currencies.ToDictionary(c => c.ShortName, c => c);
 
             List<XElement> accountElements = rootElement.Elements(XName.Get("Account")).ToList();
-            List<Account> accounts = accountElements.Select(e => AccountFromElement(e, currenciesByShortName)).ToList();
+            List<Entities.Account> accounts = accountElements.Select(e => AccountFromElement(e, currenciesByShortName)).ToList();
             m_dbContext.Accounts.AddRange(accounts);
             m_dbContext.SaveChanges();
-            Dictionary<string, Account> accountsByName = accounts.ToDictionary(a => a.Name, a => a);
+            Dictionary<string, Entities.Account> accountsByName = accounts.ToDictionary(a => a.Name, a => a);
 
             List<XElement> accountRelationshipElements = rootElement.Elements(XName.Get("AccountRelationship")).ToList();
-            List<AccountRelationship> accountRelationships = accountRelationshipElements.Select(e => AccountRelationshipFromElement(e, accountsByName)).ToList();
+            List<Entities.AccountRelationship> accountRelationships = accountRelationshipElements.Select(e => AccountRelationshipFromElement(e, accountsByName)).ToList();
             m_dbContext.AccountRelationships.AddRange(accountRelationships);
             m_dbContext.SaveChanges();
 
             List<XElement> transactionElements = rootElement.Elements(XName.Get("Transaction")).ToList();
-            List<Transaction> transactions = transactionElements.Select(e => TransactionFromElement(e, accountsByName)).ToList();
+            List<Entities.Transaction> transactions = transactionElements.Select(e => TransactionFromElement(e, accountsByName)).ToList();
             m_dbContext.Transactions.AddRange(transactions);
             m_dbContext.SaveChanges();
         }
@@ -57,13 +57,13 @@ namespace Financier.Services
             List<Entities.Currency> currencies = m_dbContext.Currencies.ToList();
             List<XElement> currencyElements = currencies.Select(ElementFromCurrency).ToList();
 
-            List<Account> accounts = m_dbContext.Accounts.ToList();
+            List<Entities.Account> accounts = m_dbContext.Accounts.ToList();
             List<XElement> accountElements = accounts.Select(ElementFromAccount).ToList();
 
-            List<AccountRelationship> accountRelationships = m_dbContext.AccountRelationships.ToList();
+            List<Entities.AccountRelationship> accountRelationships = m_dbContext.AccountRelationships.ToList();
             List<XElement> accountRelationshipElements = accountRelationships.Select(ElementFromAccountRelationship).ToList();
 
-            List<Transaction> transactions = m_dbContext.Transactions.ToList();
+            List<Entities.Transaction> transactions = m_dbContext.Transactions.ToList();
             List<XElement> transactionElements = transactions.Select(ElementFromTransaction).ToList();
 
             var document = new XDocument(
@@ -115,20 +115,20 @@ namespace Financier.Services
             return element;
         }
 
-        private static Account AccountFromElement(XElement element, Dictionary<string, Entities.Currency> currenciesByShortName)
+        private static Entities.Account AccountFromElement(XElement element, Dictionary<string, Entities.Currency> currenciesByShortName)
         {
             string currencyShortName = GetRequiredAttribute(element, "currency").Value;
-            var account = new Account
+            var account = new Entities.Account
             {
                 Currency = currenciesByShortName[currencyShortName],
                 Name = GetRequiredAttribute(element, "name").Value,
-                Type = (AccountType)Enum.Parse(typeof(AccountType), GetRequiredAttribute(element, "type").Value)
+                Type = (Entities.AccountType)Enum.Parse(typeof(Entities.AccountType), GetRequiredAttribute(element, "type").Value)
             };
 
             return account;
         }
 
-        private static XElement ElementFromAccount(Account account)
+        private static XElement ElementFromAccount(Entities.Account account)
         {
             var element = new XElement(XName.Get("Account"),
                 new XAttribute(XName.Get("name"), account.Name),
@@ -139,23 +139,23 @@ namespace Financier.Services
             return element;
         }
 
-        private static AccountRelationship AccountRelationshipFromElement(XElement element, Dictionary<string, Account> accountsByShortName)
+        private static Entities.AccountRelationship AccountRelationshipFromElement(XElement element, Dictionary<string, Entities.Account> accountsByShortName)
         {
             string destinationAccountName = GetRequiredAttribute(element, "destination").Value;
             string sourceAcountName = GetRequiredAttribute(element, "source").Value;
             string type = GetRequiredAttribute(element, "type").Value;
 
-            var accountRelationship = new AccountRelationship
+            var accountRelationship = new Entities.AccountRelationship
             {
                 DestinationAccount = accountsByShortName[destinationAccountName],
                 SourceAccount = accountsByShortName[sourceAcountName],
-                Type = (AccountRelationshipType)Enum.Parse(typeof(AccountRelationshipType), type)
+                Type = (Entities.AccountRelationshipType)Enum.Parse(typeof(Entities.AccountRelationshipType), type)
             };
 
             return accountRelationship;
         }
 
-        private static XElement ElementFromAccountRelationship(AccountRelationship accountRelationship)
+        private static XElement ElementFromAccountRelationship(Entities.AccountRelationship accountRelationship)
         {
             var element = new XElement(XName.Get("AccountRelationship"),
                 new XAttribute(XName.Get("destination"), accountRelationship.DestinationAccount.Name),
@@ -166,14 +166,14 @@ namespace Financier.Services
             return element;
         }
 
-        private static Transaction TransactionFromElement(XElement element, Dictionary<string, Account> accountsByShortName)
+        private static Entities.Transaction TransactionFromElement(XElement element, Dictionary<string, Entities.Account> accountsByShortName)
         {
             string at = GetRequiredAttribute(element, "at").Value;
             string creditAccountName = GetRequiredAttribute(element, "credit").Value;
             string amount = GetRequiredAttribute(element, "amount").Value;
             string debitAccountName = GetRequiredAttribute(element, "debit").Value;
 
-            var transaction = new Transaction
+            var transaction = new Entities.Transaction
             {
                 At = DateTime.Parse(at),
                 CreditAccount = accountsByShortName[creditAccountName],
@@ -184,7 +184,7 @@ namespace Financier.Services
             return transaction;
         }
 
-        private static XElement ElementFromTransaction(Transaction transaction)
+        private static XElement ElementFromTransaction(Entities.Transaction transaction)
         {
             var element = new XElement(XName.Get("Transaction"),
                 new XAttribute(XName.Get("at"), transaction.At),

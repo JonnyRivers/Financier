@@ -15,11 +15,11 @@ namespace Financier.Desktop.ViewModels
             m_currencyService = currencyService;
             m_accountId = 0;
 
-            AccountTypes = Enum.GetValues(typeof(Entities.AccountType)).Cast<Entities.AccountType>();
+            AccountTypes = Enum.GetValues(typeof(AccountType)).Cast<AccountType>();
             Currencies = m_currencyService.GetAll();
 
             Name = "New Account";
-            SelectedAccountType = Entities.AccountType.Asset;
+            SelectedAccountType = AccountType.Asset;
             SelectedCurrency = m_currencyService.GetPrimary();
         }
 
@@ -27,7 +27,7 @@ namespace Financier.Desktop.ViewModels
         private ICurrencyService m_currencyService;
         private int m_accountId;
 
-        public IEnumerable<Entities.AccountType> AccountTypes { get; }
+        public IEnumerable<AccountType> AccountTypes { get; }
         public IEnumerable<Currency> Currencies { get; }
 
         public int AccountId
@@ -39,7 +39,7 @@ namespace Financier.Desktop.ViewModels
                 {
                     m_accountId = value;
 
-                    Entities.Account account = m_accountService.Get(m_accountId);
+                    Account account = m_accountService.Get(m_accountId);
                     Name = account.Name;
                     SelectedAccountType = account.Type;
                     SelectedCurrency = account.Currency;
@@ -48,7 +48,7 @@ namespace Financier.Desktop.ViewModels
         }
 
         public string Name { get; set; }
-        public Entities.AccountType SelectedAccountType { get; set; }
+        public AccountType SelectedAccountType { get; set; }
         public Currency SelectedCurrency { get; set; }
 
         public ICommand OKCommand => new RelayCommand(OKExecute);
@@ -58,20 +58,20 @@ namespace Financier.Desktop.ViewModels
         {
             if (m_accountId != 0)
             {
-                Entities.Account account = m_accountService.Get(m_accountId);
+                Account account = m_accountService.Get(m_accountId);
                 account.Name = Name;
                 account.Type = SelectedAccountType;
-                account.CurrencyId = SelectedCurrency.CurrencyId;
+                account.Currency = SelectedCurrency;
 
                 m_accountService.Update(account);
             }
             else
             {
-                var account = new Entities.Account
+                var account = new Account
                 {
                     Name = Name,
                     Type = SelectedAccountType,
-                    CurrencyId = SelectedCurrency.CurrencyId
+                    Currency = SelectedCurrency
                 };
 
                 m_accountService.Create(account);

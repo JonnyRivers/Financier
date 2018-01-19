@@ -1,5 +1,4 @@
-﻿using Financier.Entities;
-using Financier.Desktop.Commands;
+﻿using Financier.Desktop.Commands;
 using Financier.Desktop.Services;
 using Financier.Services;
 using Microsoft.Extensions.Logging;
@@ -32,11 +31,6 @@ namespace Financier.Desktop.ViewModels
             m_viewService = viewService;
 
             IEnumerable<Account> accounts = m_accountService.GetAll();
-            HashSet<int> accountIdsWithLogicalRelationships = new HashSet<int>(
-                m_accountRelationshipService
-                    .GetAll(AccountRelationshipType.PhysicalToLogical)
-                    .Select(ar => ar.SourceAccountId)
-            );
 
             var accountFilters = new List<ITransactionAccountFilterViewModel>();
             m_nullAccountFilter = new TransactionAccountFilterViewModel(0, "(All Accounts)", false);
@@ -48,7 +42,7 @@ namespace Financier.Desktop.ViewModels
                         new TransactionAccountFilterViewModel(
                             a.AccountId,
                             a.Name,
-                            accountIdsWithLogicalRelationships.Contains(a.AccountId)))
+                            a.LogicalAccounts.Any()))
             );
             AccountFilters = accountFilters;
             SelectedAccountFilter = m_nullAccountFilter;
@@ -191,7 +185,7 @@ namespace Financier.Desktop.ViewModels
                 decimal balance = 0;
                 foreach(Transaction transaction in transactions)
                 {
-                    if (transaction.CreditAccountId == SelectedAccountFilter.AccountId)
+                    if (transaction.CreditAccount.AccountId == SelectedAccountFilter.AccountId)
                     {
                         balance -= transaction.Amount;
                     }

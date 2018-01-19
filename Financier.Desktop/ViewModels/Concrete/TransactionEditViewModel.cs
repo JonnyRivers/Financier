@@ -1,5 +1,4 @@
-﻿using Financier.Entities;
-using Financier.Desktop.Commands;
+﻿using Financier.Desktop.Commands;
 using Financier.Services;
 using Microsoft.Extensions.Logging;
 using System;
@@ -53,8 +52,8 @@ namespace Financier.Desktop.ViewModels
 
                     Transaction transaction = m_transactionService.Get(m_transactionId);
 
-                    SelectedCreditAccount = Accounts.Single(a => a.AccountId == transaction.CreditAccountId);
-                    SelectedDebitAccount = Accounts.Single(a => a.AccountId == transaction.DebitAccountId);
+                    SelectedCreditAccount = Accounts.Single(a => a.AccountId == transaction.CreditAccount.AccountId);
+                    SelectedDebitAccount = Accounts.Single(a => a.AccountId == transaction.DebitAccount.AccountId);
                     Amount = transaction.Amount;
                     At = transaction.At;
                 }
@@ -129,8 +128,8 @@ namespace Financier.Desktop.ViewModels
             if (m_transactionId != 0)
             {
                 Transaction transaction = m_transactionService.Get(m_transactionId);
-                transaction.CreditAccountId = SelectedCreditAccount.AccountId;
-                transaction.DebitAccountId = SelectedDebitAccount.AccountId;
+                transaction.CreditAccount.AccountId = SelectedCreditAccount.AccountId;
+                transaction.DebitAccount.AccountId = SelectedDebitAccount.AccountId;
                 transaction.Amount = Amount;
                 transaction.At = At;
 
@@ -140,8 +139,8 @@ namespace Financier.Desktop.ViewModels
             {
                 var transaction = new Transaction
                 {
-                    CreditAccountId = SelectedCreditAccount.AccountId,
-                    DebitAccountId = SelectedDebitAccount.AccountId,
+                    CreditAccount = new AccountSummary { AccountId = SelectedCreditAccount.AccountId },
+                    DebitAccount = new AccountSummary { AccountId = SelectedDebitAccount.AccountId },
                     Amount = Amount,
                     At = At,
                 };
