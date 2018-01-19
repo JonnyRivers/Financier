@@ -47,7 +47,9 @@ namespace Financier.Desktop.IoC
                 ServiceLifetime.Transient);
 
             serviceCollection.AddTransient<IAccountService, AccountService>();
+            serviceCollection.AddTransient<IAccountRelationshipService, AccountRelationshipService>();
             serviceCollection.AddTransient<ICurrencyService, CurrencyService>();
+            serviceCollection.AddTransient<ITransactionService, TransactionService>();
 
             serviceCollection.AddTransient<IViewService, ViewService>();
 
