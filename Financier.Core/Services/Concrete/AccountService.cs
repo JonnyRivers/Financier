@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -46,6 +47,22 @@ namespace Financier.Services
                 .ToList();
         }
 
+        public IEnumerable<Account> GetAllPhysical()
+        {
+            var logicalAccountIds = new HashSet<int>(
+                m_dbContext.AccountRelationships
+                    .Where(ar => ar.Type == Entities.AccountRelationshipType.PhysicalToLogical)
+                    .Select(ar => ar.DestinationAccountId)
+            );
+
+            return m_dbContext.Accounts
+                .Include(a => a.Currency)
+                .Where(a => a.Type == Entities.AccountType.Asset || a.Type == Entities.AccountType.Liability)
+                .Where(a => !logicalAccountIds.Contains(a.AccountId))
+                .Select(FromEntity)
+                .ToList();
+        }
+
         public void Update(Account account)
         {
             Entities.Account accountEntity = m_dbContext.Accounts
@@ -58,6 +75,43 @@ namespace Financier.Services
             m_dbContext.SaveChanges();
         }
 
+        public decimal GetBalance(int accountId, bool includeLogical)
+        {
+            return GetBalanceAt(accountId, DateTime.MaxValue, includeLogical);
+        }
+
+        public decimal GetBalanceAt(int accountId, DateTime at, bool includeLogical)
+        {
+            var allAccountIds = new HashSet<int>();
+            allAccountIds.Add(accountId);
+            if (includeLogical)
+            {
+                IEnumerable<int> logicalAccountIds = m_dbContext.AccountRelationships
+                    .Where(r => r.SourceAccountId == accountId &&
+                                r.Type == Entities.AccountRelationshipType.PhysicalToLogical)
+                    .Select(r => r.DestinationAccountId);
+                foreach(int logicalAccountId in logicalAccountIds)
+                {
+                    allAccountIds.Add(logicalAccountId);
+                }
+            }
+
+            IEnumerable<Entities.Transaction> creditTransactions =
+                m_dbContext.Transactions
+                    .Where(t => allAccountIds.Contains(t.CreditAccountId) &&
+                                t.At <= at);
+            IEnumerable<Entities.Transaction> debitTransactions =
+                m_dbContext.Transactions
+                    .Where(t => allAccountIds.Contains(t.DebitAccountId) &&
+                                t.At <= at);
+
+            decimal creditBalance = creditTransactions.Sum(t => t.Amount);
+            decimal debitBalance = debitTransactions.Sum(t => t.Amount);
+            decimal balance = debitBalance - creditBalance;
+
+            return balance;
+        }
+
         private Account FromEntity(Entities.Account accountEntity)
         {
             // Get all logical accounts
@@ -68,16 +122,7 @@ namespace Financier.Services
                 .ToList();
             List<Account> logicalAccounts = logicalAccountIds.Select(id => Get(id)).ToList();
 
-            IEnumerable<Entities.Transaction> creditTransactions =
-                m_dbContext.Transactions
-                    .Where(t => t.CreditAccountId == accountEntity.AccountId);
-            IEnumerable<Entities.Transaction> debitTransactions =
-                m_dbContext.Transactions
-                    .Where(t => t.DebitAccountId == accountEntity.AccountId);
-
-            decimal creditBalance = creditTransactions.Sum(t => t.Amount);
-            decimal debitBalance = debitTransactions.Sum(t => t.Amount);
-            decimal balance = debitBalance - creditBalance;
+            decimal balance = GetBalance(accountEntity.AccountId, false);
 
             decimal totalBalance = balance + logicalAccounts.Sum(a => a.Balance);
 

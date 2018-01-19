@@ -1,4 +1,4 @@
-﻿namespace Financier.Entities
+﻿namespace Financier.Services
 {
     public class BalanceSheetItem
     {

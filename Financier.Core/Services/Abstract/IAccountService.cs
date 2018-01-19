@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Financier.Services
 {
@@ -7,6 +8,10 @@ namespace Financier.Services
         void Create(Account account);
         Account Get(int accountId);
         IEnumerable<Account> GetAll();
+        IEnumerable<Account> GetAllPhysical();
         void Update(Account account);
+
+        decimal GetBalance(int accountId, bool includeLogical);
+        decimal GetBalanceAt(int accountId, DateTime at, bool includeLogical);
     }
 }

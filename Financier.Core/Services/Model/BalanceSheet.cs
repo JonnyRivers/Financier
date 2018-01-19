@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Financier.Entities
+namespace Financier.Services
 {
     public class BalanceSheet
     {
@@ -18,7 +18,7 @@ namespace Financier.Entities
             TotalAssets = Assets.Sum(a => a.Balance);
             TotalLiabilities = Liabilities.Sum(l => l.Balance);
 
-            NetWorth = TotalAssets - TotalLiabilities;
+            NetWorth = TotalAssets + TotalLiabilities;
         }
 
         public string CurrencySymbol { get; }

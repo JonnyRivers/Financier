@@ -15,7 +15,6 @@ namespace Financier.Tests
         public void TestBalanceSheetNoAccounts()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<BalanceSheetService> logger = loggerFactory.CreateLogger<BalanceSheetService>();
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
@@ -29,8 +28,20 @@ namespace Financier.Tests
 
                 sqliteMemoryWrapper.DbContext.Currencies.Add(usdCurrency);
                 sqliteMemoryWrapper.DbContext.SaveChanges();
-
-                var balanceSheetService = new BalanceSheetService(logger, sqliteMemoryWrapper.DbContext);
+                
+                var accountService = new AccountService(
+                    loggerFactory.CreateLogger<AccountService>(),
+                    sqliteMemoryWrapper.DbContext
+                );
+                var currencyService = new CurrencyService(
+                    loggerFactory.CreateLogger<CurrencyService>(),
+                    sqliteMemoryWrapper.DbContext
+                );
+                var balanceSheetService = new BalanceSheetService(
+                    loggerFactory.CreateLogger<BalanceSheetService>(), 
+                    accountService, 
+                    currencyService
+                );
 
                 BalanceSheet balanceSheet = balanceSheetService.Generate(new DateTime(2018,1, 1));
 
@@ -46,7 +57,6 @@ namespace Financier.Tests
         public void TestBalanceSheetNoTransactions()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<BalanceSheetService> logger = loggerFactory.CreateLogger<BalanceSheetService>();
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
@@ -99,7 +109,19 @@ namespace Financier.Tests
                 sqliteMemoryWrapper.DbContext.Accounts.Add(creditCardAccount);
                 sqliteMemoryWrapper.DbContext.SaveChanges();
 
-                var balanceSheetService = new BalanceSheetService(logger, sqliteMemoryWrapper.DbContext);
+                var accountService = new AccountService(
+                    loggerFactory.CreateLogger<AccountService>(),
+                    sqliteMemoryWrapper.DbContext
+                );
+                var currencyService = new CurrencyService(
+                    loggerFactory.CreateLogger<CurrencyService>(),
+                    sqliteMemoryWrapper.DbContext
+                );
+                var balanceSheetService = new BalanceSheetService(
+                    loggerFactory.CreateLogger<BalanceSheetService>(),
+                    accountService,
+                    currencyService
+                );
 
                 BalanceSheet balanceSheet = balanceSheetService.Generate(new DateTime(2018, 1, 1));
                 List<BalanceSheetItem> balanceSheetAssets = balanceSheet.Assets.ToList();
@@ -121,7 +143,6 @@ namespace Financier.Tests
         public void TestBalanceSheetWithTransactions()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<BalanceSheetService> logger = loggerFactory.CreateLogger<BalanceSheetService>();
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
@@ -208,7 +229,19 @@ namespace Financier.Tests
                 sqliteMemoryWrapper.DbContext.Transactions.AddRange(transactions);
                 sqliteMemoryWrapper.DbContext.SaveChanges();
 
-                var balanceSheetService = new BalanceSheetService(logger, sqliteMemoryWrapper.DbContext);
+                var accountService = new AccountService(
+                    loggerFactory.CreateLogger<AccountService>(),
+                    sqliteMemoryWrapper.DbContext
+                );
+                var currencyService = new CurrencyService(
+                    loggerFactory.CreateLogger<CurrencyService>(),
+                    sqliteMemoryWrapper.DbContext
+                );
+                var balanceSheetService = new BalanceSheetService(
+                    loggerFactory.CreateLogger<BalanceSheetService>(),
+                    accountService,
+                    currencyService
+                );
 
                 BalanceSheet balanceSheetBeforeTransactions = balanceSheetService.Generate(new DateTime(2017, 1, 1));
                 List<BalanceSheetItem> balanceSheetBeforeTransactionsAssets = balanceSheetBeforeTransactions.Assets.ToList();
@@ -231,14 +264,14 @@ namespace Financier.Tests
 
                 Assert.AreEqual(usdCurrency.Symbol, balanceSheetTwoTransactions.CurrencySymbol);
                 Assert.AreEqual(100, balanceSheetTwoTransactions.TotalAssets);
-                Assert.AreEqual(40, balanceSheetTwoTransactions.TotalLiabilities);
+                Assert.AreEqual(-40, balanceSheetTwoTransactions.TotalLiabilities);
                 Assert.AreEqual(60, balanceSheetTwoTransactions.NetWorth);
                 Assert.AreEqual(1, balanceSheetTwoTransactionsAssets.Count);
                 Assert.AreEqual(1, balanceSheetTwoTransactionsLiabilities.Count);
                 Assert.AreEqual(checkingAccount.Name, balanceSheetTwoTransactionsAssets[0].Name);
                 Assert.AreEqual(100, balanceSheetTwoTransactionsAssets[0].Balance);
                 Assert.AreEqual(creditCardAccount.Name, balanceSheetTwoTransactionsLiabilities[0].Name);
-                Assert.AreEqual(40, balanceSheetTwoTransactionsLiabilities[0].Balance);
+                Assert.AreEqual(-40, balanceSheetTwoTransactionsLiabilities[0].Balance);
 
                 BalanceSheet balanceSheetAtEnd = balanceSheetService.Generate(new DateTime(2018, 2, 1));
                 List<BalanceSheetItem> balanceSheetAtEndAssets = balanceSheetAtEnd.Assets.ToList();
@@ -261,7 +294,6 @@ namespace Financier.Tests
         public void TestBalanceSheetWithLogicalAccounts()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<BalanceSheetService> logger = loggerFactory.CreateLogger<BalanceSheetService>();
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
@@ -351,7 +383,19 @@ namespace Financier.Tests
                 sqliteMemoryWrapper.DbContext.Transactions.AddRange(transactions);
                 sqliteMemoryWrapper.DbContext.SaveChanges();
 
-                var balanceSheetService = new BalanceSheetService(logger, sqliteMemoryWrapper.DbContext);
+                var accountService = new AccountService(
+                    loggerFactory.CreateLogger<AccountService>(),
+                    sqliteMemoryWrapper.DbContext
+                );
+                var currencyService = new CurrencyService(
+                    loggerFactory.CreateLogger<CurrencyService>(),
+                    sqliteMemoryWrapper.DbContext
+                );
+                var balanceSheetService = new BalanceSheetService(
+                    loggerFactory.CreateLogger<BalanceSheetService>(),
+                    accountService,
+                    currencyService
+                );
 
                 BalanceSheet balanceSheet = balanceSheetService.Generate(new DateTime(2018, 1, 1));
                 List<BalanceSheetItem> balanceSheetAssets = balanceSheet.Assets.ToList();
