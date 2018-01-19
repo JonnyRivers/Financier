@@ -1,4 +1,4 @@
-﻿using Financier.Data;
+﻿using Financier.Entities;
 using Financier.Desktop.Services;
 using Financier.Desktop.ViewModels;
 using Financier.Desktop.Views;

@@ -1,4 +1,4 @@
-﻿namespace Financier.Data
+﻿namespace Financier.Entities
 {
     public enum AccountType
     {

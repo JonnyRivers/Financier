@@ -1,4 +1,4 @@
-﻿using Financier.Data;
+﻿using Financier.Entities;
 using Financier.Services;
 using Microsoft.Extensions.CommandLineUtils;
 using Microsoft.Extensions.DependencyInjection;

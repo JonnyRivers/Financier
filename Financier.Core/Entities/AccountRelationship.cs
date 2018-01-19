@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Financier.Data
+namespace Financier.Entities
 {
     public class AccountRelationship
     {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Financier.Data;
+using Financier.Entities;
 using Microsoft.Extensions.Logging;
 
 namespace Financier.Services

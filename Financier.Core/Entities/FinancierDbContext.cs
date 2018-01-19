@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
-namespace Financier.Data
+namespace Financier.Entities
 {
     public class FinancierDbContext : DbContext
     {

@@ -1,4 +1,4 @@
-﻿using Financier.Data;
+﻿using Financier.Entities;
 using Financier.Desktop.Commands;
 using Financier.Services;
 using Microsoft.Extensions.Logging;

@@ -1,4 +1,4 @@
-﻿using Financier.Data;
+﻿using Financier.Entities;
 
 namespace Financier.Desktop.ViewModels
 {
