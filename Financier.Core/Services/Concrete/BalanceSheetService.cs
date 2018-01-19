@@ -23,7 +23,7 @@ namespace Financier.Services
             // TODO: this is implemented in terms of very low level (data layer) concepts.
             // This should be implemented in terms of other services.
 
-            Currency primaryCurrency = m_dbContext.Currencies.Single(c => c.IsPrimary);
+            Entities.Currency primaryCurrency = m_dbContext.Currencies.Single(c => c.IsPrimary);
 
             // Find all logical account ids
             List<AccountRelationship> physicalToLogicalRelationships = 

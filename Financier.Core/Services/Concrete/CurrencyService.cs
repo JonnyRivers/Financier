@@ -1,5 +1,4 @@
-﻿using Financier.Entities;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -8,9 +7,9 @@ namespace Financier.Services
     public class CurrencyService : ICurrencyService
     {
         private ILogger<CurrencyService> m_logger;
-        private FinancierDbContext m_dbContext;
+        private Entities.FinancierDbContext m_dbContext;
 
-        public CurrencyService(ILogger<CurrencyService> logger, FinancierDbContext dbContext)
+        public CurrencyService(ILogger<CurrencyService> logger, Entities.FinancierDbContext dbContext)
         {
             m_logger = logger;
             m_dbContext = dbContext;
@@ -18,12 +17,24 @@ namespace Financier.Services
 
         public IEnumerable<Currency> GetAll()
         {
-            return m_dbContext.Currencies;
+            return m_dbContext.Currencies.Select(FromEntity);
         }
 
         public Currency GetPrimary()
         {
-            return m_dbContext.Currencies.Single(c => c.IsPrimary);
+            return m_dbContext.Currencies.Select(FromEntity).Single(c => c.IsPrimary);
+        }
+
+        private static Currency FromEntity(Entities.Currency currencyEntity)
+        {
+            return new Currency
+            {
+                CurrencyId = currencyEntity.CurrencyId,
+                IsPrimary = currencyEntity.IsPrimary,
+                Name = currencyEntity.Name,
+                ShortName = currencyEntity.ShortName,
+                Symbol = currencyEntity.Symbol
+            };
         }
     }
 }

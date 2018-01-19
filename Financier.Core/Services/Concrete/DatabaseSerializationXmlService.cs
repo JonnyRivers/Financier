@@ -30,10 +30,10 @@ namespace Financier.Services
             XElement rootElement = document.Root;
 
             List<XElement> currencyElements = rootElement.Elements(XName.Get("Currency")).ToList();
-            List<Currency> currencies = currencyElements.Select(CurrencyFromElement).ToList();
+            List<Entities.Currency> currencies = currencyElements.Select(CurrencyFromElement).ToList();
             m_dbContext.Currencies.AddRange(currencies);
             m_dbContext.SaveChanges();
-            Dictionary<string, Currency> currenciesByShortName = currencies.ToDictionary(c => c.ShortName, c => c);
+            Dictionary<string, Entities.Currency> currenciesByShortName = currencies.ToDictionary(c => c.ShortName, c => c);
 
             List<XElement> accountElements = rootElement.Elements(XName.Get("Account")).ToList();
             List<Account> accounts = accountElements.Select(e => AccountFromElement(e, currenciesByShortName)).ToList();
@@ -54,7 +54,7 @@ namespace Financier.Services
 
         public void Save(string path)
         {
-            List<Currency> currencies = m_dbContext.Currencies.ToList();
+            List<Entities.Currency> currencies = m_dbContext.Currencies.ToList();
             List<XElement> currencyElements = currencies.Select(ElementFromCurrency).ToList();
 
             List<Account> accounts = m_dbContext.Accounts.ToList();
@@ -90,9 +90,9 @@ namespace Financier.Services
             return attribute;
         }
 
-        private static Currency CurrencyFromElement(XElement element)
+        private static Entities.Currency CurrencyFromElement(XElement element)
         {
-            var currency = new Currency
+            var currency = new Entities.Currency
             {
                 Name = GetRequiredAttribute(element, "name").Value,
                 ShortName = GetRequiredAttribute(element, "shortName").Value,
@@ -103,7 +103,7 @@ namespace Financier.Services
             return currency;
         }
 
-        private static XElement ElementFromCurrency(Currency currency)
+        private static XElement ElementFromCurrency(Entities.Currency currency)
         {
             var element = new XElement(XName.Get("Currency"),
                 new XAttribute(XName.Get("name"), currency.Name),
@@ -115,7 +115,7 @@ namespace Financier.Services
             return element;
         }
 
-        private static Account AccountFromElement(XElement element, Dictionary<string, Currency> currenciesByShortName)
+        private static Account AccountFromElement(XElement element, Dictionary<string, Entities.Currency> currenciesByShortName)
         {
             string currencyShortName = GetRequiredAttribute(element, "currency").Value;
             var account = new Account

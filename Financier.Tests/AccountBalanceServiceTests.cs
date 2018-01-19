@@ -17,7 +17,7 @@ namespace Financier.Tests
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
-                var usdCurrency = new Currency
+                var usdCurrency = new Entities.Currency
                 {
                     Name = "US Dollar",
                     ShortName = "USD",
@@ -54,7 +54,7 @@ namespace Financier.Tests
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
-                var usdCurrency = new Currency
+                var usdCurrency = new Entities.Currency
                 {
                     Name = "US Dollar",
                     ShortName = "USD",
@@ -112,7 +112,7 @@ namespace Financier.Tests
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
-                var usdCurrency = new Currency
+                var usdCurrency = new Entities.Currency
                 {
                     Name = "US Dollar",
                     ShortName = "USD",
