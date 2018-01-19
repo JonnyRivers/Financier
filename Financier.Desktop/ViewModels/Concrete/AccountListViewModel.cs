@@ -71,7 +71,6 @@ namespace Financier.Desktop.ViewModels
 
         private void PopulateAccounts()
         {
-            // TODO: batch balance retrieval
             IEnumerable<Account> accounts = m_accountService.GetAll();
             IEnumerable<IAccountItemViewModel> accountVMs = accounts
                 .OrderBy(a => a.Name)

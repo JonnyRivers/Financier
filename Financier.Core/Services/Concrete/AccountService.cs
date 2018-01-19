@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Financier.Services
@@ -31,13 +32,18 @@ namespace Financier.Services
 
         public Account Get(int accountId)
         {
-            Entities.Account accountEntity = m_dbContext.Accounts.Single(a => a.AccountId == accountId);
+            Entities.Account accountEntity = m_dbContext.Accounts
+                .Include(a => a.Currency)
+                .Single(a => a.AccountId == accountId);
             return FromEntity(accountEntity);
         }
 
         public IEnumerable<Account> GetAll()
         {
-            return m_dbContext.Accounts.Select(FromEntity);
+            return m_dbContext.Accounts
+                .Include(a => a.Currency)
+                .Select(FromEntity)
+                .ToList();
         }
 
         public void Update(Account account)

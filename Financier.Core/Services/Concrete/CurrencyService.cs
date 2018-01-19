@@ -17,7 +17,7 @@ namespace Financier.Services
 
         public IEnumerable<Currency> GetAll()
         {
-            return m_dbContext.Currencies.Select(FromEntity);
+            return m_dbContext.Currencies.Select(FromEntity).ToList();
         }
 
         public Currency GetPrimary()

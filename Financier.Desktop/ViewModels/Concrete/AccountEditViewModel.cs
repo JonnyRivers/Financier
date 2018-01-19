@@ -20,7 +20,7 @@ namespace Financier.Desktop.ViewModels
 
             Name = "New Account";
             SelectedAccountType = AccountType.Asset;
-            SelectedCurrency = m_currencyService.GetPrimary();
+            SelectedCurrency = Currencies.Single(c => c.IsPrimary);
         }
 
         private IAccountService m_accountService;
@@ -42,7 +42,7 @@ namespace Financier.Desktop.ViewModels
                     Account account = m_accountService.Get(m_accountId);
                     Name = account.Name;
                     SelectedAccountType = account.Type;
-                    SelectedCurrency = account.Currency;
+                    SelectedCurrency = Currencies.Single(c => c.CurrencyId == account.Currency.CurrencyId);
                 }
             }
         }

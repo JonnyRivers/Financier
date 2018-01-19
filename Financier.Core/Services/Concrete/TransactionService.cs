@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Financier.Services
@@ -42,14 +43,21 @@ namespace Financier.Services
         public Transaction Get(int transactionId)
         {
             Entities.Transaction transaction = 
-                m_dbContext.Transactions.Single(t => t.TransactionId == transactionId);
+                m_dbContext.Transactions
+                    .Include(t => t.CreditAccount)
+                    .Include(t => t.DebitAccount)
+                    .Single(t => t.TransactionId == transactionId);
 
             return FromEntity(transaction);
         }
 
         public IEnumerable<Transaction> GetAll()
         {
-            return m_dbContext.Transactions.Select(FromEntity);
+            return m_dbContext.Transactions
+                .Include(t => t.CreditAccount)
+                .Include(t => t.DebitAccount)
+                .Select(FromEntity)
+                .ToList();
         }
 
         public IEnumerable<Transaction> GetAll(int accountId, bool includeLogicalAccounts)
@@ -67,10 +75,13 @@ namespace Financier.Services
             }
 
             return m_dbContext.Transactions
+                .Include(t => t.CreditAccount)
+                .Include(t => t.DebitAccount)
                 .Where(t => relevantAccountIds.Contains(t.CreditAccountId) ||
                             relevantAccountIds.Contains(t.DebitAccountId))
                 .OrderBy(t => t.TransactionId)
-                .Select(FromEntity);
+                .Select(FromEntity)
+                .ToList();
         }
 
         public void Update(Transaction transaction)
@@ -90,6 +101,7 @@ namespace Financier.Services
         {
             return new Transaction
             {
+                TransactionId = transactionEntity.TransactionId,
                 CreditAccount = FromEntity(transactionEntity.CreditAccount),
                 DebitAccount = FromEntity(transactionEntity.DebitAccount),
                 Amount = transactionEntity.Amount,
