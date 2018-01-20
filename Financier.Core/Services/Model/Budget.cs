@@ -6,6 +6,7 @@ namespace Financier.Services
     {
         public int BudgetId { get; set; }
         public string Name { get; set; }
+        public BudgetPeriod Period { get; set; }
         public BudgetTransaction InitialTransaction { get; set; }
         public IEnumerable<BudgetTransaction> Transactions { get; set; }
         public BudgetTransaction SurplusTransaction { get; set; }
