@@ -139,8 +139,8 @@ namespace Financier.Desktop.ViewModels
             {
                 var transaction = new Transaction
                 {
-                    CreditAccount = new AccountSummary { AccountId = SelectedCreditAccount.AccountId },
-                    DebitAccount = new AccountSummary { AccountId = SelectedDebitAccount.AccountId },
+                    CreditAccount = new AccountLink { AccountId = SelectedCreditAccount.AccountId },
+                    DebitAccount = new AccountLink { AccountId = SelectedDebitAccount.AccountId },
                     Amount = Amount,
                     At = At,
                 };

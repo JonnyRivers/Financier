@@ -1,13 +1,10 @@
-﻿using System;
-
-namespace Financier.Services
+﻿namespace Financier.Services
 {
-    public class Transaction
+    public class BudgetTransaction
     {
-        public int TransactionId { get; set; }
+        public int BudgetTransactionId { get; set; }
         public AccountLink CreditAccount { get; set; }
         public AccountLink DebitAccount { get; set; }
         public decimal Amount { get; set; }
-        public DateTime At { get; set; }
     }
 }
