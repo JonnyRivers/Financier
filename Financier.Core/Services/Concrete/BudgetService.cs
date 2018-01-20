@@ -97,7 +97,53 @@ namespace Financier.Services
 
         public void Update(Budget budget)
         {
-            throw new NotImplementedException();
+            Entities.Budget budgetEntity = m_dbContext.Budgets
+                .Include(b => b.Transactions)
+                .Single(b => b.BudgetId == budget.BudgetId);
+            budgetEntity.Name = budget.Name;
+            budgetEntity.Period = (Entities.BudgetPeriod)budget.Period;
+
+            Entities.BudgetTransaction initialTransactionEntity = budgetEntity.Transactions.Single(t => t.IsInitial);
+            UpdateTransactionEntity(budget.InitialTransaction, initialTransactionEntity);
+
+            List<Entities.BudgetTransaction> transactionEntities =
+                budgetEntity.Transactions
+                    .Where(t => !t.IsInitial && !t.IsSurplus)
+                    .ToList();
+            var transactionIds = new HashSet<int>(
+                budget.Transactions
+                    .Select(t => t.BudgetTransactionId)
+            );
+
+            foreach (Entities.BudgetTransaction transactionEntity in transactionEntities)
+            {
+                if (transactionIds.Contains(transactionEntity.BudgetTransactionId))
+                {
+                    // update existing transaction
+                    BudgetTransaction transaction = budget.Transactions
+                        .Single(t => t.BudgetTransactionId == transactionEntity.BudgetTransactionId);
+                    UpdateTransactionEntity(transaction, transactionEntity);
+                }
+                else
+                {
+                    // remove missing transaction
+                    budgetEntity.Transactions.Remove(transactionEntity);
+                }
+            }
+
+            // add new transactions
+            var transactionEntityIds = new HashSet<int>(transactionEntities.Select(t => t.BudgetTransactionId));
+            IEnumerable<BudgetTransaction> transactionsWithNoEntity = 
+                budget.Transactions.Where(t => !transactionEntityIds.Contains(t.BudgetTransactionId));
+            foreach (BudgetTransaction transactionWithNoEntity in transactionsWithNoEntity)
+            {
+                budgetEntity.Transactions.Add(ToEntity(budgetEntity, transactionWithNoEntity));
+            }
+
+            Entities.BudgetTransaction surplusTransactionEntity = budgetEntity.Transactions.Single(t => t.IsSurplus);
+            UpdateTransactionEntity(budget.SurplusTransaction, surplusTransactionEntity);
+
+            m_dbContext.SaveChanges();
         }
 
         private static Budget FromEntity(Entities.Budget budgetEntity)
@@ -158,6 +204,15 @@ namespace Financier.Services
             };
 
             return transactionEntity;
+        }
+
+        private static void UpdateTransactionEntity(
+            BudgetTransaction budgetTransaction, 
+            Entities.BudgetTransaction budgetTransactionEntity)
+        {
+            budgetTransactionEntity.Amount = budgetTransaction.Amount;
+            budgetTransactionEntity.CreditAccountId = budgetTransaction.CreditAccount.AccountId;
+            budgetTransactionEntity.DebitAccountId = budgetTransaction.DebitAccount.AccountId;
         }
     }
 }

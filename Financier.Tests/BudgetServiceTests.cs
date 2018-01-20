@@ -663,10 +663,153 @@ namespace Financier.Tests
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
+                var usdCurrencyEntity = new Entities.Currency
+                {
+                    Name = "US Dollar",
+                    ShortName = "USD",
+                    Symbol = "$",
+                    IsPrimary = true
+                };
+
+                sqliteMemoryWrapper.DbContext.Currencies.Add(usdCurrencyEntity);
+                sqliteMemoryWrapper.DbContext.SaveChanges();
+
+                var incomeAccountEntity = new Entities.Account
+                {
+                    Name = "Income",
+                    Currency = usdCurrencyEntity,
+                    Type = Entities.AccountType.Income
+                };
+                var checkingAccountEntity = new Entities.Account
+                {
+                    Name = "Checking",
+                    Currency = usdCurrencyEntity,
+                    Type = Entities.AccountType.Asset
+                };
+                var savingsAccountEntity = new Entities.Account
+                {
+                    Name = "Savings",
+                    Currency = usdCurrencyEntity,
+                    Type = Entities.AccountType.Asset
+                };
+                var rentPrepaymentAccountEntity = new Entities.Account
+                {
+                    Name = "Rent Prepayment",
+                    Currency = usdCurrencyEntity,
+                    Type = Entities.AccountType.Asset
+                };
+                var rentExpenseAccountEntity = new Entities.Account
+                {
+                    Name = "Rent Expense",
+                    Currency = usdCurrencyEntity,
+                    Type = Entities.AccountType.Expense
+                };
+
+                sqliteMemoryWrapper.DbContext.Accounts.Add(incomeAccountEntity);
+                sqliteMemoryWrapper.DbContext.Accounts.Add(checkingAccountEntity);
+                sqliteMemoryWrapper.DbContext.Accounts.Add(savingsAccountEntity);
+                sqliteMemoryWrapper.DbContext.Accounts.Add(rentPrepaymentAccountEntity);
+                sqliteMemoryWrapper.DbContext.Accounts.Add(rentExpenseAccountEntity);
+                sqliteMemoryWrapper.DbContext.SaveChanges();
+
+                var checkingToRentPrepaymentRelationshipEntity = new Entities.AccountRelationship
+                {
+                    SourceAccount = checkingAccountEntity,
+                    DestinationAccount = rentPrepaymentAccountEntity,
+                    Type = Entities.AccountRelationshipType.PhysicalToLogical
+                };
+                var rentPrepaymentToExpenseRelationshipEntity = new Entities.AccountRelationship
+                {
+                    SourceAccount = rentPrepaymentAccountEntity,
+                    DestinationAccount = rentExpenseAccountEntity,
+                    Type = Entities.AccountRelationshipType.PrepaymentToExpense
+                };
+
+                sqliteMemoryWrapper.DbContext.AccountRelationships.Add(checkingToRentPrepaymentRelationshipEntity);
+                sqliteMemoryWrapper.DbContext.AccountRelationships.Add(rentPrepaymentToExpenseRelationshipEntity);
+                sqliteMemoryWrapper.DbContext.SaveChanges();
+
+                var budgetEntity = new Entities.Budget
+                {
+                    Name = "Full Budget",
+                    Period = Entities.BudgetPeriod.Fortnightly
+                };
+                sqliteMemoryWrapper.DbContext.Budgets.Add(budgetEntity);
+                sqliteMemoryWrapper.DbContext.SaveChanges();
+
+                var budgetTransactionEntities = new Entities.BudgetTransaction[3]
+                {
+                    new Entities.BudgetTransaction
+                    {
+                        CreditAccount = incomeAccountEntity,
+                        DebitAccount = checkingAccountEntity,
+                        Amount = 200m,
+                        IsInitial = true,
+                        Budget = budgetEntity
+                    },
+                    new Entities.BudgetTransaction
+                    {
+                        CreditAccount = checkingAccountEntity,
+                        DebitAccount = rentPrepaymentAccountEntity,
+                        Amount = 100m,
+                        Budget = budgetEntity
+                    },
+                    new Entities.BudgetTransaction
+                    {
+                        CreditAccount = checkingAccountEntity,
+                        DebitAccount = savingsAccountEntity,
+                        IsSurplus = true,
+                        Budget = budgetEntity
+                    }
+                };
+
+                sqliteMemoryWrapper.DbContext.BudgetTransactions.AddRange(budgetTransactionEntities);
+                sqliteMemoryWrapper.DbContext.SaveChanges();
+
                 var budgetService = new BudgetService(logger, sqliteMemoryWrapper.DbContext);
 
-                Budget budget = null;
+                Budget budget = budgetService.Get(budgetEntity.BudgetId);
+
+                // Change *everything*
+                budget.Name = "Updated";
+                budget.Period = BudgetPeriod.Weekly;
+                budget.InitialTransaction.Amount = 50m;
+                budget.InitialTransaction.CreditAccount.AccountId = savingsAccountEntity.AccountId;
+                budget.InitialTransaction.DebitAccount.AccountId = incomeAccountEntity.AccountId;
+                BudgetTransaction transaction = budget.Transactions.ElementAt(0);
+                transaction.Amount = 25m;
+                transaction.CreditAccount.AccountId = savingsAccountEntity.AccountId;
+                transaction.DebitAccount.AccountId = checkingAccountEntity.AccountId;
+                budget.SurplusTransaction.CreditAccount.AccountId = savingsAccountEntity.AccountId;
+                budget.SurplusTransaction.DebitAccount.AccountId = checkingAccountEntity.AccountId;
+
                 budgetService.Update(budget);
+
+                List<Entities.Budget> updatedBudgetEntities = sqliteMemoryWrapper.DbContext.Budgets.ToList();
+                List<Entities.BudgetTransaction> updatedBudgetTransactionEntities =
+                    sqliteMemoryWrapper.DbContext.BudgetTransactions.ToList();
+
+                Assert.AreEqual(1, updatedBudgetEntities.Count);
+                Assert.AreEqual(3, updatedBudgetTransactionEntities.Count);
+                Assert.AreEqual(budget.Name, updatedBudgetEntities[0].Name);
+                Assert.AreEqual(Entities.BudgetPeriod.Weekly, updatedBudgetEntities[0].Period);
+                Assert.AreEqual(budget.InitialTransaction.Amount, 
+                    updatedBudgetTransactionEntities[0].Amount);
+                Assert.AreEqual(budget.InitialTransaction.CreditAccount.AccountId, 
+                    updatedBudgetTransactionEntities[0].CreditAccount.AccountId);
+                Assert.AreEqual(budget.InitialTransaction.DebitAccount.AccountId, 
+                    updatedBudgetTransactionEntities[0].DebitAccount.AccountId);
+                Assert.AreEqual(transaction.Amount, updatedBudgetTransactionEntities[1].Amount);
+                Assert.AreEqual(transaction.CreditAccount.AccountId,
+                    updatedBudgetTransactionEntities[1].CreditAccount.AccountId);
+                Assert.AreEqual(transaction.DebitAccount.AccountId,
+                    updatedBudgetTransactionEntities[1].DebitAccount.AccountId);
+                Assert.AreEqual(budget.SurplusTransaction.Amount, 
+                    updatedBudgetTransactionEntities[2].Amount);
+                Assert.AreEqual(budget.SurplusTransaction.CreditAccount.AccountId,
+                    updatedBudgetTransactionEntities[2].CreditAccount.AccountId);
+                Assert.AreEqual(budget.SurplusTransaction.DebitAccount.AccountId,
+                    updatedBudgetTransactionEntities[2].DebitAccount.AccountId);
             }
         }
 
@@ -678,10 +821,138 @@ namespace Financier.Tests
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
+                var usdCurrencyEntity = new Entities.Currency
+                {
+                    Name = "US Dollar",
+                    ShortName = "USD",
+                    Symbol = "$",
+                    IsPrimary = true
+                };
+
+                sqliteMemoryWrapper.DbContext.Currencies.Add(usdCurrencyEntity);
+                sqliteMemoryWrapper.DbContext.SaveChanges();
+
+                var incomeAccountEntity = new Entities.Account
+                {
+                    Name = "Income",
+                    Currency = usdCurrencyEntity,
+                    Type = Entities.AccountType.Income
+                };
+                var checkingAccountEntity = new Entities.Account
+                {
+                    Name = "Checking",
+                    Currency = usdCurrencyEntity,
+                    Type = Entities.AccountType.Asset
+                };
+                var savingsAccountEntity = new Entities.Account
+                {
+                    Name = "Savings",
+                    Currency = usdCurrencyEntity,
+                    Type = Entities.AccountType.Asset
+                };
+                var rentPrepaymentAccountEntity = new Entities.Account
+                {
+                    Name = "Rent Prepayment",
+                    Currency = usdCurrencyEntity,
+                    Type = Entities.AccountType.Asset
+                };
+                var rentExpenseAccountEntity = new Entities.Account
+                {
+                    Name = "Rent Expense",
+                    Currency = usdCurrencyEntity,
+                    Type = Entities.AccountType.Expense
+                };
+
+                sqliteMemoryWrapper.DbContext.Accounts.Add(incomeAccountEntity);
+                sqliteMemoryWrapper.DbContext.Accounts.Add(checkingAccountEntity);
+                sqliteMemoryWrapper.DbContext.Accounts.Add(savingsAccountEntity);
+                sqliteMemoryWrapper.DbContext.Accounts.Add(rentPrepaymentAccountEntity);
+                sqliteMemoryWrapper.DbContext.Accounts.Add(rentExpenseAccountEntity);
+                sqliteMemoryWrapper.DbContext.SaveChanges();
+
+                var checkingToRentPrepaymentRelationshipEntity = new Entities.AccountRelationship
+                {
+                    SourceAccount = checkingAccountEntity,
+                    DestinationAccount = rentPrepaymentAccountEntity,
+                    Type = Entities.AccountRelationshipType.PhysicalToLogical
+                };
+                var rentPrepaymentToExpenseRelationshipEntity = new Entities.AccountRelationship
+                {
+                    SourceAccount = rentPrepaymentAccountEntity,
+                    DestinationAccount = rentExpenseAccountEntity,
+                    Type = Entities.AccountRelationshipType.PrepaymentToExpense
+                };
+
+                sqliteMemoryWrapper.DbContext.AccountRelationships.Add(checkingToRentPrepaymentRelationshipEntity);
+                sqliteMemoryWrapper.DbContext.AccountRelationships.Add(rentPrepaymentToExpenseRelationshipEntity);
+                sqliteMemoryWrapper.DbContext.SaveChanges();
+
+                var budgetEntity = new Entities.Budget
+                {
+                    Name = "Full Budget",
+                    Period = Entities.BudgetPeriod.Fortnightly
+                };
+                sqliteMemoryWrapper.DbContext.Budgets.Add(budgetEntity);
+                sqliteMemoryWrapper.DbContext.SaveChanges();
+
+                var budgetTransactionEntities = new Entities.BudgetTransaction[3]
+                {
+                    new Entities.BudgetTransaction
+                    {
+                        CreditAccount = incomeAccountEntity,
+                        DebitAccount = checkingAccountEntity,
+                        Amount = 200m,
+                        IsInitial = true,
+                        Budget = budgetEntity
+                    },
+                    new Entities.BudgetTransaction
+                    {
+                        CreditAccount = checkingAccountEntity,
+                        DebitAccount = rentPrepaymentAccountEntity,
+                        Amount = 100m,
+                        Budget = budgetEntity
+                    },
+                    new Entities.BudgetTransaction
+                    {
+                        CreditAccount = checkingAccountEntity,
+                        DebitAccount = savingsAccountEntity,
+                        IsSurplus = true,
+                        Budget = budgetEntity
+                    }
+                };
+
+                sqliteMemoryWrapper.DbContext.BudgetTransactions.AddRange(budgetTransactionEntities);
+                sqliteMemoryWrapper.DbContext.SaveChanges();
+
                 var budgetService = new BudgetService(logger, sqliteMemoryWrapper.DbContext);
 
-                Budget budget = null;
+                Budget budget = budgetService.Get(budgetEntity.BudgetId);
+
+                // Remove the one 'regular' transaction
+                budget.Transactions = new BudgetTransaction[0];
+
                 budgetService.Update(budget);
+
+                List<Entities.Budget> updatedBudgetEntities = sqliteMemoryWrapper.DbContext.Budgets.ToList();
+                List<Entities.BudgetTransaction> updatedBudgetTransactionEntities =
+                    sqliteMemoryWrapper.DbContext.BudgetTransactions.ToList();
+
+                Assert.AreEqual(1, updatedBudgetEntities.Count);
+                Assert.AreEqual(2, updatedBudgetTransactionEntities.Count);
+                Assert.AreEqual(budget.Name, updatedBudgetEntities[0].Name);
+                Assert.AreEqual(Entities.BudgetPeriod.Fortnightly, updatedBudgetEntities[0].Period);
+                Assert.AreEqual(budget.InitialTransaction.Amount,
+                    updatedBudgetTransactionEntities[0].Amount);
+                Assert.AreEqual(budget.InitialTransaction.CreditAccount.AccountId,
+                    updatedBudgetTransactionEntities[0].CreditAccount.AccountId);
+                Assert.AreEqual(budget.InitialTransaction.DebitAccount.AccountId,
+                    updatedBudgetTransactionEntities[0].DebitAccount.AccountId);
+                Assert.AreEqual(budget.SurplusTransaction.Amount,
+                    updatedBudgetTransactionEntities[1].Amount);
+                Assert.AreEqual(budget.SurplusTransaction.CreditAccount.AccountId,
+                    updatedBudgetTransactionEntities[1].CreditAccount.AccountId);
+                Assert.AreEqual(budget.SurplusTransaction.DebitAccount.AccountId,
+                    updatedBudgetTransactionEntities[1].DebitAccount.AccountId);
             }
         }
 
@@ -693,10 +964,158 @@ namespace Financier.Tests
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
+                var usdCurrencyEntity = new Entities.Currency
+                {
+                    Name = "US Dollar",
+                    ShortName = "USD",
+                    Symbol = "$",
+                    IsPrimary = true
+                };
+
+                sqliteMemoryWrapper.DbContext.Currencies.Add(usdCurrencyEntity);
+                sqliteMemoryWrapper.DbContext.SaveChanges();
+
+                var incomeAccountEntity = new Entities.Account
+                {
+                    Name = "Income",
+                    Currency = usdCurrencyEntity,
+                    Type = Entities.AccountType.Income
+                };
+                var checkingAccountEntity = new Entities.Account
+                {
+                    Name = "Checking",
+                    Currency = usdCurrencyEntity,
+                    Type = Entities.AccountType.Asset
+                };
+                var savingsAccountEntity = new Entities.Account
+                {
+                    Name = "Savings",
+                    Currency = usdCurrencyEntity,
+                    Type = Entities.AccountType.Asset
+                };
+                var rentPrepaymentAccountEntity = new Entities.Account
+                {
+                    Name = "Rent Prepayment",
+                    Currency = usdCurrencyEntity,
+                    Type = Entities.AccountType.Asset
+                };
+                var rentExpenseAccountEntity = new Entities.Account
+                {
+                    Name = "Rent Expense",
+                    Currency = usdCurrencyEntity,
+                    Type = Entities.AccountType.Expense
+                };
+
+                sqliteMemoryWrapper.DbContext.Accounts.Add(incomeAccountEntity);
+                sqliteMemoryWrapper.DbContext.Accounts.Add(checkingAccountEntity);
+                sqliteMemoryWrapper.DbContext.Accounts.Add(savingsAccountEntity);
+                sqliteMemoryWrapper.DbContext.Accounts.Add(rentPrepaymentAccountEntity);
+                sqliteMemoryWrapper.DbContext.Accounts.Add(rentExpenseAccountEntity);
+                sqliteMemoryWrapper.DbContext.SaveChanges();
+
+                var checkingToRentPrepaymentRelationshipEntity = new Entities.AccountRelationship
+                {
+                    SourceAccount = checkingAccountEntity,
+                    DestinationAccount = rentPrepaymentAccountEntity,
+                    Type = Entities.AccountRelationshipType.PhysicalToLogical
+                };
+                var rentPrepaymentToExpenseRelationshipEntity = new Entities.AccountRelationship
+                {
+                    SourceAccount = rentPrepaymentAccountEntity,
+                    DestinationAccount = rentExpenseAccountEntity,
+                    Type = Entities.AccountRelationshipType.PrepaymentToExpense
+                };
+
+                sqliteMemoryWrapper.DbContext.AccountRelationships.Add(checkingToRentPrepaymentRelationshipEntity);
+                sqliteMemoryWrapper.DbContext.AccountRelationships.Add(rentPrepaymentToExpenseRelationshipEntity);
+                sqliteMemoryWrapper.DbContext.SaveChanges();
+
+                var budgetEntity = new Entities.Budget
+                {
+                    Name = "Full Budget",
+                    Period = Entities.BudgetPeriod.Fortnightly
+                };
+                sqliteMemoryWrapper.DbContext.Budgets.Add(budgetEntity);
+                sqliteMemoryWrapper.DbContext.SaveChanges();
+
+                var budgetTransactionEntities = new Entities.BudgetTransaction[3]
+                {
+                    new Entities.BudgetTransaction
+                    {
+                        CreditAccount = incomeAccountEntity,
+                        DebitAccount = checkingAccountEntity,
+                        Amount = 200m,
+                        IsInitial = true,
+                        Budget = budgetEntity
+                    },
+                    new Entities.BudgetTransaction
+                    {
+                        CreditAccount = checkingAccountEntity,
+                        DebitAccount = rentPrepaymentAccountEntity,
+                        Amount = 100m,
+                        Budget = budgetEntity
+                    },
+                    new Entities.BudgetTransaction
+                    {
+                        CreditAccount = checkingAccountEntity,
+                        DebitAccount = savingsAccountEntity,
+                        IsSurplus = true,
+                        Budget = budgetEntity
+                    }
+                };
+
+                sqliteMemoryWrapper.DbContext.BudgetTransactions.AddRange(budgetTransactionEntities);
+                sqliteMemoryWrapper.DbContext.SaveChanges();
+
                 var budgetService = new BudgetService(logger, sqliteMemoryWrapper.DbContext);
 
-                Budget budget = null;
+                Budget budget = budgetService.Get(budgetEntity.BudgetId);
+
+                // Add one 'regular' transaction
+                List<BudgetTransaction> transactions = budget.Transactions.ToList();
+                var newTransaction = new BudgetTransaction
+                {
+                    CreditAccount = new AccountLink { AccountId = checkingAccountEntity.AccountId },
+                    DebitAccount = new AccountLink { AccountId = rentPrepaymentAccountEntity.AccountId },
+                    Amount = 20m
+                };
+                transactions.Add(newTransaction);
+                budget.Transactions = transactions;
+
                 budgetService.Update(budget);
+
+                List<Entities.Budget> updatedBudgetEntities = sqliteMemoryWrapper.DbContext.Budgets.ToList();
+                List<Entities.BudgetTransaction> updatedBudgetTransactionEntities =
+                    sqliteMemoryWrapper.DbContext.BudgetTransactions.ToList();
+
+                Assert.AreEqual(1, updatedBudgetEntities.Count);
+                Assert.AreEqual(4, updatedBudgetTransactionEntities.Count);
+                Assert.AreEqual(budget.Name, updatedBudgetEntities[0].Name);
+                Assert.AreEqual(Entities.BudgetPeriod.Fortnightly, updatedBudgetEntities[0].Period);
+                Assert.AreEqual(budget.InitialTransaction.Amount,
+                    updatedBudgetTransactionEntities[0].Amount);
+                Assert.AreEqual(budget.InitialTransaction.CreditAccount.AccountId,
+                    updatedBudgetTransactionEntities[0].CreditAccount.AccountId);
+                Assert.AreEqual(budget.InitialTransaction.DebitAccount.AccountId,
+                    updatedBudgetTransactionEntities[0].DebitAccount.AccountId);
+                Assert.AreEqual(transactions[0].Amount,
+                    updatedBudgetTransactionEntities[1].Amount);
+                Assert.AreEqual(transactions[0].CreditAccount.AccountId,
+                    updatedBudgetTransactionEntities[1].CreditAccount.AccountId);
+                Assert.AreEqual(transactions[0].DebitAccount.AccountId,
+                    updatedBudgetTransactionEntities[1].DebitAccount.AccountId);
+                Assert.AreEqual(budget.SurplusTransaction.Amount,
+                    updatedBudgetTransactionEntities[2].Amount);
+                Assert.AreEqual(budget.SurplusTransaction.CreditAccount.AccountId,
+                    updatedBudgetTransactionEntities[2].CreditAccount.AccountId);
+                Assert.AreEqual(budget.SurplusTransaction.DebitAccount.AccountId,
+                    updatedBudgetTransactionEntities[2].DebitAccount.AccountId);
+                Assert.AreEqual(transactions[1].Amount,
+                    updatedBudgetTransactionEntities[3].Amount);
+                Assert.AreEqual(transactions[1].CreditAccount.AccountId,
+                    updatedBudgetTransactionEntities[3].CreditAccount.AccountId);
+                Assert.AreEqual(transactions[1].DebitAccount.AccountId,
+                    updatedBudgetTransactionEntities[3].DebitAccount.AccountId);
             }
         }
     }
