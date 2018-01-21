@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Financier.Desktop.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="400" d:DesignWidth="650">
+             d:DesignHeight="400" d:DesignWidth="750">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -16,12 +16,12 @@
             <Button Margin="5" Command="{Binding EditCommand}">Edit Selected Budget</Button>
             <Button Margin="5" Command="{Binding DeleteCommand}">Delete Selected Budget</Button>
         </StackPanel>
-        <ListView Grid.Row="1" SelectedItem="{Binding SelectedAccount}" ItemsSource="{Binding Accounts}">
+        <ListView Grid.Row="1" SelectedItem="{Binding SelectedBudget}" ItemsSource="{Binding Budgets}">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Name" Width="220" DisplayMemberBinding="{Binding Name}"/>
+                    <GridViewColumn Header="Name" Width="150" DisplayMemberBinding="{Binding Name}"/>
                     <GridViewColumn Header="Type" Width="80" DisplayMemberBinding="{Binding Period}"/>
-                    <GridViewColumn Header="Initial Transaction" Width="220" DisplayMemberBinding="{Binding InitialTransactionHint}"/>
+                    <GridViewColumn Header="Initial Transaction" Width="400" DisplayMemberBinding="{Binding InitialTransactionHint}"/>
                     <GridViewColumn Header="Transactions" Width="80" DisplayMemberBinding="{Binding Transactions}"/>
                 </GridView>
             </ListView.View>

@@ -33,6 +33,19 @@ namespace Financier.Desktop.ViewModels
             Type = type;
         }
 
+        public BudgetTransaction ToBudgetTransaction()
+        {
+            var budgetTransaction = new BudgetTransaction
+            {
+                BudgetTransactionId = BudgetTransactionId,
+                CreditAccount = SelectedCreditAccount.ToAccountLink(),
+                DebitAccount = SelectedDebitAccount.ToAccountLink(),
+                Amount = Amount
+            };
+
+            return budgetTransaction;
+        }
+
         public int BudgetTransactionId { get; set; }
         public BudgetTransactionType Type { get; set; }
         public IAccountLinkViewModel SelectedCreditAccount { get; set; }
@@ -41,6 +54,8 @@ namespace Financier.Desktop.ViewModels
 
         public IEnumerable<IAccountLinkViewModel> AccountLinks { get; private set; }
 
+        // TODO: this should be shared.  It can't be a property of Account.
+        // Perhaps we need a converter service.  We could ise AutoMapper or similar.
         private static IAccountLinkViewModel CreateAccountLink(Account account)
         {
             IAccountLinkViewModel accountLinkViewModel = IoC.ServiceProvider.Instance.GetRequiredService<IAccountLinkViewModel>();

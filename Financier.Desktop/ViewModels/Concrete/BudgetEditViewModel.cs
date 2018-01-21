@@ -23,6 +23,8 @@ namespace Financier.Desktop.ViewModels
             TransactionListViewModel = IoC.ServiceProvider.Instance.GetRequiredService<IBudgetTransactionListViewModel>();
         }
 
+        // TODO: Add a Setup() for consistency?
+
         private IBudgetService m_budgetService;
         private int m_budgetId;
 
@@ -56,22 +58,14 @@ namespace Financier.Desktop.ViewModels
 
         private void OKExecute(object obj)
         {
+            Budget budget = this.ToBudget();
+
             if (m_budgetId != 0)
             {
-                Budget budget = m_budgetService.Get(m_budgetId);
-                budget.Name = Name;
-                budget.Period = SelectedPeriod;
-
                 m_budgetService.Update(budget);
             }
             else
             {
-                var budget = new Budget
-                {
-                    Name = Name,
-                    Period = SelectedPeriod
-                };
-
                 m_budgetService.Create(budget);
             }
         }
@@ -79,6 +73,28 @@ namespace Financier.Desktop.ViewModels
         private void CancelExecute(object obj)
         {
 
+        }
+
+        private Budget ToBudget()
+        {
+            IBudgetTransactionItemViewModel initialTransaction = TransactionListViewModel.Transactions
+                .Single(t => t.Type == BudgetTransactionType.Initial);
+            IBudgetTransactionItemViewModel surplusTransaction = TransactionListViewModel.Transactions
+                .Single(t => t.Type == BudgetTransactionType.Surplus);
+            IEnumerable<IBudgetTransactionItemViewModel> regularTransactions = 
+                TransactionListViewModel.Transactions.Where(t => t.Type == BudgetTransactionType.Regular);
+
+            Budget budget = new Budget
+            {
+                BudgetId = m_budgetId,
+                Name = Name,
+                Period = SelectedPeriod,
+                InitialTransaction = initialTransaction.ToBudgetTransaction(),
+                Transactions = regularTransactions.Select(t => t.ToBudgetTransaction()),
+                SurplusTransaction = surplusTransaction.ToBudgetTransaction(),
+            };
+
+            return budget;
         }
     }
 }

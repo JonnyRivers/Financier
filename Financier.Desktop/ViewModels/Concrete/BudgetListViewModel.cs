@@ -30,9 +30,23 @@ namespace Financier.Desktop.ViewModels
             PopulateBudgets();
         }
 
+        private ObservableCollection<IBudgetItemViewModel> m_budgets;
         private IBudgetItemViewModel m_selectedBudget;
 
-        public ObservableCollection<IBudgetItemViewModel> Budgets { get; set; }
+        public ObservableCollection<IBudgetItemViewModel> Budgets
+        {
+            get { return m_budgets; }
+            set
+            {
+                if (m_budgets != value)
+                {
+                    m_budgets = value;
+
+                    OnPropertyChanged();
+                }
+            }
+        }
+
         public IBudgetItemViewModel SelectedBudget
         {
             get { return m_selectedBudget; }
@@ -108,7 +122,6 @@ namespace Financier.Desktop.ViewModels
                     });
 
             Budgets = new ObservableCollection<IBudgetItemViewModel>(budgetViewModels);
-            //OnPropertyChanged(nameof(Budgets));
         }
     }
 }
