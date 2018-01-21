@@ -11,6 +11,9 @@
             <TabItem Header="Accounts">
                 <views:AccountListControl DataContext="{Binding AccountListViewModel}"/>
             </TabItem>
+            <TabItem Header="Accounts">
+                <views:BudgetListControl DataContext="{Binding BudgetListViewModel}"/>
+            </TabItem>
             <TabItem Header="Transactions">
                 <views:TransactionListControl DataContext="{Binding TransactionListViewModel}"/>
             </TabItem>
