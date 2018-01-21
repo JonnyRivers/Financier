@@ -9,6 +9,39 @@ namespace Financier.Entities
         {
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<AccountRelationship>()
+                .HasOne(ar => ar.SourceAccount)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<AccountRelationship>()
+                .HasOne(ar => ar.DestinationAccount)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<BudgetTransaction>()
+                .HasOne(ar => ar.CreditAccount)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<BudgetTransaction>()
+                .HasOne(ar => ar.DebitAccount)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Transaction>()
+                .HasOne(ar => ar.CreditAccount)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Transaction>()
+                .HasOne(ar => ar.DebitAccount)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict);
+        }
+
         public DbSet<Account> Accounts { get; set; }
         public DbSet<AccountRelationship> AccountRelationships { get; set; }
         public DbSet<Budget> Budgets { get; set; }
