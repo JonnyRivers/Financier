@@ -76,10 +76,10 @@ namespace Financier.Desktop.ViewModels
 
         private void EditExecute(object obj)
         {
-            //if (m_viewService.OpenBudgetEditView(SelectedBudget.BudgetId))
-            //{
-            //    PopulateBudgets();
-            //}
+            if (m_viewService.OpenBudgetEditView(SelectedBudget.BudgetId))
+            {
+                PopulateBudgets();
+            }
         }
 
         private bool EditCanExecute(object obj)
