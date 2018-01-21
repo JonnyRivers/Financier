@@ -1,4 +1,5 @@
 ﻿using Financier.Desktop.Commands;
+using Financier.Desktop.Services;
 using Financier.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -13,16 +14,22 @@ namespace Financier.Desktop.ViewModels
     {
         private ILogger<BudgetTransactionListViewModel> m_logger;
         private IBudgetService m_budgetService;
+        private IViewService m_viewService;
 
         private int m_budgetId;
         private IBudgetTransactionItemViewModel m_selectedTransaction;
 
-        public BudgetTransactionListViewModel(ILogger<BudgetTransactionListViewModel> logger, IBudgetService budgetService)
+        public BudgetTransactionListViewModel(
+            ILogger<BudgetTransactionListViewModel> logger, 
+            IBudgetService budgetService,
+            IViewService viewService)
         {
             m_logger = logger;
             m_budgetService = budgetService;
+            m_viewService = viewService;
 
-            // TODO: this madness - this gets thrown away
+            // TODO: this is madness - this gets thrown away & is invalid with no data
+            // We need the account service to solve this
             var transactions = new List<IBudgetTransactionItemViewModel>();
             BudgetTransaction initialTransaction = new BudgetTransaction
             {
@@ -77,12 +84,31 @@ namespace Financier.Desktop.ViewModels
 
         private void CreateExecute(object obj)
         {
-            
+            IBudgetTransactionItemViewModel initialTransactionViewModel = 
+                Transactions
+                    .Single(t => t.Type == BudgetTransactionType.Initial);
+
+            var newTransaction = new BudgetTransaction
+            {
+                CreditAccount = initialTransactionViewModel.SelectedDebitAccount.ToAccountLink(),
+                // TODO: a sensible DebitAccount?  First account with a prepayment to expense link? Fallback?
+                DebitAccount = initialTransactionViewModel.SelectedCreditAccount.ToAccountLink(),
+                Amount = 0m
+            };
+
+            Transactions.Insert(
+                Transactions.Count - 1,// we maintain that the surplus transaction is last, so - 1
+                CreateItemViewModel(newTransaction, BudgetTransactionType.Regular)
+            );
         }
 
         private void DeleteExecute(object obj)
         {
-            
+            if (m_viewService.OpenBudgetDeleteConfirmationView())
+            {
+                Transactions.Remove(SelectedTransaction);
+                SelectedTransaction = null;// is this necessary?
+            }
         }
 
         private bool DeleteCanExecute(object obj)

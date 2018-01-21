@@ -11,6 +11,8 @@
         bool OpenBudgetDeleteConfirmationView();
         bool OpenBudgetEditView(int budgetId);
 
+        bool OpenBudgetTransactionDeleteConfirmationView();
+
         bool OpenTransactionCreateView();
         bool OpenTransactionDeleteConfirmationView();
         bool OpenTransactionEditView(int transactionId);

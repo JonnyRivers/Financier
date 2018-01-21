@@ -79,6 +79,11 @@ namespace Financier.Desktop.Services
             return false;
         }
 
+        public bool OpenBudgetTransactionDeleteConfirmationView()
+        {
+            return OpenDeleteConfirmationView("budget transaction");
+        }
+
         public bool OpenTransactionCreateView()
         {
             ITransactionEditViewModel transactionEditViewModel =
