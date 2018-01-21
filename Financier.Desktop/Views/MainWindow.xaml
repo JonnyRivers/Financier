@@ -11,7 +11,7 @@
             <TabItem Header="Accounts">
                 <views:AccountListControl DataContext="{Binding AccountListViewModel}"/>
             </TabItem>
-            <TabItem Header="Accounts">
+            <TabItem Header="Budgets">
                 <views:BudgetListControl DataContext="{Binding BudgetListViewModel}"/>
             </TabItem>
             <TabItem Header="Transactions">
