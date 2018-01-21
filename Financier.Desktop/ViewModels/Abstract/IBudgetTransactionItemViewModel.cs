@@ -1,5 +1,6 @@
 ﻿using Financier.Services;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace Financier.Desktop.ViewModels
 {
@@ -14,6 +15,9 @@ namespace Financier.Desktop.ViewModels
         IAccountLinkViewModel SelectedDebitAccount { get; set; }
         decimal Amount { get; set; }
 
-        IEnumerable<IAccountLinkViewModel> AccountLinks { get; }
+        // This has to be an ObservableCollection<T>
+        // Despite this not being required in other situations, the use of a <GridViewColumn.CellTemplate>
+        // in the view makes this necessary.  Otherwise the SelectedItem is not shown on form load.
+        ObservableCollection<IAccountLinkViewModel> AccountLinks { get; }
     }
 }

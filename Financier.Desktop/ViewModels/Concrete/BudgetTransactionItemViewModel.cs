@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Financier.Services;
 using Microsoft.Extensions.DependencyInjection;
@@ -6,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Financier.Desktop.ViewModels
 {
-    public class BudgetTransactionItemViewModel : IBudgetTransactionItemViewModel
+    public class BudgetTransactionItemViewModel : BaseViewModel, IBudgetTransactionItemViewModel
     {
         private ILogger<BudgetTransactionItemViewModel> m_logger;
         private IAccountService m_accountService;
@@ -16,12 +17,12 @@ namespace Financier.Desktop.ViewModels
             m_logger = logger;
             m_accountService = accountService;
 
-            // TODO: pass this through!
+            // TODO: pass this through ro centralize it somehow!
             // TODO: do we need a lightweight version?  We are hitting transactions here when we don't need to.
             // Maybe we need an account link get all at the account service level, given how expensive it is to retrieve accounts
             IEnumerable<Account> accounts = m_accountService.GetAll();
             IEnumerable<IAccountLinkViewModel> accountLinks = accounts.Select(CreateAccountLink);
-            AccountLinks = accountLinks;
+            AccountLinks = new ObservableCollection<IAccountLinkViewModel>(accountLinks);
         }
 
         public void Setup(BudgetTransaction budgetTransaction, BudgetTransactionType type)
@@ -52,7 +53,7 @@ namespace Financier.Desktop.ViewModels
         public IAccountLinkViewModel SelectedDebitAccount { get; set; }
         public decimal Amount { get; set; }
 
-        public IEnumerable<IAccountLinkViewModel> AccountLinks { get; private set; }
+        public ObservableCollection<IAccountLinkViewModel> AccountLinks { get; private set; }
 
         // TODO: this should be shared.  It can't be a property of Account.
         // Perhaps we need a converter service.  We could ise AutoMapper or similar.

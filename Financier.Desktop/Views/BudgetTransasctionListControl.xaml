@@ -6,13 +6,6 @@
              xmlns:local="clr-namespace:Financier.Desktop.Views"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="700">
-    <UserControl.Resources>
-        <DataTemplate x:Key="AccountLinkComboBoxItemTemplate">
-            <StackPanel>
-                <TextBlock Text="{Binding Name}"/>
-            </StackPanel>
-        </DataTemplate>
-    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -26,9 +19,35 @@
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Type" Width="80" DisplayMemberBinding="{Binding Type}"/>
-                    <GridViewColumn Header="Credit Account" Width="240" DisplayMemberBinding="{Binding SelectedCreditAccount.Name}"/>
-                    <GridViewColumn Header="Debit Account" Width="240" DisplayMemberBinding="{Binding SelectedDebitAccount.Name}"/>
-                    <GridViewColumn Header="Amount" Width="100" DisplayMemberBinding="{Binding Amount}"/>
+                    <GridViewColumn Header="Credit Account" Width="240">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <ComboBox DisplayMemberPath="Name"
+                                          ItemsSource="{Binding AccountLinks}" 
+                                          SelectedItem="{Binding SelectedCreditAccount}"
+                                          Width="225">
+                                </ComboBox>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Debit Account" Width="240">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <ComboBox DisplayMemberPath="Name"
+                                          ItemsSource="{Binding AccountLinks}" 
+                                          SelectedItem="{Binding SelectedDebitAccount}"
+                                          Width="225">
+                                </ComboBox>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Amount" Width="100" >
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBox Width="85" Text="{Binding Amount}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                 </GridView>
             </ListView.View>
         </ListView>
