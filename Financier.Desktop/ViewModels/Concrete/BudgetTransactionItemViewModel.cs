@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Linq;
 using Financier.Services;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,23 +9,18 @@ namespace Financier.Desktop.ViewModels
     public class BudgetTransactionItemViewModel : BaseViewModel, IBudgetTransactionItemViewModel
     {
         private ILogger<BudgetTransactionItemViewModel> m_logger;
-        private IAccountService m_accountService;
 
         public BudgetTransactionItemViewModel(ILogger<BudgetTransactionItemViewModel> logger, IAccountService accountService)
         {
             m_logger = logger;
-            m_accountService = accountService;
-
-            // TODO: pass this through ro centralize it somehow!
-            // TODO: do we need a lightweight version?  We are hitting transactions here when we don't need to.
-            // Maybe we need an account link get all at the account service level, given how expensive it is to retrieve accounts
-            IEnumerable<Account> accounts = m_accountService.GetAll();
-            IEnumerable<IAccountLinkViewModel> accountLinks = accounts.Select(CreateAccountLink);
-            AccountLinks = new ObservableCollection<IAccountLinkViewModel>(accountLinks);
         }
 
-        public void Setup(BudgetTransaction budgetTransaction, BudgetTransactionType type)
+        public void Setup(
+            ObservableCollection<IAccountLinkViewModel> accountLinks,
+            BudgetTransaction budgetTransaction, 
+            BudgetTransactionType type)
         {
+            AccountLinks = accountLinks;
             Amount = budgetTransaction.Amount;
             BudgetTransactionId = budgetTransaction.BudgetTransactionId;
             SelectedCreditAccount = AccountLinks.Single(al => al.AccountId == budgetTransaction.CreditAccount.AccountId);
@@ -54,15 +48,5 @@ namespace Financier.Desktop.ViewModels
         public decimal Amount { get; set; }
 
         public ObservableCollection<IAccountLinkViewModel> AccountLinks { get; private set; }
-
-        // TODO: this should be shared.  It can't be a property of Account.
-        // Perhaps we need a converter service.  We could ise AutoMapper or similar.
-        private static IAccountLinkViewModel CreateAccountLink(Account account)
-        {
-            IAccountLinkViewModel accountLinkViewModel = IoC.ServiceProvider.Instance.GetRequiredService<IAccountLinkViewModel>();
-            accountLinkViewModel.Setup(account);
-
-            return accountLinkViewModel;
-        }
     }
 }

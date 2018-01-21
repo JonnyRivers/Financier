@@ -8,6 +8,7 @@ namespace Financier.Services
         void Create(Account account);
         Account Get(int accountId);
         IEnumerable<Account> GetAll();
+        IEnumerable<AccountLink> GetAllAsLinks();
         IEnumerable<Account> GetAllPhysical();
         void Update(Account account);
 

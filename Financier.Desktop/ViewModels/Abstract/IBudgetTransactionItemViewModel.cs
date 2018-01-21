@@ -1,12 +1,14 @@
 ﻿using Financier.Services;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace Financier.Desktop.ViewModels
 {
     public interface IBudgetTransactionItemViewModel
     {
-        void Setup(BudgetTransaction budgetTransaction, BudgetTransactionType type);
+        void Setup(
+            ObservableCollection<IAccountLinkViewModel> accountLinks,
+            BudgetTransaction budgetTransaction, 
+            BudgetTransactionType type);
         BudgetTransaction ToBudgetTransaction();
 
         int BudgetTransactionId { get; set; }

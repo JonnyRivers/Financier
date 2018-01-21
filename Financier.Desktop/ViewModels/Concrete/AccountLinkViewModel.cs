@@ -4,11 +4,11 @@ namespace Financier.Desktop.ViewModels
 {
     public class AccountLinkViewModel : IAccountLinkViewModel
     {
-        public void Setup(Account account)
+        public void Setup(AccountLink accountLink)
         {
-            AccountId = account.AccountId;
-            Name = account.Name;
-            Type = account.Type;
+            AccountId = accountLink.AccountId;
+            Name = accountLink.Name;
+            Type = accountLink.Type;
         }
 
         public AccountLink ToAccountLink()
