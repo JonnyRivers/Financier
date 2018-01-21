@@ -68,6 +68,14 @@ namespace Financier.Services
             }
         }
 
+        public void Delete(int budgetId)
+        {
+            Entities.Budget budgetEntity =
+                m_dbContext.Budgets.Single(b => b.BudgetId == budgetId);
+            m_dbContext.Budgets.Remove(budgetEntity);
+            m_dbContext.SaveChanges();
+        }
+
         public Budget Get(int budgetId)
         {
             Entities.Budget budgetEntity =

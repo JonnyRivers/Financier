@@ -65,7 +65,7 @@ namespace Financier.Tests
         }
 
         [TestMethod]
-        public void TestBudgetCreateNewTransactions()
+        public void TestBudgetCreate()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
 
@@ -229,7 +229,8 @@ namespace Financier.Tests
         }
 
         [TestMethod]
-        public void TestBudgetGetAllEmpty()
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void TestBudgetDeleteFailInvalidId()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
             ILogger<BudgetService> logger = loggerFactory.CreateLogger<BudgetService>();
@@ -238,9 +239,405 @@ namespace Financier.Tests
             {
                 var budgetService = new BudgetService(logger, sqliteMemoryWrapper.DbContext);
 
+                budgetService.Delete(666);
+            }
+        }
+
+        [TestMethod]
+        public void TestBudgetDelete()
+        {
+            ILoggerFactory loggerFactory = new LoggerFactory();
+            ILogger<BudgetService> logger = loggerFactory.CreateLogger<BudgetService>();
+
+            using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
+            {
+                var usdCurrencyEntity = new Entities.Currency
+                {
+                    Name = "US Dollar",
+                    ShortName = "USD",
+                    Symbol = "$",
+                    IsPrimary = true
+                };
+
+                sqliteMemoryWrapper.DbContext.Currencies.Add(usdCurrencyEntity);
+                sqliteMemoryWrapper.DbContext.SaveChanges();
+
+                var incomeAccountEntity = new Entities.Account
+                {
+                    Name = "Income",
+                    Currency = usdCurrencyEntity,
+                    Type = Entities.AccountType.Income
+                };
+                var checkingAccountEntity = new Entities.Account
+                {
+                    Name = "Checking",
+                    Currency = usdCurrencyEntity,
+                    Type = Entities.AccountType.Asset
+                };
+                var savingsAccountEntity = new Entities.Account
+                {
+                    Name = "Savings",
+                    Currency = usdCurrencyEntity,
+                    Type = Entities.AccountType.Asset
+                };
+                var rentPrepaymentAccountEntity = new Entities.Account
+                {
+                    Name = "Rent Prepayment",
+                    Currency = usdCurrencyEntity,
+                    Type = Entities.AccountType.Asset
+                };
+                var rentExpenseAccountEntity = new Entities.Account
+                {
+                    Name = "Rent Expense",
+                    Currency = usdCurrencyEntity,
+                    Type = Entities.AccountType.Expense
+                };
+                var groceriesPrepaymentAccountEntity = new Entities.Account
+                {
+                    Name = "Groceries Prepayment",
+                    Currency = usdCurrencyEntity,
+                    Type = Entities.AccountType.Asset
+                };
+                var groceriesExpenseAccountEntity = new Entities.Account
+                {
+                    Name = "Groceries Expense",
+                    Currency = usdCurrencyEntity,
+                    Type = Entities.AccountType.Expense
+                };
+
+                sqliteMemoryWrapper.DbContext.Accounts.Add(incomeAccountEntity);
+                sqliteMemoryWrapper.DbContext.Accounts.Add(checkingAccountEntity);
+                sqliteMemoryWrapper.DbContext.Accounts.Add(savingsAccountEntity);
+                sqliteMemoryWrapper.DbContext.Accounts.Add(rentPrepaymentAccountEntity);
+                sqliteMemoryWrapper.DbContext.Accounts.Add(rentExpenseAccountEntity);
+                sqliteMemoryWrapper.DbContext.Accounts.Add(groceriesPrepaymentAccountEntity);
+                sqliteMemoryWrapper.DbContext.Accounts.Add(groceriesExpenseAccountEntity);
+                sqliteMemoryWrapper.DbContext.SaveChanges();
+
+                var checkingToRentPrepaymentRelationshipEntity = new Entities.AccountRelationship
+                {
+                    SourceAccount = checkingAccountEntity,
+                    DestinationAccount = rentPrepaymentAccountEntity,
+                    Type = Entities.AccountRelationshipType.PhysicalToLogical
+                };
+                var checkingToGroceriesPrepaymentRelationshipEntity = new Entities.AccountRelationship
+                {
+                    SourceAccount = checkingAccountEntity,
+                    DestinationAccount = groceriesPrepaymentAccountEntity,
+                    Type = Entities.AccountRelationshipType.PhysicalToLogical
+                };
+                var rentPrepaymentToExpenseRelationshipEntity = new Entities.AccountRelationship
+                {
+                    SourceAccount = rentPrepaymentAccountEntity,
+                    DestinationAccount = rentExpenseAccountEntity,
+                    Type = Entities.AccountRelationshipType.PrepaymentToExpense
+                };
+                var groceriesPrepaymentToExpenseRelationshipEntity = new Entities.AccountRelationship
+                {
+                    SourceAccount = groceriesPrepaymentAccountEntity,
+                    DestinationAccount = groceriesExpenseAccountEntity,
+                    Type = Entities.AccountRelationshipType.PrepaymentToExpense
+                };
+
+                sqliteMemoryWrapper.DbContext.AccountRelationships.Add(checkingToRentPrepaymentRelationshipEntity);
+                sqliteMemoryWrapper.DbContext.AccountRelationships.Add(checkingToGroceriesPrepaymentRelationshipEntity);
+                sqliteMemoryWrapper.DbContext.AccountRelationships.Add(rentPrepaymentToExpenseRelationshipEntity);
+                sqliteMemoryWrapper.DbContext.AccountRelationships.Add(groceriesPrepaymentToExpenseRelationshipEntity);
+                sqliteMemoryWrapper.DbContext.SaveChanges();
+
+                var budget1Entity = new Entities.Budget
+                {
+                    Name = "Full Budget",
+                    Period = Entities.BudgetPeriod.Fortnightly
+                };
+                var budget2Entity = new Entities.Budget
+                {
+                    Name = "Half Budget",
+                    Period = Entities.BudgetPeriod.Fortnightly
+                };
+                sqliteMemoryWrapper.DbContext.Budgets.Add(budget1Entity);
+                sqliteMemoryWrapper.DbContext.Budgets.Add(budget2Entity);
+                sqliteMemoryWrapper.DbContext.SaveChanges();
+
+                var budget1TransactionEntities = new Entities.BudgetTransaction[4]
+                {
+                    new Entities.BudgetTransaction
+                    {
+                        CreditAccount = incomeAccountEntity,
+                        DebitAccount = checkingAccountEntity,
+                        Amount = 200m,
+                        IsInitial = true,
+                        Budget = budget1Entity
+                    },
+                    new Entities.BudgetTransaction
+                    {
+                        CreditAccount = checkingAccountEntity,
+                        DebitAccount = rentPrepaymentAccountEntity,
+                        Amount = 100m,
+                        Budget = budget1Entity
+                    },
+                    new Entities.BudgetTransaction
+                    {
+                        CreditAccount = checkingAccountEntity,
+                        DebitAccount = groceriesPrepaymentAccountEntity,
+                        Amount = 50m,
+                        Budget = budget1Entity
+                    },
+                    new Entities.BudgetTransaction
+                    {
+                        CreditAccount = checkingAccountEntity,
+                        DebitAccount = groceriesPrepaymentAccountEntity,
+                        IsSurplus = true,
+                        Budget = budget1Entity
+                    }
+                };
+
+                var budget2TransactionEntities = new Entities.BudgetTransaction[4]
+                {
+                    new Entities.BudgetTransaction
+                    {
+                        CreditAccount = incomeAccountEntity,
+                        DebitAccount = checkingAccountEntity,
+                        Amount = 100m,
+                        IsInitial = true,
+                        Budget = budget2Entity
+                    },
+                    new Entities.BudgetTransaction
+                    {
+                        CreditAccount = checkingAccountEntity,
+                        DebitAccount = rentPrepaymentAccountEntity,
+                        Amount = 50m,
+                        Budget = budget2Entity
+                    },
+                    new Entities.BudgetTransaction
+                    {
+                        CreditAccount = checkingAccountEntity,
+                        DebitAccount = groceriesPrepaymentAccountEntity,
+                        Amount = 25m,
+                        Budget = budget2Entity
+                    },
+                    new Entities.BudgetTransaction
+                    {
+                        CreditAccount = checkingAccountEntity,
+                        DebitAccount = groceriesPrepaymentAccountEntity,
+                        IsSurplus = true,
+                        Budget = budget2Entity
+                    }
+                };
+
+                sqliteMemoryWrapper.DbContext.BudgetTransactions.AddRange(budget1TransactionEntities);
+                sqliteMemoryWrapper.DbContext.BudgetTransactions.AddRange(budget2TransactionEntities);
+                sqliteMemoryWrapper.DbContext.SaveChanges();
+
+                var budgetService = new BudgetService(logger, sqliteMemoryWrapper.DbContext);
+
+                List<Entities.Budget> budgetEntitiesBeforeDelete = sqliteMemoryWrapper.DbContext.Budgets.ToList();
+                List<Entities.BudgetTransaction> budgetTransactionEntitiesBeforeDelete = sqliteMemoryWrapper.DbContext.BudgetTransactions.ToList();
+
+                Assert.AreEqual(2, budgetEntitiesBeforeDelete.Count);
+                Assert.AreEqual(8, budgetTransactionEntitiesBeforeDelete.Count);
+
+                budgetService.Delete(budget1Entity.BudgetId);
+
+                List<Entities.Budget> budgetEntitiesAfterDelete = sqliteMemoryWrapper.DbContext.Budgets.ToList();
+                List<Entities.BudgetTransaction> budgetTransactionEntitiesAfterDelete = sqliteMemoryWrapper.DbContext.BudgetTransactions.ToList();
+
+                Assert.AreEqual(1, budgetEntitiesAfterDelete.Count);
+                Assert.AreEqual(4, budgetTransactionEntitiesAfterDelete.Count);
+            }
+        }
+
+        [TestMethod]
+        public void TestBudgetGetAllEmpty()
+        {
+            ILoggerFactory loggerFactory = new LoggerFactory();
+            ILogger<BudgetService> logger = loggerFactory.CreateLogger<BudgetService>();
+
+            using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
+            {
+                var usdCurrencyEntity = new Entities.Currency
+                {
+                    Name = "US Dollar",
+                    ShortName = "USD",
+                    Symbol = "$",
+                    IsPrimary = true
+                };
+
+                sqliteMemoryWrapper.DbContext.Currencies.Add(usdCurrencyEntity);
+                sqliteMemoryWrapper.DbContext.SaveChanges();
+
+                var incomeAccountEntity = new Entities.Account
+                {
+                    Name = "Income",
+                    Currency = usdCurrencyEntity,
+                    Type = Entities.AccountType.Income
+                };
+                var checkingAccountEntity = new Entities.Account
+                {
+                    Name = "Checking",
+                    Currency = usdCurrencyEntity,
+                    Type = Entities.AccountType.Asset
+                };
+                var savingsAccountEntity = new Entities.Account
+                {
+                    Name = "Savings",
+                    Currency = usdCurrencyEntity,
+                    Type = Entities.AccountType.Asset
+                };
+                var rentPrepaymentAccountEntity = new Entities.Account
+                {
+                    Name = "Rent Prepayment",
+                    Currency = usdCurrencyEntity,
+                    Type = Entities.AccountType.Asset
+                };
+                var rentExpenseAccountEntity = new Entities.Account
+                {
+                    Name = "Rent Expense",
+                    Currency = usdCurrencyEntity,
+                    Type = Entities.AccountType.Expense
+                };
+                var groceriesPrepaymentAccountEntity = new Entities.Account
+                {
+                    Name = "Groceries Prepayment",
+                    Currency = usdCurrencyEntity,
+                    Type = Entities.AccountType.Asset
+                };
+                var groceriesExpenseAccountEntity = new Entities.Account
+                {
+                    Name = "Groceries Expense",
+                    Currency = usdCurrencyEntity,
+                    Type = Entities.AccountType.Expense
+                };
+
+                sqliteMemoryWrapper.DbContext.Accounts.Add(incomeAccountEntity);
+                sqliteMemoryWrapper.DbContext.Accounts.Add(checkingAccountEntity);
+                sqliteMemoryWrapper.DbContext.Accounts.Add(savingsAccountEntity);
+                sqliteMemoryWrapper.DbContext.Accounts.Add(rentPrepaymentAccountEntity);
+                sqliteMemoryWrapper.DbContext.Accounts.Add(rentExpenseAccountEntity);
+                sqliteMemoryWrapper.DbContext.Accounts.Add(groceriesPrepaymentAccountEntity);
+                sqliteMemoryWrapper.DbContext.Accounts.Add(groceriesExpenseAccountEntity);
+                sqliteMemoryWrapper.DbContext.SaveChanges();
+
+                var checkingToRentPrepaymentRelationshipEntity = new Entities.AccountRelationship
+                {
+                    SourceAccount = checkingAccountEntity,
+                    DestinationAccount = rentPrepaymentAccountEntity,
+                    Type = Entities.AccountRelationshipType.PhysicalToLogical
+                };
+                var checkingToGroceriesPrepaymentRelationshipEntity = new Entities.AccountRelationship
+                {
+                    SourceAccount = checkingAccountEntity,
+                    DestinationAccount = groceriesPrepaymentAccountEntity,
+                    Type = Entities.AccountRelationshipType.PhysicalToLogical
+                };
+                var rentPrepaymentToExpenseRelationshipEntity = new Entities.AccountRelationship
+                {
+                    SourceAccount = rentPrepaymentAccountEntity,
+                    DestinationAccount = rentExpenseAccountEntity,
+                    Type = Entities.AccountRelationshipType.PrepaymentToExpense
+                };
+                var groceriesPrepaymentToExpenseRelationshipEntity = new Entities.AccountRelationship
+                {
+                    SourceAccount = groceriesPrepaymentAccountEntity,
+                    DestinationAccount = groceriesExpenseAccountEntity,
+                    Type = Entities.AccountRelationshipType.PrepaymentToExpense
+                };
+
+                sqliteMemoryWrapper.DbContext.AccountRelationships.Add(checkingToRentPrepaymentRelationshipEntity);
+                sqliteMemoryWrapper.DbContext.AccountRelationships.Add(checkingToGroceriesPrepaymentRelationshipEntity);
+                sqliteMemoryWrapper.DbContext.AccountRelationships.Add(rentPrepaymentToExpenseRelationshipEntity);
+                sqliteMemoryWrapper.DbContext.AccountRelationships.Add(groceriesPrepaymentToExpenseRelationshipEntity);
+                sqliteMemoryWrapper.DbContext.SaveChanges();
+
+                var budget1Entity = new Entities.Budget
+                {
+                    Name = "Full Budget",
+                    Period = Entities.BudgetPeriod.Fortnightly
+                };
+                var budget2Entity = new Entities.Budget
+                {
+                    Name = "Half Budget",
+                    Period = Entities.BudgetPeriod.Fortnightly
+                };
+                sqliteMemoryWrapper.DbContext.Budgets.Add(budget1Entity);
+                sqliteMemoryWrapper.DbContext.Budgets.Add(budget2Entity);
+                sqliteMemoryWrapper.DbContext.SaveChanges();
+
+                var budget1TransactionEntities = new Entities.BudgetTransaction[4]
+                {
+                    new Entities.BudgetTransaction
+                    {
+                        CreditAccount = incomeAccountEntity,
+                        DebitAccount = checkingAccountEntity,
+                        Amount = 200m,
+                        IsInitial = true,
+                        Budget = budget1Entity
+                    },
+                    new Entities.BudgetTransaction
+                    {
+                        CreditAccount = checkingAccountEntity,
+                        DebitAccount = rentPrepaymentAccountEntity,
+                        Amount = 100m,
+                        Budget = budget1Entity
+                    },
+                    new Entities.BudgetTransaction
+                    {
+                        CreditAccount = checkingAccountEntity,
+                        DebitAccount = groceriesPrepaymentAccountEntity,
+                        Amount = 50m,
+                        Budget = budget1Entity
+                    },
+                    new Entities.BudgetTransaction
+                    {
+                        CreditAccount = checkingAccountEntity,
+                        DebitAccount = groceriesPrepaymentAccountEntity,
+                        IsSurplus = true,
+                        Budget = budget1Entity
+                    }
+                };
+
+                var budget2TransactionEntities = new Entities.BudgetTransaction[4]
+                {
+                    new Entities.BudgetTransaction
+                    {
+                        CreditAccount = incomeAccountEntity,
+                        DebitAccount = checkingAccountEntity,
+                        Amount = 100m,
+                        IsInitial = true,
+                        Budget = budget2Entity
+                    },
+                    new Entities.BudgetTransaction
+                    {
+                        CreditAccount = checkingAccountEntity,
+                        DebitAccount = rentPrepaymentAccountEntity,
+                        Amount = 50m,
+                        Budget = budget2Entity
+                    },
+                    new Entities.BudgetTransaction
+                    {
+                        CreditAccount = checkingAccountEntity,
+                        DebitAccount = groceriesPrepaymentAccountEntity,
+                        Amount = 25m,
+                        Budget = budget2Entity
+                    },
+                    new Entities.BudgetTransaction
+                    {
+                        CreditAccount = checkingAccountEntity,
+                        DebitAccount = groceriesPrepaymentAccountEntity,
+                        IsSurplus = true,
+                        Budget = budget2Entity
+                    }
+                };
+
+                sqliteMemoryWrapper.DbContext.BudgetTransactions.AddRange(budget1TransactionEntities);
+                sqliteMemoryWrapper.DbContext.BudgetTransactions.AddRange(budget2TransactionEntities);
+                sqliteMemoryWrapper.DbContext.SaveChanges();
+
+                var budgetService = new BudgetService(logger, sqliteMemoryWrapper.DbContext);
+
                 IEnumerable<Budget> budgets = budgetService.GetAll();
 
-                Assert.AreEqual(0, budgets.Count());
+                Assert.AreEqual(2, budgets.Count());
             }
         }
 

@@ -89,12 +89,12 @@ namespace Financier.Desktop.ViewModels
 
         private void DeleteExecute(object obj)
         {
-            //if (m_viewService.OpenBudgetDeleteConfirmationView())
-            //{
-            //    m_budgetService.Delete(SelectedBudget.BudgetId);
+            if (m_viewService.OpenBudgetDeleteConfirmationView())
+            {
+                m_budgetService.Delete(SelectedBudget.BudgetId);
 
-            //    PopulateBudgets();
-            //}
+                PopulateBudgets();
+            }
         }
 
         private bool DeleteCanExecute(object obj)

@@ -8,6 +8,7 @@
         bool OpenAccountEditView(int accountId);
 
         bool OpenBudgetCreateView();
+        bool OpenBudgetDeleteConfirmationView();
         bool OpenBudgetEditView(int budgetId);
 
         bool OpenTransactionCreateView();
