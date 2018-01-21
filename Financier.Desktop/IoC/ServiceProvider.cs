@@ -51,8 +51,12 @@ namespace Financier.Desktop.IoC
 
             // TODO: some view models are constructed without IoC
             serviceCollection.AddTransient<IAccountEditViewModel, AccountEditViewModel>();
+            serviceCollection.AddTransient<IAccountLinkViewModel, AccountLinkViewModel>();
             serviceCollection.AddTransient<IAccountListViewModel, AccountListViewModel>();
+            serviceCollection.AddTransient<IBudgetEditViewModel, BudgetEditViewModel>();
             serviceCollection.AddTransient<IBudgetListViewModel, BudgetListViewModel>();
+            serviceCollection.AddTransient<IBudgetTransactionListViewModel, BudgetTransactionListViewModel>();
+            serviceCollection.AddTransient<IBudgetTransactionItemViewModel, BudgetTransactionItemViewModel>();
             serviceCollection.AddTransient<ITransactionEditViewModel, TransactionEditViewModel>();
             serviceCollection.AddTransient<ITransactionListViewModel, TransactionListViewModel>();
             serviceCollection.AddTransient<IMainWindowViewModel, MainWindowViewModel>();

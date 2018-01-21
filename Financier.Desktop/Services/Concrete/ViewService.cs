@@ -48,6 +48,32 @@ namespace Financier.Desktop.Services
             return false;
         }
 
+        public bool OpenBudgetCreateView()
+        {
+            var budgetEditWindow = new BudgetEditWindow(
+                IoC.ServiceProvider.Instance.GetRequiredService<IBudgetEditViewModel>());
+            bool? result = budgetEditWindow.ShowDialog();
+
+            if (result.HasValue)
+                return result.Value;
+
+            return false;
+        }
+
+        public bool OpenBudgetEditView(int budgetId)
+        {
+            IBudgetEditViewModel budgetEditViewModel =
+                IoC.ServiceProvider.Instance.GetRequiredService<IBudgetEditViewModel>();
+            budgetEditViewModel.BudgetId = budgetId;// TODO: can we omit this initialization step?
+            var budgetEditWindow = new BudgetEditWindow(budgetEditViewModel);
+            bool? result = budgetEditWindow.ShowDialog();
+
+            if (result.HasValue)
+                return result.Value;
+
+            return false;
+        }
+
         public bool OpenTransactionCreateView()
         {
             ITransactionEditViewModel transactionEditViewModel =

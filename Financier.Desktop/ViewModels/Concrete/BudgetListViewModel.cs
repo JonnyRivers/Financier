@@ -54,10 +54,10 @@ namespace Financier.Desktop.ViewModels
 
         private void CreateExecute(object obj)
         {
-            //if (m_viewService.OpenBudgetCreateView())
-            //{
-            //    PopulateBudgets();
-            //}
+            if (m_viewService.OpenBudgetCreateView())
+            {
+                PopulateBudgets();
+            }
         }
 
         private void EditExecute(object obj)
