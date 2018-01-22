@@ -1,4 +1,5 @@
 ﻿using Financier.Entities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -80,7 +81,10 @@ namespace Financier.Services
             List<Entities.Transaction> transactions = m_dbContext.Transactions.ToList();
             List<XElement> transactionElements = transactions.Select(ElementFromTransaction).ToList();
 
-            List<Entities.Budget> budgets = m_dbContext.Budgets.ToList();
+            List<Entities.Budget> budgets = m_dbContext
+                .Budgets
+                .Include(b => b.Transactions)
+                .ToList();
             List<XElement> budgetsElements = budgets.Select(ElementFromBudget).ToList();
 
             var document = new XDocument(
