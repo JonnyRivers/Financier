@@ -51,6 +51,8 @@ namespace Financier.Services
             m_dbContext.Transactions.AddRange(transactions);
             m_dbContext.SaveChanges();
 
+            // TODO: this can probably be cleaned up a bit by using the Transactions nav property
+            // of Entities.Budget.
             List<XElement> budgetElements = rootElement.Elements(XName.Get("Budget")).ToList();
             List<Entities.Budget> budgets = budgetElements.Select(BudgetFromElement).ToList();
             m_dbContext.Budgets.AddRange(budgets);
@@ -78,12 +80,16 @@ namespace Financier.Services
             List<Entities.Transaction> transactions = m_dbContext.Transactions.ToList();
             List<XElement> transactionElements = transactions.Select(ElementFromTransaction).ToList();
 
+            List<Entities.Budget> budgets = m_dbContext.Budgets.ToList();
+            List<XElement> budgetsElements = budgets.Select(ElementFromBudget).ToList();
+
             var document = new XDocument(
                 new XElement(XName.Get("Data"),
                     currencyElements,
                     accountElements,
                     accountRelationshipElements,
-                    transactionElements)
+                    transactionElements,
+                    budgetsElements)
             );
             document.Save(path);
         }
@@ -286,6 +292,30 @@ namespace Financier.Services
                 throw new ArgumentException(nameof(element), "Budget element has no surplus transaction");
 
             return budgetTransactions;
+        }
+
+        private static XElement ElementFromBudget(Entities.Budget budget)
+        {
+            var element = new XElement(XName.Get("Budget"),
+                new XAttribute(XName.Get("name"), budget.Name),
+                new XAttribute(XName.Get("period"), budget.Period),
+                budget.Transactions.Select(ElementFromBudgetTransaction)
+            );
+
+            return element;
+        }
+
+        private static XElement ElementFromBudgetTransaction(Entities.BudgetTransaction budgetTransaction)
+        {
+            var element = new XElement(XName.Get("BudgetTransaction"),
+                new XAttribute(XName.Get("credit"), budgetTransaction.CreditAccount.Name),
+                new XAttribute(XName.Get("debit"), budgetTransaction.DebitAccount.Name),
+                new XAttribute(XName.Get("amount"), budgetTransaction.Amount),
+                new XAttribute(XName.Get("isInitial"), budgetTransaction.IsInitial),
+                new XAttribute(XName.Get("isSurplus"), budgetTransaction.IsSurplus)
+            );
+
+            return element;
         }
     }
 }

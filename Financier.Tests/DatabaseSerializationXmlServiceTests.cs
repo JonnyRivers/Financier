@@ -425,6 +425,138 @@ namespace Financier.Tests
             }
         }
 
+        [TestMethod]
+        public void TestReloadBudget()
+        {
+            const string path = "TestData/BudgetReload.xml";
+            ILoggerFactory loggerFactory = new LoggerFactory();
+            ILogger<DatabaseSerializationXmlService> logger = loggerFactory.CreateLogger<DatabaseSerializationXmlService>();
+
+            var usdCurrency = new Entities.Currency
+            {
+                Name = "US Dollar",
+                ShortName = "USD",
+                Symbol = "$",
+                IsPrimary = true
+            };
+            var incomeAccount = new Entities.Account
+            {
+                Name = "Income",
+                Currency = usdCurrency,
+                Type = Entities.AccountType.Income
+            };
+            var checkingAccount = new Entities.Account
+            {
+                Name = "Checking",
+                Currency = usdCurrency,
+                Type = Entities.AccountType.Asset
+            };
+            var rentPrepaymentAccount = new Entities.Account
+            {
+                Name = "Rent Prepayment",
+                Currency = usdCurrency,
+                Type = Entities.AccountType.Asset
+            };
+            var savingsAccount = new Entities.Account
+            {
+                Name = "Savings",
+                Currency = usdCurrency,
+                Type = Entities.AccountType.Asset
+            };
+            var accountRelationship = new Entities.AccountRelationship
+            {
+                SourceAccount = checkingAccount,
+                DestinationAccount = rentPrepaymentAccount,
+                Type = Entities.AccountRelationshipType.PhysicalToLogical
+            };
+            var budget = new Entities.Budget
+            {
+                Name = "The Budget",
+                Period = Entities.BudgetPeriod.Fortnightly,
+                Transactions = new List<Entities.BudgetTransaction>
+                {
+                    new Entities.BudgetTransaction
+                    {
+                        CreditAccount = incomeAccount,
+                        DebitAccount = checkingAccount,
+                        Amount = 100m,
+                        IsInitial = true
+                    },
+                    new Entities.BudgetTransaction
+                    {
+                        CreditAccount = checkingAccount,
+                        DebitAccount = rentPrepaymentAccount,
+                        Amount = 80m,
+                    },
+                    new Entities.BudgetTransaction
+                    {
+                        CreditAccount = checkingAccount,
+                        DebitAccount = savingsAccount,
+                        Amount = 100m,
+                        IsSurplus = true
+                    }
+                }
+            };
+
+            using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
+            {
+                sqliteMemoryWrapper.DbContext.Currencies.Add(usdCurrency);
+                sqliteMemoryWrapper.DbContext.SaveChanges();
+
+                sqliteMemoryWrapper.DbContext.Accounts.Add(checkingAccount);
+                sqliteMemoryWrapper.DbContext.Accounts.Add(rentPrepaymentAccount);
+                sqliteMemoryWrapper.DbContext.SaveChanges();
+
+                sqliteMemoryWrapper.DbContext.AccountRelationships.Add(accountRelationship);
+                sqliteMemoryWrapper.DbContext.SaveChanges();
+
+                sqliteMemoryWrapper.DbContext.Budgets.Add(budget);
+                sqliteMemoryWrapper.DbContext.SaveChanges();
+
+                var service = new DatabaseSerializationXmlService(logger, sqliteMemoryWrapper.DbContext);
+                service.Save(path);
+            }
+
+            using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
+            {
+                var service = new DatabaseSerializationXmlService(logger, sqliteMemoryWrapper.DbContext);
+                service.Load(path);
+
+                List<Entities.Account> accounts = sqliteMemoryWrapper.DbContext.Accounts.ToList();
+                List<Entities.AccountRelationship> accountRelationships = sqliteMemoryWrapper.DbContext.AccountRelationships.ToList();
+                List<Entities.Budget> budgets = sqliteMemoryWrapper.DbContext.Budgets.ToList();
+                List<Entities.BudgetTransaction> budgetTransactions = sqliteMemoryWrapper.DbContext.BudgetTransactions.ToList();
+                List<Entities.Currency> currencies = sqliteMemoryWrapper.DbContext.Currencies.ToList();
+                List<Entities.Transaction> transactions = sqliteMemoryWrapper.DbContext.Transactions.ToList();
+
+                Assert.AreEqual(4, accounts.Count);
+                Assert.AreEqual(1, accountRelationships.Count);
+                Assert.AreEqual(1, budgets.Count);
+                Assert.AreEqual(3, budgetTransactions.Count);
+                Assert.AreEqual(1, currencies.Count);
+                Assert.AreEqual(0, transactions.Count);
+
+                Assert.AreEqual(budget.Name, budgets[0].Name);
+                Assert.AreEqual(budget.Period, budgets[0].Period);
+
+                Assert.AreEqual(budget.Transactions[0].DebitAccount.Name, budgetTransactions[0].DebitAccount.Name);
+                Assert.AreEqual(budget.Transactions[0].CreditAccount.Name, budgetTransactions[0].CreditAccount.Name);
+                Assert.AreEqual(budget.Transactions[0].Amount, budgetTransactions[0].Amount);
+                Assert.AreEqual(budget.Transactions[0].IsInitial, budgetTransactions[0].IsInitial);
+                Assert.AreEqual(budget.Transactions[0].IsSurplus, budgetTransactions[0].IsSurplus);
+                Assert.AreEqual(budget.Transactions[1].DebitAccount.Name, budgetTransactions[1].DebitAccount.Name);
+                Assert.AreEqual(budget.Transactions[1].CreditAccount.Name, budgetTransactions[1].CreditAccount.Name);
+                Assert.AreEqual(budget.Transactions[1].Amount, budgetTransactions[1].Amount);
+                Assert.AreEqual(budget.Transactions[1].IsInitial, budgetTransactions[1].IsInitial);
+                Assert.AreEqual(budget.Transactions[1].IsSurplus, budgetTransactions[1].IsSurplus);
+                Assert.AreEqual(budget.Transactions[2].DebitAccount.Name, budgetTransactions[2].DebitAccount.Name);
+                Assert.AreEqual(budget.Transactions[2].CreditAccount.Name, budgetTransactions[2].CreditAccount.Name);
+                Assert.AreEqual(budget.Transactions[2].Amount, budgetTransactions[2].Amount);
+                Assert.AreEqual(budget.Transactions[2].IsInitial, budgetTransactions[2].IsInitial);
+                Assert.AreEqual(budget.Transactions[2].IsSurplus, budgetTransactions[2].IsSurplus);
+            }
+        }
+
         private void TestLoadFailure(string path)
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
