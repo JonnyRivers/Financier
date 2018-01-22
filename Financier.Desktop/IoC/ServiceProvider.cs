@@ -1,16 +1,11 @@
 ﻿using Financier.Entities;
 using Financier.Desktop.Services;
 using Financier.Desktop.ViewModels;
-using Financier.Desktop.Views;
 using Financier.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Financier.Desktop.IoC
 {
@@ -48,6 +43,7 @@ namespace Financier.Desktop.IoC
 
             serviceCollection.AddSingleton<IAccountService, AccountService>();
             serviceCollection.AddSingleton<IAccountRelationshipService, AccountRelationshipService>();
+            serviceCollection.AddSingleton<IBudgetService, BudgetService>();
             serviceCollection.AddSingleton<ICurrencyService, CurrencyService>();
             serviceCollection.AddSingleton<ITransactionService, TransactionService>();
 
@@ -55,7 +51,12 @@ namespace Financier.Desktop.IoC
 
             // TODO: some view models are constructed without IoC
             serviceCollection.AddTransient<IAccountEditViewModel, AccountEditViewModel>();
+            serviceCollection.AddTransient<IAccountLinkViewModel, AccountLinkViewModel>();
             serviceCollection.AddTransient<IAccountListViewModel, AccountListViewModel>();
+            serviceCollection.AddTransient<IBudgetEditViewModel, BudgetEditViewModel>();
+            serviceCollection.AddTransient<IBudgetListViewModel, BudgetListViewModel>();
+            serviceCollection.AddTransient<IBudgetTransactionListViewModel, BudgetTransactionListViewModel>();
+            serviceCollection.AddTransient<IBudgetTransactionItemViewModel, BudgetTransactionItemViewModel>();
             serviceCollection.AddTransient<ITransactionEditViewModel, TransactionEditViewModel>();
             serviceCollection.AddTransient<ITransactionListViewModel, TransactionListViewModel>();
             serviceCollection.AddTransient<IMainWindowViewModel, MainWindowViewModel>();

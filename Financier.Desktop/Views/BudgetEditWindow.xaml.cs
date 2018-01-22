@@ -4,11 +4,11 @@ using System.Windows;
 namespace Financier.Desktop.Views
 {
     /// <summary>
-    /// Interaction logic for TransactionWindow.xaml
+    /// Interaction logic for BudgetEditWindow.xaml
     /// </summary>
-    public partial class TransactionEditWindow : Window
+    public partial class BudgetEditWindow : Window
     {
-        public TransactionEditWindow(ITransactionEditViewModel viewModel)
+        public BudgetEditWindow(IBudgetEditViewModel viewModel)
         {
             InitializeComponent();
 

@@ -109,9 +109,9 @@ namespace Financier.Services
             };
         }
 
-        private static AccountSummary FromEntity(Entities.Account accountEntity)
+        private static AccountLink FromEntity(Entities.Account accountEntity)
         {
-            return new AccountSummary
+            return new AccountLink
             {
                 AccountId = accountEntity.AccountId,
                 Name = accountEntity.Name,

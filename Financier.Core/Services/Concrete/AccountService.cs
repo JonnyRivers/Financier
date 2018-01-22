@@ -47,6 +47,13 @@ namespace Financier.Services
                 .ToList();
         }
 
+        public IEnumerable<AccountLink> GetAllAsLinks()
+        {
+            return m_dbContext.Accounts
+                .Select(FromEntityToAccountLink)
+                .ToList();
+        }
+
         public IEnumerable<Account> GetAllPhysical()
         {
             var logicalAccountIds = new HashSet<int>(
@@ -143,6 +150,16 @@ namespace Financier.Services
                 Currency = currency,
                 LogicalAccounts = logicalAccounts,
                 Balance = totalBalance
+            };
+        }
+
+        private AccountLink FromEntityToAccountLink(Entities.Account accountEntity)
+        {
+            return new AccountLink
+            {
+                AccountId = accountEntity.AccountId,
+                Name = accountEntity.Name,
+                Type = (AccountType)accountEntity.Type
             };
         }
     }

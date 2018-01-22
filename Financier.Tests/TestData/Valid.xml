@@ -3,9 +3,19 @@
   <Currency name="US Dollar" shortName="USD" symbol="$" isPrimary="True"/>
   <Currency name="UK Sterling" shortName="GBP" symbol="£" isPrimary="False"/>
   <Account name="Checking" currency="USD" type="Asset"/>
+  <Account name="Savings" currency="USD" type="Asset"/>
   <Account name="Income" currency="USD" type="Income"/>
   <Account name="Rent Prepayment" currency="USD" type="Asset"/>
   <AccountRelationship source="Checking" destination="Rent Prepayment" type="PhysicalToLogical"/>
   <Transaction credit="Income" debit="Checking" at="2018-01-01 09:00:00" amount="100.00"/>
   <Transaction credit="Checking" debit="Rent Prepayment" at="2018-01-02 08:30:00" amount="50.00"/>
+  <Budget name="The Budget" period="Fortnightly">
+    <BudgetTransaction credit="Income" debit="Checking" amount="100" isInitial="True" />
+    <BudgetTransaction credit="Checking" debit="Rent Prepayment" amount="80"/>
+    <BudgetTransaction credit="Checking" debit="Savings" amount="0" isSurplus="True"/>
+  </Budget>
+  <Budget name="Another Budget" period="Weekly">
+    <BudgetTransaction credit="Income" debit="Checking" amount="50" isInitial="True" />
+    <BudgetTransaction credit="Checking" debit="Savings" amount="0" isSurplus="True"/>
+  </Budget>
 </Data>

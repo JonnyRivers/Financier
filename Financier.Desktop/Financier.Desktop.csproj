@@ -120,8 +120,15 @@
     <Compile Include="IoC\ServiceProvider.cs" />
     <Compile Include="Services\Abstract\IViewService.cs" />
     <Compile Include="Services\Concrete\ViewService.cs" />
+    <Compile Include="ViewModels\Abstract\IAccountLinkViewModel.cs" />
+    <Compile Include="ViewModels\Abstract\IBudgetEditViewModel.cs" />
+    <Compile Include="ViewModels\Abstract\IBudgetItemViewModel.cs" />
+    <Compile Include="ViewModels\Abstract\IBudgetListViewModel.cs" />
+    <Compile Include="ViewModels\Abstract\IBudgetTransactionItemViewModel.cs" />
+    <Compile Include="ViewModels\Abstract\IBudgetTransactionListViewModel.cs" />
     <Compile Include="ViewModels\Concrete\AccountEditViewModel.cs" />
     <Compile Include="ViewModels\Concrete\AccountItemViewModel.cs" />
+    <Compile Include="ViewModels\Concrete\AccountLinkViewModel.cs" />
     <Compile Include="ViewModels\Concrete\AccountListViewModel.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IAccountEditViewModel.cs" />
@@ -132,16 +139,31 @@
     <Compile Include="ViewModels\Abstract\ITransactionEditViewModel.cs" />
     <Compile Include="ViewModels\Abstract\ITransactionListViewModel.cs" />
     <Compile Include="ViewModels\Abstract\ITransactionItemViewModel.cs" />
+    <Compile Include="ViewModels\Concrete\BudgetEditViewModel.cs" />
+    <Compile Include="ViewModels\Concrete\BudgetItemViewModel.cs" />
+    <Compile Include="ViewModels\Concrete\BudgetListViewModel.cs" />
+    <Compile Include="ViewModels\Concrete\BudgetTransactionItemViewModel.cs" />
+    <Compile Include="ViewModels\Concrete\BudgetTransactionListViewModel.cs" />
     <Compile Include="ViewModels\Concrete\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\Concrete\TransactionAccountFilterViewModel.cs" />
     <Compile Include="ViewModels\Concrete\TransactionEditViewModel.cs" />
     <Compile Include="ViewModels\Concrete\TransactionListViewModel.cs" />
     <Compile Include="ViewModels\Concrete\TransactionItemViewModel.cs" />
+    <Compile Include="ViewModels\Model\BudgetTransactionType.cs" />
     <Compile Include="Views\AccountEditWindow.xaml.cs">
       <DependentUpon>AccountEditWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\AccountListControl.xaml.cs">
       <DependentUpon>AccountListControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\BudgetEditWindow.xaml.cs">
+      <DependentUpon>BudgetEditWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\BudgetListControl.xaml.cs">
+      <DependentUpon>BudgetListControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\BudgetTransasctionListControl.xaml.cs">
+      <DependentUpon>BudgetTransasctionListControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -163,6 +185,18 @@
     <Page Include="Views\AccountListControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\BudgetEditWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\BudgetListControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\BudgetTransasctionListControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

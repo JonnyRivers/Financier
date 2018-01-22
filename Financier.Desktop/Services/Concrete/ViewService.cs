@@ -48,6 +48,42 @@ namespace Financier.Desktop.Services
             return false;
         }
 
+        public bool OpenBudgetCreateView()
+        {
+            var budgetEditWindow = new BudgetEditWindow(
+                IoC.ServiceProvider.Instance.GetRequiredService<IBudgetEditViewModel>());
+            bool? result = budgetEditWindow.ShowDialog();
+
+            if (result.HasValue)
+                return result.Value;
+
+            return false;
+        }
+
+        public bool OpenBudgetDeleteConfirmationView()
+        {
+            return OpenDeleteConfirmationView("budget");
+        }
+
+        public bool OpenBudgetEditView(int budgetId)
+        {
+            IBudgetEditViewModel budgetEditViewModel =
+                IoC.ServiceProvider.Instance.GetRequiredService<IBudgetEditViewModel>();
+            budgetEditViewModel.BudgetId = budgetId;// TODO: can we omit this initialization step?
+            var budgetEditWindow = new BudgetEditWindow(budgetEditViewModel);
+            bool? result = budgetEditWindow.ShowDialog();
+
+            if (result.HasValue)
+                return result.Value;
+
+            return false;
+        }
+
+        public bool OpenBudgetTransactionDeleteConfirmationView()
+        {
+            return OpenDeleteConfirmationView("budget transaction");
+        }
+
         public bool OpenTransactionCreateView()
         {
             ITransactionEditViewModel transactionEditViewModel =
@@ -63,13 +99,7 @@ namespace Financier.Desktop.Services
 
         public bool OpenTransactionDeleteConfirmationView()
         {
-            MessageBoxResult confirmResult = MessageBox.Show(
-               "Are you sure you want to delete this transaction?  This cannot be undone.",
-               "Really delete transaction?",
-               MessageBoxButton.YesNo
-           );
-
-            return (confirmResult == MessageBoxResult.Yes);
+            return OpenDeleteConfirmationView("transaction");
         }
 
         public bool OpenTransactionEditView(int transactionId)
@@ -84,6 +114,17 @@ namespace Financier.Desktop.Services
                 return result.Value;
 
             return false;
+        }
+
+        private bool OpenDeleteConfirmationView(string context)
+        {
+            MessageBoxResult confirmResult = MessageBox.Show(
+               $"Are you sure you want to delete this {context}?  This cannot be undone.",
+               $"Really delete {context}?",
+               MessageBoxButton.YesNo
+           );
+
+            return (confirmResult == MessageBoxResult.Yes);
         }
     }
 }

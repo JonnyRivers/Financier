@@ -3,12 +3,13 @@ using System.Windows.Input;
 
 namespace Financier.Desktop.ViewModels
 {
-    public interface IAccountListViewModel
+    public interface IBudgetListViewModel
     {
-        ObservableCollection<IAccountItemViewModel> Accounts { get; }
-        IAccountItemViewModel SelectedAccount { get; }
+        ObservableCollection<IBudgetItemViewModel> Budgets { get; }
+        IBudgetItemViewModel SelectedBudget { get; }
 
         ICommand CreateCommand { get; }
         ICommand EditCommand { get; }
+        ICommand DeleteCommand { get; }
     }
 }

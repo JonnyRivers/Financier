@@ -9,16 +9,19 @@ namespace Financier.Desktop.ViewModels
         public MainWindowViewModel(
             ILogger<AccountListViewModel> logger,
             IAccountListViewModel accountListViewModel,
+            IBudgetListViewModel budgetListViewModel,
             ITransactionListViewModel transactionListViewModel
         )
         {
             m_logger = logger;
 
             AccountListViewModel = accountListViewModel;
+            BudgetListViewModel = budgetListViewModel;
             TransactionListViewModel = transactionListViewModel;
         }
 
         public IAccountListViewModel AccountListViewModel { get; }
+        public IBudgetListViewModel BudgetListViewModel { get; }
         public ITransactionListViewModel TransactionListViewModel { get; }
     }
 }

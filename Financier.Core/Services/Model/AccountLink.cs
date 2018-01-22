@@ -1,6 +1,6 @@
 ﻿namespace Financier.Services
 {
-    public class AccountSummary
+    public class AccountLink
     {
         public int AccountId { get; set; }
         public string Name { get; set; }

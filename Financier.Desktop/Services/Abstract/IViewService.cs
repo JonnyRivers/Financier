@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Financier.Desktop.Services
+﻿namespace Financier.Desktop.Services
 {
     public interface IViewService
     {
@@ -12,6 +6,12 @@ namespace Financier.Desktop.Services
 
         bool OpenAccountCreateView();
         bool OpenAccountEditView(int accountId);
+
+        bool OpenBudgetCreateView();
+        bool OpenBudgetDeleteConfirmationView();
+        bool OpenBudgetEditView(int budgetId);
+
+        bool OpenBudgetTransactionDeleteConfirmationView();
 
         bool OpenTransactionCreateView();
         bool OpenTransactionDeleteConfirmationView();

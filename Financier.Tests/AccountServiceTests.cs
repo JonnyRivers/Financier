@@ -75,6 +75,56 @@ namespace Financier.Tests
         }
 
         [TestMethod]
+        public void TestGetAllAccountLinks()
+        {
+            ILoggerFactory loggerFactory = new LoggerFactory();
+            ILogger<AccountService> logger = loggerFactory.CreateLogger<AccountService>();
+
+            using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
+            {
+                var usdCurrencyEntity = new Entities.Currency
+                {
+                    Name = "US Dollar",
+                    ShortName = "USD",
+                    Symbol = "$",
+                    IsPrimary = true
+                };
+
+                sqliteMemoryWrapper.DbContext.Currencies.Add(usdCurrencyEntity);
+                sqliteMemoryWrapper.DbContext.SaveChanges();
+
+                var incomeAccountEntity = new Entities.Account
+                {
+                    Name = "Income",
+                    Currency = usdCurrencyEntity,
+                    Type = Entities.AccountType.Income
+                };
+                var checkingAccountEntity = new Entities.Account
+                {
+                    Name = "Checking",
+                    Currency = usdCurrencyEntity,
+                    Type = Entities.AccountType.Asset
+                };
+
+                sqliteMemoryWrapper.DbContext.Accounts.Add(incomeAccountEntity);
+                sqliteMemoryWrapper.DbContext.Accounts.Add(checkingAccountEntity);
+                sqliteMemoryWrapper.DbContext.SaveChanges();
+
+                var accountService = new AccountService(logger, sqliteMemoryWrapper.DbContext);
+
+                List<AccountLink> accountLinks = accountService.GetAllAsLinks().ToList();
+
+                Assert.AreEqual(2, accountLinks.Count);
+                Assert.AreEqual(incomeAccountEntity.AccountId, accountLinks[0].AccountId);
+                Assert.AreEqual(incomeAccountEntity.Name, accountLinks[0].Name);
+                Assert.AreEqual(AccountType.Income, accountLinks[0].Type);
+                Assert.AreEqual(checkingAccountEntity.AccountId, accountLinks[1].AccountId);
+                Assert.AreEqual(checkingAccountEntity.Name, accountLinks[1].Name);
+                Assert.AreEqual(AccountType.Asset, accountLinks[1].Type);
+            }
+        }
+
+        [TestMethod]
         public void TestGetAccountNoTransactions()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
