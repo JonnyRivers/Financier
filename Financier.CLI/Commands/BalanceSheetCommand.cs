@@ -2,6 +2,7 @@
 using Microsoft.Extensions.CommandLineUtils;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Linq;
 
 namespace Financier.CLI.Commands
 {
@@ -50,7 +51,7 @@ namespace Financier.CLI.Commands
             Console.WriteLine();
 
             Console.WriteLine("Assets");
-            foreach (BalanceSheetItem item in balanceSheet.Assets)
+            foreach (BalanceSheetItem item in balanceSheet.Assets.OrderByDescending(a => a.Balance))
             {
                 Console.WriteLine("    {0,-50} {1} {2,10}", item.Name, balanceSheet.CurrencySymbol, item.Balance);
             }
@@ -60,7 +61,7 @@ namespace Financier.CLI.Commands
             Console.WriteLine();
 
             Console.WriteLine("Liabilities");
-            foreach (BalanceSheetItem item in balanceSheet.Liabilities)
+            foreach (BalanceSheetItem item in balanceSheet.Liabilities.OrderBy(a => a.Balance))
             {
                 Console.WriteLine("    {0,-50} {1} {2,10}", item.Name, balanceSheet.CurrencySymbol, item.Balance);
             }
