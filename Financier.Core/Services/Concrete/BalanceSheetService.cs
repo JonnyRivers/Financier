@@ -5,7 +5,6 @@ using System.Linq;
 
 namespace Financier.Services
 {
-    // TODO: replace this with something implemented in terms of the data services
     public class BalanceSheetService : IBalanceSheetService
     {
         ILogger<BalanceSheetService> m_logger;
@@ -24,9 +23,6 @@ namespace Financier.Services
 
         public BalanceSheet Generate(DateTime at)
         {
-            // TODO: this is implemented in terms of very low level (data layer) concepts.
-            // This should be implemented in terms of other services.
-
             Currency primaryCurrency = m_currencyService.GetPrimary();
 
             List<Account> accounts = m_accountService.GetAllPhysical().ToList();
@@ -35,7 +31,8 @@ namespace Financier.Services
             var liabilities = new List<BalanceSheetItem>();
             foreach (Account account in accounts)
             {
-                // TODO: we are hitting the database too much
+                // TODO: Improve performance by getting all accounts at a certain time
+                // https://github.com/JonnyRivers/Financier/issues/12
                 var item = new BalanceSheetItem(
                     account.Name, 
                     m_accountService.GetBalanceAt(account.AccountId, at, true)

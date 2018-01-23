@@ -49,7 +49,8 @@ namespace Financier.Desktop.IoC
 
             serviceCollection.AddSingleton<IViewService, ViewService>();
 
-            // TODO: some view models are constructed without IoC
+            // TODO: For consistency, all view models should be constructed with IoC
+            // https://github.com/JonnyRivers/Financier/issues/15
             serviceCollection.AddTransient<IAccountEditViewModel, AccountEditViewModel>();
             serviceCollection.AddTransient<IAccountLinkViewModel, AccountLinkViewModel>();
             serviceCollection.AddTransient<IAccountListViewModel, AccountListViewModel>();
@@ -60,8 +61,6 @@ namespace Financier.Desktop.IoC
             serviceCollection.AddTransient<ITransactionEditViewModel, TransactionEditViewModel>();
             serviceCollection.AddTransient<ITransactionListViewModel, TransactionListViewModel>();
             serviceCollection.AddTransient<IMainWindowViewModel, MainWindowViewModel>();
-            
-            // Constructing views via the service provider seems like a step too far
 
             IServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
 

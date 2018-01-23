@@ -1,6 +1,7 @@
 ﻿namespace Financier.Desktop.ViewModels
 {
-    // TODO: This is really an IAccountLinkViewModel
+    // TODO: Replace ITransactionAccountFilterViewModel with IAccountLinkViewModel
+    // https://github.com/JonnyRivers/Financier/issues/16
     public interface ITransactionAccountFilterViewModel
     {
         int AccountId { get; }

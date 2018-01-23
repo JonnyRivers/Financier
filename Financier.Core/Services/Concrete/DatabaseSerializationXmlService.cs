@@ -52,8 +52,8 @@ namespace Financier.Services
             m_dbContext.Transactions.AddRange(transactions);
             m_dbContext.SaveChanges();
 
-            // TODO: this can probably be cleaned up a bit by using the Transactions nav property
-            // of Entities.Budget.
+            // TODO: Clean up Budget->XML by using the Transactions nav property of Entities.Budget
+            // https://github.com/JonnyRivers/Financier/issues/13
             List<XElement> budgetElements = rootElement.Elements(XName.Get("Budget")).ToList();
             List<Entities.Budget> budgets = budgetElements.Select(BudgetFromElement).ToList();
             m_dbContext.Budgets.AddRange(budgets);

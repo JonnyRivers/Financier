@@ -23,13 +23,13 @@ namespace Financier.Desktop.ViewModels
             TransactionListViewModel = IoC.ServiceProvider.Instance.GetRequiredService<IBudgetTransactionListViewModel>();
         }
 
-        // TODO: Add a Setup() for consistency?
-
         private IBudgetService m_budgetService;
         private int m_budgetId;
 
         public IEnumerable<BudgetPeriod> Periods { get; }
 
+        // TODO: Account and Transaction VMs set the ID on sub-VMs, where Budgets use a Setup() routine
+        // https://github.com/JonnyRivers/Financier/issues/9
         public int BudgetId
         {
             get { return m_budgetId; }

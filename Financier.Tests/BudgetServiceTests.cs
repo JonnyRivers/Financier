@@ -7,6 +7,8 @@ using System.Linq;
 
 namespace Financier.Tests
 {
+    // TODO: Remove code duplication from tests around DB setup
+    // https://github.com/JonnyRivers/Financier/issues/10
     [TestClass]
     public class BudgetServiceTests
     {
@@ -229,6 +231,8 @@ namespace Financier.Tests
         }
 
         [TestMethod]
+        // TODO: Data service Get() exceptions should be more specific than InvalidOperationException
+        // https://github.com/JonnyRivers/Financier/issues/8
         [ExpectedException(typeof(InvalidOperationException))]
         public void TestBudgetDeleteFailInvalidId()
         {
@@ -718,6 +722,8 @@ namespace Financier.Tests
         }
 
         [TestMethod]
+        // TODO: Data service Get() exceptions should be more specific than InvalidOperationException
+        // https://github.com/JonnyRivers/Financier/issues/8
         [ExpectedException(typeof(InvalidOperationException))]
         public void TestBudgetGetFailInvalidId()
         {

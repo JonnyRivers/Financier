@@ -22,9 +22,10 @@ namespace Financier.Desktop.ViewModels
 
             Accounts = m_accountService.GetAll().OrderBy(a => a.Name).ToList();
 
-            // TODO: take selections from last transaction?
-            SelectedCreditAccount = Accounts.First();// TODO: handle no accounts
-            SelectedDebitAccount = Accounts.First();// TODO: handle no accounts
+            // TODO: Provide sensible defaults to new TransactionEditViewModel instances
+            // https://github.com/JonnyRivers/Financier/issues/19
+            SelectedCreditAccount = Accounts.First();
+            SelectedDebitAccount = Accounts.First();
             Amount = 0m;
             At = DateTime.Now;
         }

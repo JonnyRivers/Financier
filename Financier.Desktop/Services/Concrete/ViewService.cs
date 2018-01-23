@@ -38,7 +38,9 @@ namespace Financier.Desktop.Services
         {
             IAccountEditViewModel accountEditViewModel = 
                 IoC.ServiceProvider.Instance.GetRequiredService<IAccountEditViewModel>();
-            accountEditViewModel.AccountId = accountId;// TODO: can we omit this initialization step?
+            // TODO: Account and Transaction VMs set the ID on sub-VMs, where Budgets use a Setup() routine
+            // https://github.com/JonnyRivers/Financier/issues/9
+            accountEditViewModel.AccountId = accountId;
             var accountEditWindow = new AccountEditWindow(accountEditViewModel);
             bool? result = accountEditWindow.ShowDialog();
 
@@ -69,7 +71,9 @@ namespace Financier.Desktop.Services
         {
             IBudgetEditViewModel budgetEditViewModel =
                 IoC.ServiceProvider.Instance.GetRequiredService<IBudgetEditViewModel>();
-            budgetEditViewModel.BudgetId = budgetId;// TODO: can we omit this initialization step?
+            // TODO: Account and Transaction VMs set the ID on sub-VMs, where Budgets use a Setup() routine
+            // https://github.com/JonnyRivers/Financier/issues/9
+            budgetEditViewModel.BudgetId = budgetId;
             var budgetEditWindow = new BudgetEditWindow(budgetEditViewModel);
             bool? result = budgetEditWindow.ShowDialog();
 
@@ -106,7 +110,9 @@ namespace Financier.Desktop.Services
         {
             ITransactionEditViewModel transactionEditViewModel =
                 IoC.ServiceProvider.Instance.GetRequiredService<ITransactionEditViewModel>();
-            transactionEditViewModel.TransactionId = transactionId;// TODO: can we omit this initialization step?
+            // TODO: Account and Transaction VMs set the ID on sub-VMs, where Budgets use a Setup() routine
+            // https://github.com/JonnyRivers/Financier/issues/9
+            transactionEditViewModel.TransactionId = transactionId;
             var transactionEditWindow = new TransactionEditWindow(transactionEditViewModel);
             bool? result = transactionEditWindow.ShowDialog();
 

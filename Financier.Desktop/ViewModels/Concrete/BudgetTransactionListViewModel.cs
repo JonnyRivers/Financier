@@ -33,12 +33,16 @@ namespace Financier.Desktop.ViewModels
             m_budgetService = budgetService;
             m_viewService = viewService;
 
+            // TODO: ObservableCollection<T> instances can easily become out of date
+            // https://github.com/JonnyRivers/Financier/issues/7
             m_accountLinks = new ObservableCollection<IAccountLinkViewModel>(
                 m_accountService
                     .GetAllAsLinks()
                     .OrderBy(a => a.Name)
                     .Select(CreateAccountLink));
 
+            // TODO: Account and Transaction VMs set the ID on sub-VMs, where Budgets use a Setup() routine
+            // https://github.com/JonnyRivers/Financier/issues/9
             int firstIncomeAccountId = 0;
             int firstAssetAccountId = 0;
             int secondAssetAccountId = 0;
@@ -58,8 +62,7 @@ namespace Financier.Desktop.ViewModels
             if (secondAssetAccount != null)
                 secondAssetAccountId = secondAssetAccount.AccountId;
 
-            // TODO: this is madness - this gets thrown away & is invalid with no data
-            // We need the account service to solve this
+            
             var transactions = new List<IBudgetTransactionItemViewModel>();
             BudgetTransaction initialTransaction = new BudgetTransaction
             {
@@ -121,7 +124,8 @@ namespace Financier.Desktop.ViewModels
             var newTransaction = new BudgetTransaction
             {
                 CreditAccount = initialTransactionViewModel.SelectedDebitAccount.ToAccountLink(),
-                // TODO: a sensible DebitAccount?  First account with a prepayment to expense link? Fallback?
+                // TODO: Be smarter about the initial DebitAccount for new budget transactions
+                // https://github.com/JonnyRivers/Financier/issues/17
                 DebitAccount = initialTransactionViewModel.SelectedCreditAccount.ToAccountLink(),
                 Amount = 0m
             };
@@ -157,8 +161,8 @@ namespace Financier.Desktop.ViewModels
             return transactionViewModel;
         }
 
-        // TODO: this should be shared.  It can't be a property of Account.
-        // Perhaps we need a converter service.  We could ise AutoMapper or similar.
+        // TODO: Bring consistency to Model -> ViewModel conversions
+        // https://github.com/JonnyRivers/Financier/issues/18
         private static IAccountLinkViewModel CreateAccountLink(AccountLink accountLink)
         {
             IAccountLinkViewModel accountLinkViewModel = 

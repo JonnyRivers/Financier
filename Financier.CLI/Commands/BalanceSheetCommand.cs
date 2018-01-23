@@ -42,7 +42,8 @@ namespace Financier.CLI.Commands
             });
         }
 
-        // TODO: should this be another service?
+        // TODO: Create a BalanceSheetConsoleWriterService to refactor Financier.CLI.Commands.BalanceSheetCommand
+        // https://github.com/JonnyRivers/Financier/issues/14
         private static void DisplayBalanceSheet(BalanceSheet balanceSheet, DateTime at)
         {
             Console.WriteLine($"Balance sheet at {at}");
