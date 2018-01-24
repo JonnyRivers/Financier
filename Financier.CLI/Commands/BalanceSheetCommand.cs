@@ -1,8 +1,8 @@
-﻿using Financier.Services;
+﻿using Financier.CLI.Services;
+using Financier.Services;
 using Microsoft.Extensions.CommandLineUtils;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Linq;
 
 namespace Financier.CLI.Commands
 {
@@ -31,48 +31,19 @@ namespace Financier.CLI.Commands
                 serviceCollection.AddSingleton<IAccountService, AccountService>();
                 serviceCollection.AddSingleton<ICurrencyService, CurrencyService>();
                 serviceCollection.AddSingleton<IBalanceSheetService, BalanceSheetService>();
+                serviceCollection.AddSingleton<IBalanceSheetWriterService, BalanceSheetConsoleWriterService>();
 
                 IServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
 
                 IBalanceSheetService balanceSheetService = serviceProvider.GetRequiredService<IBalanceSheetService>();
                 DateTime at = DateTime.Parse(atOption.Value());
                 BalanceSheet balanceSheet = balanceSheetService.Generate(at);
-                DisplayBalanceSheet(balanceSheet, at);
+
+                IBalanceSheetWriterService balanceSheetWriterService = serviceProvider.GetRequiredService<IBalanceSheetWriterService>();
+                balanceSheetWriterService.Write(balanceSheet, at);
 
                 return 0;
             });
-        }
-
-        // TODO: Create a BalanceSheetConsoleWriterService to refactor Financier.CLI.Commands.BalanceSheetCommand
-        // https://github.com/JonnyRivers/Financier/issues/14
-        private static void DisplayBalanceSheet(BalanceSheet balanceSheet, DateTime at)
-        {
-            Console.WriteLine($"Balance sheet at {at}");
-            Console.WriteLine();
-
-            Console.WriteLine("Assets");
-            foreach (BalanceSheetItem item in balanceSheet.Assets.OrderByDescending(a => a.Balance))
-            {
-                Console.WriteLine("    {0,-50} {1} {2,10}", item.Name, balanceSheet.CurrencySymbol, item.Balance);
-            }
-            Console.WriteLine("                                                       ============");
-            Console.WriteLine("                                                       {0} {1,10}", balanceSheet.CurrencySymbol, balanceSheet.TotalAssets);
-            Console.WriteLine("                                                       ============");
-            Console.WriteLine();
-
-            Console.WriteLine("Liabilities");
-            foreach (BalanceSheetItem item in balanceSheet.Liabilities.OrderBy(a => a.Balance))
-            {
-                Console.WriteLine("    {0,-50} {1} {2,10}", item.Name, balanceSheet.CurrencySymbol, item.Balance);
-            }
-            Console.WriteLine("                                                       ============");
-            Console.WriteLine("                                                       {0} {1,10}", balanceSheet.CurrencySymbol, balanceSheet.TotalLiabilities);
-            Console.WriteLine("                                                       ============");
-
-            Console.WriteLine();
-            Console.WriteLine("                                                       ============");
-            Console.WriteLine("Net Worth                                              {0} {1,10}", balanceSheet.CurrencySymbol, balanceSheet.NetWorth);
-            Console.WriteLine("                                                       ============");
         }
     }
 }
