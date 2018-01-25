@@ -158,6 +158,27 @@ namespace Financier.Tests
         }
 
         [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void TestLoadFailureBudgetWithNoInitialTransaction()
+        {
+            TestLoadFailure("TestData/BudgetNoInitialTransaction.xml");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void TestLoadFailureBudgetWithNoSurplusTransaction()
+        {
+            TestLoadFailure("TestData/BudgetNoSurplusTransaction.xml");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void TestLoadFailureBudgetInitialSurplusTransaction()
+        {
+            TestLoadFailure("TestData/BudgetInitialSurplusTransaction.xml");
+        }
+
+        [TestMethod]
         public void TestSaveEmpty()
         {
             const string path = "TestData/EmptySaved.xml";
@@ -216,8 +237,6 @@ namespace Financier.Tests
                 Assert.AreEqual(usdCurrency.Name, currencies[0].Name);
                 Assert.AreEqual(usdCurrency.ShortName, currencies[0].ShortName);
                 Assert.AreEqual(usdCurrency.Symbol, currencies[0].Symbol);
-
-                
             }
         }
 

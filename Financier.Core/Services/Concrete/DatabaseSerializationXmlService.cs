@@ -52,19 +52,11 @@ namespace Financier.Services
             m_dbContext.Transactions.AddRange(transactions);
             m_dbContext.SaveChanges();
 
-            // TODO: Clean up Budget->XML by using the Transactions nav property of Entities.Budget
-            // https://github.com/JonnyRivers/Financier/issues/13
             List<XElement> budgetElements = rootElement.Elements(XName.Get("Budget")).ToList();
-            List<Entities.Budget> budgets = budgetElements.Select(BudgetFromElement).ToList();
+            List<Entities.Budget> budgets = budgetElements.Select(b => BudgetFromElement(b, accountsByName)).ToList();
             m_dbContext.Budgets.AddRange(budgets);
             m_dbContext.SaveChanges();
             Dictionary<string, Entities.Budget> budgetsByName = budgets.ToDictionary(b => b.Name, b => b);
-
-            List<Entities.BudgetTransaction> budgetTransactions = budgetElements
-                .SelectMany(e => BudgetTransactionsFromElement(e, accountsByName, budgetsByName))
-                .ToList();
-            m_dbContext.BudgetTransactions.AddRange(budgetTransactions);
-            m_dbContext.SaveChanges();
         }
 
         public void Save(string path)
@@ -235,7 +227,9 @@ namespace Financier.Services
             return element;
         }
 
-        private static Entities.Budget BudgetFromElement(XElement element)
+        private static Entities.Budget BudgetFromElement(
+            XElement element,
+            Dictionary<string, Entities.Account> accountsByName)
         {
             string name = GetRequiredAttribute(element, "name").Value;
             string period = GetRequiredAttribute(element, "period").Value;
@@ -243,59 +237,45 @@ namespace Financier.Services
             var budget = new Entities.Budget
             {
                 Name = name,
-                Period = (Entities.BudgetPeriod)Enum.Parse(typeof(Entities.BudgetPeriod), period)
+                Period = (Entities.BudgetPeriod)Enum.Parse(typeof(Entities.BudgetPeriod), period),
+                Transactions = element
+                    .Elements(XName.Get("BudgetTransaction"))
+                    .Select(e => BudgetTransactionFromElement(e, accountsByName)).ToList()
             };
+
+            if (budget.Transactions.Count(t => t.IsInitial) != 1)
+                throw new ArgumentException(nameof(element), "Budget element must have exactly one initial transaction");
+            if (budget.Transactions.Count(t => t.IsSurplus) != 1)
+                throw new ArgumentException(nameof(element), "Budget element must have exactly one surplus transaction");
 
             return budget;
         }
 
-        private static List<Entities.BudgetTransaction> BudgetTransactionsFromElement(
+        private static Entities.BudgetTransaction BudgetTransactionFromElement(
             XElement element,
-            Dictionary<string, Entities.Account> accountsByName,
-            Dictionary<string, Entities.Budget> budgetsByName)
+            Dictionary<string, Entities.Account> accountsByName)
         {
-            string budgetName = GetRequiredAttribute(element, "name").Value;
-            int budgetId = budgetsByName[budgetName].BudgetId;
+            string creditAccountName = GetRequiredAttribute(element, "credit").Value;
+            string debitAccountName = GetRequiredAttribute(element, "debit").Value;
+            string amount = GetRequiredAttribute(element, "amount").Value;
+            bool isInitial = AttributeExistsAndIsTrue(element, "isInitial");
+            bool isSurplus = AttributeExistsAndIsTrue(element, "isSurplus");
 
-            bool initialTransactionFound = false;
-            bool surplusTransactionFound = false;
-
-            var budgetTransactions = new List<Entities.BudgetTransaction>();
-            foreach (XElement budgetTransactionElement in element.Elements(XName.Get(nameof(BudgetTransaction))))
+            var newBudgetTransaction = new Entities.BudgetTransaction
             {
-                string creditAccountName = GetRequiredAttribute(budgetTransactionElement, "credit").Value;
-                string debitAccountName = GetRequiredAttribute(budgetTransactionElement, "debit").Value;
-                string amount = GetRequiredAttribute(budgetTransactionElement, "amount").Value;
-                bool isInitial = AttributeExistsAndIsTrue(budgetTransactionElement, "isInitial");
-                bool isSurplus = AttributeExistsAndIsTrue(budgetTransactionElement, "isSurplus");
+                CreditAccountId = accountsByName[creditAccountName].AccountId,
+                DebitAccountId = accountsByName[debitAccountName].AccountId,
+                Amount = Decimal.Parse(amount),
+                IsInitial = isInitial,
+                IsSurplus = isSurplus
+            };
 
-                var newBudgetTransaction = new Entities.BudgetTransaction
-                {
-                    CreditAccountId = accountsByName[creditAccountName].AccountId,
-                    DebitAccountId = accountsByName[debitAccountName].AccountId,
-                    Amount = Decimal.Parse(amount),
-                    IsInitial = isInitial,
-                    IsSurplus = isSurplus,
-                    BudgetId = budgetId
-                };
+            if(newBudgetTransaction.IsInitial && newBudgetTransaction.IsSurplus)
+                throw new ArgumentException(
+                    nameof(element), 
+                    "Budget contains transaction with initial and surplus flags set.  Either or neither must be set, never both.");
 
-                if(newBudgetTransaction.IsInitial && newBudgetTransaction.IsSurplus)
-                    throw new ArgumentException(
-                        nameof(element), 
-                        "Budget contains transaction with initial and surplus flags set");
-
-                initialTransactionFound |= newBudgetTransaction.IsInitial;
-                surplusTransactionFound |= newBudgetTransaction.IsSurplus;
-
-                budgetTransactions.Add(newBudgetTransaction);
-            }
-
-            if (!initialTransactionFound)
-                throw new ArgumentException(nameof(element), "Budget element has no initial transaction");
-            if (!surplusTransactionFound)
-                throw new ArgumentException(nameof(element), "Budget element has no surplus transaction");
-
-            return budgetTransactions;
+            return newBudgetTransaction;
         }
 
         private static XElement ElementFromBudget(Entities.Budget budget)
