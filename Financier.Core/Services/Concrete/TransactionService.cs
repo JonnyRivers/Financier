@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -34,21 +35,28 @@ namespace Financier.Services
 
         public void Delete(int transactionId)
         {
-            Entities.Transaction transaction =
-                m_dbContext.Transactions.Single(t => t.TransactionId == transactionId);
-            m_dbContext.Transactions.Remove(transaction);
+            Entities.Transaction transactionEntity =
+                m_dbContext.Transactions.SingleOrDefault(t => t.TransactionId == transactionId);
+
+            if (transactionEntity == null)
+                throw new ArgumentException($"No Transaction exists with TransactionId {transactionId}");
+
+            m_dbContext.Transactions.Remove(transactionEntity);
             m_dbContext.SaveChanges();
         }
 
         public Transaction Get(int transactionId)
         {
-            Entities.Transaction transaction = 
+            Entities.Transaction transactionEntity = 
                 m_dbContext.Transactions
                     .Include(t => t.CreditAccount)
                     .Include(t => t.DebitAccount)
-                    .Single(t => t.TransactionId == transactionId);
+                    .SingleOrDefault(t => t.TransactionId == transactionId);
 
-            return FromEntity(transaction);
+            if (transactionEntity == null)
+                throw new ArgumentException($"No Transaction exists with TransactionId {transactionId}");
+
+            return FromEntity(transactionEntity);
         }
 
         public IEnumerable<Transaction> GetAll()

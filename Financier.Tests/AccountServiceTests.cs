@@ -75,6 +75,21 @@ namespace Financier.Tests
         }
 
         [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void TestGetAccountFailInvalidId()
+        {
+            ILoggerFactory loggerFactory = new LoggerFactory();
+            ILogger<AccountService> logger = loggerFactory.CreateLogger<AccountService>();
+
+            using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
+            {
+                var accountService = new AccountService(logger, sqliteMemoryWrapper.DbContext);
+
+                Account account = accountService.Get(666);
+            }
+        }
+
+        [TestMethod]
         public void TestGetAllAccountLinks()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();

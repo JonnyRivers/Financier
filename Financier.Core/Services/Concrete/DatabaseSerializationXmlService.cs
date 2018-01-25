@@ -56,7 +56,6 @@ namespace Financier.Services
             List<Entities.Budget> budgets = budgetElements.Select(b => BudgetFromElement(b, accountsByName)).ToList();
             m_dbContext.Budgets.AddRange(budgets);
             m_dbContext.SaveChanges();
-            Dictionary<string, Entities.Budget> budgetsByName = budgets.ToDictionary(b => b.Name, b => b);
         }
 
         public void Save(string path)

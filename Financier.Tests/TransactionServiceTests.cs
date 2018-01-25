@@ -133,5 +133,107 @@ namespace Financier.Tests
                 Assert.AreEqual(transactionEntities[2].At, transactions[2].At);
             }
         }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void TestGetTransactionFailInvalidId()
+        {
+            ILoggerFactory loggerFactory = new LoggerFactory();
+            ILogger<TransactionService> logger = loggerFactory.CreateLogger<TransactionService>();
+
+            using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
+            {
+                var transactionService = new TransactionService(logger, sqliteMemoryWrapper.DbContext);
+
+                Transaction transaction = transactionService.Get(666);
+            }
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void TestTransactionDeleteFailInvalidId()
+        {
+            ILoggerFactory loggerFactory = new LoggerFactory();
+            ILogger<TransactionService> logger = loggerFactory.CreateLogger<TransactionService>();
+
+            using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
+            {
+                var transactionService = new TransactionService(logger, sqliteMemoryWrapper.DbContext);
+
+                transactionService.Delete(666);
+            }
+        }
+
+        [TestMethod]
+        public void TestTransactionDelete()
+        {
+            ILoggerFactory loggerFactory = new LoggerFactory();
+            ILogger<TransactionService> logger = loggerFactory.CreateLogger<TransactionService>();
+
+            using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
+            {
+                var usdCurrencyEntity = new Entities.Currency
+                {
+                    Name = "US Dollar",
+                    ShortName = "USD",
+                    Symbol = "$",
+                    IsPrimary = true
+                };
+
+                sqliteMemoryWrapper.DbContext.Currencies.Add(usdCurrencyEntity);
+                sqliteMemoryWrapper.DbContext.SaveChanges();
+
+                var incomeAccountEntity = new Entities.Account
+                {
+                    Name = "Income",
+                    Currency = usdCurrencyEntity,
+                    Type = Entities.AccountType.Income
+                };
+                var checkingAccountEntity = new Entities.Account
+                {
+                    Name = "Checking",
+                    Currency = usdCurrencyEntity,
+                    Type = Entities.AccountType.Asset
+                };
+
+                sqliteMemoryWrapper.DbContext.Accounts.Add(incomeAccountEntity);
+                sqliteMemoryWrapper.DbContext.Accounts.Add(checkingAccountEntity);
+                sqliteMemoryWrapper.DbContext.SaveChanges();
+
+                var transactionEntities = new Entities.Transaction[]
+                {
+                    new Entities.Transaction
+                    {
+                        CreditAccount = incomeAccountEntity,
+                        DebitAccount = checkingAccountEntity,
+                        Amount = 100m,
+                        At = new DateTime(2018, 1, 1, 8, 30, 0)
+                    },
+                    new Entities.Transaction
+                    {
+                        CreditAccount = incomeAccountEntity,
+                        DebitAccount = checkingAccountEntity,
+                        Amount = 60m,
+                        At = new DateTime(2018, 1, 1, 8, 31, 0)
+                    }
+                };
+
+                sqliteMemoryWrapper.DbContext.Transactions.AddRange(transactionEntities);
+                sqliteMemoryWrapper.DbContext.SaveChanges();
+
+                var transactionService = new TransactionService(logger, sqliteMemoryWrapper.DbContext);
+
+                transactionService.Delete(transactionEntities[0].TransactionId);
+
+                List<Transaction> transactions = transactionService.GetAll().ToList();
+
+                Assert.AreEqual(1, transactions.Count);
+                Assert.AreEqual(transactionEntities[1].TransactionId, transactions[0].TransactionId);
+                Assert.AreEqual(transactionEntities[1].Amount, transactions[0].Amount);
+                Assert.AreEqual(transactionEntities[1].At, transactions[0].At);
+                Assert.AreEqual(transactionEntities[1].CreditAccountId, transactions[0].CreditAccount.AccountId);
+                Assert.AreEqual(transactionEntities[1].DebitAccountId, transactions[0].DebitAccount.AccountId);
+            }
+        }
     }
 }

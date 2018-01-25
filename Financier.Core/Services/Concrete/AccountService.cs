@@ -35,7 +35,11 @@ namespace Financier.Services
         {
             Entities.Account accountEntity = m_dbContext.Accounts
                 .Include(a => a.Currency)
-                .Single(a => a.AccountId == accountId);
+                .SingleOrDefault(a => a.AccountId == accountId);
+
+            if (accountEntity == null)
+                throw new ArgumentException($"No Account exists with AccountId {accountId}");
+
             return FromEntity(accountEntity);
         }
 

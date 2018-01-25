@@ -71,7 +71,11 @@ namespace Financier.Services
         public void Delete(int budgetId)
         {
             Entities.Budget budgetEntity =
-                m_dbContext.Budgets.Single(b => b.BudgetId == budgetId);
+                m_dbContext.Budgets.SingleOrDefault(b => b.BudgetId == budgetId);
+
+            if (budgetEntity == null)
+                throw new ArgumentException($"No Budget exists with BudgetId {budgetId}");
+
             m_dbContext.Budgets.Remove(budgetEntity);
             m_dbContext.SaveChanges();
         }
@@ -84,7 +88,10 @@ namespace Financier.Services
                         .ThenInclude(t => t.CreditAccount)
                     .Include(b => b.Transactions)
                         .ThenInclude(t => t.DebitAccount)
-                    .Single(b => b.BudgetId == budgetId);
+                    .SingleOrDefault(b => b.BudgetId == budgetId);
+
+            if (budgetEntity == null)
+                throw new ArgumentException($"No Budget exists with BudgetId {budgetId}");
 
             return FromEntity(budgetEntity);
         }

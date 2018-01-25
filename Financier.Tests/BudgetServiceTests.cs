@@ -231,9 +231,7 @@ namespace Financier.Tests
         }
 
         [TestMethod]
-        // TODO: Data service Get() exceptions should be more specific than InvalidOperationException
-        // https://github.com/JonnyRivers/Financier/issues/8
-        [ExpectedException(typeof(InvalidOperationException))]
+        [ExpectedException(typeof(ArgumentException))]
         public void TestBudgetDeleteFailInvalidId()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
@@ -722,9 +720,7 @@ namespace Financier.Tests
         }
 
         [TestMethod]
-        // TODO: Data service Get() exceptions should be more specific than InvalidOperationException
-        // https://github.com/JonnyRivers/Financier/issues/8
-        [ExpectedException(typeof(InvalidOperationException))]
+        [ExpectedException(typeof(ArgumentException))]
         public void TestBudgetGetFailInvalidId()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
