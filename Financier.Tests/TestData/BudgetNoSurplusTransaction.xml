@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Data>
+  <Currency name="US Dollar" shortName="USD" symbol="$" isPrimary="True"/>
+  <Account name="Checking" currency="USD" type="Asset"/>
+  <Account name="Savings" currency="USD" type="Asset"/>
+  <Account name="Income" currency="USD" type="Income"/>
+  <Account name="Rent Prepayment" currency="USD" type="Asset"/>
+  <AccountRelationship source="Checking" destination="Rent Prepayment" type="PhysicalToLogical"/>
+  <Budget name="Bad Budget" period="Fortnightly">
+    <BudgetTransaction credit="Income" debit="Checking" amount="100" isInitial="True" />
+    <BudgetTransaction credit="Checking" debit="Rent Prepayment" amount="80"/>
+    <BudgetTransaction credit="Checking" debit="Savings" amount="0"/>
+  </Budget>
+</Data>
