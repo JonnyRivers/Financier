@@ -244,19 +244,15 @@ namespace Financier.Tests
             var currencyFactory = new DbSetup.CurrencyFactory();
             Entities.Currency usdCurrencyEntity = currencyFactory.Create(DbSetup.CurrencyPrefab.Usd, true);
 
-            var checkingAccount = new Entities.Account
-            {
-                Name = "Checking",
-                Currency = usdCurrencyEntity,
-                Type = Entities.AccountType.Asset
-            };
+            var accountFactory = new DbSetup.AccountFactory();
+            Entities.Account checkingAccountEntity =
+                accountFactory.Create(DbSetup.AccountPrefab.Checking, usdCurrencyEntity);
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
                 currencyFactory.Add(sqliteMemoryWrapper.DbContext, usdCurrencyEntity);
 
-                sqliteMemoryWrapper.DbContext.Accounts.Add(checkingAccount);
-                sqliteMemoryWrapper.DbContext.SaveChanges();
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, checkingAccountEntity);
 
                 var service = new DatabaseSerializationXmlService(logger, sqliteMemoryWrapper.DbContext);
                 service.Save(path);
@@ -277,7 +273,7 @@ namespace Financier.Tests
                 Assert.AreEqual(1, currencies.Count);
                 Assert.AreEqual(0, transactions.Count);
 
-                Assert.AreEqual(checkingAccount.Name, accounts[0].Name);
+                Assert.AreEqual(checkingAccountEntity.Name, accounts[0].Name);
                 Assert.AreEqual(usdCurrencyEntity.ShortName, accounts[0].Currency.ShortName);
             }
         }
@@ -289,40 +285,28 @@ namespace Financier.Tests
             ILoggerFactory loggerFactory = new LoggerFactory();
             ILogger<DatabaseSerializationXmlService> logger = loggerFactory.CreateLogger<DatabaseSerializationXmlService>();
 
-            var usdCurrency = new Entities.Currency
-            {
-                Name = "US Dollar",
-                ShortName = "USD",
-                Symbol = "$",
-                IsPrimary = true
-            };
-            var checkingAccount = new Entities.Account
-            {
-                Name = "Checking",
-                Currency = usdCurrency,
-                Type = Entities.AccountType.Asset
-            };
-            var rentPrepaymentAccount = new Entities.Account
-            {
-                Name = "Rent Prepayment",
-                Currency = usdCurrency,
-                Type = Entities.AccountType.Asset
-            };
+            var currencyFactory = new DbSetup.CurrencyFactory();
+            var usdCurrencyEntity = currencyFactory.Create(DbSetup.CurrencyPrefab.Usd, true);
+
+            var accountFactory = new DbSetup.AccountFactory();
+            Entities.Account checkingAccountEntity = 
+                accountFactory.Create(DbSetup.AccountPrefab.Checking, usdCurrencyEntity);
+            Entities.Account rentPrepaymentAccountEntity = 
+                accountFactory.Create(DbSetup.AccountPrefab.RentPrepayment, usdCurrencyEntity);
+
             var accountRelationship = new Entities.AccountRelationship
             {
-                SourceAccount = checkingAccount,
-                DestinationAccount = rentPrepaymentAccount,
+                SourceAccount = checkingAccountEntity,
+                DestinationAccount = rentPrepaymentAccountEntity,
                 Type = Entities.AccountRelationshipType.PhysicalToLogical
             };
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
-                sqliteMemoryWrapper.DbContext.Currencies.Add(usdCurrency);
-                sqliteMemoryWrapper.DbContext.SaveChanges();
+                currencyFactory.Add(sqliteMemoryWrapper.DbContext, usdCurrencyEntity);
 
-                sqliteMemoryWrapper.DbContext.Accounts.Add(checkingAccount);
-                sqliteMemoryWrapper.DbContext.Accounts.Add(rentPrepaymentAccount);
-                sqliteMemoryWrapper.DbContext.SaveChanges();
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, checkingAccountEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, rentPrepaymentAccountEntity);
 
                 sqliteMemoryWrapper.DbContext.AccountRelationships.Add(accountRelationship);
                 sqliteMemoryWrapper.DbContext.SaveChanges();
@@ -346,8 +330,8 @@ namespace Financier.Tests
                 Assert.AreEqual(1, currencies.Count);
                 Assert.AreEqual(0, transactions.Count);
 
-                Assert.AreEqual(checkingAccount.Name, accountRelationships[0].SourceAccount.Name);
-                Assert.AreEqual(rentPrepaymentAccount.Name, accountRelationships[0].DestinationAccount.Name);
+                Assert.AreEqual(checkingAccountEntity.Name, accountRelationships[0].SourceAccount.Name);
+                Assert.AreEqual(rentPrepaymentAccountEntity.Name, accountRelationships[0].DestinationAccount.Name);
                 Assert.AreEqual(accountRelationship.Type, accountRelationships[0].Type);
             }
         }
@@ -362,29 +346,23 @@ namespace Financier.Tests
             var currencyFactory = new DbSetup.CurrencyFactory();
             Entities.Currency usdCurrencyEntity = currencyFactory.Create(DbSetup.CurrencyPrefab.Usd, true);
 
-            var checkingAccount = new Entities.Account
-            {
-                Name = "Checking",
-                Currency = usdCurrencyEntity,
-                Type = Entities.AccountType.Asset
-            };
-            var rentPrepaymentAccount = new Entities.Account
-            {
-                Name = "Rent Prepayment",
-                Currency = usdCurrencyEntity,
-                Type = Entities.AccountType.Asset
-            };
+            var accountFactory = new DbSetup.AccountFactory();
+            Entities.Account checkingAccountEntity =
+                accountFactory.Create(DbSetup.AccountPrefab.Checking, usdCurrencyEntity);
+            Entities.Account rentPrepaymentAccountEntity =
+                accountFactory.Create(DbSetup.AccountPrefab.RentPrepayment, usdCurrencyEntity);
+
             var accountRelationship = new Entities.AccountRelationship
             {
-                SourceAccount = checkingAccount,
-                DestinationAccount = rentPrepaymentAccount,
+                SourceAccount = checkingAccountEntity,
+                DestinationAccount = rentPrepaymentAccountEntity,
                 Type = Entities.AccountRelationshipType.PhysicalToLogical
             };
             var transaction = new Entities.Transaction
             {
-                CreditAccount = checkingAccount,
+                CreditAccount = checkingAccountEntity,
                 Amount = 10m,
-                DebitAccount = rentPrepaymentAccount,
+                DebitAccount = rentPrepaymentAccountEntity,
                 At = new DateTime(2018, 1, 1, 8, 30, 0)
             };
 
@@ -392,9 +370,8 @@ namespace Financier.Tests
             {
                 currencyFactory.Add(sqliteMemoryWrapper.DbContext, usdCurrencyEntity);
 
-                sqliteMemoryWrapper.DbContext.Accounts.Add(checkingAccount);
-                sqliteMemoryWrapper.DbContext.Accounts.Add(rentPrepaymentAccount);
-                sqliteMemoryWrapper.DbContext.SaveChanges();
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, checkingAccountEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, rentPrepaymentAccountEntity);
 
                 sqliteMemoryWrapper.DbContext.AccountRelationships.Add(accountRelationship);
                 sqliteMemoryWrapper.DbContext.SaveChanges();
@@ -421,9 +398,9 @@ namespace Financier.Tests
                 Assert.AreEqual(1, currencies.Count);
                 Assert.AreEqual(1, transactions.Count);
 
-                Assert.AreEqual(checkingAccount.Name, transactions[0].CreditAccount.Name);
+                Assert.AreEqual(checkingAccountEntity.Name, transactions[0].CreditAccount.Name);
                 Assert.AreEqual(transaction.Amount, transactions[0].Amount);
-                Assert.AreEqual(rentPrepaymentAccount.Name, transactions[0].DebitAccount.Name);
+                Assert.AreEqual(rentPrepaymentAccountEntity.Name, transactions[0].DebitAccount.Name);
                 Assert.AreEqual(transaction.At, transactions[0].At);
             }
         }
@@ -438,34 +415,20 @@ namespace Financier.Tests
             var currencyFactory = new DbSetup.CurrencyFactory();
             Entities.Currency usdCurrencyEntity = currencyFactory.Create(DbSetup.CurrencyPrefab.Usd, true);
 
-            var incomeAccount = new Entities.Account
-            {
-                Name = "Income",
-                Currency = usdCurrencyEntity,
-                Type = Entities.AccountType.Income
-            };
-            var checkingAccount = new Entities.Account
-            {
-                Name = "Checking",
-                Currency = usdCurrencyEntity,
-                Type = Entities.AccountType.Asset
-            };
-            var rentPrepaymentAccount = new Entities.Account
-            {
-                Name = "Rent Prepayment",
-                Currency = usdCurrencyEntity,
-                Type = Entities.AccountType.Asset
-            };
-            var savingsAccount = new Entities.Account
-            {
-                Name = "Savings",
-                Currency = usdCurrencyEntity,
-                Type = Entities.AccountType.Asset
-            };
+            var accountFactory = new DbSetup.AccountFactory();
+            Entities.Account incomeAccountEntity =
+                accountFactory.Create(DbSetup.AccountPrefab.Income, usdCurrencyEntity);
+            Entities.Account checkingAccountEntity =
+                accountFactory.Create(DbSetup.AccountPrefab.Checking, usdCurrencyEntity);
+            Entities.Account rentPrepaymentAccountEntity =
+                accountFactory.Create(DbSetup.AccountPrefab.RentPrepayment, usdCurrencyEntity);
+            Entities.Account savingsAccountEntity =
+                accountFactory.Create(DbSetup.AccountPrefab.Savings, usdCurrencyEntity);
+
             var accountRelationship = new Entities.AccountRelationship
             {
-                SourceAccount = checkingAccount,
-                DestinationAccount = rentPrepaymentAccount,
+                SourceAccount = checkingAccountEntity,
+                DestinationAccount = rentPrepaymentAccountEntity,
                 Type = Entities.AccountRelationshipType.PhysicalToLogical
             };
             var budget = new Entities.Budget
@@ -476,21 +439,21 @@ namespace Financier.Tests
                 {
                     new Entities.BudgetTransaction
                     {
-                        CreditAccount = incomeAccount,
-                        DebitAccount = checkingAccount,
+                        CreditAccount = incomeAccountEntity,
+                        DebitAccount = checkingAccountEntity,
                         Amount = 100m,
                         IsInitial = true
                     },
                     new Entities.BudgetTransaction
                     {
-                        CreditAccount = checkingAccount,
-                        DebitAccount = rentPrepaymentAccount,
+                        CreditAccount = checkingAccountEntity,
+                        DebitAccount = rentPrepaymentAccountEntity,
                         Amount = 80m,
                     },
                     new Entities.BudgetTransaction
                     {
-                        CreditAccount = checkingAccount,
-                        DebitAccount = savingsAccount,
+                        CreditAccount = checkingAccountEntity,
+                        DebitAccount = savingsAccountEntity,
                         Amount = 100m,
                         IsSurplus = true
                     }
@@ -501,9 +464,10 @@ namespace Financier.Tests
             {
                 currencyFactory.Add(sqliteMemoryWrapper.DbContext, usdCurrencyEntity);
 
-                sqliteMemoryWrapper.DbContext.Accounts.Add(checkingAccount);
-                sqliteMemoryWrapper.DbContext.Accounts.Add(rentPrepaymentAccount);
-                sqliteMemoryWrapper.DbContext.SaveChanges();
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, incomeAccountEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, checkingAccountEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, rentPrepaymentAccountEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, savingsAccountEntity);
 
                 sqliteMemoryWrapper.DbContext.AccountRelationships.Add(accountRelationship);
                 sqliteMemoryWrapper.DbContext.SaveChanges();
