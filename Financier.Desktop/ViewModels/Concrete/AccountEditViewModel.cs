@@ -11,6 +11,9 @@ namespace Financier.Desktop.ViewModels
     public class AccountEditViewModel : IAccountEditViewModel
     {
         private ILogger<AccountEditViewModel> m_logger;
+        private IAccountService m_accountService;
+        private ICurrencyService m_currencyService;
+        private int m_accountId;
 
         public AccountEditViewModel(
             ILogger<AccountEditViewModel> logger,
@@ -20,8 +23,7 @@ namespace Financier.Desktop.ViewModels
             m_logger = logger;
             m_accountService = accountService;
             m_currencyService = currencyService;
-            m_accountId = 0;
-
+            
             AccountTypes = Enum.GetValues(typeof(AccountType)).Cast<AccountType>();
             Currencies = m_currencyService.GetAll();
 
@@ -30,9 +32,25 @@ namespace Financier.Desktop.ViewModels
             SelectedCurrency = Currencies.Single(c => c.IsPrimary);
         }
 
-        private IAccountService m_accountService;
-        private ICurrencyService m_currencyService;
-        private int m_accountId;
+        public void SetupForCreate()
+        {
+            m_accountId = 0;
+
+            Name = "New Account";
+            SelectedAccountType = AccountType.Asset;
+            SelectedCurrency = Currencies.Single(c => c.IsPrimary);
+        }
+
+        public void SetupForEdit(int accountId)
+        {
+            m_accountId = accountId;
+
+            Account account = m_accountService.Get(accountId);
+            
+            Name = account.Name;
+            SelectedAccountType = account.Type;
+            SelectedCurrency = Currencies.Single(c => c.CurrencyId == account.Currency.CurrencyId);
+        }
 
         public IEnumerable<AccountType> AccountTypes { get; }
         public IEnumerable<Currency> Currencies { get; }
@@ -40,18 +58,6 @@ namespace Financier.Desktop.ViewModels
         public int AccountId
         {
             get { return m_accountId; }
-            set
-            {
-                if(value != m_accountId)
-                {
-                    m_accountId = value;
-
-                    Account account = m_accountService.Get(m_accountId);
-                    Name = account.Name;
-                    SelectedAccountType = account.Type;
-                    SelectedCurrency = Currencies.Single(c => c.CurrencyId == account.Currency.CurrencyId);
-                }
-            }
         }
 
         public string Name { get; set; }

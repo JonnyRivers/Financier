@@ -19,36 +19,38 @@ namespace Financier.Desktop.ViewModels
         {
             m_logger = logger;
             m_budgetService = budgetService;
-            m_budgetId = 0;
-
+            
             Periods = Enum.GetValues(typeof(BudgetPeriod)).Cast<BudgetPeriod>();
+
+            TransactionListViewModel =
+                IoC.ServiceProvider.Instance.GetRequiredService<IBudgetTransactionListViewModel>();
+        }
+
+        public void SetupForCreate()
+        {
+            m_budgetId = 0;
 
             Name = "New Budget";
             SelectedPeriod = BudgetPeriod.Fortnightly;
+            TransactionListViewModel.SetupForCreate();
+        }
 
-            TransactionListViewModel = IoC.ServiceProvider.Instance.GetRequiredService<IBudgetTransactionListViewModel>();
+        public void SetupForEdit(int budgetId)
+        {
+            m_budgetId = budgetId;
+
+            Budget budget = m_budgetService.Get(m_budgetId);
+
+            Name = budget.Name;
+            SelectedPeriod = budget.Period;
+            TransactionListViewModel.SetupForEdit(budget);
         }
 
         public IEnumerable<BudgetPeriod> Periods { get; }
 
-        // TODO: Account and Transaction VMs set the ID on sub-VMs, where Budgets use a Setup() routine
-        // https://github.com/JonnyRivers/Financier/issues/9
         public int BudgetId
         {
             get { return m_budgetId; }
-            set
-            {
-                if (value != m_budgetId)
-                {
-                    m_budgetId = value;
-
-                    Budget budget = m_budgetService.Get(m_budgetId);
-                    Name = budget.Name;
-                    SelectedPeriod = budget.Period;
-
-                    TransactionListViewModel.Setup(budget);
-                }
-            }
         }
 
         public string Name { get; set; }

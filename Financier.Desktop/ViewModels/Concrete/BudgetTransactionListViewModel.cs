@@ -40,18 +40,19 @@ namespace Financier.Desktop.ViewModels
                     .GetAllAsLinks()
                     .OrderBy(a => a.Name)
                     .Select(CreateAccountLink));
+        }
 
-            // TODO: Account and Transaction VMs set the ID on sub-VMs, where Budgets use a Setup() routine
-            // https://github.com/JonnyRivers/Financier/issues/9
+        public void SetupForCreate()
+        {
             int firstIncomeAccountId = 0;
             int firstAssetAccountId = 0;
             int secondAssetAccountId = 0;
 
-            IAccountLinkViewModel firstIncomeAccount = 
+            IAccountLinkViewModel firstIncomeAccount =
                 m_accountLinks.FirstOrDefault(al => al.Type == AccountType.Income);
-            IAccountLinkViewModel firstAssetAccount = 
+            IAccountLinkViewModel firstAssetAccount =
                 m_accountLinks.FirstOrDefault(al => al.Type == AccountType.Asset);
-            IAccountLinkViewModel secondAssetAccount = 
+            IAccountLinkViewModel secondAssetAccount =
                 m_accountLinks.Where(al => al.Type == AccountType.Asset)
                               .ElementAtOrDefault(1);
 
@@ -62,7 +63,6 @@ namespace Financier.Desktop.ViewModels
             if (secondAssetAccount != null)
                 secondAssetAccountId = secondAssetAccount.AccountId;
 
-            
             var transactions = new List<IBudgetTransactionItemViewModel>();
             BudgetTransaction initialTransaction = new BudgetTransaction
             {
@@ -82,7 +82,7 @@ namespace Financier.Desktop.ViewModels
             Transactions = new ObservableCollection<IBudgetTransactionItemViewModel>(transactions);
         }
 
-        public void Setup(Budget budget)
+        public void SetupForEdit(Budget budget)
         {
             m_budgetId = budget.BudgetId;
 

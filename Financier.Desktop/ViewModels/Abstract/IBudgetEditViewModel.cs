@@ -6,7 +6,10 @@ namespace Financier.Desktop.ViewModels
 {
     public interface IBudgetEditViewModel
     {
-        int BudgetId { get; set; }
+        void SetupForCreate();
+        void SetupForEdit(int budgetId);
+
+        int BudgetId { get; }
         string Name { get; set; }
         BudgetPeriod SelectedPeriod { get; set; }
         IBudgetTransactionListViewModel TransactionListViewModel { get; }

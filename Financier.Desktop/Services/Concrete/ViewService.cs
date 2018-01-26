@@ -24,8 +24,11 @@ namespace Financier.Desktop.Services
 
         public bool OpenAccountCreateView()
         {
+            IAccountEditViewModel accountEditViewModel =
+                IoC.ServiceProvider.Instance.GetRequiredService<IAccountEditViewModel>();
+            accountEditViewModel.SetupForCreate();
             var accountEditWindow = new AccountEditWindow(
-                IoC.ServiceProvider.Instance.GetRequiredService<IAccountEditViewModel>());
+                accountEditViewModel);
             bool? result = accountEditWindow.ShowDialog();
 
             if (result.HasValue)
@@ -38,9 +41,7 @@ namespace Financier.Desktop.Services
         {
             IAccountEditViewModel accountEditViewModel = 
                 IoC.ServiceProvider.Instance.GetRequiredService<IAccountEditViewModel>();
-            // TODO: Account and Transaction VMs set the ID on sub-VMs, where Budgets use a Setup() routine
-            // https://github.com/JonnyRivers/Financier/issues/9
-            accountEditViewModel.AccountId = accountId;
+            accountEditViewModel.SetupForEdit(accountId);
             var accountEditWindow = new AccountEditWindow(accountEditViewModel);
             bool? result = accountEditWindow.ShowDialog();
 
@@ -52,8 +53,10 @@ namespace Financier.Desktop.Services
 
         public bool OpenBudgetCreateView()
         {
-            var budgetEditWindow = new BudgetEditWindow(
-                IoC.ServiceProvider.Instance.GetRequiredService<IBudgetEditViewModel>());
+            IBudgetEditViewModel budgetEditViewModel = 
+                IoC.ServiceProvider.Instance.GetRequiredService<IBudgetEditViewModel>();
+            budgetEditViewModel.SetupForCreate();
+            var budgetEditWindow = new BudgetEditWindow(budgetEditViewModel);
             bool? result = budgetEditWindow.ShowDialog();
 
             if (result.HasValue)
@@ -71,9 +74,7 @@ namespace Financier.Desktop.Services
         {
             IBudgetEditViewModel budgetEditViewModel =
                 IoC.ServiceProvider.Instance.GetRequiredService<IBudgetEditViewModel>();
-            // TODO: Account and Transaction VMs set the ID on sub-VMs, where Budgets use a Setup() routine
-            // https://github.com/JonnyRivers/Financier/issues/9
-            budgetEditViewModel.BudgetId = budgetId;
+            budgetEditViewModel.SetupForEdit(budgetId);
             var budgetEditWindow = new BudgetEditWindow(budgetEditViewModel);
             bool? result = budgetEditWindow.ShowDialog();
 
@@ -92,6 +93,7 @@ namespace Financier.Desktop.Services
         {
             ITransactionEditViewModel transactionEditViewModel =
                 IoC.ServiceProvider.Instance.GetRequiredService<ITransactionEditViewModel>();
+            transactionEditViewModel.SetupForCreate();
             var transactionEditWindow = new TransactionEditWindow(transactionEditViewModel);
             bool? result = transactionEditWindow.ShowDialog();
 
@@ -110,9 +112,7 @@ namespace Financier.Desktop.Services
         {
             ITransactionEditViewModel transactionEditViewModel =
                 IoC.ServiceProvider.Instance.GetRequiredService<ITransactionEditViewModel>();
-            // TODO: Account and Transaction VMs set the ID on sub-VMs, where Budgets use a Setup() routine
-            // https://github.com/JonnyRivers/Financier/issues/9
-            transactionEditViewModel.TransactionId = transactionId;
+            transactionEditViewModel.SetupForEdit(transactionId);
             var transactionEditWindow = new TransactionEditWindow(transactionEditViewModel);
             bool? result = transactionEditWindow.ShowDialog();
 
