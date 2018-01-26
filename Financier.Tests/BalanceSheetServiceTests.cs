@@ -18,17 +18,10 @@ namespace Financier.Tests
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
-                var usdCurrency = new Entities.Currency
-                {
-                    Name = "US Dollar",
-                    ShortName = "USD",
-                    Symbol = "$",
-                    IsPrimary = true
-                };
+                var currencyFactory = new DbSetup.CurrencyFactory();
+                var usdCurrencyEntity = currencyFactory.Create(DbSetup.CurrencyPrefab.Usd, true);
+                currencyFactory.Add(sqliteMemoryWrapper.DbContext, usdCurrencyEntity);
 
-                sqliteMemoryWrapper.DbContext.Currencies.Add(usdCurrency);
-                sqliteMemoryWrapper.DbContext.SaveChanges();
-                
                 var accountService = new AccountService(
                     loggerFactory.CreateLogger<AccountService>(),
                     sqliteMemoryWrapper.DbContext
@@ -45,7 +38,7 @@ namespace Financier.Tests
 
                 BalanceSheet balanceSheet = balanceSheetService.Generate(new DateTime(2018,1, 1));
 
-                Assert.AreEqual(usdCurrency.Symbol, balanceSheet.CurrencySymbol);
+                Assert.AreEqual(usdCurrencyEntity.Symbol, balanceSheet.CurrencySymbol);
                 Assert.AreEqual(0, balanceSheet.TotalAssets);
                 Assert.AreEqual(0, balanceSheet.TotalLiabilities);
                 Assert.AreEqual(0, balanceSheet.Assets.Count());
@@ -60,45 +53,38 @@ namespace Financier.Tests
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
-                var usdCurrency = new Entities.Currency
-                {
-                    Name = "US Dollar",
-                    ShortName = "USD",
-                    Symbol = "$",
-                    IsPrimary = true
-                };
-
-                sqliteMemoryWrapper.DbContext.Currencies.Add(usdCurrency);
-                sqliteMemoryWrapper.DbContext.SaveChanges();
+                var currencyFactory = new DbSetup.CurrencyFactory();
+                var usdCurrencyEntity = currencyFactory.Create(DbSetup.CurrencyPrefab.Usd, true);
+                currencyFactory.Add(sqliteMemoryWrapper.DbContext, usdCurrencyEntity);
 
                 var checkingAccount = new Entities.Account
                 {
                     Name = "Checking",
-                    Currency = usdCurrency,
+                    Currency = usdCurrencyEntity,
                     Type = Entities.AccountType.Asset
                 };
                 var incomeAccount = new Entities.Account
                 {
                     Name = "Income",
-                    Currency = usdCurrency,
+                    Currency = usdCurrencyEntity,
                     Type = Entities.AccountType.Income
                 };
                 var capitalAccount = new Entities.Account
                 {
                     Name = "Capital",
-                    Currency = usdCurrency,
+                    Currency = usdCurrencyEntity,
                     Type = Entities.AccountType.Capital
                 };
                 var rentAccount = new Entities.Account
                 {
                     Name = "Rent",
-                    Currency = usdCurrency,
+                    Currency = usdCurrencyEntity,
                     Type = Entities.AccountType.Expense
                 };
                 var creditCardAccount = new Entities.Account
                 {
                     Name = "Credit Card",
-                    Currency = usdCurrency,
+                    Currency = usdCurrencyEntity,
                     Type = Entities.AccountType.Liability
                 };
 
@@ -127,7 +113,7 @@ namespace Financier.Tests
                 List<BalanceSheetItem> balanceSheetAssets = balanceSheet.Assets.ToList();
                 List<BalanceSheetItem> balanceSheetLiabilities = balanceSheet.Liabilities.ToList();
 
-                Assert.AreEqual(usdCurrency.Symbol, balanceSheet.CurrencySymbol);
+                Assert.AreEqual(usdCurrencyEntity.Symbol, balanceSheet.CurrencySymbol);
                 Assert.AreEqual(0, balanceSheet.TotalAssets);
                 Assert.AreEqual(0, balanceSheet.TotalLiabilities);
                 Assert.AreEqual(1, balanceSheetAssets.Count);
@@ -146,45 +132,38 @@ namespace Financier.Tests
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
-                var usdCurrency = new Entities.Currency
-                {
-                    Name = "US Dollar",
-                    ShortName = "USD",
-                    Symbol = "$",
-                    IsPrimary = true
-                };
-
-                sqliteMemoryWrapper.DbContext.Currencies.Add(usdCurrency);
-                sqliteMemoryWrapper.DbContext.SaveChanges();
+                var currencyFactory = new DbSetup.CurrencyFactory();
+                var usdCurrencyEntity = currencyFactory.Create(DbSetup.CurrencyPrefab.Usd, true);
+                currencyFactory.Add(sqliteMemoryWrapper.DbContext, usdCurrencyEntity);
 
                 var checkingAccount = new Entities.Account
                 {
                     Name = "Checking",
-                    Currency = usdCurrency,
+                    Currency = usdCurrencyEntity,
                     Type = Entities.AccountType.Asset
                 };
                 var incomeAccount = new Entities.Account
                 {
                     Name = "Income",
-                    Currency = usdCurrency,
+                    Currency = usdCurrencyEntity,
                     Type = Entities.AccountType.Income
                 };
                 var capitalAccount = new Entities.Account
                 {
                     Name = "Capital",
-                    Currency = usdCurrency,
+                    Currency = usdCurrencyEntity,
                     Type = Entities.AccountType.Capital
                 };
                 var rentAccount = new Entities.Account
                 {
                     Name = "Rent",
-                    Currency = usdCurrency,
+                    Currency = usdCurrencyEntity,
                     Type = Entities.AccountType.Expense
                 };
                 var creditCardAccount = new Entities.Account
                 {
                     Name = "Credit Card",
-                    Currency = usdCurrency,
+                    Currency = usdCurrencyEntity,
                     Type = Entities.AccountType.Liability
                 };
 
@@ -247,7 +226,7 @@ namespace Financier.Tests
                 List<BalanceSheetItem> balanceSheetBeforeTransactionsAssets = balanceSheetBeforeTransactions.Assets.ToList();
                 List<BalanceSheetItem> balanceSheetBeforeTransactionsLiabilities = balanceSheetBeforeTransactions.Liabilities.ToList();
 
-                Assert.AreEqual(usdCurrency.Symbol, balanceSheetBeforeTransactions.CurrencySymbol);
+                Assert.AreEqual(usdCurrencyEntity.Symbol, balanceSheetBeforeTransactions.CurrencySymbol);
                 Assert.AreEqual(0, balanceSheetBeforeTransactions.TotalAssets);
                 Assert.AreEqual(0, balanceSheetBeforeTransactions.TotalLiabilities);
                 Assert.AreEqual(0, balanceSheetBeforeTransactions.NetWorth);
@@ -262,7 +241,7 @@ namespace Financier.Tests
                 List<BalanceSheetItem> balanceSheetTwoTransactionsAssets = balanceSheetTwoTransactions.Assets.ToList();
                 List<BalanceSheetItem> balanceSheetTwoTransactionsLiabilities = balanceSheetTwoTransactions.Liabilities.ToList();
 
-                Assert.AreEqual(usdCurrency.Symbol, balanceSheetTwoTransactions.CurrencySymbol);
+                Assert.AreEqual(usdCurrencyEntity.Symbol, balanceSheetTwoTransactions.CurrencySymbol);
                 Assert.AreEqual(100, balanceSheetTwoTransactions.TotalAssets);
                 Assert.AreEqual(-40, balanceSheetTwoTransactions.TotalLiabilities);
                 Assert.AreEqual(60, balanceSheetTwoTransactions.NetWorth);
@@ -277,7 +256,7 @@ namespace Financier.Tests
                 List<BalanceSheetItem> balanceSheetAtEndAssets = balanceSheetAtEnd.Assets.ToList();
                 List<BalanceSheetItem> balanceSheetAtEndLiabilities = balanceSheetAtEnd.Liabilities.ToList();
 
-                Assert.AreEqual(usdCurrency.Symbol, balanceSheetAtEnd.CurrencySymbol);
+                Assert.AreEqual(usdCurrencyEntity.Symbol, balanceSheetAtEnd.CurrencySymbol);
                 Assert.AreEqual(260, balanceSheetAtEnd.TotalAssets);
                 Assert.AreEqual(0, balanceSheetAtEnd.TotalLiabilities);
                 Assert.AreEqual(260, balanceSheetAtEnd.NetWorth);
@@ -297,39 +276,32 @@ namespace Financier.Tests
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
-                var usdCurrency = new Entities.Currency
-                {
-                    Name = "US Dollar",
-                    ShortName = "USD",
-                    Symbol = "$",
-                    IsPrimary = true
-                };
-
-                sqliteMemoryWrapper.DbContext.Currencies.Add(usdCurrency);
-                sqliteMemoryWrapper.DbContext.SaveChanges();
+                var currencyFactory = new DbSetup.CurrencyFactory();
+                var usdCurrencyEntity = currencyFactory.Create(DbSetup.CurrencyPrefab.Usd, true);
+                currencyFactory.Add(sqliteMemoryWrapper.DbContext, usdCurrencyEntity);
 
                 var checkingAccount = new Entities.Account
                 {
                     Name = "Checking",
-                    Currency = usdCurrency,
+                    Currency = usdCurrencyEntity,
                     Type = Entities.AccountType.Asset
                 };
                 var incomeAccount = new Entities.Account
                 {
                     Name = "Income",
-                    Currency = usdCurrency,
+                    Currency = usdCurrencyEntity,
                     Type = Entities.AccountType.Income
                 };
                 var rentPrepaymentAccount = new Entities.Account
                 {
                     Name = "Rent Prepayment",
-                    Currency = usdCurrency,
+                    Currency = usdCurrencyEntity,
                     Type = Entities.AccountType.Asset
                 };
                 var groceriesPrepaymentAccount = new Entities.Account
                 {
                     Name = "Groceries Prepayment",
-                    Currency = usdCurrency,
+                    Currency = usdCurrencyEntity,
                     Type = Entities.AccountType.Asset
                 };
 
@@ -401,7 +373,7 @@ namespace Financier.Tests
                 List<BalanceSheetItem> balanceSheetAssets = balanceSheet.Assets.ToList();
                 List<BalanceSheetItem> balanceSheetLiabilities = balanceSheet.Liabilities.ToList();
 
-                Assert.AreEqual(usdCurrency.Symbol, balanceSheet.CurrencySymbol);
+                Assert.AreEqual(usdCurrencyEntity.Symbol, balanceSheet.CurrencySymbol);
                 Assert.AreEqual(100, balanceSheet.TotalAssets);
                 Assert.AreEqual(0, balanceSheet.TotalLiabilities);
                 Assert.AreEqual(100, balanceSheet.NetWorth);

@@ -73,16 +73,9 @@ namespace Financier.Tests
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
-                var usdCurrencyEntity = new Entities.Currency
-                {
-                    Name = "US Dollar",
-                    ShortName = "USD",
-                    Symbol = "$",
-                    IsPrimary = true
-                };
-
-                sqliteMemoryWrapper.DbContext.Currencies.Add(usdCurrencyEntity);
-                sqliteMemoryWrapper.DbContext.SaveChanges();
+                var currencyFactory = new DbSetup.CurrencyFactory();
+                var usdCurrencyEntity = currencyFactory.Create(DbSetup.CurrencyPrefab.Usd, true);
+                currencyFactory.Add(sqliteMemoryWrapper.DbContext, usdCurrencyEntity);
 
                 var incomeAccountEntity = new Entities.Account
                 {
@@ -253,16 +246,9 @@ namespace Financier.Tests
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
-                var usdCurrencyEntity = new Entities.Currency
-                {
-                    Name = "US Dollar",
-                    ShortName = "USD",
-                    Symbol = "$",
-                    IsPrimary = true
-                };
-
-                sqliteMemoryWrapper.DbContext.Currencies.Add(usdCurrencyEntity);
-                sqliteMemoryWrapper.DbContext.SaveChanges();
+                var currencyFactory = new DbSetup.CurrencyFactory();
+                var usdCurrencyEntity = currencyFactory.Create(DbSetup.CurrencyPrefab.Usd, true);
+                currencyFactory.Add(sqliteMemoryWrapper.DbContext, usdCurrencyEntity);
 
                 var incomeAccountEntity = new Entities.Account
                 {
@@ -473,16 +459,9 @@ namespace Financier.Tests
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
-                var usdCurrencyEntity = new Entities.Currency
-                {
-                    Name = "US Dollar",
-                    ShortName = "USD",
-                    Symbol = "$",
-                    IsPrimary = true
-                };
-
-                sqliteMemoryWrapper.DbContext.Currencies.Add(usdCurrencyEntity);
-                sqliteMemoryWrapper.DbContext.SaveChanges();
+                var currencyFactory = new DbSetup.CurrencyFactory();
+                var usdCurrencyEntity = currencyFactory.Create(DbSetup.CurrencyPrefab.Usd, true);
+                currencyFactory.Add(sqliteMemoryWrapper.DbContext, usdCurrencyEntity);
 
                 var incomeAccountEntity = new Entities.Account
                 {
@@ -742,16 +721,9 @@ namespace Financier.Tests
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
-                var usdCurrencyEntity = new Entities.Currency
-                {
-                    Name = "US Dollar",
-                    ShortName = "USD",
-                    Symbol = "$",
-                    IsPrimary = true
-                };
-
-                sqliteMemoryWrapper.DbContext.Currencies.Add(usdCurrencyEntity);
-                sqliteMemoryWrapper.DbContext.SaveChanges();
+                var currencyFactory = new DbSetup.CurrencyFactory();
+                var usdCurrencyEntity = currencyFactory.Create(DbSetup.CurrencyPrefab.Usd, true);
+                currencyFactory.Add(sqliteMemoryWrapper.DbContext, usdCurrencyEntity);
 
                 var incomeAccountEntity = new Entities.Account
                 {
@@ -884,16 +856,9 @@ namespace Financier.Tests
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
-                var usdCurrencyEntity = new Entities.Currency
-                {
-                    Name = "US Dollar",
-                    ShortName = "USD",
-                    Symbol = "$",
-                    IsPrimary = true
-                };
-
-                sqliteMemoryWrapper.DbContext.Currencies.Add(usdCurrencyEntity);
-                sqliteMemoryWrapper.DbContext.SaveChanges();
+                var currencyFactory = new DbSetup.CurrencyFactory();
+                var usdCurrencyEntity = currencyFactory.Create(DbSetup.CurrencyPrefab.Usd, true);
+                currencyFactory.Add(sqliteMemoryWrapper.DbContext, usdCurrencyEntity);
 
                 var incomeAccountEntity = new Entities.Account
                 {
@@ -1042,16 +1007,9 @@ namespace Financier.Tests
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
-                var usdCurrencyEntity = new Entities.Currency
-                {
-                    Name = "US Dollar",
-                    ShortName = "USD",
-                    Symbol = "$",
-                    IsPrimary = true
-                };
-
-                sqliteMemoryWrapper.DbContext.Currencies.Add(usdCurrencyEntity);
-                sqliteMemoryWrapper.DbContext.SaveChanges();
+                var currencyFactory = new DbSetup.CurrencyFactory();
+                var usdCurrencyEntity = currencyFactory.Create(DbSetup.CurrencyPrefab.Usd, true);
+                currencyFactory.Add(sqliteMemoryWrapper.DbContext, usdCurrencyEntity);
 
                 var incomeAccountEntity = new Entities.Account
                 {
@@ -1185,16 +1143,9 @@ namespace Financier.Tests
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
-                var usdCurrencyEntity = new Entities.Currency
-                {
-                    Name = "US Dollar",
-                    ShortName = "USD",
-                    Symbol = "$",
-                    IsPrimary = true
-                };
-
-                sqliteMemoryWrapper.DbContext.Currencies.Add(usdCurrencyEntity);
-                sqliteMemoryWrapper.DbContext.SaveChanges();
+                var currencyFactory = new DbSetup.CurrencyFactory();
+                var usdCurrencyEntity = currencyFactory.Create(DbSetup.CurrencyPrefab.Usd, true);
+                currencyFactory.Add(sqliteMemoryWrapper.DbContext, usdCurrencyEntity);
 
                 var incomeAccountEntity = new Entities.Account
                 {
