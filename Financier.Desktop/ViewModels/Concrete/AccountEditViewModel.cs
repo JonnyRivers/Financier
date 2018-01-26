@@ -26,10 +26,6 @@ namespace Financier.Desktop.ViewModels
             
             AccountTypes = Enum.GetValues(typeof(AccountType)).Cast<AccountType>();
             Currencies = m_currencyService.GetAll();
-
-            Name = "New Account";
-            SelectedAccountType = AccountType.Asset;
-            SelectedCurrency = Currencies.Single(c => c.IsPrimary);
         }
 
         public void SetupForCreate()
@@ -52,6 +48,17 @@ namespace Financier.Desktop.ViewModels
             SelectedCurrency = Currencies.Single(c => c.CurrencyId == account.Currency.CurrencyId);
         }
 
+        public Account ToAccount()
+        {
+            return new Account
+            {
+                AccountId = m_accountId,
+                Name = Name,
+                Type = SelectedAccountType,
+                Currency = SelectedCurrency
+            };
+        }
+
         public IEnumerable<AccountType> AccountTypes { get; }
         public IEnumerable<Currency> Currencies { get; }
 
@@ -69,24 +76,14 @@ namespace Financier.Desktop.ViewModels
 
         private void OKExecute(object obj)
         {
+            Account account = ToAccount();
+
             if (m_accountId != 0)
             {
-                Account account = m_accountService.Get(m_accountId);
-                account.Name = Name;
-                account.Type = SelectedAccountType;
-                account.Currency = SelectedCurrency;
-
                 m_accountService.Update(account);
             }
             else
             {
-                var account = new Account
-                {
-                    Name = Name,
-                    Type = SelectedAccountType,
-                    Currency = SelectedCurrency
-                };
-
                 m_accountService.Create(account);
             }
         }

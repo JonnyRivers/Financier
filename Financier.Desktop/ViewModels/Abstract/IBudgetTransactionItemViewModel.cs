@@ -9,8 +9,7 @@ namespace Financier.Desktop.ViewModels
             ObservableCollection<IAccountLinkViewModel> accountLinks,
             BudgetTransaction budgetTransaction, 
             BudgetTransactionType type);
-        // TODO: Bring consistency to ViewModel->Model conversions
-        // https://github.com/JonnyRivers/Financier/issues/22
+
         BudgetTransaction ToBudgetTransaction();
 
         int BudgetTransactionId { get; set; }

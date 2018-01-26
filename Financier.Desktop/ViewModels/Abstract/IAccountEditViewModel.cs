@@ -9,6 +9,8 @@ namespace Financier.Desktop.ViewModels
         void SetupForCreate();
         void SetupForEdit(int accountId);
 
+        Account ToAccount();
+
         IEnumerable<AccountType> AccountTypes { get; }
         IEnumerable<Currency> Currencies { get; }
 

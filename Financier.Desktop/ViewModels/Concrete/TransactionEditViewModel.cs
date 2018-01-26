@@ -72,6 +72,20 @@ namespace Financier.Desktop.ViewModels
             At = transaction.At;
         }
 
+        public Transaction ToTransaction()
+        {
+            var transaction = new Transaction
+            {
+                TransactionId = m_transactionId,
+                CreditAccount = SelectedCreditAccount.ToAccountLink(),
+                DebitAccount = SelectedDebitAccount.ToAccountLink(),
+                Amount = Amount,
+                At = At,
+            };
+
+            return transaction;
+        }
+
         private int m_transactionId;
         private IAccountLinkViewModel m_selectedCreditAccount;
         private IAccountLinkViewModel m_selectedDebitAccount;
@@ -148,6 +162,8 @@ namespace Financier.Desktop.ViewModels
 
         private void OKExecute(object obj)
         {
+            Transaction transaction = ToTransaction();
+
             if (m_transactionId != 0)
             {
                 Transaction transaction = m_transactionService.Get(m_transactionId);

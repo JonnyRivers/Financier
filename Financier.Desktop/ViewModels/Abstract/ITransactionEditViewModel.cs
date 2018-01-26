@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Financier.Services;
+using System;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
@@ -8,6 +9,8 @@ namespace Financier.Desktop.ViewModels
     {
         void SetupForCreate();
         void SetupForEdit(int transactionId);
+
+        Transaction ToTransaction();
 
         ObservableCollection<IAccountLinkViewModel> Accounts { get; }
 

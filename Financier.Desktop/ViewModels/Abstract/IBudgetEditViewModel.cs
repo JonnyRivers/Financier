@@ -9,6 +9,8 @@ namespace Financier.Desktop.ViewModels
         void SetupForCreate();
         void SetupForEdit(int budgetId);
 
+        Budget ToBudget();
+
         int BudgetId { get; }
         string Name { get; set; }
         BudgetPeriod SelectedPeriod { get; set; }
