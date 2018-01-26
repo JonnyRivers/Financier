@@ -33,16 +33,9 @@ namespace Financier.Tests
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
-                var usdCurrencyEntity = new Entities.Currency
-                {
-                    Name = "US Dollar",
-                    ShortName = "USD",
-                    Symbol = "$",
-                    IsPrimary = true
-                };
-
-                sqliteMemoryWrapper.DbContext.Currencies.Add(usdCurrencyEntity);
-                sqliteMemoryWrapper.DbContext.SaveChanges();
+                var currencyFactory = new DbSetup.CurrencyFactory();
+                var usdCurrencyEntity = currencyFactory.Create(DbSetup.CurrencyPrefab.Usd, true);
+                currencyFactory.Add(sqliteMemoryWrapper.DbContext, usdCurrencyEntity);
 
                 var currencyService = new CurrencyService(logger, sqliteMemoryWrapper.DbContext);
                 List<Currency> currencies = currencyService.GetAll().ToList();
@@ -63,24 +56,11 @@ namespace Financier.Tests
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
-                var usdCurrencyEntity = new Entities.Currency
-                {
-                    Name = "US Dollar",
-                    ShortName = "USD",
-                    Symbol = "$",
-                    IsPrimary = true
-                };
-                var gbpCurrencyEntity = new Entities.Currency
-                {
-                    Name = "UK Sterling",
-                    ShortName = "GBP",
-                    Symbol = "£",
-                    IsPrimary = false
-                };
-
-                sqliteMemoryWrapper.DbContext.Currencies.Add(usdCurrencyEntity);
-                sqliteMemoryWrapper.DbContext.Currencies.Add(gbpCurrencyEntity);
-                sqliteMemoryWrapper.DbContext.SaveChanges();
+                var currencyFactory = new DbSetup.CurrencyFactory();
+                var usdCurrencyEntity = currencyFactory.Create(DbSetup.CurrencyPrefab.Usd, true);
+                var gbpCurrencyEntity = currencyFactory.Create(DbSetup.CurrencyPrefab.Gbp, false);
+                currencyFactory.Add(sqliteMemoryWrapper.DbContext, usdCurrencyEntity);
+                currencyFactory.Add(sqliteMemoryWrapper.DbContext, gbpCurrencyEntity);
 
                 var currencyService = new CurrencyService(logger, sqliteMemoryWrapper.DbContext);
                 List<Currency> currencies = currencyService.GetAll().ToList();
@@ -105,24 +85,11 @@ namespace Financier.Tests
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
-                var usdCurrencyEntity = new Entities.Currency
-                {
-                    Name = "US Dollar",
-                    ShortName = "USD",
-                    Symbol = "$",
-                    IsPrimary = true
-                };
-                var gbpCurrencyEntity = new Entities.Currency
-                {
-                    Name = "UK Sterling",
-                    ShortName = "GBP",
-                    Symbol = "£",
-                    IsPrimary = false
-                };
-
-                sqliteMemoryWrapper.DbContext.Currencies.Add(usdCurrencyEntity);
-                sqliteMemoryWrapper.DbContext.Currencies.Add(gbpCurrencyEntity);
-                sqliteMemoryWrapper.DbContext.SaveChanges();
+                var currencyFactory = new DbSetup.CurrencyFactory();
+                var usdCurrencyEntity = currencyFactory.Create(DbSetup.CurrencyPrefab.Usd, true);
+                var gbpCurrencyEntity = currencyFactory.Create(DbSetup.CurrencyPrefab.Gbp, false);
+                currencyFactory.Add(sqliteMemoryWrapper.DbContext, usdCurrencyEntity);
+                currencyFactory.Add(sqliteMemoryWrapper.DbContext, gbpCurrencyEntity);
 
                 var currencyService = new CurrencyService(logger, sqliteMemoryWrapper.DbContext);
                 Currency primaryCurrency = currencyService.GetPrimary();
@@ -143,24 +110,11 @@ namespace Financier.Tests
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
-                var usdCurrencyEntity = new Entities.Currency
-                {
-                    Name = "US Dollar",
-                    ShortName = "USD",
-                    Symbol = "$",
-                    IsPrimary = false
-                };
-                var gbpCurrencyEntity = new Entities.Currency
-                {
-                    Name = "UK Sterling",
-                    ShortName = "GBP",
-                    Symbol = "£",
-                    IsPrimary = false
-                };
-
-                sqliteMemoryWrapper.DbContext.Currencies.Add(usdCurrencyEntity);
-                sqliteMemoryWrapper.DbContext.Currencies.Add(gbpCurrencyEntity);
-                sqliteMemoryWrapper.DbContext.SaveChanges();
+                var currencyFactory = new DbSetup.CurrencyFactory();
+                var usdCurrencyEntity = currencyFactory.Create(DbSetup.CurrencyPrefab.Usd, false);
+                var gbpCurrencyEntity = currencyFactory.Create(DbSetup.CurrencyPrefab.Gbp, false);
+                currencyFactory.Add(sqliteMemoryWrapper.DbContext, usdCurrencyEntity);
+                currencyFactory.Add(sqliteMemoryWrapper.DbContext, gbpCurrencyEntity);
 
                 var currencyService = new CurrencyService(logger, sqliteMemoryWrapper.DbContext);
                 Currency primaryCurrency = currencyService.GetPrimary();
@@ -176,24 +130,11 @@ namespace Financier.Tests
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
-                var usdCurrencyEntity = new Entities.Currency
-                {
-                    Name = "US Dollar",
-                    ShortName = "USD",
-                    Symbol = "$",
-                    IsPrimary = true
-                };
-                var gbpCurrencyEntity = new Entities.Currency
-                {
-                    Name = "UK Sterling",
-                    ShortName = "GBP",
-                    Symbol = "£",
-                    IsPrimary = true
-                };
-
-                sqliteMemoryWrapper.DbContext.Currencies.Add(usdCurrencyEntity);
-                sqliteMemoryWrapper.DbContext.Currencies.Add(gbpCurrencyEntity);
-                sqliteMemoryWrapper.DbContext.SaveChanges();
+                var currencyFactory = new DbSetup.CurrencyFactory();
+                var usdCurrencyEntity = currencyFactory.Create(DbSetup.CurrencyPrefab.Usd, true);
+                var gbpCurrencyEntity = currencyFactory.Create(DbSetup.CurrencyPrefab.Gbp, true);
+                currencyFactory.Add(sqliteMemoryWrapper.DbContext, usdCurrencyEntity);
+                currencyFactory.Add(sqliteMemoryWrapper.DbContext, gbpCurrencyEntity);
 
                 var currencyService = new CurrencyService(logger, sqliteMemoryWrapper.DbContext);
                 Currency primaryCurrency = currencyService.GetPrimary();

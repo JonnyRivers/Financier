@@ -73,54 +73,26 @@ namespace Financier.Tests
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
-                var usdCurrencyEntity = new Entities.Currency
-                {
-                    Name = "US Dollar",
-                    ShortName = "USD",
-                    Symbol = "$",
-                    IsPrimary = true
-                };
+                var currencyFactory = new DbSetup.CurrencyFactory();
+                var usdCurrencyEntity = currencyFactory.Create(DbSetup.CurrencyPrefab.Usd, true);
+                currencyFactory.Add(sqliteMemoryWrapper.DbContext, usdCurrencyEntity);
 
-                sqliteMemoryWrapper.DbContext.Currencies.Add(usdCurrencyEntity);
-                sqliteMemoryWrapper.DbContext.SaveChanges();
-
-                var incomeAccountEntity = new Entities.Account
-                {
-                    Name = "Income",
-                    Currency = usdCurrencyEntity,
-                    Type = Entities.AccountType.Income
-                };
-                var checkingAccountEntity = new Entities.Account
-                {
-                    Name = "Checking",
-                    Currency = usdCurrencyEntity,
-                    Type = Entities.AccountType.Asset
-                };
-                var savingsAccountEntity = new Entities.Account
-                {
-                    Name = "Savings",
-                    Currency = usdCurrencyEntity,
-                    Type = Entities.AccountType.Asset
-                };
-                var rentPrepaymentAccountEntity = new Entities.Account
-                {
-                    Name = "Rent Prepayment",
-                    Currency = usdCurrencyEntity,
-                    Type = Entities.AccountType.Asset
-                };
-                var rentExpenseAccountEntity = new Entities.Account
-                {
-                    Name = "Rent Expense",
-                    Currency = usdCurrencyEntity,
-                    Type = Entities.AccountType.Expense
-                };
-
-                sqliteMemoryWrapper.DbContext.Accounts.Add(incomeAccountEntity);
-                sqliteMemoryWrapper.DbContext.Accounts.Add(checkingAccountEntity);
-                sqliteMemoryWrapper.DbContext.Accounts.Add(savingsAccountEntity);
-                sqliteMemoryWrapper.DbContext.Accounts.Add(rentPrepaymentAccountEntity);
-                sqliteMemoryWrapper.DbContext.Accounts.Add(rentExpenseAccountEntity);
-                sqliteMemoryWrapper.DbContext.SaveChanges();
+                var accountFactory = new DbSetup.AccountFactory();
+                Entities.Account incomeAccountEntity =
+                    accountFactory.Create(DbSetup.AccountPrefab.Income, usdCurrencyEntity);
+                Entities.Account checkingAccountEntity =
+                    accountFactory.Create(DbSetup.AccountPrefab.Checking, usdCurrencyEntity);
+                Entities.Account savingsAccountEntity =
+                    accountFactory.Create(DbSetup.AccountPrefab.Savings, usdCurrencyEntity);
+                Entities.Account rentPrepaymentAccountEntity =
+                    accountFactory.Create(DbSetup.AccountPrefab.RentPrepayment, usdCurrencyEntity);
+                Entities.Account rentExpenseAccountEntity =
+                    accountFactory.Create(DbSetup.AccountPrefab.RentExpense, usdCurrencyEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, incomeAccountEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, checkingAccountEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, savingsAccountEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, rentPrepaymentAccountEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, rentExpenseAccountEntity);
 
                 var checkingToRentPrepaymentRelationshipEntity = new Entities.AccountRelationship
                 {
@@ -253,68 +225,32 @@ namespace Financier.Tests
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
-                var usdCurrencyEntity = new Entities.Currency
-                {
-                    Name = "US Dollar",
-                    ShortName = "USD",
-                    Symbol = "$",
-                    IsPrimary = true
-                };
+                var currencyFactory = new DbSetup.CurrencyFactory();
+                var usdCurrencyEntity = currencyFactory.Create(DbSetup.CurrencyPrefab.Usd, true);
+                currencyFactory.Add(sqliteMemoryWrapper.DbContext, usdCurrencyEntity);
 
-                sqliteMemoryWrapper.DbContext.Currencies.Add(usdCurrencyEntity);
-                sqliteMemoryWrapper.DbContext.SaveChanges();
-
-                var incomeAccountEntity = new Entities.Account
-                {
-                    Name = "Income",
-                    Currency = usdCurrencyEntity,
-                    Type = Entities.AccountType.Income
-                };
-                var checkingAccountEntity = new Entities.Account
-                {
-                    Name = "Checking",
-                    Currency = usdCurrencyEntity,
-                    Type = Entities.AccountType.Asset
-                };
-                var savingsAccountEntity = new Entities.Account
-                {
-                    Name = "Savings",
-                    Currency = usdCurrencyEntity,
-                    Type = Entities.AccountType.Asset
-                };
-                var rentPrepaymentAccountEntity = new Entities.Account
-                {
-                    Name = "Rent Prepayment",
-                    Currency = usdCurrencyEntity,
-                    Type = Entities.AccountType.Asset
-                };
-                var rentExpenseAccountEntity = new Entities.Account
-                {
-                    Name = "Rent Expense",
-                    Currency = usdCurrencyEntity,
-                    Type = Entities.AccountType.Expense
-                };
-                var groceriesPrepaymentAccountEntity = new Entities.Account
-                {
-                    Name = "Groceries Prepayment",
-                    Currency = usdCurrencyEntity,
-                    Type = Entities.AccountType.Asset
-                };
-                var groceriesExpenseAccountEntity = new Entities.Account
-                {
-                    Name = "Groceries Expense",
-                    Currency = usdCurrencyEntity,
-                    Type = Entities.AccountType.Expense
-                };
-
-                sqliteMemoryWrapper.DbContext.Accounts.Add(incomeAccountEntity);
-                sqliteMemoryWrapper.DbContext.Accounts.Add(checkingAccountEntity);
-                sqliteMemoryWrapper.DbContext.Accounts.Add(savingsAccountEntity);
-                sqliteMemoryWrapper.DbContext.Accounts.Add(rentPrepaymentAccountEntity);
-                sqliteMemoryWrapper.DbContext.Accounts.Add(rentExpenseAccountEntity);
-                sqliteMemoryWrapper.DbContext.Accounts.Add(groceriesPrepaymentAccountEntity);
-                sqliteMemoryWrapper.DbContext.Accounts.Add(groceriesExpenseAccountEntity);
-                sqliteMemoryWrapper.DbContext.SaveChanges();
+                var accountFactory = new DbSetup.AccountFactory();
+                Entities.Account incomeAccountEntity =
+                    accountFactory.Create(DbSetup.AccountPrefab.Income, usdCurrencyEntity);
+                Entities.Account checkingAccountEntity =
+                    accountFactory.Create(DbSetup.AccountPrefab.Checking, usdCurrencyEntity);
+                Entities.Account savingsAccountEntity =
+                    accountFactory.Create(DbSetup.AccountPrefab.Savings, usdCurrencyEntity);
+                Entities.Account rentPrepaymentAccountEntity =
+                    accountFactory.Create(DbSetup.AccountPrefab.RentPrepayment, usdCurrencyEntity);
+                Entities.Account rentExpenseAccountEntity =
+                    accountFactory.Create(DbSetup.AccountPrefab.RentExpense, usdCurrencyEntity);
+                Entities.Account groceriesPrepaymentAccountEntity =
+                    accountFactory.Create(DbSetup.AccountPrefab.GroceriesPrepayment, usdCurrencyEntity);
+                Entities.Account groceriesExpenseAccountEntity =
+                    accountFactory.Create(DbSetup.AccountPrefab.GroceriesExpense, usdCurrencyEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, incomeAccountEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, checkingAccountEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, savingsAccountEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, rentPrepaymentAccountEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, rentExpenseAccountEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, groceriesPrepaymentAccountEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, groceriesExpenseAccountEntity);
 
                 var checkingToRentPrepaymentRelationshipEntity = new Entities.AccountRelationship
                 {
@@ -473,68 +409,32 @@ namespace Financier.Tests
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
-                var usdCurrencyEntity = new Entities.Currency
-                {
-                    Name = "US Dollar",
-                    ShortName = "USD",
-                    Symbol = "$",
-                    IsPrimary = true
-                };
+                var currencyFactory = new DbSetup.CurrencyFactory();
+                var usdCurrencyEntity = currencyFactory.Create(DbSetup.CurrencyPrefab.Usd, true);
+                currencyFactory.Add(sqliteMemoryWrapper.DbContext, usdCurrencyEntity);
 
-                sqliteMemoryWrapper.DbContext.Currencies.Add(usdCurrencyEntity);
-                sqliteMemoryWrapper.DbContext.SaveChanges();
-
-                var incomeAccountEntity = new Entities.Account
-                {
-                    Name = "Income",
-                    Currency = usdCurrencyEntity,
-                    Type = Entities.AccountType.Income
-                };
-                var checkingAccountEntity = new Entities.Account
-                {
-                    Name = "Checking",
-                    Currency = usdCurrencyEntity,
-                    Type = Entities.AccountType.Asset
-                };
-                var savingsAccountEntity = new Entities.Account
-                {
-                    Name = "Savings",
-                    Currency = usdCurrencyEntity,
-                    Type = Entities.AccountType.Asset
-                };
-                var rentPrepaymentAccountEntity = new Entities.Account
-                {
-                    Name = "Rent Prepayment",
-                    Currency = usdCurrencyEntity,
-                    Type = Entities.AccountType.Asset
-                };
-                var rentExpenseAccountEntity = new Entities.Account
-                {
-                    Name = "Rent Expense",
-                    Currency = usdCurrencyEntity,
-                    Type = Entities.AccountType.Expense
-                };
-                var groceriesPrepaymentAccountEntity = new Entities.Account
-                {
-                    Name = "Groceries Prepayment",
-                    Currency = usdCurrencyEntity,
-                    Type = Entities.AccountType.Asset
-                };
-                var groceriesExpenseAccountEntity = new Entities.Account
-                {
-                    Name = "Groceries Expense",
-                    Currency = usdCurrencyEntity,
-                    Type = Entities.AccountType.Expense
-                };
-
-                sqliteMemoryWrapper.DbContext.Accounts.Add(incomeAccountEntity);
-                sqliteMemoryWrapper.DbContext.Accounts.Add(checkingAccountEntity);
-                sqliteMemoryWrapper.DbContext.Accounts.Add(savingsAccountEntity);
-                sqliteMemoryWrapper.DbContext.Accounts.Add(rentPrepaymentAccountEntity);
-                sqliteMemoryWrapper.DbContext.Accounts.Add(rentExpenseAccountEntity);
-                sqliteMemoryWrapper.DbContext.Accounts.Add(groceriesPrepaymentAccountEntity);
-                sqliteMemoryWrapper.DbContext.Accounts.Add(groceriesExpenseAccountEntity);
-                sqliteMemoryWrapper.DbContext.SaveChanges();
+                var accountFactory = new DbSetup.AccountFactory();
+                Entities.Account incomeAccountEntity =
+                    accountFactory.Create(DbSetup.AccountPrefab.Income, usdCurrencyEntity);
+                Entities.Account checkingAccountEntity =
+                    accountFactory.Create(DbSetup.AccountPrefab.Checking, usdCurrencyEntity);
+                Entities.Account savingsAccountEntity =
+                    accountFactory.Create(DbSetup.AccountPrefab.Savings, usdCurrencyEntity);
+                Entities.Account rentPrepaymentAccountEntity =
+                    accountFactory.Create(DbSetup.AccountPrefab.RentPrepayment, usdCurrencyEntity);
+                Entities.Account rentExpenseAccountEntity =
+                    accountFactory.Create(DbSetup.AccountPrefab.RentExpense, usdCurrencyEntity);
+                Entities.Account groceriesPrepaymentAccountEntity =
+                    accountFactory.Create(DbSetup.AccountPrefab.GroceriesPrepayment, usdCurrencyEntity);
+                Entities.Account groceriesExpenseAccountEntity =
+                    accountFactory.Create(DbSetup.AccountPrefab.GroceriesExpense, usdCurrencyEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, incomeAccountEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, checkingAccountEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, savingsAccountEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, rentPrepaymentAccountEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, rentExpenseAccountEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, groceriesPrepaymentAccountEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, groceriesExpenseAccountEntity);
 
                 var checkingToRentPrepaymentRelationshipEntity = new Entities.AccountRelationship
                 {
@@ -742,54 +642,26 @@ namespace Financier.Tests
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
-                var usdCurrencyEntity = new Entities.Currency
-                {
-                    Name = "US Dollar",
-                    ShortName = "USD",
-                    Symbol = "$",
-                    IsPrimary = true
-                };
+                var currencyFactory = new DbSetup.CurrencyFactory();
+                var usdCurrencyEntity = currencyFactory.Create(DbSetup.CurrencyPrefab.Usd, true);
+                currencyFactory.Add(sqliteMemoryWrapper.DbContext, usdCurrencyEntity);
 
-                sqliteMemoryWrapper.DbContext.Currencies.Add(usdCurrencyEntity);
-                sqliteMemoryWrapper.DbContext.SaveChanges();
-
-                var incomeAccountEntity = new Entities.Account
-                {
-                    Name = "Income",
-                    Currency = usdCurrencyEntity,
-                    Type = Entities.AccountType.Income
-                };
-                var checkingAccountEntity = new Entities.Account
-                {
-                    Name = "Checking",
-                    Currency = usdCurrencyEntity,
-                    Type = Entities.AccountType.Asset
-                };
-                var savingsAccountEntity = new Entities.Account
-                {
-                    Name = "Savings",
-                    Currency = usdCurrencyEntity,
-                    Type = Entities.AccountType.Asset
-                };
-                var rentPrepaymentAccountEntity = new Entities.Account
-                {
-                    Name = "Rent Prepayment",
-                    Currency = usdCurrencyEntity,
-                    Type = Entities.AccountType.Asset
-                };
-                var rentExpenseAccountEntity = new Entities.Account
-                {
-                    Name = "Rent Expense",
-                    Currency = usdCurrencyEntity,
-                    Type = Entities.AccountType.Expense
-                };
-
-                sqliteMemoryWrapper.DbContext.Accounts.Add(incomeAccountEntity);
-                sqliteMemoryWrapper.DbContext.Accounts.Add(checkingAccountEntity);
-                sqliteMemoryWrapper.DbContext.Accounts.Add(savingsAccountEntity);
-                sqliteMemoryWrapper.DbContext.Accounts.Add(rentPrepaymentAccountEntity);
-                sqliteMemoryWrapper.DbContext.Accounts.Add(rentExpenseAccountEntity);
-                sqliteMemoryWrapper.DbContext.SaveChanges();
+                var accountFactory = new DbSetup.AccountFactory();
+                Entities.Account incomeAccountEntity =
+                    accountFactory.Create(DbSetup.AccountPrefab.Income, usdCurrencyEntity);
+                Entities.Account checkingAccountEntity =
+                    accountFactory.Create(DbSetup.AccountPrefab.Checking, usdCurrencyEntity);
+                Entities.Account savingsAccountEntity =
+                    accountFactory.Create(DbSetup.AccountPrefab.Savings, usdCurrencyEntity);
+                Entities.Account rentPrepaymentAccountEntity =
+                    accountFactory.Create(DbSetup.AccountPrefab.RentPrepayment, usdCurrencyEntity);
+                Entities.Account rentExpenseAccountEntity =
+                    accountFactory.Create(DbSetup.AccountPrefab.RentExpense, usdCurrencyEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, incomeAccountEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, checkingAccountEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, savingsAccountEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, rentPrepaymentAccountEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, rentExpenseAccountEntity);
 
                 var checkingToRentPrepaymentRelationshipEntity = new Entities.AccountRelationship
                 {
@@ -884,54 +756,26 @@ namespace Financier.Tests
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
-                var usdCurrencyEntity = new Entities.Currency
-                {
-                    Name = "US Dollar",
-                    ShortName = "USD",
-                    Symbol = "$",
-                    IsPrimary = true
-                };
+                var currencyFactory = new DbSetup.CurrencyFactory();
+                var usdCurrencyEntity = currencyFactory.Create(DbSetup.CurrencyPrefab.Usd, true);
+                currencyFactory.Add(sqliteMemoryWrapper.DbContext, usdCurrencyEntity);
 
-                sqliteMemoryWrapper.DbContext.Currencies.Add(usdCurrencyEntity);
-                sqliteMemoryWrapper.DbContext.SaveChanges();
-
-                var incomeAccountEntity = new Entities.Account
-                {
-                    Name = "Income",
-                    Currency = usdCurrencyEntity,
-                    Type = Entities.AccountType.Income
-                };
-                var checkingAccountEntity = new Entities.Account
-                {
-                    Name = "Checking",
-                    Currency = usdCurrencyEntity,
-                    Type = Entities.AccountType.Asset
-                };
-                var savingsAccountEntity = new Entities.Account
-                {
-                    Name = "Savings",
-                    Currency = usdCurrencyEntity,
-                    Type = Entities.AccountType.Asset
-                };
-                var rentPrepaymentAccountEntity = new Entities.Account
-                {
-                    Name = "Rent Prepayment",
-                    Currency = usdCurrencyEntity,
-                    Type = Entities.AccountType.Asset
-                };
-                var rentExpenseAccountEntity = new Entities.Account
-                {
-                    Name = "Rent Expense",
-                    Currency = usdCurrencyEntity,
-                    Type = Entities.AccountType.Expense
-                };
-
-                sqliteMemoryWrapper.DbContext.Accounts.Add(incomeAccountEntity);
-                sqliteMemoryWrapper.DbContext.Accounts.Add(checkingAccountEntity);
-                sqliteMemoryWrapper.DbContext.Accounts.Add(savingsAccountEntity);
-                sqliteMemoryWrapper.DbContext.Accounts.Add(rentPrepaymentAccountEntity);
-                sqliteMemoryWrapper.DbContext.Accounts.Add(rentExpenseAccountEntity);
-                sqliteMemoryWrapper.DbContext.SaveChanges();
+                var accountFactory = new DbSetup.AccountFactory();
+                Entities.Account incomeAccountEntity =
+                    accountFactory.Create(DbSetup.AccountPrefab.Income, usdCurrencyEntity);
+                Entities.Account checkingAccountEntity =
+                    accountFactory.Create(DbSetup.AccountPrefab.Checking, usdCurrencyEntity);
+                Entities.Account savingsAccountEntity =
+                    accountFactory.Create(DbSetup.AccountPrefab.Savings, usdCurrencyEntity);
+                Entities.Account rentPrepaymentAccountEntity =
+                    accountFactory.Create(DbSetup.AccountPrefab.RentPrepayment, usdCurrencyEntity);
+                Entities.Account rentExpenseAccountEntity =
+                    accountFactory.Create(DbSetup.AccountPrefab.RentExpense, usdCurrencyEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, incomeAccountEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, checkingAccountEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, savingsAccountEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, rentPrepaymentAccountEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, rentExpenseAccountEntity);
 
                 var checkingToRentPrepaymentRelationshipEntity = new Entities.AccountRelationship
                 {
@@ -1042,54 +886,26 @@ namespace Financier.Tests
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
-                var usdCurrencyEntity = new Entities.Currency
-                {
-                    Name = "US Dollar",
-                    ShortName = "USD",
-                    Symbol = "$",
-                    IsPrimary = true
-                };
+                var currencyFactory = new DbSetup.CurrencyFactory();
+                var usdCurrencyEntity = currencyFactory.Create(DbSetup.CurrencyPrefab.Usd, true);
+                currencyFactory.Add(sqliteMemoryWrapper.DbContext, usdCurrencyEntity);
 
-                sqliteMemoryWrapper.DbContext.Currencies.Add(usdCurrencyEntity);
-                sqliteMemoryWrapper.DbContext.SaveChanges();
-
-                var incomeAccountEntity = new Entities.Account
-                {
-                    Name = "Income",
-                    Currency = usdCurrencyEntity,
-                    Type = Entities.AccountType.Income
-                };
-                var checkingAccountEntity = new Entities.Account
-                {
-                    Name = "Checking",
-                    Currency = usdCurrencyEntity,
-                    Type = Entities.AccountType.Asset
-                };
-                var savingsAccountEntity = new Entities.Account
-                {
-                    Name = "Savings",
-                    Currency = usdCurrencyEntity,
-                    Type = Entities.AccountType.Asset
-                };
-                var rentPrepaymentAccountEntity = new Entities.Account
-                {
-                    Name = "Rent Prepayment",
-                    Currency = usdCurrencyEntity,
-                    Type = Entities.AccountType.Asset
-                };
-                var rentExpenseAccountEntity = new Entities.Account
-                {
-                    Name = "Rent Expense",
-                    Currency = usdCurrencyEntity,
-                    Type = Entities.AccountType.Expense
-                };
-
-                sqliteMemoryWrapper.DbContext.Accounts.Add(incomeAccountEntity);
-                sqliteMemoryWrapper.DbContext.Accounts.Add(checkingAccountEntity);
-                sqliteMemoryWrapper.DbContext.Accounts.Add(savingsAccountEntity);
-                sqliteMemoryWrapper.DbContext.Accounts.Add(rentPrepaymentAccountEntity);
-                sqliteMemoryWrapper.DbContext.Accounts.Add(rentExpenseAccountEntity);
-                sqliteMemoryWrapper.DbContext.SaveChanges();
+                var accountFactory = new DbSetup.AccountFactory();
+                Entities.Account incomeAccountEntity =
+                    accountFactory.Create(DbSetup.AccountPrefab.Income, usdCurrencyEntity);
+                Entities.Account checkingAccountEntity =
+                    accountFactory.Create(DbSetup.AccountPrefab.Checking, usdCurrencyEntity);
+                Entities.Account savingsAccountEntity =
+                    accountFactory.Create(DbSetup.AccountPrefab.Savings, usdCurrencyEntity);
+                Entities.Account rentPrepaymentAccountEntity =
+                    accountFactory.Create(DbSetup.AccountPrefab.RentPrepayment, usdCurrencyEntity);
+                Entities.Account rentExpenseAccountEntity =
+                    accountFactory.Create(DbSetup.AccountPrefab.RentExpense, usdCurrencyEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, incomeAccountEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, checkingAccountEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, savingsAccountEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, rentPrepaymentAccountEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, rentExpenseAccountEntity);
 
                 var checkingToRentPrepaymentRelationshipEntity = new Entities.AccountRelationship
                 {
@@ -1185,54 +1001,26 @@ namespace Financier.Tests
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
-                var usdCurrencyEntity = new Entities.Currency
-                {
-                    Name = "US Dollar",
-                    ShortName = "USD",
-                    Symbol = "$",
-                    IsPrimary = true
-                };
+                var currencyFactory = new DbSetup.CurrencyFactory();
+                var usdCurrencyEntity = currencyFactory.Create(DbSetup.CurrencyPrefab.Usd, true);
+                currencyFactory.Add(sqliteMemoryWrapper.DbContext, usdCurrencyEntity);
 
-                sqliteMemoryWrapper.DbContext.Currencies.Add(usdCurrencyEntity);
-                sqliteMemoryWrapper.DbContext.SaveChanges();
-
-                var incomeAccountEntity = new Entities.Account
-                {
-                    Name = "Income",
-                    Currency = usdCurrencyEntity,
-                    Type = Entities.AccountType.Income
-                };
-                var checkingAccountEntity = new Entities.Account
-                {
-                    Name = "Checking",
-                    Currency = usdCurrencyEntity,
-                    Type = Entities.AccountType.Asset
-                };
-                var savingsAccountEntity = new Entities.Account
-                {
-                    Name = "Savings",
-                    Currency = usdCurrencyEntity,
-                    Type = Entities.AccountType.Asset
-                };
-                var rentPrepaymentAccountEntity = new Entities.Account
-                {
-                    Name = "Rent Prepayment",
-                    Currency = usdCurrencyEntity,
-                    Type = Entities.AccountType.Asset
-                };
-                var rentExpenseAccountEntity = new Entities.Account
-                {
-                    Name = "Rent Expense",
-                    Currency = usdCurrencyEntity,
-                    Type = Entities.AccountType.Expense
-                };
-
-                sqliteMemoryWrapper.DbContext.Accounts.Add(incomeAccountEntity);
-                sqliteMemoryWrapper.DbContext.Accounts.Add(checkingAccountEntity);
-                sqliteMemoryWrapper.DbContext.Accounts.Add(savingsAccountEntity);
-                sqliteMemoryWrapper.DbContext.Accounts.Add(rentPrepaymentAccountEntity);
-                sqliteMemoryWrapper.DbContext.Accounts.Add(rentExpenseAccountEntity);
-                sqliteMemoryWrapper.DbContext.SaveChanges();
+                var accountFactory = new DbSetup.AccountFactory();
+                Entities.Account incomeAccountEntity =
+                    accountFactory.Create(DbSetup.AccountPrefab.Income, usdCurrencyEntity);
+                Entities.Account checkingAccountEntity =
+                    accountFactory.Create(DbSetup.AccountPrefab.Checking, usdCurrencyEntity);
+                Entities.Account savingsAccountEntity =
+                    accountFactory.Create(DbSetup.AccountPrefab.Savings, usdCurrencyEntity);
+                Entities.Account rentPrepaymentAccountEntity =
+                    accountFactory.Create(DbSetup.AccountPrefab.RentPrepayment, usdCurrencyEntity);
+                Entities.Account rentExpenseAccountEntity =
+                    accountFactory.Create(DbSetup.AccountPrefab.RentExpense, usdCurrencyEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, incomeAccountEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, checkingAccountEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, savingsAccountEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, rentPrepaymentAccountEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, rentExpenseAccountEntity);
 
                 var checkingToRentPrepaymentRelationshipEntity = new Entities.AccountRelationship
                 {
