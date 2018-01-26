@@ -7,8 +7,6 @@ using System.Linq;
 
 namespace Financier.Tests
 {
-    // TODO: Remove code duplication from tests around DB setup
-    // https://github.com/JonnyRivers/Financier/issues/10
     [TestClass]
     public class BudgetServiceTests
     {
