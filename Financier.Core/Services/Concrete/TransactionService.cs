@@ -17,6 +17,11 @@ namespace Financier.Services
             m_dbContext = dbContext;
         }
 
+        public bool Any()
+        {
+            return m_dbContext.Transactions.Any();
+        }
+
         public void Create(Transaction transaction)
         {
             var transactionEntity = new Entities.Transaction
@@ -39,7 +44,10 @@ namespace Financier.Services
                 m_dbContext.Transactions.SingleOrDefault(t => t.TransactionId == transactionId);
 
             if (transactionEntity == null)
-                throw new ArgumentException($"No Transaction exists with TransactionId {transactionId}");
+                throw new ArgumentException(
+                    $"No Transaction exists with TransactionId {transactionId}",
+                    nameof(transactionId)
+                );
 
             m_dbContext.Transactions.Remove(transactionEntity);
             m_dbContext.SaveChanges();
@@ -54,7 +62,23 @@ namespace Financier.Services
                     .SingleOrDefault(t => t.TransactionId == transactionId);
 
             if (transactionEntity == null)
-                throw new ArgumentException($"No Transaction exists with TransactionId {transactionId}");
+                throw new ArgumentException(
+                    $"No Transaction exists with TransactionId {transactionId}",
+                    nameof(transactionId));
+
+            return FromEntity(transactionEntity);
+        }
+
+        public Transaction GetMostRecent()
+        {
+            Entities.Transaction transactionEntity =
+                m_dbContext.Transactions
+                    .Include(t => t.CreditAccount)
+                    .Include(t => t.DebitAccount)
+                    .LastOrDefault();
+
+            if (transactionEntity == null)
+                throw new InvalidOperationException($"Unable to get most recent transaction as there are none");
 
             return FromEntity(transactionEntity);
         }

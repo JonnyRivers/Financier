@@ -1,8 +1,10 @@
 ﻿using Financier.Desktop.Commands;
+using Financier.Desktop.Services;
 using Financier.Services;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 
@@ -10,26 +12,50 @@ namespace Financier.Desktop.ViewModels
 {
     public class TransactionEditViewModel : BaseViewModel, ITransactionEditViewModel
     {
+        private ILogger<TransactionEditViewModel> m_logger;
+        private IAccountService m_accountService;
+        private IConversionService m_conversionService;
+        private ITransactionService m_transactionService;
+
         public TransactionEditViewModel(
             ILogger<TransactionEditViewModel> logger, 
             IAccountService accountService,
+            IConversionService conversionService,
             ITransactionService transactionService)
         {
             m_logger = logger;
             m_accountService = accountService;
+            m_conversionService = conversionService;
             m_transactionService = transactionService;
 
-            Accounts = m_accountService.GetAll().OrderBy(a => a.Name).ToList();
+            IEnumerable<AccountLink> accountLinks = m_accountService.GetAllAsLinks();
+            IEnumerable<IAccountLinkViewModel> accountLinkViewModels = 
+                accountLinks.Select(al => m_conversionService.AccountLinkToViewModel(al));
+            
+            Accounts = new ObservableCollection<IAccountLinkViewModel>(accountLinkViewModels);
         }
 
         public void SetupForCreate()
         {
             m_transactionId = 0;
 
-            // TODO: Provide sensible defaults to new TransactionEditViewModel instances
-            // https://github.com/JonnyRivers/Financier/issues/19
-            SelectedCreditAccount = Accounts.First();
-            SelectedDebitAccount = Accounts.First();
+            if (m_transactionService.Any())
+            {
+                Transaction mostRecentTransaction = m_transactionService.GetMostRecent();
+
+                SelectedCreditAccount = Accounts.Single(a => a.AccountId == mostRecentTransaction.CreditAccount.AccountId);
+                SelectedDebitAccount = Accounts.Single(a => a.AccountId == mostRecentTransaction.DebitAccount.AccountId);
+            }
+            else
+            {
+                SelectedCreditAccount = 
+                    Accounts
+                        .FirstOrDefault(a => a.Type == AccountType.Capital || a.Type == AccountType.Income);
+                SelectedDebitAccount = 
+                    Accounts
+                        .FirstOrDefault(a => a.Type == AccountType.Asset || a.Type == AccountType.Expense);
+            }
+            
             Amount = 0m;
             At = DateTime.Now;
         }
@@ -46,24 +72,20 @@ namespace Financier.Desktop.ViewModels
             At = transaction.At;
         }
 
-        private ILogger<TransactionEditViewModel> m_logger;
-        private IAccountService m_accountService;
-        private ITransactionService m_transactionService;
-
         private int m_transactionId;
-        private Account m_selectedCreditAccount;
-        private Account m_selectedDebitAccount;
+        private IAccountLinkViewModel m_selectedCreditAccount;
+        private IAccountLinkViewModel m_selectedDebitAccount;
         private decimal m_amount;
         private DateTime m_at;
 
-        public IEnumerable<Account> Accounts { get; }
+        public ObservableCollection<IAccountLinkViewModel> Accounts { get; }
 
         public int TransactionId
         {
             get { return m_transactionId; }
         }
 
-        public Account SelectedCreditAccount
+        public IAccountLinkViewModel SelectedCreditAccount
         {
             get { return m_selectedCreditAccount; }
             set
@@ -78,7 +100,7 @@ namespace Financier.Desktop.ViewModels
             }
         }
 
-        public Account SelectedDebitAccount
+        public IAccountLinkViewModel SelectedDebitAccount
         {
             get { return m_selectedDebitAccount; }
             set
@@ -103,7 +125,6 @@ namespace Financier.Desktop.ViewModels
                     m_amount = value;
 
                     OnPropertyChanged();
-                    CommandManager.InvalidateRequerySuggested();
                 }
             }
         }
@@ -118,12 +139,11 @@ namespace Financier.Desktop.ViewModels
                     m_at = value;
 
                     OnPropertyChanged();
-                    CommandManager.InvalidateRequerySuggested();
                 }
             }
         }
 
-        public ICommand OKCommand => new RelayCommand(OKExecute);
+        public ICommand OKCommand => new RelayCommand(OKExecute, OKCanExecute);
         public ICommand CancelCommand => new RelayCommand(CancelExecute);
 
         private void OKExecute(object obj)
@@ -131,8 +151,8 @@ namespace Financier.Desktop.ViewModels
             if (m_transactionId != 0)
             {
                 Transaction transaction = m_transactionService.Get(m_transactionId);
-                transaction.CreditAccount.AccountId = SelectedCreditAccount.AccountId;
-                transaction.DebitAccount.AccountId = SelectedDebitAccount.AccountId;
+                transaction.CreditAccount = SelectedCreditAccount.ToAccountLink();
+                transaction.DebitAccount = SelectedDebitAccount.ToAccountLink();
                 transaction.Amount = Amount;
                 transaction.At = At;
 
@@ -142,14 +162,19 @@ namespace Financier.Desktop.ViewModels
             {
                 var transaction = new Transaction
                 {
-                    CreditAccount = new AccountLink { AccountId = SelectedCreditAccount.AccountId },
-                    DebitAccount = new AccountLink { AccountId = SelectedDebitAccount.AccountId },
+                    CreditAccount = SelectedCreditAccount.ToAccountLink(),
+                    DebitAccount = SelectedDebitAccount.ToAccountLink(),
                     Amount = Amount,
                     At = At,
                 };
 
                 m_transactionService.Create(transaction);
             }
+        }
+
+        private bool OKCanExecute(object obj)
+        {
+            return (SelectedCreditAccount != null) && (SelectedDebitAccount != null);
         }
 
         private void CancelExecute(object obj)

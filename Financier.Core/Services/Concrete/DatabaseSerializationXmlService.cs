@@ -243,9 +243,9 @@ namespace Financier.Services
             };
 
             if (budget.Transactions.Count(t => t.IsInitial) != 1)
-                throw new ArgumentException(nameof(element), "Budget element must have exactly one initial transaction");
+                throw new ArgumentException("Budget element must have exactly one initial transaction", nameof(element));
             if (budget.Transactions.Count(t => t.IsSurplus) != 1)
-                throw new ArgumentException(nameof(element), "Budget element must have exactly one surplus transaction");
+                throw new ArgumentException("Budget element must have exactly one surplus transaction", nameof(element));
 
             return budget;
         }
@@ -271,8 +271,9 @@ namespace Financier.Services
 
             if(newBudgetTransaction.IsInitial && newBudgetTransaction.IsSurplus)
                 throw new ArgumentException(
-                    nameof(element), 
-                    "Budget contains transaction with initial and surplus flags set.  Either or neither must be set, never both.");
+                    "Budget contains transaction with initial and surplus flags set.  " + 
+                    "Either or neither must be set, never both.",
+                    nameof(element));
 
             return newBudgetTransaction;
         }

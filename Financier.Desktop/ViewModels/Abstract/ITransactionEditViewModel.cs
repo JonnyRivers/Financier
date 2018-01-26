@@ -1,6 +1,5 @@
-﻿using Financier.Services;
-using System;
-using System.Collections.Generic;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Windows.Input;
 
 namespace Financier.Desktop.ViewModels
@@ -10,12 +9,12 @@ namespace Financier.Desktop.ViewModels
         void SetupForCreate();
         void SetupForEdit(int transactionId);
 
-        IEnumerable<Account> Accounts { get; }
+        ObservableCollection<IAccountLinkViewModel> Accounts { get; }
 
         int TransactionId { get; }
 
-        Account SelectedCreditAccount { get; set; }
-        Account SelectedDebitAccount { get; set; }
+        IAccountLinkViewModel SelectedCreditAccount { get; set; }
+        IAccountLinkViewModel SelectedDebitAccount { get; set; }
         decimal Amount { get; set; }
         DateTime At { get; set; }
 

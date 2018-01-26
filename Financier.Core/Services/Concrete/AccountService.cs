@@ -38,7 +38,7 @@ namespace Financier.Services
                 .SingleOrDefault(a => a.AccountId == accountId);
 
             if (accountEntity == null)
-                throw new ArgumentException($"No Account exists with AccountId {accountId}");
+                throw new ArgumentException($"No Account exists with AccountId {accountId}", nameof(accountId));
 
             return FromEntity(accountEntity);
         }

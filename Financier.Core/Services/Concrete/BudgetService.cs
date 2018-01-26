@@ -23,10 +23,10 @@ namespace Financier.Services
                 throw new ArgumentNullException(nameof(budget));
 
             if (budget.InitialTransaction == null)
-                throw new ArgumentException(nameof(budget), "InitialTransaction cannot be null");
+                throw new ArgumentException("InitialTransaction cannot be null", nameof(budget));
 
             if (budget.SurplusTransaction == null)
-                throw new ArgumentException(nameof(budget), "SurplusTransaction cannot be null");
+                throw new ArgumentException("SurplusTransaction cannot be null", nameof(budget));
 
             using (var transaction = m_dbContext.Database.BeginTransaction())
             {
@@ -74,7 +74,7 @@ namespace Financier.Services
                 m_dbContext.Budgets.SingleOrDefault(b => b.BudgetId == budgetId);
 
             if (budgetEntity == null)
-                throw new ArgumentException($"No Budget exists with BudgetId {budgetId}");
+                throw new ArgumentException($"No Budget exists with BudgetId {budgetId}", nameof(budgetId));
 
             m_dbContext.Budgets.Remove(budgetEntity);
             m_dbContext.SaveChanges();
@@ -91,7 +91,7 @@ namespace Financier.Services
                     .SingleOrDefault(b => b.BudgetId == budgetId);
 
             if (budgetEntity == null)
-                throw new ArgumentException($"No Budget exists with BudgetId {budgetId}");
+                throw new ArgumentException($"No Budget exists with BudgetId {budgetId}", nameof(budgetId));
 
             return FromEntity(budgetEntity);
         }

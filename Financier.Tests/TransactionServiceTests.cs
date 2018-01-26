@@ -195,5 +195,73 @@ namespace Financier.Tests
                 Assert.AreEqual(transactionEntities[1].DebitAccountId, transactions[0].DebitAccount.AccountId);
             }
         }
+
+        [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void TestGetMostRecentTransactionFailNoTransactions()
+        {
+            ILoggerFactory loggerFactory = new LoggerFactory();
+            ILogger<TransactionService> logger = loggerFactory.CreateLogger<TransactionService>();
+
+            using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
+            {
+                var transactionService = new TransactionService(logger, sqliteMemoryWrapper.DbContext);
+
+                transactionService.GetMostRecent();
+            }
+        }
+
+        [TestMethod]
+        public void TestGetMostRecentTransaction()
+        {
+            ILoggerFactory loggerFactory = new LoggerFactory();
+            ILogger<TransactionService> logger = loggerFactory.CreateLogger<TransactionService>();
+
+            using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
+            {
+                var currencyFactory = new DbSetup.CurrencyFactory();
+                var usdCurrencyEntity = currencyFactory.Create(DbSetup.CurrencyPrefab.Usd, true);
+                currencyFactory.Add(sqliteMemoryWrapper.DbContext, usdCurrencyEntity);
+
+                var accountFactory = new DbSetup.AccountFactory();
+                Entities.Account incomeAccountEntity =
+                    accountFactory.Create(DbSetup.AccountPrefab.Income, usdCurrencyEntity);
+                Entities.Account checkingAccountEntity =
+                    accountFactory.Create(DbSetup.AccountPrefab.Checking, usdCurrencyEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, incomeAccountEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, checkingAccountEntity);
+
+                var transactionEntities = new Entities.Transaction[]
+                {
+                    new Entities.Transaction
+                    {
+                        CreditAccount = incomeAccountEntity,
+                        DebitAccount = checkingAccountEntity,
+                        Amount = 100m,
+                        At = new DateTime(2018, 1, 1, 8, 30, 0)
+                    },
+                    new Entities.Transaction
+                    {
+                        CreditAccount = incomeAccountEntity,
+                        DebitAccount = checkingAccountEntity,
+                        Amount = 60m,
+                        At = new DateTime(2018, 1, 1, 8, 31, 0)
+                    }
+                };
+
+                sqliteMemoryWrapper.DbContext.Transactions.AddRange(transactionEntities);
+                sqliteMemoryWrapper.DbContext.SaveChanges();
+
+                var transactionService = new TransactionService(logger, sqliteMemoryWrapper.DbContext);
+
+                Transaction mostRecentTransaction = transactionService.GetMostRecent();
+
+                Assert.AreEqual(transactionEntities[1].TransactionId, mostRecentTransaction.TransactionId);
+                Assert.AreEqual(transactionEntities[1].Amount, mostRecentTransaction.Amount);
+                Assert.AreEqual(transactionEntities[1].At, mostRecentTransaction.At);
+                Assert.AreEqual(transactionEntities[1].CreditAccountId, mostRecentTransaction.CreditAccount.AccountId);
+                Assert.AreEqual(transactionEntities[1].DebitAccountId, mostRecentTransaction.DebitAccount.AccountId);
+            }
+        }
     }
 }
