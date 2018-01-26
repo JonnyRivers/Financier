@@ -120,13 +120,35 @@ namespace Financier.Desktop.ViewModels
             IBudgetTransactionItemViewModel initialTransactionViewModel = 
                 Transactions
                     .Single(t => t.Type == BudgetTransactionType.Initial);
+            AccountLink suggestedCreditAccount =
+                initialTransactionViewModel.SelectedDebitAccount.ToAccountLink();
+
+            // For the debit account, we want the next unused asset account.
+            // Failing that, we want an asset account.
+            // Failing that, we'll take anything!
+            IEnumerable<IAccountLinkViewModel> assetAccountLinks = m_accountLinks
+                .Where(alvm => alvm.Type == AccountType.Asset &&
+                               alvm != suggestedCreditAccount);
+            IEnumerable<IAccountLinkViewModel> usedAssetAccountLinks = 
+                Transactions
+                    .Select(t => t.SelectedDebitAccount)
+                    .Where(al => al.Type == AccountType.Asset);
+            IEnumerable<IAccountLinkViewModel> unusedAssetAccountLinks =
+                assetAccountLinks
+                    .Except(usedAssetAccountLinks);
+
+            IAccountLinkViewModel suggestedDebitAccount = null;
+            if (unusedAssetAccountLinks.Any())
+                suggestedDebitAccount = unusedAssetAccountLinks.First();
+            else if (usedAssetAccountLinks.Any())
+                suggestedDebitAccount = usedAssetAccountLinks.First();
+            else if (m_accountLinks.Any())
+                suggestedDebitAccount = m_accountLinks.First();
 
             var newTransaction = new BudgetTransaction
             {
-                CreditAccount = initialTransactionViewModel.SelectedDebitAccount.ToAccountLink(),
-                // TODO: Be smarter about the initial DebitAccount for new budget transactions
-                // https://github.com/JonnyRivers/Financier/issues/17
-                DebitAccount = initialTransactionViewModel.SelectedCreditAccount.ToAccountLink(),
+                CreditAccount = suggestedCreditAccount,
+                DebitAccount = suggestedDebitAccount.ToAccountLink(),
                 Amount = 0m
             };
 
