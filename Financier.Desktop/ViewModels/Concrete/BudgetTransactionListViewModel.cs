@@ -120,8 +120,8 @@ namespace Financier.Desktop.ViewModels
             IBudgetTransactionItemViewModel initialTransactionViewModel = 
                 Transactions
                     .Single(t => t.Type == BudgetTransactionType.Initial);
-            AccountLink suggestedCreditAccount =
-                initialTransactionViewModel.SelectedDebitAccount.ToAccountLink();
+            IAccountLinkViewModel suggestedCreditAccount =
+                initialTransactionViewModel.SelectedDebitAccount;
 
             // For the debit account, we want the next unused asset account.
             // Failing that, we want an asset account.
@@ -147,7 +147,7 @@ namespace Financier.Desktop.ViewModels
 
             var newTransaction = new BudgetTransaction
             {
-                CreditAccount = suggestedCreditAccount,
+                CreditAccount = suggestedCreditAccount.ToAccountLink(),
                 DebitAccount = suggestedDebitAccount.ToAccountLink(),
                 Amount = 0m
             };
