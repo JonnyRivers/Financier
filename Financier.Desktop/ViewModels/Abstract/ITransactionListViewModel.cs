@@ -10,8 +10,8 @@ namespace Financier.Desktop.ViewModels
 {
     public interface ITransactionListViewModel
     {
-        IEnumerable<ITransactionAccountFilterViewModel> AccountFilters { get; }
-        ITransactionAccountFilterViewModel SelectedAccountFilter { get; }
+        IEnumerable<IAccountLinkViewModel> AccountFilters { get; }
+        IAccountLinkViewModel SelectedAccountFilter { get; }
         bool IncludeLogicalAccounts { get; }
         bool AccountFilterHasLogicalAccounts { get; }
 

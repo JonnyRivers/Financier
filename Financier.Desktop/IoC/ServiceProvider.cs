@@ -50,19 +50,17 @@ namespace Financier.Desktop.IoC
             serviceCollection.AddSingleton<IConversionService, ConversionService>();
             serviceCollection.AddSingleton<IViewService, ViewService>();
 
-            // TODO: For consistency, all view models should be constructed with IoC
-            // https://github.com/JonnyRivers/Financier/issues/15
             serviceCollection.AddTransient<IAccountEditViewModel, AccountEditViewModel>();
             serviceCollection.AddTransient<IAccountItemViewModel, AccountItemViewModel>();
             serviceCollection.AddTransient<IAccountLinkViewModel, AccountLinkViewModel>();
             serviceCollection.AddTransient<IAccountListViewModel, AccountListViewModel>();
             serviceCollection.AddTransient<IBudgetEditViewModel, BudgetEditViewModel>();
-            //serviceCollection.AddTransient<IBudgetItemViewModel, BudgetItemViewModel>();
+            serviceCollection.AddTransient<IBudgetItemViewModel, BudgetItemViewModel>();
             serviceCollection.AddTransient<IBudgetListViewModel, BudgetListViewModel>();
             serviceCollection.AddTransient<IBudgetTransactionItemViewModel, BudgetTransactionItemViewModel>();
             serviceCollection.AddTransient<IBudgetTransactionListViewModel, BudgetTransactionListViewModel>();
             serviceCollection.AddTransient<ITransactionEditViewModel, TransactionEditViewModel>();
-            //serviceCollection.AddTransient<ITransactionItemViewModel, TransactionItemViewModel>();
+            serviceCollection.AddTransient<ITransactionItemViewModel, TransactionItemViewModel>();
             serviceCollection.AddTransient<ITransactionListViewModel, TransactionListViewModel>();
             serviceCollection.AddTransient<IMainWindowViewModel, MainWindowViewModel>();
 

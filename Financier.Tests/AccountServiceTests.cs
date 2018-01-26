@@ -84,22 +84,43 @@ namespace Financier.Tests
                 currencyFactory.Add(sqliteMemoryWrapper.DbContext, usdCurrencyEntity);
 
                 var accountFactory = new DbSetup.AccountFactory();
-                Entities.Account incomeAccountEntity = accountFactory.Create(DbSetup.AccountPrefab.Income, usdCurrencyEntity);
-                Entities.Account checkingAccountEntity = accountFactory.Create(DbSetup.AccountPrefab.Checking, usdCurrencyEntity);
+                Entities.Account incomeAccountEntity = 
+                    accountFactory.Create(DbSetup.AccountPrefab.Income, usdCurrencyEntity);
+                Entities.Account checkingAccountEntity = 
+                    accountFactory.Create(DbSetup.AccountPrefab.Checking, usdCurrencyEntity);
+                Entities.Account rentPrepaymentAccountEntity = 
+                    accountFactory.Create(DbSetup.AccountPrefab.RentPrepayment, usdCurrencyEntity);
                 accountFactory.Add(sqliteMemoryWrapper.DbContext, incomeAccountEntity);
                 accountFactory.Add(sqliteMemoryWrapper.DbContext, checkingAccountEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, rentPrepaymentAccountEntity);
+
+                var checkingToRentPrepaymentRelationship = new Entities.AccountRelationship
+                {
+                    SourceAccount = checkingAccountEntity,
+                    DestinationAccount = rentPrepaymentAccountEntity,
+                    Type = Entities.AccountRelationshipType.PhysicalToLogical
+                };
+
+                sqliteMemoryWrapper.DbContext.AccountRelationships.Add(checkingToRentPrepaymentRelationship);
+                sqliteMemoryWrapper.DbContext.SaveChanges();
 
                 var accountService = new AccountService(logger, sqliteMemoryWrapper.DbContext);
 
                 List<AccountLink> accountLinks = accountService.GetAllAsLinks().ToList();
 
-                Assert.AreEqual(2, accountLinks.Count);
+                Assert.AreEqual(3, accountLinks.Count);
                 Assert.AreEqual(incomeAccountEntity.AccountId, accountLinks[0].AccountId);
+                Assert.AreEqual(false, accountLinks[0].HasLogicalAccounts);
                 Assert.AreEqual(incomeAccountEntity.Name, accountLinks[0].Name);
                 Assert.AreEqual(AccountType.Income, accountLinks[0].Type);
                 Assert.AreEqual(checkingAccountEntity.AccountId, accountLinks[1].AccountId);
+                Assert.AreEqual(true, accountLinks[1].HasLogicalAccounts);
                 Assert.AreEqual(checkingAccountEntity.Name, accountLinks[1].Name);
                 Assert.AreEqual(AccountType.Asset, accountLinks[1].Type);
+                Assert.AreEqual(rentPrepaymentAccountEntity.AccountId, accountLinks[2].AccountId);
+                Assert.AreEqual(false, accountLinks[2].HasLogicalAccounts);
+                Assert.AreEqual(rentPrepaymentAccountEntity.Name, accountLinks[2].Name);
+                Assert.AreEqual(AccountType.Asset, accountLinks[2].Type);
             }
         }
 

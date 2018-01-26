@@ -1,5 +1,6 @@
 ﻿using Financier.Desktop.Commands;
 using Financier.Services;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +10,14 @@ namespace Financier.Desktop.ViewModels
 {
     public class AccountEditViewModel : IAccountEditViewModel
     {
-        public AccountEditViewModel(IAccountService accountService, ICurrencyService currencyService)
+        private ILogger<AccountEditViewModel> m_logger;
+
+        public AccountEditViewModel(
+            ILogger<AccountEditViewModel> logger,
+            IAccountService accountService, 
+            ICurrencyService currencyService)
         {
+            m_logger = logger;
             m_accountService = accountService;
             m_currencyService = currencyService;
             m_accountId = 0;

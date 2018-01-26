@@ -140,7 +140,6 @@
     <Compile Include="ViewModels\Abstract\IAccountItemViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IAccountListViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IMainWindowViewModel.cs" />
-    <Compile Include="ViewModels\Abstract\ITransactionAccountFilterViewModel.cs" />
     <Compile Include="ViewModels\Abstract\ITransactionEditViewModel.cs" />
     <Compile Include="ViewModels\Abstract\ITransactionListViewModel.cs" />
     <Compile Include="ViewModels\Abstract\ITransactionItemViewModel.cs" />
@@ -150,7 +149,6 @@
     <Compile Include="ViewModels\Concrete\BudgetTransactionItemViewModel.cs" />
     <Compile Include="ViewModels\Concrete\BudgetTransactionListViewModel.cs" />
     <Compile Include="ViewModels\Concrete\MainWindowViewModel.cs" />
-    <Compile Include="ViewModels\Concrete\TransactionAccountFilterViewModel.cs" />
     <Compile Include="ViewModels\Concrete\TransactionEditViewModel.cs" />
     <Compile Include="ViewModels\Concrete\TransactionListViewModel.cs" />
     <Compile Include="ViewModels\Concrete\TransactionItemViewModel.cs" />

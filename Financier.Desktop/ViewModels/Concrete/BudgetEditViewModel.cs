@@ -1,6 +1,7 @@
 ﻿using Financier.Desktop.Commands;
 using Financier.Services;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,8 +11,13 @@ namespace Financier.Desktop.ViewModels
 {
     public class BudgetEditViewModel : IBudgetEditViewModel
     {
-        public BudgetEditViewModel(IBudgetService budgetService)
+        private ILogger<AccountLinkViewModel> m_logger;
+        private IBudgetService m_budgetService;
+        private int m_budgetId;
+
+        public BudgetEditViewModel(ILogger<AccountLinkViewModel> logger, IBudgetService budgetService)
         {
+            m_logger = logger;
             m_budgetService = budgetService;
             m_budgetId = 0;
 
@@ -22,9 +28,6 @@ namespace Financier.Desktop.ViewModels
 
             TransactionListViewModel = IoC.ServiceProvider.Instance.GetRequiredService<IBudgetTransactionListViewModel>();
         }
-
-        private IBudgetService m_budgetService;
-        private int m_budgetId;
 
         public IEnumerable<BudgetPeriod> Periods { get; }
 

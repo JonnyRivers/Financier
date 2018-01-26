@@ -15,5 +15,35 @@ namespace Financier.Desktop.Services
 
             return accountItemViewModel;
         }
+
+        public IAccountLinkViewModel AccountLinkToViewModel(AccountLink accountLink)
+        {
+            IAccountLinkViewModel accountLinkViewModel
+                = IoC.ServiceProvider.Instance.GetRequiredService<IAccountLinkViewModel>();
+
+            accountLinkViewModel.Setup(accountLink);
+
+            return accountLinkViewModel;
+        }
+
+        public IBudgetItemViewModel BudgetToItemViewModel(Budget budget, Currency currency)
+        {
+            IBudgetItemViewModel budgetItemViewModel
+                = IoC.ServiceProvider.Instance.GetRequiredService<IBudgetItemViewModel>();
+
+            budgetItemViewModel.Setup(budget, currency);
+
+            return budgetItemViewModel;
+        }
+
+        public ITransactionItemViewModel TransactionToItemViewModel(Transaction transaction, decimal balance)
+        {
+            ITransactionItemViewModel transactionItemViewModel
+                = IoC.ServiceProvider.Instance.GetRequiredService<ITransactionItemViewModel>();
+
+            transactionItemViewModel.Setup(transaction, balance);
+
+            return transactionItemViewModel;
+        }
     }
 }

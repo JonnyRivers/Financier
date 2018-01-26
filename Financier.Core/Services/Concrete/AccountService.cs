@@ -53,8 +53,15 @@ namespace Financier.Services
 
         public IEnumerable<AccountLink> GetAllAsLinks()
         {
+            var accountsWithLogicalRelativesById = 
+                new HashSet<int>(
+                    m_dbContext.AccountRelationships
+                        .Where(ar => ar.Type == Entities.AccountRelationshipType.PhysicalToLogical)
+                        .Select(ar => ar.SourceAccountId)
+                );
+
             return m_dbContext.Accounts
-                .Select(FromEntityToAccountLink)
+                .Select(a => FromEntityToAccountLink(a, accountsWithLogicalRelativesById))
                 .ToList();
         }
 
@@ -157,11 +164,12 @@ namespace Financier.Services
             };
         }
 
-        private AccountLink FromEntityToAccountLink(Entities.Account accountEntity)
+        private AccountLink FromEntityToAccountLink(Entities.Account accountEntity, HashSet<int> accountsWithLogicalRelativesById)
         {
             return new AccountLink
             {
                 AccountId = accountEntity.AccountId,
+                HasLogicalAccounts = accountsWithLogicalRelativesById.Contains(accountEntity.AccountId),
                 Name = accountEntity.Name,
                 Type = (AccountType)accountEntity.Type
             };

@@ -1,7 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
 using Financier.Services;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace Financier.Desktop.ViewModels
@@ -10,7 +9,7 @@ namespace Financier.Desktop.ViewModels
     {
         private ILogger<BudgetTransactionItemViewModel> m_logger;
 
-        public BudgetTransactionItemViewModel(ILogger<BudgetTransactionItemViewModel> logger, IAccountService accountService)
+        public BudgetTransactionItemViewModel(ILogger<BudgetTransactionItemViewModel> logger)
         {
             m_logger = logger;
         }
