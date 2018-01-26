@@ -4,24 +4,19 @@ namespace Financier.Desktop.ViewModels
 {
     public class AccountItemViewModel : IAccountItemViewModel
     {
-        public AccountItemViewModel(
-            int accountId, 
-            string name, 
-            AccountType type, 
-            string currencyName, 
-            decimal balance)
+        public void Setup(Account account)
         {
-            AccountId = accountId;
-            Name = name;
-            Type = type;
-            CurrencyName = currencyName;
-            Balance = balance;
+            AccountId = account.AccountId;
+            Name = account.Name;
+            Type = account.Type;
+            CurrencyName = account.Currency.Name;
+            Balance = account.Balance;
         }
 
-        public int AccountId { get; }
-        public string Name { get; }
-        public AccountType Type { get; }
-        public string CurrencyName { get; }
-        public decimal Balance { get; }
+        public int AccountId { get; private set; }
+        public string Name { get; private set; }
+        public AccountType Type { get; private set; }
+        public string CurrencyName { get; private set; }
+        public decimal Balance { get; private set; }
     }
 }
