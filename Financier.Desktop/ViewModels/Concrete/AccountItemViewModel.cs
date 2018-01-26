@@ -1,9 +1,18 @@
 ﻿using Financier.Services;
+using Microsoft.Extensions.Logging;
 
 namespace Financier.Desktop.ViewModels
 {
     public class AccountItemViewModel : IAccountItemViewModel
     {
+        private ILogger<AccountItemViewModel> m_logger;
+
+        public AccountItemViewModel(
+            ILogger<AccountItemViewModel> logger)
+        {
+            m_logger = logger;
+        }
+
         public void Setup(Account account)
         {
             AccountId = account.AccountId;
