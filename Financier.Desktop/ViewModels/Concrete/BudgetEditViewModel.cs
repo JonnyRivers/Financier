@@ -46,6 +46,28 @@ namespace Financier.Desktop.ViewModels
             TransactionListViewModel.SetupForEdit(budget);
         }
 
+        public Budget ToBudget()
+        {
+            IBudgetTransactionItemViewModel initialTransaction = TransactionListViewModel.Transactions
+                .Single(t => t.Type == BudgetTransactionType.Initial);
+            IBudgetTransactionItemViewModel surplusTransaction = TransactionListViewModel.Transactions
+                .Single(t => t.Type == BudgetTransactionType.Surplus);
+            IEnumerable<IBudgetTransactionItemViewModel> regularTransactions =
+                TransactionListViewModel.Transactions.Where(t => t.Type == BudgetTransactionType.Regular);
+
+            Budget budget = new Budget
+            {
+                BudgetId = m_budgetId,
+                Name = Name,
+                Period = SelectedPeriod,
+                InitialTransaction = initialTransaction.ToBudgetTransaction(),
+                Transactions = regularTransactions.Select(t => t.ToBudgetTransaction()),
+                SurplusTransaction = surplusTransaction.ToBudgetTransaction(),
+            };
+
+            return budget;
+        }
+
         public IEnumerable<BudgetPeriod> Periods { get; }
 
         public int BudgetId
@@ -78,28 +100,6 @@ namespace Financier.Desktop.ViewModels
         private void CancelExecute(object obj)
         {
 
-        }
-
-        private Budget ToBudget()
-        {
-            IBudgetTransactionItemViewModel initialTransaction = TransactionListViewModel.Transactions
-                .Single(t => t.Type == BudgetTransactionType.Initial);
-            IBudgetTransactionItemViewModel surplusTransaction = TransactionListViewModel.Transactions
-                .Single(t => t.Type == BudgetTransactionType.Surplus);
-            IEnumerable<IBudgetTransactionItemViewModel> regularTransactions = 
-                TransactionListViewModel.Transactions.Where(t => t.Type == BudgetTransactionType.Regular);
-
-            Budget budget = new Budget
-            {
-                BudgetId = m_budgetId,
-                Name = Name,
-                Period = SelectedPeriod,
-                InitialTransaction = initialTransaction.ToBudgetTransaction(),
-                Transactions = regularTransactions.Select(t => t.ToBudgetTransaction()),
-                SurplusTransaction = surplusTransaction.ToBudgetTransaction(),
-            };
-
-            return budget;
         }
     }
 }

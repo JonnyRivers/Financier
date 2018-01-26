@@ -166,24 +166,10 @@ namespace Financier.Desktop.ViewModels
 
             if (m_transactionId != 0)
             {
-                Transaction transaction = m_transactionService.Get(m_transactionId);
-                transaction.CreditAccount = SelectedCreditAccount.ToAccountLink();
-                transaction.DebitAccount = SelectedDebitAccount.ToAccountLink();
-                transaction.Amount = Amount;
-                transaction.At = At;
-
                 m_transactionService.Update(transaction);
             }
             else
             {
-                var transaction = new Transaction
-                {
-                    CreditAccount = SelectedCreditAccount.ToAccountLink(),
-                    DebitAccount = SelectedDebitAccount.ToAccountLink(),
-                    Amount = Amount,
-                    At = At,
-                };
-
                 m_transactionService.Create(transaction);
             }
         }

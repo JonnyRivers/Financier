@@ -31,8 +31,6 @@ namespace Financier.Services
             var liabilities = new List<BalanceSheetItem>();
             foreach (Account account in accounts)
             {
-                // TODO: Improve performance by getting all accounts at a certain time
-                // https://github.com/JonnyRivers/Financier/issues/12
                 var item = new BalanceSheetItem(
                     account.Name, 
                     m_accountService.GetBalanceAt(account.AccountId, at, true)
