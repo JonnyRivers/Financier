@@ -6,7 +6,8 @@ namespace Financier.Desktop.ViewModels
 {
     public interface IBudgetTransactionListViewModel
     {
-        void Setup(Budget budget);
+        void SetupForCreate();
+        void SetupForEdit(Budget budget);
 
         ObservableCollection<IBudgetTransactionItemViewModel> Transactions { get; set; }
         IBudgetTransactionItemViewModel SelectedTransaction { get; set; }

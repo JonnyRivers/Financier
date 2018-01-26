@@ -14,6 +14,7 @@ namespace Financier.Desktop.ViewModels
         private ILogger<AccountListViewModel> m_logger;
         private IAccountService m_accountService;
         private IAccountRelationshipService m_accountRelationshipService;
+        private IConversionService m_conversionService;
         private ITransactionService m_transactionService;
         private IViewService m_viewService;
 
@@ -21,28 +22,27 @@ namespace Financier.Desktop.ViewModels
             ILogger<AccountListViewModel> logger, 
             IAccountService accountService,
             IAccountRelationshipService accountRelationshipService,
+            IConversionService conversionService,
             ITransactionService transactionService,
             IViewService viewService)
         {
             m_logger = logger;
             m_accountService = accountService;
             m_accountRelationshipService = accountRelationshipService;
+            m_conversionService = conversionService;
             m_transactionService = transactionService;
             m_viewService = viewService;
 
-            IEnumerable<Account> accounts = m_accountService.GetAll();
+            IEnumerable<AccountLink> accountLinks = m_accountService.GetAllAsLinks();
 
-            var accountFilters = new List<ITransactionAccountFilterViewModel>();
-            m_nullAccountFilter = new TransactionAccountFilterViewModel(0, "(All Accounts)", false);
+            var accountFilters = new List<IAccountLinkViewModel>();
+            var nullAccountLink = new AccountLink { AccountId = 0, Name = "(All Accounts)" };
+            m_nullAccountFilter = m_conversionService.AccountLinkToViewModel(nullAccountLink);
             accountFilters.Add(m_nullAccountFilter);
             accountFilters.AddRange(
-                accounts
+                accountLinks
                     .OrderBy(a => a.Name)
-                    .Select(a =>
-                        new TransactionAccountFilterViewModel(
-                            a.AccountId,
-                            a.Name,
-                            a.LogicalAccounts.Any()))
+                    .Select(a => m_conversionService.AccountLinkToViewModel(a))
             );
             AccountFilters = accountFilters;
             SelectedAccountFilter = m_nullAccountFilter;
@@ -51,14 +51,14 @@ namespace Financier.Desktop.ViewModels
             PopulateTransactions();
         }
 
-        private ITransactionAccountFilterViewModel m_nullAccountFilter;
-        private ITransactionAccountFilterViewModel m_selectedAccountFilter;
+        private IAccountLinkViewModel m_nullAccountFilter;
+        private IAccountLinkViewModel m_selectedAccountFilter;
         private bool m_includeLogicalAccounts;
         private bool m_accountFilterHasLogicalAcounts;
         private ITransactionItemViewModel m_selectedTransaction;
 
-        public IEnumerable<ITransactionAccountFilterViewModel> AccountFilters { get; }
-        public ITransactionAccountFilterViewModel SelectedAccountFilter
+        public IEnumerable<IAccountLinkViewModel> AccountFilters { get; }
+        public IAccountLinkViewModel SelectedAccountFilter
         {
             get { return m_selectedAccountFilter; }
             set
@@ -164,16 +164,10 @@ namespace Financier.Desktop.ViewModels
                 IEnumerable<Transaction> transactions = m_transactionService
                     .GetAll()
                     .OrderByDescending(t => t.TransactionId)
-                    .Take(100);
-                IEnumerable<ITransactionItemViewModel> transactionVMs = transactions
-                    .Select(t =>
-                        new TransactionItemViewModel(
-                            t.TransactionId,
-                            t.CreditAccount.Name,
-                            t.DebitAccount.Name,
-                            t.At,
-                            t.Amount,
-                            0));
+                    .Take(100)
+                    .ToList();
+                IEnumerable<ITransactionItemViewModel> transactionVMs =
+                    transactions.Select(t => m_conversionService.TransactionToItemViewModel(t, 0));
                 Transactions = new ObservableCollection<ITransactionItemViewModel>(transactionVMs);
             }
             else
@@ -193,15 +187,7 @@ namespace Financier.Desktop.ViewModels
                     {
                         balance += transaction.Amount;
                     }
-                    itemVMs.Add(
-                        new TransactionItemViewModel(
-                            transaction.TransactionId,
-                            transaction.CreditAccount.Name,
-                            transaction.DebitAccount.Name,
-                            transaction.At,
-                            transaction.Amount,
-                            balance)
-                    );
+                    itemVMs.Add(m_conversionService.TransactionToItemViewModel(transaction, balance));
                 }
                 Transactions = new ObservableCollection<ITransactionItemViewModel>(
                     itemVMs.OrderByDescending(t => t.TransactionId)

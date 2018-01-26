@@ -18,9 +18,13 @@ namespace Financier.Desktop.ViewModels
             m_logger = logger;
             m_accountService = accountService;
             m_transactionService = transactionService;
-            m_transactionId = 0;
 
             Accounts = m_accountService.GetAll().OrderBy(a => a.Name).ToList();
+        }
+
+        public void SetupForCreate()
+        {
+            m_transactionId = 0;
 
             // TODO: Provide sensible defaults to new TransactionEditViewModel instances
             // https://github.com/JonnyRivers/Financier/issues/19
@@ -28,6 +32,18 @@ namespace Financier.Desktop.ViewModels
             SelectedDebitAccount = Accounts.First();
             Amount = 0m;
             At = DateTime.Now;
+        }
+
+        public void SetupForEdit(int budgetId)
+        {
+            m_transactionId = budgetId;
+
+            Transaction transaction = m_transactionService.Get(m_transactionId);
+
+            SelectedCreditAccount = Accounts.Single(a => a.AccountId == transaction.CreditAccount.AccountId);
+            SelectedDebitAccount = Accounts.Single(a => a.AccountId == transaction.DebitAccount.AccountId);
+            Amount = transaction.Amount;
+            At = transaction.At;
         }
 
         private ILogger<TransactionEditViewModel> m_logger;
@@ -45,20 +61,6 @@ namespace Financier.Desktop.ViewModels
         public int TransactionId
         {
             get { return m_transactionId; }
-            set
-            {
-                if (value != m_transactionId)
-                {
-                    m_transactionId = value;
-
-                    Transaction transaction = m_transactionService.Get(m_transactionId);
-
-                    SelectedCreditAccount = Accounts.Single(a => a.AccountId == transaction.CreditAccount.AccountId);
-                    SelectedDebitAccount = Accounts.Single(a => a.AccountId == transaction.DebitAccount.AccountId);
-                    Amount = transaction.Amount;
-                    At = transaction.At;
-                }
-            }
         }
 
         public Account SelectedCreditAccount

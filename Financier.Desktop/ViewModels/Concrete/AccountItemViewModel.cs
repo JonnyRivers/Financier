@@ -1,27 +1,31 @@
 ﻿using Financier.Services;
+using Microsoft.Extensions.Logging;
 
 namespace Financier.Desktop.ViewModels
 {
     public class AccountItemViewModel : IAccountItemViewModel
     {
+        private ILogger<AccountItemViewModel> m_logger;
+
         public AccountItemViewModel(
-            int accountId, 
-            string name, 
-            AccountType type, 
-            string currencyName, 
-            decimal balance)
+            ILogger<AccountItemViewModel> logger)
         {
-            AccountId = accountId;
-            Name = name;
-            Type = type;
-            CurrencyName = currencyName;
-            Balance = balance;
+            m_logger = logger;
         }
 
-        public int AccountId { get; }
-        public string Name { get; }
-        public AccountType Type { get; }
-        public string CurrencyName { get; }
-        public decimal Balance { get; }
+        public void Setup(Account account)
+        {
+            AccountId = account.AccountId;
+            Name = account.Name;
+            Type = account.Type;
+            CurrencyName = account.Currency.Name;
+            Balance = account.Balance;
+        }
+
+        public int AccountId { get; private set; }
+        public string Name { get; private set; }
+        public AccountType Type { get; private set; }
+        public string CurrencyName { get; private set; }
+        public decimal Balance { get; private set; }
     }
 }

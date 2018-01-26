@@ -13,15 +13,18 @@ namespace Financier.Desktop.ViewModels
     {
         private ILogger<AccountListViewModel> m_logger;
         private IAccountService m_accountService;
+        private IConversionService m_conversionService;
         private IViewService m_viewService;
 
         public AccountListViewModel(
             ILogger<AccountListViewModel> logger,
             IAccountService accountService,
+            IConversionService conversionService,
             IViewService viewService)
         {
             m_logger = logger;
             m_accountService = accountService;
+            m_conversionService = conversionService;
             m_viewService = viewService;
 
             PopulateAccounts();
@@ -72,16 +75,9 @@ namespace Financier.Desktop.ViewModels
         private void PopulateAccounts()
         {
             IEnumerable<Account> accounts = m_accountService.GetAll();
-            IEnumerable<IAccountItemViewModel> accountVMs = accounts
-                .OrderBy(a => a.Name)
-                .Select(a =>
-                    new AccountItemViewModel(
-                        a.AccountId,
-                        a.Name,
-                        a.Type,
-                        a.Currency.Name,
-                        a.Balance));
-            Accounts = new ObservableCollection<IAccountItemViewModel>(accountVMs);
+            IEnumerable<IAccountItemViewModel> accountVMs = 
+                accounts.Select(a => m_conversionService.AccountToItemViewModel(a));
+            Accounts = new ObservableCollection<IAccountItemViewModel>(accountVMs.OrderBy(a => a.Name));
             OnPropertyChanged(nameof(Accounts));
         }
     }

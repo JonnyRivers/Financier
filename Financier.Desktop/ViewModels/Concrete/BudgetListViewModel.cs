@@ -13,17 +13,20 @@ namespace Financier.Desktop.ViewModels
     {
         private ILogger<BudgetListViewModel> m_logger;
         private IBudgetService m_budgetService;
+        private IConversionService m_conversionService;
         private ICurrencyService m_currencyService;
         private IViewService m_viewService;
 
         public BudgetListViewModel(
             ILogger<BudgetListViewModel> logger,
             IBudgetService budgetService,
+            IConversionService conversionService,
             ICurrencyService currencyService,
             IViewService viewService)
         {
             m_logger = logger;
             m_budgetService = budgetService;
+            m_conversionService = conversionService;
             m_currencyService = currencyService;
             m_viewService = viewService;
 
@@ -104,24 +107,12 @@ namespace Financier.Desktop.ViewModels
 
         private void PopulateBudgets()
         {
-            Currency currency = m_currencyService.GetPrimary();
+            Currency primaryCurrency = m_currencyService.GetPrimary();
             IEnumerable<Budget> budgets = m_budgetService.GetAll();
-            IEnumerable<IBudgetItemViewModel> budgetViewModels = budgets
-                .OrderBy(b => b.Name)
-                .Select(b =>
-                    new BudgetItemViewModel
-                    {
-                        BudgetId = b.BudgetId,
-                        Name = b.Name,
-                        Period = b.Period,
-                        InitialTransactionHint = 
-                            $"{currency.Symbol}{b.InitialTransaction.Amount} " + 
-                            $"from {b.InitialTransaction.CreditAccount.Name} " +
-                            $"to {b.InitialTransaction.DebitAccount.Name}",
-                        Transactions = b.Transactions.Count()
-                    });
+            IEnumerable<IBudgetItemViewModel> budgetViewModels =
+                budgets.Select(b => m_conversionService.BudgetToItemViewModel(b, primaryCurrency));
 
-            Budgets = new ObservableCollection<IBudgetItemViewModel>(budgetViewModels);
+            Budgets = new ObservableCollection<IBudgetItemViewModel>(budgetViewModels.OrderBy(b => b.Name));
         }
     }
 }

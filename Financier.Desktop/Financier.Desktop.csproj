@@ -121,7 +121,9 @@
     </ApplicationDefinition>
     <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="IoC\ServiceProvider.cs" />
+    <Compile Include="Services\Abstract\IConversionService.cs" />
     <Compile Include="Services\Abstract\IViewService.cs" />
+    <Compile Include="Services\Concrete\ConversionService.cs" />
     <Compile Include="Services\Concrete\ViewService.cs" />
     <Compile Include="ViewModels\Abstract\IAccountLinkViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IBudgetEditViewModel.cs" />
@@ -138,7 +140,6 @@
     <Compile Include="ViewModels\Abstract\IAccountItemViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IAccountListViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IMainWindowViewModel.cs" />
-    <Compile Include="ViewModels\Abstract\ITransactionAccountFilterViewModel.cs" />
     <Compile Include="ViewModels\Abstract\ITransactionEditViewModel.cs" />
     <Compile Include="ViewModels\Abstract\ITransactionListViewModel.cs" />
     <Compile Include="ViewModels\Abstract\ITransactionItemViewModel.cs" />
@@ -148,7 +149,6 @@
     <Compile Include="ViewModels\Concrete\BudgetTransactionItemViewModel.cs" />
     <Compile Include="ViewModels\Concrete\BudgetTransactionListViewModel.cs" />
     <Compile Include="ViewModels\Concrete\MainWindowViewModel.cs" />
-    <Compile Include="ViewModels\Concrete\TransactionAccountFilterViewModel.cs" />
     <Compile Include="ViewModels\Concrete\TransactionEditViewModel.cs" />
     <Compile Include="ViewModels\Concrete\TransactionListViewModel.cs" />
     <Compile Include="ViewModels\Concrete\TransactionItemViewModel.cs" />
