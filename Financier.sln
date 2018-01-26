@@ -3,19 +3,21 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Financier.Core", "Financier.Core\Financier.Core.csproj", "{8A0D8499-AA46-4330-8B7F-056DF0008F10}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Financier.Core", "Financier.Core\Financier.Core.csproj", "{8A0D8499-AA46-4330-8B7F-056DF0008F10}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Financier.CLI", "Financier.CLI\Financier.CLI.csproj", "{D2CC1964-008A-4815-8EB6-DD17626E3C70}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Financier.CLI", "Financier.CLI\Financier.CLI.csproj", "{D2CC1964-008A-4815-8EB6-DD17626E3C70}"
 	ProjectSection(ProjectDependencies) = postProject
 		{8A0D8499-AA46-4330-8B7F-056DF0008F10} = {8A0D8499-AA46-4330-8B7F-056DF0008F10}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Financier.Tests", "Financier.Tests\Financier.Tests.csproj", "{5A9E4C6C-C669-42C6-9FE1-C2AEC33FE3B8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Financier.Tests", "Financier.Tests\Financier.Tests.csproj", "{5A9E4C6C-C669-42C6-9FE1-C2AEC33FE3B8}"
 	ProjectSection(ProjectDependencies) = postProject
 		{8A0D8499-AA46-4330-8B7F-056DF0008F10} = {8A0D8499-AA46-4330-8B7F-056DF0008F10}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Financier.Desktop", "Financier.Desktop\Financier.Desktop.csproj", "{547D5383-961E-4312-95FF-9D9BCD319A69}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Financier.Desktop.Tests", "Financier.Desktop.Tests\Financier.Desktop.Tests.csproj", "{782E57DF-8BD7-4924-9EAB-E6DA9CFEB2C7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -75,6 +77,18 @@ Global
 		{547D5383-961E-4312-95FF-9D9BCD319A69}.Release|x64.Build.0 = Release|Any CPU
 		{547D5383-961E-4312-95FF-9D9BCD319A69}.Release|x86.ActiveCfg = Release|Any CPU
 		{547D5383-961E-4312-95FF-9D9BCD319A69}.Release|x86.Build.0 = Release|Any CPU
+		{782E57DF-8BD7-4924-9EAB-E6DA9CFEB2C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{782E57DF-8BD7-4924-9EAB-E6DA9CFEB2C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{782E57DF-8BD7-4924-9EAB-E6DA9CFEB2C7}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{782E57DF-8BD7-4924-9EAB-E6DA9CFEB2C7}.Debug|x64.Build.0 = Debug|Any CPU
+		{782E57DF-8BD7-4924-9EAB-E6DA9CFEB2C7}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{782E57DF-8BD7-4924-9EAB-E6DA9CFEB2C7}.Debug|x86.Build.0 = Debug|Any CPU
+		{782E57DF-8BD7-4924-9EAB-E6DA9CFEB2C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{782E57DF-8BD7-4924-9EAB-E6DA9CFEB2C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{782E57DF-8BD7-4924-9EAB-E6DA9CFEB2C7}.Release|x64.ActiveCfg = Release|Any CPU
+		{782E57DF-8BD7-4924-9EAB-E6DA9CFEB2C7}.Release|x64.Build.0 = Release|Any CPU
+		{782E57DF-8BD7-4924-9EAB-E6DA9CFEB2C7}.Release|x86.ActiveCfg = Release|Any CPU
+		{782E57DF-8BD7-4924-9EAB-E6DA9CFEB2C7}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

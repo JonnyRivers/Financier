@@ -122,7 +122,9 @@
     <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="IoC\ServiceProvider.cs" />
     <Compile Include="Services\Abstract\IConversionService.cs" />
+    <Compile Include="Services\Abstract\IMessageService.cs" />
     <Compile Include="Services\Abstract\IViewService.cs" />
+    <Compile Include="Services\Concrete\MessageService.cs" />
     <Compile Include="Services\Concrete\ConversionService.cs" />
     <Compile Include="Services\Concrete\ViewService.cs" />
     <Compile Include="ViewModels\Abstract\IAccountLinkViewModel.cs" />
