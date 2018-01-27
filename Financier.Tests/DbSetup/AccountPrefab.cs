@@ -1,4 +1,4 @@
-﻿namespace Financier.Tests.DbSetup
+﻿namespace Financier.Core.Tests.DbSetup
 {
     internal enum AccountPrefab
     {

@@ -10,7 +10,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Financier.CLI", "Financier.
 		{8A0D8499-AA46-4330-8B7F-056DF0008F10} = {8A0D8499-AA46-4330-8B7F-056DF0008F10}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Financier.Tests", "Financier.Tests\Financier.Tests.csproj", "{5A9E4C6C-C669-42C6-9FE1-C2AEC33FE3B8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Financier.Core.Tests", "Financier.Tests\Financier.Core.Tests.csproj", "{5A9E4C6C-C669-42C6-9FE1-C2AEC33FE3B8}"
 	ProjectSection(ProjectDependencies) = postProject
 		{8A0D8499-AA46-4330-8B7F-056DF0008F10} = {8A0D8499-AA46-4330-8B7F-056DF0008F10}
 	EndProjectSection

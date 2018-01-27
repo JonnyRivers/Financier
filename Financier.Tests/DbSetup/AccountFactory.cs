@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Financier.Tests.DbSetup
+namespace Financier.Core.Tests.DbSetup
 {
     class AccountFactory
     {

@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Financier.Tests
+namespace Financier.Core.Tests
 {
     [TestClass]
     public class BudgetServiceTests

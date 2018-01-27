@@ -1,7 +1,7 @@
 ﻿using Financier.Entities;
 using System.Collections.Generic;
 
-namespace Financier.Tests.DbSetup
+namespace Financier.Core.Tests.DbSetup
 {
     internal class CurrencyFactory
     {

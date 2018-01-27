@@ -1,5 +1,4 @@
-﻿using Financier.Entities;
-using Financier.Services;
+﻿using Financier.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -7,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 
-namespace Financier.Tests
+namespace Financier.Core.Tests
 {
     [TestClass]
     public class DatabaseSerializationXmlServiceTests
