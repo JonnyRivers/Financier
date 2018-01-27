@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 using System.Windows.Input;
 
 namespace Financier.Desktop.ViewModels
 {
     public interface ITransactionListViewModel
     {
-        IEnumerable<IAccountLinkViewModel> AccountFilters { get; }
+        ObservableCollection<IAccountLinkViewModel> AccountFilters { get; }
         IAccountLinkViewModel SelectedAccountFilter { get; }
         bool IncludeLogicalAccounts { get; }
         bool AccountFilterHasLogicalAccounts { get; }

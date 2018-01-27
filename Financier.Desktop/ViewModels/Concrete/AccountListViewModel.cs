@@ -14,18 +14,25 @@ namespace Financier.Desktop.ViewModels
         private ILogger<AccountListViewModel> m_logger;
         private IAccountService m_accountService;
         private IConversionService m_conversionService;
+        private IMessageService m_messageService;
         private IViewService m_viewService;
 
         public AccountListViewModel(
             ILogger<AccountListViewModel> logger,
             IAccountService accountService,
             IConversionService conversionService,
+            IMessageService messageService,
             IViewService viewService)
         {
             m_logger = logger;
             m_accountService = accountService;
             m_conversionService = conversionService;
+            m_messageService = messageService;
             m_viewService = viewService;
+
+            m_messageService.Register<TransactionCreateMessage>(OnTransactionCreated);
+            m_messageService.Register<TransactionDeleteMessage>(OnTransactionDeleted);
+            m_messageService.Register<TransactionUpdateMessage>(OnTransactionUpdated);
 
             PopulateAccounts();
         }
@@ -79,6 +86,48 @@ namespace Financier.Desktop.ViewModels
                 accounts.Select(a => m_conversionService.AccountToItemViewModel(a));
             Accounts = new ObservableCollection<IAccountItemViewModel>(accountVMs.OrderBy(a => a.Name));
             OnPropertyChanged(nameof(Accounts));
+        }
+
+        private void OnTransactionCreated(TransactionCreateMessage message)
+        {
+            AddTransactionToBalances(message.Transaction);
+        }
+
+        private void OnTransactionDeleted(TransactionDeleteMessage message)
+        {
+            RemoveTransactionFromBalances(message.Transaction);
+        }
+
+        private void OnTransactionUpdated(TransactionUpdateMessage message)
+        {
+            RemoveTransactionFromBalances(message.Before);
+            AddTransactionToBalances(message.After);
+        }
+
+        private void AddTransactionToBalances(Transaction transaction)
+        {
+            IAccountItemViewModel creditAccountBefore =
+                Accounts
+                    .Single(a => a.AccountId == transaction.CreditAccount.AccountId);
+            IAccountItemViewModel debitAccountBefore =
+                Accounts
+                    .Single(a => a.AccountId == transaction.DebitAccount.AccountId);
+
+            creditAccountBefore.Balance -= transaction.Amount;
+            debitAccountBefore.Balance += transaction.Amount;
+        }
+
+        private void RemoveTransactionFromBalances(Transaction transaction)
+        {
+            IAccountItemViewModel creditAccountAfter =
+                Accounts
+                    .Single(a => a.AccountId == transaction.CreditAccount.AccountId);
+            IAccountItemViewModel debitAccountAfter =
+                Accounts
+                    .Single(a => a.AccountId == transaction.DebitAccount.AccountId);
+
+            creditAccountAfter.Balance += transaction.Amount;
+            debitAccountAfter.Balance -= transaction.Amount;
         }
     }
 }

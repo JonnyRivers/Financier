@@ -122,7 +122,9 @@
     <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="IoC\ServiceProvider.cs" />
     <Compile Include="Services\Abstract\IConversionService.cs" />
+    <Compile Include="Services\Abstract\IMessageService.cs" />
     <Compile Include="Services\Abstract\IViewService.cs" />
+    <Compile Include="Services\Concrete\MessageService.cs" />
     <Compile Include="Services\Concrete\ConversionService.cs" />
     <Compile Include="Services\Concrete\ViewService.cs" />
     <Compile Include="ViewModels\Abstract\IAccountLinkViewModel.cs" />
@@ -152,7 +154,12 @@
     <Compile Include="ViewModels\Concrete\TransactionEditViewModel.cs" />
     <Compile Include="ViewModels\Concrete\TransactionListViewModel.cs" />
     <Compile Include="ViewModels\Concrete\TransactionItemViewModel.cs" />
+    <Compile Include="ViewModels\Model\AccountCreateMessage.cs" />
+    <Compile Include="ViewModels\Model\AccountUpdateMessage.cs" />
     <Compile Include="ViewModels\Model\BudgetTransactionType.cs" />
+    <Compile Include="ViewModels\Model\TransactionCreateMessage.cs" />
+    <Compile Include="ViewModels\Model\TransactionDeleteMessage.cs" />
+    <Compile Include="ViewModels\Model\TransactionUpdateMessage.cs" />
     <Compile Include="Views\AccountEditWindow.xaml.cs">
       <DependentUpon>AccountEditWindow.xaml</DependentUpon>
     </Compile>
