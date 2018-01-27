@@ -165,7 +165,9 @@ namespace Financier.Desktop.ViewModels
         {
             if(m_viewService.OpenTransactionDeleteConfirmationView())
             {
+                Transaction transaction = m_transactionService.Get(SelectedTransaction.TransactionId);
                 m_transactionService.Delete(SelectedTransaction.TransactionId);
+                m_messageService.Send(new TransactionDeleteMessage(transaction));
 
                 PopulateTransactions();
             }
@@ -218,7 +220,7 @@ namespace Financier.Desktop.ViewModels
 
         private void OnAccountCreated(AccountCreateMessage message)
         {
-            Account newAccount = message.NewAccount;
+            Account newAccount = message.Account;
 
             var newAccountLink = new AccountLink
             {
@@ -244,7 +246,7 @@ namespace Financier.Desktop.ViewModels
 
         private void OnAccountUpdated(AccountUpdateMessage message)
         {
-            Account updatedAccount = message.UpdatedAccount;
+            Account updatedAccount = message.Account;
 
             IAccountLinkViewModel updatedAccountViewModel = 
                 AccountFilters

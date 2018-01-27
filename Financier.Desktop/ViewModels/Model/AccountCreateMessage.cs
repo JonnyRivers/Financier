@@ -4,11 +4,11 @@ namespace Financier.Desktop.ViewModels
 {
     public class AccountCreateMessage
     {
-        public AccountCreateMessage(Account newAccount)
+        public AccountCreateMessage(Account account)
         {
-            NewAccount = newAccount;
+            Account = account;
         }
 
-        public Account NewAccount { get; private set; }
+        public Account Account { get; private set; }
     }
 }

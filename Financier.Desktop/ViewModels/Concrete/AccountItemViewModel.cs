@@ -3,9 +3,14 @@ using Microsoft.Extensions.Logging;
 
 namespace Financier.Desktop.ViewModels
 {
-    public class AccountItemViewModel : IAccountItemViewModel
+    public class AccountItemViewModel : BaseViewModel, IAccountItemViewModel
     {
         private ILogger<AccountItemViewModel> m_logger;
+
+        private string m_name;
+        private AccountType m_type;
+        private string m_currencyName;
+        private decimal m_balance;
 
         public AccountItemViewModel(
             ILogger<AccountItemViewModel> logger)
@@ -16,16 +21,64 @@ namespace Financier.Desktop.ViewModels
         public void Setup(Account account)
         {
             AccountId = account.AccountId;
-            Name = account.Name;
-            Type = account.Type;
-            CurrencyName = account.Currency.Name;
-            Balance = account.Balance;
+            m_name = account.Name;
+            m_type = account.Type;
+            m_currencyName = account.Currency.Name;
+            m_balance = account.Balance;
         }
 
         public int AccountId { get; private set; }
-        public string Name { get; private set; }
-        public AccountType Type { get; private set; }
-        public string CurrencyName { get; private set; }
-        public decimal Balance { get; private set; }
+        public string Name
+        {
+            get { return m_name; }
+            private set
+            {
+                if (m_name != value)
+                {
+                    m_name = value;
+
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public AccountType Type
+        {
+            get { return m_type; }
+            private set
+            {
+                if (m_type != value)
+                {
+                    m_type = value;
+
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public string CurrencyName
+        {
+            get { return m_currencyName; }
+            set
+            {
+                if (m_currencyName != value)
+                {
+                    m_currencyName = value;
+
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public decimal Balance
+        {
+            get { return m_balance; }
+            set
+            {
+                if (m_balance != value)
+                {
+                    m_balance = value;
+
+                    OnPropertyChanged();
+                }
+            }
+        }
     }
 }

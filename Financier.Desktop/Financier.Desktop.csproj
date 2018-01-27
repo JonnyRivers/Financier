@@ -157,6 +157,9 @@
     <Compile Include="ViewModels\Model\AccountCreateMessage.cs" />
     <Compile Include="ViewModels\Model\AccountUpdateMessage.cs" />
     <Compile Include="ViewModels\Model\BudgetTransactionType.cs" />
+    <Compile Include="ViewModels\Model\TransactionCreateMessage.cs" />
+    <Compile Include="ViewModels\Model\TransactionDeleteMessage.cs" />
+    <Compile Include="ViewModels\Model\TransactionUpdateMessage.cs" />
     <Compile Include="Views\AccountEditWindow.xaml.cs">
       <DependentUpon>AccountEditWindow.xaml</DependentUpon>
     </Compile>
