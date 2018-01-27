@@ -176,6 +176,7 @@ namespace Financier.Desktop.ViewModels
             else
             {
                 m_transactionService.Create(transaction);
+                m_transactionId = transaction.TransactionId;
                 m_messageService.Send(new TransactionCreateMessage(transaction));
             }
         }

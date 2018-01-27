@@ -22,7 +22,7 @@ namespace Financier.Desktop.Services
             mainWindow.Show();
         }
 
-        public bool OpenAccountCreateView()
+        public int OpenAccountCreateView()
         {
             IAccountEditViewModel accountEditViewModel =
                 IoC.ServiceProvider.Instance.GetRequiredService<IAccountEditViewModel>();
@@ -32,9 +32,9 @@ namespace Financier.Desktop.Services
             bool? result = accountEditWindow.ShowDialog();
 
             if (result.HasValue)
-                return result.Value;
+                return accountEditViewModel.AccountId;
 
-            return false;
+            return 0;
         }
 
         public bool OpenAccountEditView(int accountId)
@@ -51,7 +51,7 @@ namespace Financier.Desktop.Services
             return false;
         }
 
-        public bool OpenBudgetCreateView()
+        public int OpenBudgetCreateView()
         {
             IBudgetEditViewModel budgetEditViewModel = 
                 IoC.ServiceProvider.Instance.GetRequiredService<IBudgetEditViewModel>();
@@ -60,9 +60,9 @@ namespace Financier.Desktop.Services
             bool? result = budgetEditWindow.ShowDialog();
 
             if (result.HasValue)
-                return result.Value;
+                return budgetEditViewModel.BudgetId;
 
-            return false;
+            return 0;
         }
 
         public bool OpenBudgetDeleteConfirmationView()
@@ -89,7 +89,7 @@ namespace Financier.Desktop.Services
             return OpenDeleteConfirmationView("budget transaction");
         }
 
-        public bool OpenTransactionCreateView()
+        public int OpenTransactionCreateView()
         {
             ITransactionEditViewModel transactionEditViewModel =
                 IoC.ServiceProvider.Instance.GetRequiredService<ITransactionEditViewModel>();
@@ -98,9 +98,9 @@ namespace Financier.Desktop.Services
             bool? result = transactionEditWindow.ShowDialog();
 
             if (result.HasValue)
-                return result.Value;
+                return transactionEditViewModel.TransactionId;
 
-            return false;
+            return 0;
         }
 
         public bool OpenTransactionDeleteConfirmationView()

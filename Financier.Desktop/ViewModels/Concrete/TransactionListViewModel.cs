@@ -62,6 +62,7 @@ namespace Financier.Desktop.ViewModels
         private IAccountLinkViewModel m_selectedAccountFilter;
         private bool m_includeLogicalAccounts;
         private bool m_accountFilterHasLogicalAcounts;
+        private ObservableCollection<ITransactionItemViewModel> m_transactions;
         private ITransactionItemViewModel m_selectedTransaction;
 
         public ObservableCollection<IAccountLinkViewModel> AccountFilters
@@ -126,7 +127,19 @@ namespace Financier.Desktop.ViewModels
             }
         }
 
-        public ObservableCollection<ITransactionItemViewModel> Transactions { get; set; }
+        public ObservableCollection<ITransactionItemViewModel> Transactions
+        {
+            get { return m_transactions; }
+            set
+            {
+                if (m_transactions != value)
+                {
+                    m_transactions = value;
+
+                    OnPropertyChanged();
+                }
+            }
+        }
         public ITransactionItemViewModel SelectedTransaction
         {
             get { return m_selectedTransaction; }
@@ -148,10 +161,12 @@ namespace Financier.Desktop.ViewModels
 
         private void CreateExecute(object obj)
         {
-            if (m_viewService.OpenTransactionCreateView())
+            int newTransactionId = m_viewService.OpenTransactionCreateView();
+            if (newTransactionId > 0)
             {
                 // Transaction list VM should be partially repopulated after adds, deletes and edits
                 // https://github.com/JonnyRivers/Financier/issues/27
+                // This is complicated by having balances in the view model, which must be recalculated
                 PopulateTransactions();
             }
         }
@@ -162,6 +177,7 @@ namespace Financier.Desktop.ViewModels
             {
                 // Transaction list VM should be partially repopulated after adds, deletes and edits
                 // https://github.com/JonnyRivers/Financier/issues/27
+                // This is complicated by having balances in the view model, which must be recalculated
                 PopulateTransactions();
             }
         }
@@ -175,13 +191,13 @@ namespace Financier.Desktop.ViewModels
         {
             if(m_viewService.OpenTransactionDeleteConfirmationView())
             {
+                // Update model
                 Transaction transaction = m_transactionService.Get(SelectedTransaction.TransactionId);
                 m_transactionService.Delete(SelectedTransaction.TransactionId);
                 m_messageService.Send(new TransactionDeleteMessage(transaction));
 
-                // Transaction list VM should be partially repopulated after adds, deletes and edits
-                // https://github.com/JonnyRivers/Financier/issues/27
-                PopulateTransactions();
+                // Update view model
+                Transactions.Remove(SelectedTransaction);
             }
         }
 

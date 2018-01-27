@@ -91,6 +91,7 @@ namespace Financier.Desktop.ViewModels
             else
             {
                 m_accountService.Create(account);
+                m_accountId = account.AccountId;
                 m_messageService.Send(new AccountCreateMessage(account));
             }
         }

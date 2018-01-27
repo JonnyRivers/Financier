@@ -4,16 +4,16 @@
     {
         void OpenMainView();
 
-        bool OpenAccountCreateView();
+        int OpenAccountCreateView();
         bool OpenAccountEditView(int accountId);
 
-        bool OpenBudgetCreateView();
+        int OpenBudgetCreateView();
         bool OpenBudgetDeleteConfirmationView();
         bool OpenBudgetEditView(int budgetId);
 
         bool OpenBudgetTransactionDeleteConfirmationView();
 
-        bool OpenTransactionCreateView();
+        int OpenTransactionCreateView();
         bool OpenTransactionDeleteConfirmationView();
         bool OpenTransactionEditView(int transactionId);
     }

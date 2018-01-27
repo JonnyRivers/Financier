@@ -94,6 +94,7 @@ namespace Financier.Desktop.ViewModels
             else
             {
                 m_budgetService.Create(budget);
+                m_budgetId = budget.BudgetId;
             }
         }
 

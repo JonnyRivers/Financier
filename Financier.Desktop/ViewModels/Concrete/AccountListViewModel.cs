@@ -37,9 +37,23 @@ namespace Financier.Desktop.ViewModels
             PopulateAccounts();
         }
 
+        private ObservableCollection<IAccountItemViewModel> m_accounts;
         private IAccountItemViewModel m_selectedAccount;
 
-        public ObservableCollection<IAccountItemViewModel> Accounts { get; set; }
+        public ObservableCollection<IAccountItemViewModel> Accounts
+        {
+            get { return m_accounts; }
+            set
+            {
+                if (m_accounts != value)
+                {
+                    m_accounts = value;
+
+                    OnPropertyChanged();
+                }
+            }
+        }
+
         public IAccountItemViewModel SelectedAccount
         {
             get { return m_selectedAccount; }
@@ -60,11 +74,13 @@ namespace Financier.Desktop.ViewModels
 
         private void CreateExecute(object obj)
         {
-            if (m_viewService.OpenAccountCreateView())
+            int newAccountId = m_viewService.OpenAccountCreateView();
+            if (newAccountId > 0)
             {
-                // TODO: Account list VM should be partially repopulated after adds and edits
-                // https://github.com/JonnyRivers/Financier/issues/25
-                PopulateAccounts();
+                Account newAccount = m_accountService.Get(newAccountId);
+                IAccountItemViewModel newAccountViewModel = m_conversionService.AccountToItemViewModel(newAccount);
+                Accounts.Add(newAccountViewModel);
+                Accounts = new ObservableCollection<IAccountItemViewModel>(Accounts.OrderBy(b => b.Name));
             }
         }
 
@@ -72,9 +88,9 @@ namespace Financier.Desktop.ViewModels
         {
             if (m_viewService.OpenAccountEditView(SelectedAccount.AccountId))
             {
-                // TODO: Account list VM should be partially repopulated after adds and edits
-                // https://github.com/JonnyRivers/Financier/issues/25
-                PopulateAccounts();
+                Account account = m_accountService.Get(SelectedAccount.AccountId);
+                SelectedAccount.Setup(account);
+                Accounts = new ObservableCollection<IAccountItemViewModel>(Accounts.OrderBy(b => b.Name));
             }
         }
 

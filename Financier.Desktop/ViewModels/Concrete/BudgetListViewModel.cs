@@ -71,11 +71,14 @@ namespace Financier.Desktop.ViewModels
 
         private void CreateExecute(object obj)
         {
-            if (m_viewService.OpenBudgetCreateView())
+            int newBudgetId = m_viewService.OpenBudgetCreateView();
+            if (newBudgetId > 0)
             {
-                // TODO: Budget list VM should be partially repopulated after adds, deletes and edits
-                // https://github.com/JonnyRivers/Financier/issues/26
-                PopulateBudgets();
+                Currency primaryCurrency = m_currencyService.GetPrimary();
+                Budget newBudget = m_budgetService.Get(newBudgetId);
+                IBudgetItemViewModel newBudgetViewModel = m_conversionService.BudgetToItemViewModel(newBudget, primaryCurrency);
+                Budgets.Add(newBudgetViewModel);
+                Budgets = new ObservableCollection<IBudgetItemViewModel>(Budgets.OrderBy(b => b.Name));
             }
         }
 
@@ -83,9 +86,10 @@ namespace Financier.Desktop.ViewModels
         {
             if (m_viewService.OpenBudgetEditView(SelectedBudget.BudgetId))
             {
-                // TODO: Budget list VM should be partially repopulated after adds, deletes and edits
-                // https://github.com/JonnyRivers/Financier/issues/26
-                PopulateBudgets();
+                Currency primaryCurrency = m_currencyService.GetPrimary();
+                Budget budget = m_budgetService.Get(SelectedBudget.BudgetId);
+                SelectedBudget.Setup(budget, primaryCurrency);
+                Budgets = new ObservableCollection<IBudgetItemViewModel>(Budgets.OrderBy(b => b.Name));
             }
         }
 
@@ -98,11 +102,11 @@ namespace Financier.Desktop.ViewModels
         {
             if (m_viewService.OpenBudgetDeleteConfirmationView())
             {
+                // Update model
                 m_budgetService.Delete(SelectedBudget.BudgetId);
 
-                // TODO: Budget list VM should be partially repopulated after adds, deletes and edits
-                // https://github.com/JonnyRivers/Financier/issues/26
-                PopulateBudgets();
+                // Update view model
+                Budgets.Remove(SelectedBudget);
             }
         }
 
