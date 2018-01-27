@@ -78,6 +78,8 @@ namespace Financier.Desktop.ViewModels
                 Budget newBudget = m_budgetService.Get(newBudgetId);
                 IBudgetItemViewModel newBudgetViewModel = m_conversionService.BudgetToItemViewModel(newBudget, primaryCurrency);
                 Budgets.Add(newBudgetViewModel);
+                // TODO: Is there a better way to maintain ObservableCollection<T> sorting?
+                // https://github.com/JonnyRivers/Financier/issues/29
                 Budgets = new ObservableCollection<IBudgetItemViewModel>(Budgets.OrderBy(b => b.Name));
             }
         }
@@ -89,6 +91,8 @@ namespace Financier.Desktop.ViewModels
                 Currency primaryCurrency = m_currencyService.GetPrimary();
                 Budget budget = m_budgetService.Get(SelectedBudget.BudgetId);
                 SelectedBudget.Setup(budget, primaryCurrency);
+                // TODO: Is there a better way to maintain ObservableCollection<T> sorting?
+                // https://github.com/JonnyRivers/Financier/issues/29
                 Budgets = new ObservableCollection<IBudgetItemViewModel>(Budgets.OrderBy(b => b.Name));
             }
         }

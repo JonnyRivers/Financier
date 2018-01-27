@@ -164,7 +164,7 @@ namespace Financier.Desktop.ViewModels
             int newTransactionId = m_viewService.OpenTransactionCreateView();
             if (newTransactionId > 0)
             {
-                // Transaction list VM should be partially repopulated after adds, deletes and edits
+                // TODO: Transaction list VM should be partially repopulated after adds, deletes and edits
                 // https://github.com/JonnyRivers/Financier/issues/27
                 // This is complicated by having balances in the view model, which must be recalculated
                 PopulateTransactions();
@@ -175,7 +175,7 @@ namespace Financier.Desktop.ViewModels
         {
             if (m_viewService.OpenTransactionEditView(SelectedTransaction.TransactionId))
             {
-                // Transaction list VM should be partially repopulated after adds, deletes and edits
+                // TODO: Transaction list VM should be partially repopulated after adds, deletes and edits
                 // https://github.com/JonnyRivers/Financier/issues/27
                 // This is complicated by having balances in the view model, which must be recalculated
                 PopulateTransactions();

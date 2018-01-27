@@ -80,6 +80,8 @@ namespace Financier.Desktop.ViewModels
                 Account newAccount = m_accountService.Get(newAccountId);
                 IAccountItemViewModel newAccountViewModel = m_conversionService.AccountToItemViewModel(newAccount);
                 Accounts.Add(newAccountViewModel);
+                // TODO: Is there a better way to maintain ObservableCollection<T> sorting?
+                // https://github.com/JonnyRivers/Financier/issues/29
                 Accounts = new ObservableCollection<IAccountItemViewModel>(Accounts.OrderBy(b => b.Name));
             }
         }
@@ -90,6 +92,8 @@ namespace Financier.Desktop.ViewModels
             {
                 Account account = m_accountService.Get(SelectedAccount.AccountId);
                 SelectedAccount.Setup(account);
+                // TODO: Is there a better way to maintain ObservableCollection<T> sorting?
+                // https://github.com/JonnyRivers/Financier/issues/29
                 Accounts = new ObservableCollection<IAccountItemViewModel>(Accounts.OrderBy(b => b.Name));
             }
         }
