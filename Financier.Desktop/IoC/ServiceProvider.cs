@@ -48,6 +48,7 @@ namespace Financier.Desktop.IoC
             serviceCollection.AddSingleton<ITransactionService, TransactionService>();
 
             serviceCollection.AddSingleton<IConversionService, ConversionService>();
+            serviceCollection.AddSingleton<IMessageService, MessageService>();
             serviceCollection.AddSingleton<IViewService, ViewService>();
 
             serviceCollection.AddTransient<IAccountEditViewModel, AccountEditViewModel>();

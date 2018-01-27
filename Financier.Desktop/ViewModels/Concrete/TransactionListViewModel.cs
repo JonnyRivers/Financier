@@ -15,6 +15,7 @@ namespace Financier.Desktop.ViewModels
         private IAccountService m_accountService;
         private IAccountRelationshipService m_accountRelationshipService;
         private IConversionService m_conversionService;
+        private IMessageService m_messageService;
         private ITransactionService m_transactionService;
         private IViewService m_viewService;
 
@@ -23,6 +24,7 @@ namespace Financier.Desktop.ViewModels
             IAccountService accountService,
             IAccountRelationshipService accountRelationshipService,
             IConversionService conversionService,
+            IMessageService messageService,
             ITransactionService transactionService,
             IViewService viewService)
         {
@@ -30,6 +32,7 @@ namespace Financier.Desktop.ViewModels
             m_accountService = accountService;
             m_accountRelationshipService = accountRelationshipService;
             m_conversionService = conversionService;
+            m_messageService = messageService;
             m_transactionService = transactionService;
             m_viewService = viewService;
 
@@ -44,20 +47,36 @@ namespace Financier.Desktop.ViewModels
                     .OrderBy(a => a.Name)
                     .Select(a => m_conversionService.AccountLinkToViewModel(a))
             );
-            AccountFilters = accountFilters;
+            AccountFilters = new ObservableCollection<IAccountLinkViewModel>(accountFilters);
             SelectedAccountFilter = m_nullAccountFilter;
             m_includeLogicalAccounts = true;
+
+            m_messageService.Register<AccountCreateMessage>(OnAccountCreated);
+            m_messageService.Register<AccountUpdateMessage>(OnAccountUpdated);
 
             PopulateTransactions();
         }
 
+        private ObservableCollection<IAccountLinkViewModel> m_accountFilters;
         private IAccountLinkViewModel m_nullAccountFilter;
         private IAccountLinkViewModel m_selectedAccountFilter;
         private bool m_includeLogicalAccounts;
         private bool m_accountFilterHasLogicalAcounts;
         private ITransactionItemViewModel m_selectedTransaction;
 
-        public IEnumerable<IAccountLinkViewModel> AccountFilters { get; }
+        public ObservableCollection<IAccountLinkViewModel> AccountFilters
+        {
+            get { return m_accountFilters; }
+            private set
+            {
+                if (m_accountFilters != value)
+                {
+                    m_accountFilters = value;
+                    
+                    OnPropertyChanged();
+                }
+            }
+        }
         public IAccountLinkViewModel SelectedAccountFilter
         {
             get { return m_selectedAccountFilter; }
@@ -195,6 +214,45 @@ namespace Financier.Desktop.ViewModels
             }
             
             OnPropertyChanged(nameof(Transactions));
+        }
+
+        private void OnAccountCreated(AccountCreateMessage message)
+        {
+            Account newAccount = message.NewAccount;
+
+            var newAccountLink = new AccountLink
+            {
+                AccountId = newAccount.AccountId,
+                Name = newAccount.Name,
+                Type = newAccount.Type,
+                HasLogicalAccounts = newAccount.LogicalAccounts.Any()
+            };
+
+            List<IAccountLinkViewModel> accountFilters = 
+                AccountFilters
+                    .Where(alvm => alvm != m_nullAccountFilter)
+                    .ToList();
+            IAccountLinkViewModel newAccountLinkViewModel = 
+                m_conversionService.AccountLinkToViewModel(newAccountLink);
+            accountFilters.Add(newAccountLinkViewModel);
+
+            var newAccountFilters = new List<IAccountLinkViewModel>();
+            newAccountFilters.Add(m_nullAccountFilter);
+            newAccountFilters.AddRange(accountFilters.OrderBy(alvm => alvm.Name));
+            AccountFilters = new ObservableCollection<IAccountLinkViewModel>(newAccountFilters);
+        }
+
+        private void OnAccountUpdated(AccountUpdateMessage message)
+        {
+            Account updatedAccount = message.UpdatedAccount;
+
+            IAccountLinkViewModel updatedAccountViewModel = 
+                AccountFilters
+                    .Single(alvm => alvm.AccountId == updatedAccount.AccountId);
+
+            updatedAccountViewModel.HasLogicalAccounts = updatedAccount.LogicalAccounts.Any();
+            updatedAccountViewModel.Name = updatedAccount.Name;
+            updatedAccountViewModel.Type = updatedAccount.Type;
         }
     }
 }

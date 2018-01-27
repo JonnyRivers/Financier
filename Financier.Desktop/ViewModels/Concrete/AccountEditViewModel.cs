@@ -1,4 +1,5 @@
 ﻿using Financier.Desktop.Commands;
+using Financier.Desktop.Services;
 using Financier.Services;
 using Microsoft.Extensions.Logging;
 using System;
@@ -13,17 +14,20 @@ namespace Financier.Desktop.ViewModels
         private ILogger<AccountEditViewModel> m_logger;
         private IAccountService m_accountService;
         private ICurrencyService m_currencyService;
+        private IMessageService m_messageService;
         private int m_accountId;
 
         public AccountEditViewModel(
             ILogger<AccountEditViewModel> logger,
             IAccountService accountService, 
-            ICurrencyService currencyService)
+            ICurrencyService currencyService,
+            IMessageService messageService)
         {
             m_logger = logger;
             m_accountService = accountService;
             m_currencyService = currencyService;
-            
+            m_messageService = messageService;
+
             AccountTypes = Enum.GetValues(typeof(AccountType)).Cast<AccountType>();
             Currencies = m_currencyService.GetAll();
         }
@@ -55,7 +59,8 @@ namespace Financier.Desktop.ViewModels
                 AccountId = m_accountId,
                 Name = Name,
                 Type = SelectedAccountType,
-                Currency = SelectedCurrency
+                Currency = SelectedCurrency,
+                LogicalAccounts = new Account[0]
             };
         }
 
@@ -81,10 +86,12 @@ namespace Financier.Desktop.ViewModels
             if (m_accountId != 0)
             {
                 m_accountService.Update(account);
+                m_messageService.Send(new AccountUpdateMessage(account));
             }
             else
             {
                 m_accountService.Create(account);
+                m_messageService.Send(new AccountCreateMessage(account));
             }
         }
 

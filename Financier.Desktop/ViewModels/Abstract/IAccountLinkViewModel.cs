@@ -9,8 +9,8 @@ namespace Financier.Desktop.ViewModels
         AccountLink ToAccountLink();
 
         int AccountId { get; }
-        bool HasLogicalAccounts { get; }
-        string Name { get; }
-        AccountType Type { get; }
+        bool HasLogicalAccounts { get; set; }
+        string Name { get; set; }
+        AccountType Type { get; set; }
     }
 }
