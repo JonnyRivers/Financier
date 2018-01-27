@@ -62,6 +62,8 @@ namespace Financier.Desktop.ViewModels
         {
             if (m_viewService.OpenAccountCreateView())
             {
+                // TODO: Account list VM should be partially repopulated after adds and edits
+                // https://github.com/JonnyRivers/Financier/issues/25
                 PopulateAccounts();
             }
         }
@@ -70,6 +72,8 @@ namespace Financier.Desktop.ViewModels
         {
             if (m_viewService.OpenAccountEditView(SelectedAccount.AccountId))
             {
+                // TODO: Account list VM should be partially repopulated after adds and edits
+                // https://github.com/JonnyRivers/Financier/issues/25
                 PopulateAccounts();
             }
         }

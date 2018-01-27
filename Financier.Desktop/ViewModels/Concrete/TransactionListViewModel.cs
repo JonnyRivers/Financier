@@ -88,6 +88,9 @@ namespace Financier.Desktop.ViewModels
 
                     AccountFilterHasLogicalAccounts = m_selectedAccountFilter.HasLogicalAccounts;
                     OnPropertyChanged();
+
+                    // TODO: Transaction list VM should not re-filter, not reload when filters are updated
+                    // https://github.com/JonnyRivers/Financier/issues/28
                     PopulateTransactions();
                 }
             }
@@ -102,6 +105,9 @@ namespace Financier.Desktop.ViewModels
                     m_includeLogicalAccounts = value;
 
                     OnPropertyChanged();
+
+                    // TODO: Transaction list VM should not re-filter, not reload when filters are updated
+                    // https://github.com/JonnyRivers/Financier/issues/28
                     PopulateTransactions();
                 }
             }
@@ -144,6 +150,8 @@ namespace Financier.Desktop.ViewModels
         {
             if (m_viewService.OpenTransactionCreateView())
             {
+                // Transaction list VM should be partially repopulated after adds, deletes and edits
+                // https://github.com/JonnyRivers/Financier/issues/27
                 PopulateTransactions();
             }
         }
@@ -152,6 +160,8 @@ namespace Financier.Desktop.ViewModels
         {
             if (m_viewService.OpenTransactionEditView(SelectedTransaction.TransactionId))
             {
+                // Transaction list VM should be partially repopulated after adds, deletes and edits
+                // https://github.com/JonnyRivers/Financier/issues/27
                 PopulateTransactions();
             }
         }
@@ -169,6 +179,8 @@ namespace Financier.Desktop.ViewModels
                 m_transactionService.Delete(SelectedTransaction.TransactionId);
                 m_messageService.Send(new TransactionDeleteMessage(transaction));
 
+                // Transaction list VM should be partially repopulated after adds, deletes and edits
+                // https://github.com/JonnyRivers/Financier/issues/27
                 PopulateTransactions();
             }
         }

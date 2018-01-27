@@ -73,6 +73,8 @@ namespace Financier.Desktop.ViewModels
         {
             if (m_viewService.OpenBudgetCreateView())
             {
+                // TODO: Budget list VM should be partially repopulated after adds, deletes and edits
+                // https://github.com/JonnyRivers/Financier/issues/26
                 PopulateBudgets();
             }
         }
@@ -81,6 +83,8 @@ namespace Financier.Desktop.ViewModels
         {
             if (m_viewService.OpenBudgetEditView(SelectedBudget.BudgetId))
             {
+                // TODO: Budget list VM should be partially repopulated after adds, deletes and edits
+                // https://github.com/JonnyRivers/Financier/issues/26
                 PopulateBudgets();
             }
         }
@@ -96,6 +100,8 @@ namespace Financier.Desktop.ViewModels
             {
                 m_budgetService.Delete(SelectedBudget.BudgetId);
 
+                // TODO: Budget list VM should be partially repopulated after adds, deletes and edits
+                // https://github.com/JonnyRivers/Financier/issues/26
                 PopulateBudgets();
             }
         }
