@@ -9,5 +9,7 @@ namespace Financier.Services
         IEnumerable<Budget> GetAll();
         Budget Get(int budgetId);
         void Update(Budget budget);
+
+        IEnumerable<Transaction> MakePaydayTransactions(int budgetId, PaydayStart paydayStart);
     }
 }

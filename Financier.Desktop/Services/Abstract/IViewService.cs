@@ -1,4 +1,7 @@
-﻿namespace Financier.Desktop.Services
+﻿using Financier.Services;
+using System.Collections.Generic;
+
+namespace Financier.Desktop.Services
 {
     public interface IViewService
     {
@@ -13,6 +16,9 @@
 
         bool OpenBudgetTransactionDeleteConfirmationView();
 
+        bool OpenPaydayEventStartView(int budgetId, out PaydayStart paydayStart);
+
+        bool OpenTransactionBatchCreateConfirmView(IEnumerable<Transaction> transactions);
         int OpenTransactionCreateView();
         bool OpenTransactionDeleteConfirmationView();
         bool OpenTransactionEditView(int transactionId);

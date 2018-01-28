@@ -1,7 +1,9 @@
 ﻿using Financier.Desktop.ViewModels;
 using Financier.Desktop.Views;
+using Financier.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 using System.Windows;
 
 namespace Financier.Desktop.Services
@@ -87,6 +89,39 @@ namespace Financier.Desktop.Services
         public bool OpenBudgetTransactionDeleteConfirmationView()
         {
             return OpenDeleteConfirmationView("budget transaction");
+        }
+
+        public bool OpenPaydayEventStartView(int budgetId, out PaydayStart paydayStart)
+        {
+            paydayStart = null;
+
+            IPaydayEventStartViewModel paydayEventStartViewModel =
+                IoC.ServiceProvider.Instance.GetRequiredService<IPaydayEventStartViewModel>();
+            paydayEventStartViewModel.Setup(budgetId);
+            var paydayEventStartWindow = new PaydayEventStartWindow(paydayEventStartViewModel);
+            bool? result = paydayEventStartWindow.ShowDialog();
+
+            if (result.HasValue)
+            {
+                paydayStart = paydayEventStartViewModel.ToPaydayStart();
+                return result.Value;
+            }
+            
+            return false;
+        }
+
+        public bool OpenTransactionBatchCreateConfirmView(IEnumerable<Transaction> transactions)
+        {
+            ITransactionBatchCreateConfirmViewModel viewModel =
+                IoC.ServiceProvider.Instance.GetRequiredService<ITransactionBatchCreateConfirmViewModel>();
+            viewModel.Setup(transactions);
+            var window = new TransactionBatchCreateConfirmWindow(viewModel);
+            bool? result = window.ShowDialog();
+
+            if (result.HasValue)
+                return result.Value;
+
+            return false;
         }
 
         public int OpenTransactionCreateView()

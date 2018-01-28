@@ -15,6 +15,8 @@ namespace Financier.Desktop.ViewModels
         private IBudgetService m_budgetService;
         private IConversionService m_conversionService;
         private ICurrencyService m_currencyService;
+        private IMessageService m_messageService;
+        private ITransactionService m_transactionService;
         private IViewService m_viewService;
 
         public BudgetListViewModel(
@@ -22,12 +24,16 @@ namespace Financier.Desktop.ViewModels
             IBudgetService budgetService,
             IConversionService conversionService,
             ICurrencyService currencyService,
+            IMessageService messageService,
+            ITransactionService transactionService,
             IViewService viewService)
         {
             m_logger = logger;
             m_budgetService = budgetService;
             m_conversionService = conversionService;
             m_currencyService = currencyService;
+            m_messageService = messageService;
+            m_transactionService = transactionService;
             m_viewService = viewService;
 
             PopulateBudgets();
@@ -68,6 +74,7 @@ namespace Financier.Desktop.ViewModels
         public ICommand CreateCommand => new RelayCommand(CreateExecute);
         public ICommand EditCommand => new RelayCommand(EditExecute, EditCanExecute);
         public ICommand DeleteCommand => new RelayCommand(DeleteExecute, DeleteCanExecute);
+        public ICommand PaydayCommand => new RelayCommand(PaydayExecute, PaydayCanExecute);
 
         private void CreateExecute(object obj)
         {
@@ -115,6 +122,30 @@ namespace Financier.Desktop.ViewModels
         }
 
         private bool DeleteCanExecute(object obj)
+        {
+            return (SelectedBudget != null);
+        }
+
+        private void PaydayExecute(object obj)
+        {
+            PaydayStart paydayStart;
+            if (m_viewService.OpenPaydayEventStartView(SelectedBudget.BudgetId, out paydayStart))
+            {
+                IEnumerable<Transaction> prospectiveTransasctions =
+                    m_budgetService.MakePaydayTransactions(SelectedBudget.BudgetId, paydayStart);
+
+                if (m_viewService.OpenTransactionBatchCreateConfirmView(prospectiveTransasctions))
+                {
+                    foreach (Transaction prospectiveTransasction in prospectiveTransasctions)
+                    {
+                        m_transactionService.Create(prospectiveTransasction);
+                        m_messageService.Send(new TransactionCreateMessage(prospectiveTransasction));
+                    }
+                }
+            }
+        }
+
+        private bool PaydayCanExecute(object obj)
         {
             return (SelectedBudget != null);
         }
