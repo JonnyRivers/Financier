@@ -21,9 +21,6 @@ namespace Financier.Desktop.ViewModels
         private IViewService m_viewService;
 
         // Private data
-        // All caching should live within data services, not view models
-        // https://github.com/JonnyRivers/Financier/issues/36
-        private List<Transaction> m_allTransactions;
         private ObservableCollection<ITransactionItemViewModel> m_transactions;
         private ITransactionItemViewModel m_selectedTransaction;
 
@@ -42,26 +39,19 @@ namespace Financier.Desktop.ViewModels
             m_transactionService = transactionService;
             m_viewService = viewService;
 
-            SetupTransactions();
             PopulateTransactions();
-        }
-
-        private void SetupTransactions()
-        {
-            m_allTransactions = m_transactionService.GetAll().ToList();
         }
 
         private void PopulateTransactions()
         {
-            IEnumerable<Transaction> recentTransactions = m_allTransactions
+            IEnumerable<Transaction> recentTransactions = m_transactionService.GetAll()
                     .OrderByDescending(t => t.At)
                     .Take(100);
             List<ITransactionItemViewModel> recentTransactionViewModels =
                 recentTransactions
                     .Select(t => m_conversionService.TransactionToItemViewModel(t))
                     .ToList();
-            Transactions = new ObservableCollection<ITransactionItemViewModel>(
-                recentTransactionViewModels.OrderByDescending(t => t.TransactionId));
+            Transactions = new ObservableCollection<ITransactionItemViewModel>(recentTransactionViewModels);
         }
 
         public ObservableCollection<ITransactionItemViewModel> Transactions
@@ -101,8 +91,6 @@ namespace Financier.Desktop.ViewModels
             Transaction transaction;
             if (m_viewService.OpenTransactionCreateView(out transaction))
             {
-                m_allTransactions.Add(transaction);
-
                 PopulateTransactions();
             }
         }
@@ -111,14 +99,6 @@ namespace Financier.Desktop.ViewModels
         {
             if (m_viewService.OpenTransactionEditView(SelectedTransaction.TransactionId))
             {
-                Transaction existingTransaction =
-                    m_allTransactions
-                        .Single(t => t.TransactionId == SelectedTransaction.TransactionId);
-                m_allTransactions.Remove(existingTransaction);
-
-                Transaction updtedTransaction = m_transactionService.Get(SelectedTransaction.TransactionId);
-                m_allTransactions.Add(updtedTransaction);
-
                 PopulateTransactions();
             }
         }
