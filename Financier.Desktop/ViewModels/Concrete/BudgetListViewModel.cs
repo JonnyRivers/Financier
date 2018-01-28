@@ -15,16 +15,17 @@ namespace Financier.Desktop.ViewModels
         private IBudgetService m_budgetService;
         private IConversionService m_conversionService;
         private ICurrencyService m_currencyService;
-        private IMessageService m_messageService;
         private ITransactionService m_transactionService;
         private IViewService m_viewService;
+
+        private ObservableCollection<IBudgetItemViewModel> m_budgets;
+        private IBudgetItemViewModel m_selectedBudget;
 
         public BudgetListViewModel(
             ILogger<BudgetListViewModel> logger,
             IBudgetService budgetService,
             IConversionService conversionService,
             ICurrencyService currencyService,
-            IMessageService messageService,
             ITransactionService transactionService,
             IViewService viewService)
         {
@@ -32,15 +33,21 @@ namespace Financier.Desktop.ViewModels
             m_budgetService = budgetService;
             m_conversionService = conversionService;
             m_currencyService = currencyService;
-            m_messageService = messageService;
             m_transactionService = transactionService;
             m_viewService = viewService;
 
             PopulateBudgets();
         }
 
-        private ObservableCollection<IBudgetItemViewModel> m_budgets;
-        private IBudgetItemViewModel m_selectedBudget;
+        private void PopulateBudgets()
+        {
+            Currency primaryCurrency = m_currencyService.GetPrimary();
+            IEnumerable<Budget> budgets = m_budgetService.GetAll();
+            IEnumerable<IBudgetItemViewModel> budgetViewModels =
+                budgets.Select(b => m_conversionService.BudgetToItemViewModel(b, primaryCurrency));
+
+            Budgets = new ObservableCollection<IBudgetItemViewModel>(budgetViewModels.OrderBy(b => b.Name));
+        }
 
         public ObservableCollection<IBudgetItemViewModel> Budgets
         {
@@ -139,7 +146,6 @@ namespace Financier.Desktop.ViewModels
                     foreach (Transaction prospectiveTransasction in prospectiveTransasctions)
                     {
                         m_transactionService.Create(prospectiveTransasction);
-                        m_messageService.Send(new TransactionCreateMessage(prospectiveTransasction));
                     }
                 }
             }
@@ -148,16 +154,6 @@ namespace Financier.Desktop.ViewModels
         private bool PaydayCanExecute(object obj)
         {
             return (SelectedBudget != null);
-        }
-
-        private void PopulateBudgets()
-        {
-            Currency primaryCurrency = m_currencyService.GetPrimary();
-            IEnumerable<Budget> budgets = m_budgetService.GetAll();
-            IEnumerable<IBudgetItemViewModel> budgetViewModels =
-                budgets.Select(b => m_conversionService.BudgetToItemViewModel(b, primaryCurrency));
-
-            Budgets = new ObservableCollection<IBudgetItemViewModel>(budgetViewModels.OrderBy(b => b.Name));
         }
     }
 }

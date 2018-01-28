@@ -158,23 +158,18 @@
     <Compile Include="ViewModels\Concrete\TransactionEditViewModel.cs" />
     <Compile Include="ViewModels\Concrete\TransactionListViewModel.cs" />
     <Compile Include="ViewModels\Concrete\TransactionItemViewModel.cs" />
-    <Compile Include="ViewModels\Model\AccountCreateMessage.cs" />
-    <Compile Include="ViewModels\Model\AccountUpdateMessage.cs" />
     <Compile Include="ViewModels\Model\BudgetTransactionType.cs" />
-    <Compile Include="ViewModels\Model\TransactionCreateMessage.cs" />
-    <Compile Include="ViewModels\Model\TransactionDeleteMessage.cs" />
-    <Compile Include="ViewModels\Model\TransactionUpdateMessage.cs" />
     <Compile Include="Views\AccountEditWindow.xaml.cs">
       <DependentUpon>AccountEditWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\AccountListControl.xaml.cs">
-      <DependentUpon>AccountListControl.xaml</DependentUpon>
+    <Compile Include="Views\AccountListWindow.xaml.cs">
+      <DependentUpon>AccountListWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\BudgetEditWindow.xaml.cs">
       <DependentUpon>BudgetEditWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\BudgetListControl.xaml.cs">
-      <DependentUpon>BudgetListControl.xaml</DependentUpon>
+    <Compile Include="Views\BudgetListWindow.xaml.cs">
+      <DependentUpon>BudgetListWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\BudgetTransasctionListControl.xaml.cs">
       <DependentUpon>BudgetTransasctionListControl.xaml</DependentUpon>
@@ -188,8 +183,8 @@
     <Compile Include="Views\TransactionBatchCreateConfirmWindow.xaml.cs">
       <DependentUpon>TransactionBatchCreateConfirmWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\TransactionListControl.xaml.cs">
-      <DependentUpon>TransactionListControl.xaml</DependentUpon>
+    <Compile Include="Views\TransactionListWindow.xaml.cs">
+      <DependentUpon>TransactionListWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
@@ -202,7 +197,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\AccountListControl.xaml">
+    <Page Include="Views\AccountListWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -210,7 +205,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\BudgetListControl.xaml">
+    <Page Include="Views\BudgetListWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -230,7 +225,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\TransactionListControl.xaml">
+    <Page Include="Views\TransactionListWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

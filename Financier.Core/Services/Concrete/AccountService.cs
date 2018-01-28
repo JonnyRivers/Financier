@@ -53,19 +53,8 @@ namespace Financier.Services
 
         public IEnumerable<AccountLink> GetAllAsLinks()
         {
-            List<Entities.AccountRelationship> physicalToLogicalRelationships =
-                m_dbContext.AccountRelationships
-                    .Where(ar => ar.Type == Entities.AccountRelationshipType.PhysicalToLogical)
-                    .ToList();
-
-            Dictionary<int, IEnumerable<int>> logicalAccountIdsByAccountId = physicalToLogicalRelationships
-                .GroupBy(ar => ar.SourceAccountId)
-                .ToDictionary(
-                    g => g.Key, 
-                    g => g.ToList().Select(ar => ar.DestinationAccountId));
-
             return m_dbContext.Accounts
-                .Select(a => FromEntityToAccountLink(a, logicalAccountIdsByAccountId))
+                .Select(FromEntityToAccountLink)
                 .ToList();
         }
 
@@ -136,18 +125,6 @@ namespace Financier.Services
 
         private Account FromEntity(Entities.Account accountEntity)
         {
-            // Get all logical accounts
-            List<int> logicalAccountIds = m_dbContext.AccountRelationships
-                .Where(r => r.SourceAccountId == accountEntity.AccountId && 
-                            r.Type == Entities.AccountRelationshipType.PhysicalToLogical)
-                .Select(r => r.DestinationAccountId)
-                .ToList();
-            List<Account> logicalAccounts = logicalAccountIds.Select(id => Get(id)).ToList();
-
-            decimal balance = GetBalance(accountEntity.AccountId, false);
-
-            decimal totalBalance = balance + logicalAccounts.Sum(a => a.Balance);
-
             var currency = new Currency
             {
                 CurrencyId = accountEntity.Currency.CurrencyId,
@@ -162,30 +139,16 @@ namespace Financier.Services
                 AccountId = accountEntity.AccountId,
                 Name = accountEntity.Name,
                 Type = (AccountType)accountEntity.Type,
-                Currency = currency,
-                LogicalAccounts = logicalAccounts,
-                Balance = totalBalance
+                Currency = currency
             };
         }
 
         private AccountLink FromEntityToAccountLink(
-            Entities.Account accountEntity,
-            Dictionary<int, IEnumerable<int>> logicalAccountIdsByAccountId)
+            Entities.Account accountEntity)
         {
-            IEnumerable<int> logicalAccountIds;
-            if (logicalAccountIdsByAccountId.ContainsKey(accountEntity.AccountId))
-            {
-                logicalAccountIds = new List<int>(logicalAccountIdsByAccountId[accountEntity.AccountId]);
-            }
-            else
-            {
-                logicalAccountIds = new int[0];
-            }
-
             return new AccountLink
             {
                 AccountId = accountEntity.AccountId,
-                LogicalAccountIds = logicalAccountIds,
                 Name = accountEntity.Name,
                 Type = (AccountType)accountEntity.Type
             };

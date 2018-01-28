@@ -8,7 +8,6 @@ namespace Financier.Desktop.ViewModels
     {
         private ILogger<AccountLinkViewModel> m_logger;
 
-        private IEnumerable<int> m_logicalAccountIds;
         private string m_name;
         private AccountType m_type;
 
@@ -21,7 +20,6 @@ namespace Financier.Desktop.ViewModels
         public void Setup(AccountLink accountLink)
         {
             AccountId = accountLink.AccountId;
-            m_logicalAccountIds = accountLink.LogicalAccountIds;
             m_name = accountLink.Name;
             m_type = accountLink.Type;
         }
@@ -31,26 +29,12 @@ namespace Financier.Desktop.ViewModels
             return new AccountLink
             {
                 AccountId = AccountId,
-                LogicalAccountIds = LogicalAccountIds,
                 Name = Name,
                 Type = Type
             };
         }
 
         public int AccountId { get; private set; }
-        public IEnumerable<int> LogicalAccountIds
-        {
-            get { return m_logicalAccountIds; }
-            set
-            {
-                if (m_logicalAccountIds != value)
-                {
-                    m_logicalAccountIds = value;
-
-                    OnPropertyChanged();
-                }
-            }
-        }
         public string Name
         {
             get { return m_name; }

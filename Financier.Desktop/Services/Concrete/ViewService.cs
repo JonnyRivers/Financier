@@ -24,19 +24,23 @@ namespace Financier.Desktop.Services
             mainWindow.Show();
         }
 
-        public int OpenAccountCreateView()
+        public bool OpenAccountCreateView(out Account account)
         {
-            IAccountEditViewModel accountEditViewModel =
+            account = null;
+
+            IAccountEditViewModel viewModel =
                 IoC.ServiceProvider.Instance.GetRequiredService<IAccountEditViewModel>();
-            accountEditViewModel.SetupForCreate();
-            var accountEditWindow = new AccountEditWindow(
-                accountEditViewModel);
-            bool? result = accountEditWindow.ShowDialog();
+            viewModel.SetupForCreate();
+            var window = new AccountEditWindow(viewModel);
+            bool? result = window.ShowDialog();
 
-            if (result.HasValue)
-                return accountEditViewModel.AccountId;
+            if (result.HasValue && result.Value)
+            {
+                account = viewModel.ToAccount();
+                return true;
+            }
 
-            return 0;
+            return false;
         }
 
         public bool OpenAccountEditView(int accountId)
@@ -51,6 +55,14 @@ namespace Financier.Desktop.Services
                 return result.Value;
 
             return false;
+        }
+
+        public void OpenAccountListView()
+        {
+            IAccountListViewModel viewModel =
+                IoC.ServiceProvider.Instance.GetRequiredService<IAccountListViewModel>();
+            var window = new AccountListWindow(viewModel);
+            window.ShowDialog();
         }
 
         public int OpenBudgetCreateView()
@@ -86,6 +98,14 @@ namespace Financier.Desktop.Services
             return false;
         }
 
+        public void OpenBudgetListView()
+        {
+            IBudgetListViewModel viewModel =
+                IoC.ServiceProvider.Instance.GetRequiredService<IBudgetListViewModel>();
+            var window = new BudgetListWindow(viewModel);
+            window.ShowDialog();
+        }
+
         public bool OpenBudgetTransactionDeleteConfirmationView()
         {
             return OpenDeleteConfirmationView("budget transaction");
@@ -101,10 +121,10 @@ namespace Financier.Desktop.Services
             var paydayEventStartWindow = new PaydayEventStartWindow(paydayEventStartViewModel);
             bool? result = paydayEventStartWindow.ShowDialog();
 
-            if (result.HasValue)
+            if (result.HasValue && result.Value)
             {
                 paydayStart = paydayEventStartViewModel.ToPaydayStart();
-                return result.Value;
+                return true;
             }
             
             return false;
@@ -124,18 +144,23 @@ namespace Financier.Desktop.Services
             return false;
         }
 
-        public int OpenTransactionCreateView()
+        public bool OpenTransactionCreateView(out Transaction transaction)
         {
+            transaction = null;
+
             ITransactionEditViewModel transactionEditViewModel =
                 IoC.ServiceProvider.Instance.GetRequiredService<ITransactionEditViewModel>();
             transactionEditViewModel.SetupForCreate();
             var transactionEditWindow = new TransactionEditWindow(transactionEditViewModel);
             bool? result = transactionEditWindow.ShowDialog();
 
-            if (result.HasValue)
-                return transactionEditViewModel.TransactionId;
+            if (result.HasValue && result.Value)
+            {
+                transaction = transactionEditViewModel.ToTransaction();
+                return true;
+            }
 
-            return 0;
+            return false;
         }
 
         public bool OpenTransactionDeleteConfirmationView()
@@ -155,6 +180,14 @@ namespace Financier.Desktop.Services
                 return result.Value;
 
             return false;
+        }
+
+        public void OpenTransactionListView()
+        {
+            ITransactionListViewModel viewModel =
+                IoC.ServiceProvider.Instance.GetRequiredService<ITransactionListViewModel>();
+            var window = new TransactionListWindow(viewModel);
+            window.ShowDialog();
         }
 
         private bool OpenDeleteConfirmationView(string context)

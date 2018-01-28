@@ -10,7 +10,6 @@ namespace Financier.Desktop.ViewModels
         AccountLink ToAccountLink();
 
         int AccountId { get; }
-        IEnumerable<int> LogicalAccountIds { get; set; }
         string Name { get; set; }
         AccountType Type { get; set; }
     }

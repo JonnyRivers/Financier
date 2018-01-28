@@ -14,25 +14,18 @@ namespace Financier.Desktop.ViewModels
         private ILogger<AccountListViewModel> m_logger;
         private IAccountService m_accountService;
         private IConversionService m_conversionService;
-        private IMessageService m_messageService;
         private IViewService m_viewService;
 
         public AccountListViewModel(
             ILogger<AccountListViewModel> logger,
             IAccountService accountService,
             IConversionService conversionService,
-            IMessageService messageService,
             IViewService viewService)
         {
             m_logger = logger;
             m_accountService = accountService;
             m_conversionService = conversionService;
-            m_messageService = messageService;
             m_viewService = viewService;
-
-            m_messageService.Register<TransactionCreateMessage>(OnTransactionCreated);
-            m_messageService.Register<TransactionDeleteMessage>(OnTransactionDeleted);
-            m_messageService.Register<TransactionUpdateMessage>(OnTransactionUpdated);
 
             PopulateAccounts();
         }
@@ -74,10 +67,9 @@ namespace Financier.Desktop.ViewModels
 
         private void CreateExecute(object obj)
         {
-            int newAccountId = m_viewService.OpenAccountCreateView();
-            if (newAccountId > 0)
+            Account newAccount;
+            if (m_viewService.OpenAccountCreateView(out newAccount))
             {
-                Account newAccount = m_accountService.Get(newAccountId);
                 IAccountItemViewModel newAccountViewModel = m_conversionService.AccountToItemViewModel(newAccount);
                 Accounts.Add(newAccountViewModel);
                 // TODO: Is there a better way to maintain ObservableCollection<T> sorting?
@@ -111,87 +103,5 @@ namespace Financier.Desktop.ViewModels
             Accounts = new ObservableCollection<IAccountItemViewModel>(accountVMs.OrderBy(a => a.Name));
             OnPropertyChanged(nameof(Accounts));
         }
-
-        private void OnTransactionCreated(TransactionCreateMessage message)
-        {
-            AddTransactionToBalances(message.Transaction);
-        }
-
-        private void OnTransactionDeleted(TransactionDeleteMessage message)
-        {
-            RemoveTransactionFromBalances(message.Transaction);
-        }
-
-        private void OnTransactionUpdated(TransactionUpdateMessage message)
-        {
-            RemoveTransactionFromBalances(message.Before);
-            AddTransactionToBalances(message.After);
-        }
-
-        private void AddTransactionToBalances(Transaction transaction)
-        {
-            IAccountItemViewModel creditAccountBefore =
-                   Accounts
-                       .Single(a => a.AccountId == transaction.CreditAccount.AccountId);
-            creditAccountBefore.Balance -= transaction.Amount;
-
-            IAccountItemViewModel debitAccountBefore =
-                    Accounts
-                        .Single(a => a.AccountId == transaction.DebitAccount.AccountId);
-            debitAccountBefore.Balance += transaction.Amount;
-        }
-
-        private void RemoveTransactionFromBalances(Transaction transaction)
-        {
-            IAccountItemViewModel creditAccountBefore =
-                    Accounts
-                        .Single(a => a.AccountId == transaction.CreditAccount.AccountId);
-            creditAccountBefore.Balance += transaction.Amount;
-
-            IAccountItemViewModel debitAccountBefore =
-                    Accounts
-                        .Single(a => a.AccountId == transaction.DebitAccount.AccountId);
-            debitAccountBefore.Balance -= transaction.Amount;
-        }
-
-        // TODO: Account balances are not updated if the transaction is between physical/logical related accounts
-        // https://github.com/JonnyRivers/Financier/issues/33
-        //private void AddTransactionToBalances(Transaction transaction)
-        //{
-        //    if (!transaction.CreditAccount.LogicalAccountIds.Any(id => id == transaction.DebitAccount.AccountId))
-        //    {
-        //        IAccountItemViewModel creditAccountBefore =
-        //            Accounts
-        //                .Single(a => a.AccountId == transaction.CreditAccount.AccountId);
-        //        creditAccountBefore.Balance -= transaction.Amount;
-        //    }
-
-        //    if (!transaction.CreditAccount.LogicalAccountIds.Any(id => id == transaction.CreditAccount.AccountId))
-        //    { 
-        //        IAccountItemViewModel debitAccountBefore =
-        //            Accounts
-        //                .Single(a => a.AccountId == transaction.DebitAccount.AccountId);
-        //        debitAccountBefore.Balance += transaction.Amount;
-        //    }
-        //}
-
-        //private void RemoveTransactionFromBalances(Transaction transaction)
-        //{
-        //    if (!transaction.CreditAccount.LogicalAccountIds.Any(id => id == transaction.DebitAccount.AccountId))
-        //    {
-        //        IAccountItemViewModel creditAccountBefore =
-        //            Accounts
-        //                .Single(a => a.AccountId == transaction.CreditAccount.AccountId);
-        //        creditAccountBefore.Balance += transaction.Amount;
-        //    }
-
-        //    if (!transaction.CreditAccount.LogicalAccountIds.Any(id => id == transaction.CreditAccount.AccountId))
-        //    {
-        //        IAccountItemViewModel debitAccountBefore =
-        //            Accounts
-        //                .Single(a => a.AccountId == transaction.DebitAccount.AccountId);
-        //        debitAccountBefore.Balance -= transaction.Amount;
-        //    }
-        //}
     }
 }

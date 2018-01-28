@@ -6,8 +6,8 @@
         xmlns:views="clr-namespace:Financier.Desktop.Views"
         mc:Ignorable="d"
         Title="Budget" 
-        Height="400" Width="900"
-        MinHeight="300" MinWidth="700">
+        MinHeight="300" MinWidth="800"
+        Height="800" Width="800">
     <Grid Margin="5">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>

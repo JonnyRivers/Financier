@@ -5,7 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Financier.Desktop.Views"
         mc:Ignorable="d"
-        Title="Account" Height="250" Width="300">
+        Title="Account"
+        MinHeight="180" MinWidth="300"
+        Height="180" Width="300">
     <Window.Resources>
         <DataTemplate x:Key="CurrencyComboBoxItemTemplate">
             <StackPanel>
