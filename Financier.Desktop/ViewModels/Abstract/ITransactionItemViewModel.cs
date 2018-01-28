@@ -12,6 +12,5 @@ namespace Financier.Desktop.ViewModels
         IAccountLinkViewModel DebitAccount { get; }
         DateTime At { get; }
         decimal Amount { get; }
-        decimal Balance { get; set; }
     }
 }

@@ -3,20 +3,18 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:views="clr-namespace:Financier.Desktop.Views"
-        mc:Ignorable="d"
-        Title="Financier for Windows™" Height="400" Width="910">
+        Title="Financier for Windows™" 
+        MinHeight="135" MinWidth="230"
+        Height="135" Width="300">
     <Grid>
-        <TabControl>
-            <TabItem Header="Accounts">
-                <views:AccountListControl DataContext="{Binding AccountListViewModel}"/>
-            </TabItem>
-            <TabItem Header="Budgets">
-                <views:BudgetListControl DataContext="{Binding BudgetListViewModel}"/>
-            </TabItem>
-            <TabItem Header="Transactions">
-                <views:TransactionListControl DataContext="{Binding TransactionListViewModel}"/>
-            </TabItem>
-        </TabControl>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Button Margin="5" Grid.Row="0" IsEnabled="False" Command="{Binding AccountsViewCommand}">Accounts</Button>
+        <Button Margin="5" Grid.Row="1" Command="{Binding BudgetsViewCommand}">Budgets</Button>
+        <Button Margin="5" Grid.Row="2" Command="{Binding TransactionsViewCommand}">Transactions</Button>
     </Grid>
 </Window>

@@ -173,8 +173,8 @@
     <Compile Include="Views\BudgetEditWindow.xaml.cs">
       <DependentUpon>BudgetEditWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\BudgetListControl.xaml.cs">
-      <DependentUpon>BudgetListControl.xaml</DependentUpon>
+    <Compile Include="Views\BudgetListWindow.xaml.cs">
+      <DependentUpon>BudgetListWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\BudgetTransasctionListControl.xaml.cs">
       <DependentUpon>BudgetTransasctionListControl.xaml</DependentUpon>
@@ -188,8 +188,8 @@
     <Compile Include="Views\TransactionBatchCreateConfirmWindow.xaml.cs">
       <DependentUpon>TransactionBatchCreateConfirmWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\TransactionListControl.xaml.cs">
-      <DependentUpon>TransactionListControl.xaml</DependentUpon>
+    <Compile Include="Views\TransactionListWindow.xaml.cs">
+      <DependentUpon>TransactionListWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
@@ -210,7 +210,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\BudgetListControl.xaml">
+    <Page Include="Views\BudgetListWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -230,7 +230,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\TransactionListControl.xaml">
+    <Page Include="Views\TransactionListWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

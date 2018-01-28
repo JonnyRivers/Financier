@@ -13,14 +13,16 @@ namespace Financier.Desktop.Services
         int OpenBudgetCreateView();
         bool OpenBudgetDeleteConfirmationView();
         bool OpenBudgetEditView(int budgetId);
+        void OpenBudgetListView();
 
         bool OpenBudgetTransactionDeleteConfirmationView();
 
         bool OpenPaydayEventStartView(int budgetId, out PaydayStart paydayStart);
 
         bool OpenTransactionBatchCreateConfirmView(IEnumerable<Transaction> transactions);
-        int OpenTransactionCreateView();
+        bool OpenTransactionCreateView(out Transaction transaction);
         bool OpenTransactionDeleteConfirmationView();
         bool OpenTransactionEditView(int transactionId);
+        void OpenTransactionListView();
     }
 }

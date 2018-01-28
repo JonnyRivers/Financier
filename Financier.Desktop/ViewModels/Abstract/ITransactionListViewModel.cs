@@ -5,11 +5,6 @@ namespace Financier.Desktop.ViewModels
 {
     public interface ITransactionListViewModel
     {
-        ObservableCollection<IAccountLinkViewModel> AccountFilters { get; }
-        IAccountLinkViewModel SelectedAccountFilter { get; }
-        bool IncludeLogicalAccounts { get; }
-        bool AccountFilterHasLogicalAccounts { get; }
-
         ObservableCollection<ITransactionItemViewModel> Transactions { get; }
         ITransactionItemViewModel SelectedTransaction { get; }
 

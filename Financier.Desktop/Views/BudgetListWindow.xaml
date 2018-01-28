@@ -1,11 +1,11 @@
-﻿<UserControl x:Class="Financier.Desktop.Views.BudgetListControl"
+﻿<Window x:Class="Financier.Desktop.Views.BudgetListWindow"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Financier.Desktop.Views"
-             mc:Ignorable="d" 
-             d:DesignHeight="400" d:DesignWidth="750">
+             Title="Financier for Windows™ - Budgets" 
+             MinHeight="400" MinWidth="750"
+             Height="400" Width="750">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -28,4 +28,4 @@
             </ListView.View>
         </ListView>
     </Grid>
-</UserControl>
+</Window>

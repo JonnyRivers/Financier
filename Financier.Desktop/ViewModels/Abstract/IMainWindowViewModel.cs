@@ -1,9 +1,11 @@
-﻿namespace Financier.Desktop.ViewModels
+﻿using System.Windows.Input;
+
+namespace Financier.Desktop.ViewModels
 {
     public interface IMainWindowViewModel
     {
-        IAccountListViewModel AccountListViewModel { get; }
-        IBudgetListViewModel BudgetListViewModel { get; }
-        ITransactionListViewModel TransactionListViewModel { get; }
+        ICommand AccountsViewCommand { get; }
+        ICommand BudgetsViewCommand { get; }
+        ICommand TransactionsViewCommand { get; }
     }
 }
