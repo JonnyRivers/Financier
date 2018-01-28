@@ -8,8 +8,9 @@ namespace Financier.Desktop.Services
         void OpenMainView();
 
         bool OpenAccountCreateView(out Account account);
-        bool OpenAccountEditView(int accountId);
+        bool OpenAccountEditView(int accountId, out Account account);
         void OpenAccountListView();
+        bool OpenAccountTransactionsEditView(int accountId);
 
         int OpenBudgetCreateView();
         bool OpenBudgetDeleteConfirmationView();

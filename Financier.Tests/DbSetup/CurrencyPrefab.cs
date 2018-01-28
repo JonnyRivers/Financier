@@ -1,4 +1,4 @@
-﻿namespace Financier.Core.Tests.DbSetup
+﻿namespace Financier.Tests.DbSetup
 {
     internal enum CurrencyPrefab
     {

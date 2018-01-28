@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Financier.Core.Tests
+namespace Financier.Tests
 {
     [TestClass]
     public class BalanceSheetServiceTests

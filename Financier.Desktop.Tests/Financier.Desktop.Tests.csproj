@@ -66,6 +66,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AccountTransactionListViewModelTests.cs" />
     <Compile Include="MessageServiceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -73,6 +74,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Financier.Core\Financier.Core.csproj">
+      <Project>{8a0d8499-aa46-4330-8b7f-056df0008f10}</Project>
+      <Name>Financier.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Financier.Desktop\Financier.Desktop.csproj">
       <Project>{547d5383-961e-4312-95ff-9d9bcd319a69}</Project>
       <Name>Financier.Desktop</Name>

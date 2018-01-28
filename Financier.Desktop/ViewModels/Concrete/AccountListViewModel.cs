@@ -64,6 +64,7 @@ namespace Financier.Desktop.ViewModels
 
         public ICommand CreateCommand => new RelayCommand(CreateExecute);
         public ICommand EditCommand => new RelayCommand(EditExecute, EditCanExecute);
+        public ICommand EditTransactionsCommand => new RelayCommand(EditTransactionsExecute, EditTransactionsCanExecute);
 
         private void CreateExecute(object obj)
         {
@@ -80,10 +81,10 @@ namespace Financier.Desktop.ViewModels
 
         private void EditExecute(object obj)
         {
-            if (m_viewService.OpenAccountEditView(SelectedAccount.AccountId))
+            Account updatedAccount;
+            if (m_viewService.OpenAccountEditView(SelectedAccount.AccountId, out updatedAccount))
             {
-                Account account = m_accountService.Get(SelectedAccount.AccountId);
-                SelectedAccount.Setup(account);
+                SelectedAccount.Setup(updatedAccount);
                 // TODO: Is there a better way to maintain ObservableCollection<T> sorting?
                 // https://github.com/JonnyRivers/Financier/issues/29
                 Accounts = new ObservableCollection<IAccountItemViewModel>(Accounts.OrderBy(b => b.Name));
@@ -91,6 +92,16 @@ namespace Financier.Desktop.ViewModels
         }
 
         private bool EditCanExecute(object obj)
+        {
+            return (SelectedAccount != null);
+        }
+
+        private void EditTransactionsExecute(object obj)
+        {
+            m_viewService.OpenAccountTransactionsEditView(SelectedAccount.AccountId);
+        }
+
+        private bool EditTransactionsCanExecute(object obj)
         {
             return (SelectedAccount != null);
         }

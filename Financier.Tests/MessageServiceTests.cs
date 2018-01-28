@@ -3,7 +3,7 @@ using Financier.Desktop.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Financier.Desktop.Tests
+namespace Financier.Tests
 {
     [TestClass]
     public class MessageServiceTests

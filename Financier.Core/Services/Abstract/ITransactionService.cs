@@ -10,7 +10,7 @@ namespace Financier.Services
         Transaction Get(int transactionId);
         Transaction GetMostRecent();
         IEnumerable<Transaction> GetAll();
-        IEnumerable<Transaction> GetAll(int accountId, bool includeLogicalAccounts);
+        IEnumerable<Transaction> GetAll(IEnumerable<int> accountIds);// TODO: tests
         void Update(Transaction transaction);
     }
 }

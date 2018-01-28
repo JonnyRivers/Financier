@@ -7,6 +7,7 @@ namespace Financier.Desktop.Services
     {
         IAccountItemViewModel AccountToItemViewModel(Account account);
         IAccountLinkViewModel AccountLinkToViewModel(AccountLink accountLink);
+        IAccountTransactionItemViewModel TransactionToAccountTransactionItemViewModel(Transaction transaction);
         IBudgetItemViewModel BudgetToItemViewModel(Budget budget, Currency currency);
         ITransactionItemViewModel TransactionToItemViewModel(Transaction transaction);
     }

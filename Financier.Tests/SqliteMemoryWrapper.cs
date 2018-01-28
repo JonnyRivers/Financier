@@ -3,7 +3,7 @@ using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using System;
 
-namespace Financier.Core.Tests
+namespace Financier.Tests
 {
     internal class SqliteMemoryWrapper : IDisposable
     {

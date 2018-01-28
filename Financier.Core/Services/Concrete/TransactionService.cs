@@ -92,6 +92,19 @@ namespace Financier.Services
                 .ToList();
         }
 
+        public IEnumerable<Transaction> GetAll(IEnumerable<int> accountIds)
+        {
+            var accountIdSet = new HashSet<int>(accountIds);
+
+            return m_dbContext.Transactions
+                .Where(t => accountIdSet.Contains(t.CreditAccountId) || 
+                            accountIdSet.Contains(t.DebitAccountId))
+                .Include(t => t.CreditAccount)
+                .Include(t => t.DebitAccount)
+                .Select(FromEntity)
+                .ToList();
+        }
+
         public IEnumerable<Transaction> GetAll(int accountId, bool includeLogicalAccounts)
         {
             var relevantAccountIds = new HashSet<int>();

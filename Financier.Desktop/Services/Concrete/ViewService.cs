@@ -43,16 +43,21 @@ namespace Financier.Desktop.Services
             return false;
         }
 
-        public bool OpenAccountEditView(int accountId)
+        public bool OpenAccountEditView(int accountId, out Account account)
         {
-            IAccountEditViewModel accountEditViewModel = 
-                IoC.ServiceProvider.Instance.GetRequiredService<IAccountEditViewModel>();
-            accountEditViewModel.SetupForEdit(accountId);
-            var accountEditWindow = new AccountEditWindow(accountEditViewModel);
-            bool? result = accountEditWindow.ShowDialog();
+            account = null;
 
-            if (result.HasValue)
-                return result.Value;
+            IAccountEditViewModel viewModel = 
+                IoC.ServiceProvider.Instance.GetRequiredService<IAccountEditViewModel>();
+            viewModel.SetupForEdit(accountId);
+            var window = new AccountEditWindow(viewModel);
+            bool? result = window.ShowDialog();
+
+            if (result.HasValue && result.Value)
+            {
+                account = viewModel.ToAccount();
+                return true;
+            }
 
             return false;
         }
@@ -63,6 +68,20 @@ namespace Financier.Desktop.Services
                 IoC.ServiceProvider.Instance.GetRequiredService<IAccountListViewModel>();
             var window = new AccountListWindow(viewModel);
             window.ShowDialog();
+        }
+
+        public bool OpenAccountTransactionsEditView(int accountId)
+        {
+            IAccountTransactionListViewModel viewModel =
+                IoC.ServiceProvider.Instance.GetRequiredService<IAccountTransactionListViewModel>();
+            viewModel.Setup(accountId);
+            var window = new AccountTransactionListWindow(viewModel);
+            bool? result = window.ShowDialog();
+
+            if (result.HasValue)
+                return result.Value;
+
+            return false;
         }
 
         public int OpenBudgetCreateView()

@@ -10,6 +10,7 @@ namespace Financier.Services
         IEnumerable<Account> GetAll();
         IEnumerable<AccountLink> GetAllAsLinks();
         IEnumerable<Account> GetAllPhysical();
+        IEnumerable<int> GetLogicalAccountIds(int accountId);
         void Update(Account account);
 
         decimal GetBalance(int accountId, bool includeLogical);

@@ -74,6 +74,15 @@ namespace Financier.Services
                 .ToList();
         }
 
+        public IEnumerable<int> GetLogicalAccountIds(int accountId)
+        {
+            return m_dbContext.AccountRelationships
+                .Where(ar => ar.SourceAccountId == accountId &&
+                                ar.Type == Entities.AccountRelationshipType.PhysicalToLogical)
+                .Select(ar => ar.DestinationAccountId)
+                .ToList();
+        }
+
         public void Update(Account account)
         {
             Entities.Account accountEntity = m_dbContext.Accounts

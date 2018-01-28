@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Financier.Core.Tests
+namespace Financier.Tests
 {
     [TestClass]
     public class AccountServiceTests
@@ -49,6 +49,63 @@ namespace Financier.Core.Tests
                 Assert.AreEqual(usdCurrencyEntity.Name, accounts[1].Currency.Name);
                 Assert.AreEqual(usdCurrencyEntity.ShortName, accounts[1].Currency.ShortName);
                 Assert.AreEqual(usdCurrencyEntity.Symbol, accounts[1].Currency.Symbol);
+            }
+        }
+
+        [TestMethod]
+        public void TestGetLogicalAccountIds()
+        {
+            ILoggerFactory loggerFactory = new LoggerFactory();
+            ILogger<AccountService> logger = loggerFactory.CreateLogger<AccountService>();
+
+            using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
+            {
+                var currencyFactory = new DbSetup.CurrencyFactory();
+                var usdCurrencyEntity = currencyFactory.Create(DbSetup.CurrencyPrefab.Usd, true);
+                currencyFactory.Add(sqliteMemoryWrapper.DbContext, usdCurrencyEntity);
+
+                var accountFactory = new DbSetup.AccountFactory();
+                Entities.Account incomeAccountEntity =
+                    accountFactory.Create(DbSetup.AccountPrefab.Income, usdCurrencyEntity);
+                Entities.Account checkingAccountEntity =
+                    accountFactory.Create(DbSetup.AccountPrefab.Checking, usdCurrencyEntity);
+                Entities.Account groceriesPrepaymentAccountEntity =
+                    accountFactory.Create(DbSetup.AccountPrefab.GroceriesPrepayment, usdCurrencyEntity);
+                Entities.Account rentPrepaymentAccountEntity =
+                    accountFactory.Create(DbSetup.AccountPrefab.RentPrepayment, usdCurrencyEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, incomeAccountEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, checkingAccountEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, groceriesPrepaymentAccountEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, rentPrepaymentAccountEntity);
+
+                var checkingToGroceriesPrepaymentRelationship = new Entities.AccountRelationship
+                {
+                    SourceAccount = checkingAccountEntity,
+                    DestinationAccount = groceriesPrepaymentAccountEntity,
+                    Type = Entities.AccountRelationshipType.PhysicalToLogical
+                };
+                var checkingToRentPrepaymentRelationship = new Entities.AccountRelationship
+                {
+                    SourceAccount = checkingAccountEntity,
+                    DestinationAccount = rentPrepaymentAccountEntity,
+                    Type = Entities.AccountRelationshipType.PhysicalToLogical
+                };
+
+                sqliteMemoryWrapper.DbContext.AccountRelationships.Add(checkingToGroceriesPrepaymentRelationship);
+                sqliteMemoryWrapper.DbContext.AccountRelationships.Add(checkingToRentPrepaymentRelationship);
+                sqliteMemoryWrapper.DbContext.SaveChanges();
+
+                var accountService = new AccountService(logger, sqliteMemoryWrapper.DbContext);
+
+                var incomeAccountLogicalAccountIds = new HashSet<int>(accountService.GetLogicalAccountIds(incomeAccountEntity.AccountId));
+                var checkingAccountLogicalAccountIds = new HashSet<int>(accountService.GetLogicalAccountIds(checkingAccountEntity.AccountId));
+                var groceriesPrepaymentAccountLogicalAccountIds = new HashSet<int>(accountService.GetLogicalAccountIds(groceriesPrepaymentAccountEntity.AccountId));
+
+                Assert.AreEqual(0, incomeAccountLogicalAccountIds.Count);
+                Assert.AreEqual(2, checkingAccountLogicalAccountIds.Count);
+                Assert.IsTrue(checkingAccountLogicalAccountIds.Contains(groceriesPrepaymentAccountEntity.AccountId));
+                Assert.IsTrue(checkingAccountLogicalAccountIds.Contains(rentPrepaymentAccountEntity.AccountId));
+                Assert.AreEqual(0, groceriesPrepaymentAccountLogicalAccountIds.Count);
             }
         }
 

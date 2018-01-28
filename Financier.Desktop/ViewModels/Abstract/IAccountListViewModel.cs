@@ -10,5 +10,6 @@ namespace Financier.Desktop.ViewModels
 
         ICommand CreateCommand { get; }
         ICommand EditCommand { get; }
+        ICommand EditTransactionsCommand { get; }
     }
 }

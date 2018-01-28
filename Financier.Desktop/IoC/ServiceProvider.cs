@@ -24,6 +24,8 @@ namespace Financier.Desktop.IoC
             }
         }
 
+        // A global service provider in Financier.Desktop makes unit testing of view models trickier
+        // https://github.com/JonnyRivers/Financier/issues/38
         private static IServiceProvider Build()
         {
             var serviceCollection = new ServiceCollection();
@@ -55,6 +57,8 @@ namespace Financier.Desktop.IoC
             serviceCollection.AddTransient<IAccountItemViewModel, AccountItemViewModel>();
             serviceCollection.AddTransient<IAccountLinkViewModel, AccountLinkViewModel>();
             serviceCollection.AddTransient<IAccountListViewModel, AccountListViewModel>();
+            serviceCollection.AddTransient<IAccountTransactionItemViewModel, AccountTransactionItemViewModel>();
+            serviceCollection.AddTransient<IAccountTransactionListViewModel, AccountTransactionListViewModel>();
             serviceCollection.AddTransient<IBudgetEditViewModel, BudgetEditViewModel>();
             serviceCollection.AddTransient<IBudgetItemViewModel, BudgetItemViewModel>();
             serviceCollection.AddTransient<IBudgetListViewModel, BudgetListViewModel>();

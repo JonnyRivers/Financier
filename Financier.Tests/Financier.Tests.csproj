@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Financier.Core\Financier.Core.csproj" />
+    <ProjectReference Include="..\Financier.Desktop\Financier.Desktop.csproj" />
   </ItemGroup>
 
   <ItemGroup>

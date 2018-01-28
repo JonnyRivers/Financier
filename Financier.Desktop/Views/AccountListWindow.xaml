@@ -15,6 +15,7 @@
             <TextBlock Margin="5">Actions:</TextBlock>
             <Button Margin="5" Command="{Binding CreateCommand}">Create New Account</Button>
             <Button Margin="5" Command="{Binding EditCommand}">Edit Selected Account</Button>
+            <Button Margin="5" Command="{Binding EditTransactionsCommand}">Edit Selected Account's Transactions</Button>
         </StackPanel>
         <ListView Grid.Row="1" SelectedItem="{Binding SelectedAccount}" ItemsSource="{Binding Accounts}">
             <ListView.View>

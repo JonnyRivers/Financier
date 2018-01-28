@@ -135,6 +135,8 @@
     <Compile Include="ViewModels\Abstract\IBudgetTransactionListViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IPaydayEventStartViewModel.cs" />
     <Compile Include="ViewModels\Abstract\ITransactionBatchCreateConfirmViewModel.cs" />
+    <Compile Include="ViewModels\Abstract\IAccountTransactionListViewModel.cs" />
+    <Compile Include="ViewModels\Abstract\IAccountTransactionItemViewModel.cs" />
     <Compile Include="ViewModels\Concrete\AccountEditViewModel.cs" />
     <Compile Include="ViewModels\Concrete\AccountItemViewModel.cs" />
     <Compile Include="ViewModels\Concrete\AccountLinkViewModel.cs" />
@@ -156,6 +158,8 @@
     <Compile Include="ViewModels\Concrete\PaydayEventStartViewModel.cs" />
     <Compile Include="ViewModels\Concrete\TransactionBatchCreateConfirmViewModel.cs" />
     <Compile Include="ViewModels\Concrete\TransactionEditViewModel.cs" />
+    <Compile Include="ViewModels\Concrete\AccountTransactionItemViewModel.cs" />
+    <Compile Include="ViewModels\Concrete\AccountTransactionListViewModel.cs" />
     <Compile Include="ViewModels\Concrete\TransactionListViewModel.cs" />
     <Compile Include="ViewModels\Concrete\TransactionItemViewModel.cs" />
     <Compile Include="ViewModels\Model\BudgetTransactionType.cs" />
@@ -164,6 +168,9 @@
     </Compile>
     <Compile Include="Views\AccountListWindow.xaml.cs">
       <DependentUpon>AccountListWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\AccountTransactionListWindow.xaml.cs">
+      <DependentUpon>AccountTransactionListWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\BudgetEditWindow.xaml.cs">
       <DependentUpon>BudgetEditWindow.xaml</DependentUpon>
@@ -200,6 +207,10 @@
     <Page Include="Views\AccountListWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\AccountTransactionListWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\BudgetEditWindow.xaml">
       <SubType>Designer</SubType>

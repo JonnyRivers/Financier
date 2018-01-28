@@ -1,49 +1,67 @@
 ﻿using Financier.Desktop.ViewModels;
 using Financier.Services;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Financier.Desktop.Services
 {
     public class ConversionService : IConversionService
     {
+        private ILogger<ConversionService> m_logger;
+
+        public ConversionService(ILogger<ConversionService> logger)
+        {
+            m_logger = logger;
+        }
+
         public IAccountItemViewModel AccountToItemViewModel(Account account)
         {
-            IAccountItemViewModel accountItemViewModel 
+            IAccountItemViewModel viewModel
                 = IoC.ServiceProvider.Instance.GetRequiredService<IAccountItemViewModel>();
 
-            accountItemViewModel.Setup(account);
+            viewModel.Setup(account);
 
-            return accountItemViewModel;
+            return viewModel;
         }
 
         public IAccountLinkViewModel AccountLinkToViewModel(AccountLink accountLink)
         {
-            IAccountLinkViewModel accountLinkViewModel
+            IAccountLinkViewModel viewModel
                 = IoC.ServiceProvider.Instance.GetRequiredService<IAccountLinkViewModel>();
 
-            accountLinkViewModel.Setup(accountLink);
+            viewModel.Setup(accountLink);
 
-            return accountLinkViewModel;
+            return viewModel;
+        }
+
+        public IAccountTransactionItemViewModel TransactionToAccountTransactionItemViewModel(Transaction transaction)
+        {
+            IAccountTransactionItemViewModel viewModel
+                = IoC.ServiceProvider.Instance.GetRequiredService<IAccountTransactionItemViewModel>();
+
+            viewModel.Setup(transaction);
+
+            return viewModel;
         }
 
         public IBudgetItemViewModel BudgetToItemViewModel(Budget budget, Currency currency)
         {
-            IBudgetItemViewModel budgetItemViewModel
+            IBudgetItemViewModel viewModel
                 = IoC.ServiceProvider.Instance.GetRequiredService<IBudgetItemViewModel>();
 
-            budgetItemViewModel.Setup(budget, currency);
+            viewModel.Setup(budget, currency);
 
-            return budgetItemViewModel;
+            return viewModel;
         }
 
         public ITransactionItemViewModel TransactionToItemViewModel(Transaction transaction)
         {
-            ITransactionItemViewModel transactionItemViewModel
+            ITransactionItemViewModel viewModel
                 = IoC.ServiceProvider.Instance.GetRequiredService<ITransactionItemViewModel>();
 
-            transactionItemViewModel.Setup(transaction);
+            viewModel.Setup(transaction);
 
-            return transactionItemViewModel;
+            return viewModel;
         }
     }
 }

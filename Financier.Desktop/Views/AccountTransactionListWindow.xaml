@@ -1,29 +1,37 @@
-﻿<Window x:Class="Financier.Desktop.Views.TransactionListWindow"
+﻿<Window x:Class="Financier.Desktop.Views.AccountTransactionListWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-        Title="Financier for Windows™ - Transactions" 
-        MinHeight="200" MinWidth="810"
-        Height="600" Width="810">
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Financier.Desktop.Views"
+        mc:Ignorable="d"
+        Title="Account Transactions" 
+        MinHeight="200" MinWidth="910"
+        Height="600" Width="910">
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <StackPanel Margin="5" Grid.Row="0" Orientation="Horizontal">
-            <TextBlock Margin="5">Actions:</TextBlock>
+            <TextBlock Width="60" Margin="5">Actions:</TextBlock>
             <Button Margin="5" Command="{Binding CreateCommand}">Create New Transaction</Button>
             <Button Margin="5" Command="{Binding EditCommand}">Edit Selected Transaction</Button>
             <Button Margin="5" Command="{Binding DeleteCommand}">Delete Selected Transaction</Button>
         </StackPanel>
-        <ListView Grid.Row="1" SelectedItem="{Binding SelectedTransaction}" ItemsSource="{Binding Transactions}">
+        <StackPanel Margin="5" Grid.Row="01" Orientation="Horizontal">
+            <TextBlock Width="60" Margin="5">Filters:</TextBlock>
+            <CheckBox Margin="5" IsChecked="{Binding ShowLogicalAccounts}" IsEnabled="{Binding HasLogicalAcounts}">Show Logical Accounts</CheckBox>
+        </StackPanel>
+        <ListView Grid.Row="2" SelectedItem="{Binding SelectedTransaction}" ItemsSource="{Binding Transactions}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="At" Width="160" DisplayMemberBinding="{Binding At}"/>
                     <GridViewColumn Header="Debit Account" Width="240" DisplayMemberBinding="{Binding DebitAccount.Name}"/>
                     <GridViewColumn Header="Credit Account" Width="240" DisplayMemberBinding="{Binding CreditAccount.Name}"/>
                     <GridViewColumn Header="Amount" Width="100" DisplayMemberBinding="{Binding Amount}"/>
+                    <GridViewColumn Header="Balance" Width="100" DisplayMemberBinding="{Binding Balance}"/>
                 </GridView>
             </ListView.View>
         </ListView>

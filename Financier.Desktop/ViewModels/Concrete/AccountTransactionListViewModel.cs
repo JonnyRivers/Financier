@@ -2,7 +2,6 @@
 using Financier.Desktop.Services;
 using Financier.Services;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -10,57 +9,98 @@ using System.Windows.Input;
 
 namespace Financier.Desktop.ViewModels
 {
-    public class TransactionListViewModel : BaseViewModel, ITransactionListViewModel
+    public class AccountTransactionListViewModel : BaseViewModel, IAccountTransactionListViewModel
     {
         // Dependencies
-        private ILogger<AccountListViewModel> m_logger;
+        private ILogger<AccountTransactionListViewModel> m_logger;
         private IAccountService m_accountService;
-        private IAccountRelationshipService m_accountRelationshipService;
         private IConversionService m_conversionService;
         private ITransactionService m_transactionService;
         private IViewService m_viewService;
 
         // Private data
-        private ObservableCollection<ITransactionItemViewModel> m_transactions;
-        private ITransactionItemViewModel m_selectedTransaction;
+        private int m_accountId;
+        private List<int> m_logicalAccountIds;
+        private bool m_hasLogicalAccounts;
+        private bool m_showLogicalAccounts;
+        private ObservableCollection<IAccountTransactionItemViewModel> m_transactions;
+        private IAccountTransactionItemViewModel m_selectedTransaction;
 
-        public TransactionListViewModel(
-            ILogger<AccountListViewModel> logger,
+        public AccountTransactionListViewModel(
+            ILogger<AccountTransactionListViewModel> logger,
             IAccountService accountService,
-            IAccountRelationshipService accountRelationshipService,
             IConversionService conversionService,
             ITransactionService transactionService,
             IViewService viewService)
         {
             m_logger = logger;
             m_accountService = accountService;
-            m_accountRelationshipService = accountRelationshipService;
             m_conversionService = conversionService;
             m_transactionService = transactionService;
             m_viewService = viewService;
+        }
+
+        public void Setup(int accountId)
+        {
+            m_accountId = accountId;
+            m_logicalAccountIds = new List<int>(m_accountService.GetLogicalAccountIds(m_accountId));
+            m_hasLogicalAccounts = m_logicalAccountIds.Any();
+            ShowLogicalAccounts = m_hasLogicalAccounts;
 
             PopulateTransactions();
         }
 
         private void PopulateTransactions()
         {
-            // TODO: be flexible on how many are shown
-            IEnumerable<Transaction> recentTransactions = m_transactionService.GetAll()
-                    .OrderByDescending(t => t.At)
-                    .Take(100);
-            List<ITransactionItemViewModel> recentTransactionViewModels =
-                recentTransactions
-                    .Select(t => m_conversionService.TransactionToItemViewModel(t))
-                    .ToList();
+            var relevantAccountIds = new List<int>();
+            relevantAccountIds.Add(m_accountId);
+            if(m_showLogicalAccounts)
+            {
+                relevantAccountIds.AddRange(m_logicalAccountIds);
+            }
 
-            Transactions = new ObservableCollection<ITransactionItemViewModel>(
-                recentTransactionViewModels
+            IEnumerable<Transaction> transactions = m_transactionService.GetAll(relevantAccountIds);
+            List<IAccountTransactionItemViewModel> transactionViewModels =
+                transactions
+                    .Select(t => m_conversionService.TransactionToAccountTransactionItemViewModel(t))
+                    .ToList();
+            decimal balance = 0;
+            foreach (IAccountTransactionItemViewModel transactionViewModel in transactionViewModels.OrderBy(t => t.At))
+            {
+                // For physical<->logical trasactions, we add *and* subtract
+                if (relevantAccountIds.Contains(transactionViewModel.DebitAccount.AccountId))
+                    balance += transactionViewModel.Amount;
+                if (relevantAccountIds.Contains(transactionViewModel.CreditAccount.AccountId))
+                    balance -= transactionViewModel.Amount;
+                transactionViewModel.Balance = balance;
+            }
+
+            // TODO: control how many are shown?
+            Transactions = new ObservableCollection<IAccountTransactionItemViewModel>(
+                transactionViewModels
                     .OrderByDescending(t => t.At)
-                    .ThenByDescending(t => t.TransactionId)
-            );
+                    .ThenByDescending(t => t.TransactionId));
         }
 
-        public ObservableCollection<ITransactionItemViewModel> Transactions
+        public bool HasLogicalAcounts => m_hasLogicalAccounts;
+
+        public bool ShowLogicalAccounts
+        {
+            get { return m_showLogicalAccounts; }
+            set
+            {
+                if (m_showLogicalAccounts != value)
+                {
+                    m_showLogicalAccounts = value;
+
+                    OnPropertyChanged();
+
+                    PopulateTransactions();
+                }
+            }
+        }
+
+        public ObservableCollection<IAccountTransactionItemViewModel> Transactions
         {
             get { return m_transactions; }
             set
@@ -73,7 +113,7 @@ namespace Financier.Desktop.ViewModels
                 }
             }
         }
-        public ITransactionItemViewModel SelectedTransaction
+        public IAccountTransactionItemViewModel SelectedTransaction
         {
             get { return m_selectedTransaction; }
             set

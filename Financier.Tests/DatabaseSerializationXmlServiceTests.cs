@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 
-namespace Financier.Core.Tests
+namespace Financier.Tests
 {
     [TestClass]
     public class DatabaseSerializationXmlServiceTests
