@@ -35,16 +35,14 @@ namespace Financier.Desktop.ViewModels
             Accounts = new ObservableCollection<IAccountLinkViewModel>(accountLinkViewModels.OrderBy(alvm => alvm.Name));
         }
 
-        public void SetupForCreate()
+        public void SetupForCreate(Transaction hint)
         {
             m_transactionId = 0;
 
-            if (m_transactionService.Any())
+            if (hint != null)
             {
-                Transaction mostRecentTransaction = m_transactionService.GetMostRecent();
-
-                SelectedCreditAccount = Accounts.Single(a => a.AccountId == mostRecentTransaction.CreditAccount.AccountId);
-                SelectedDebitAccount = Accounts.Single(a => a.AccountId == mostRecentTransaction.DebitAccount.AccountId);
+                SelectedCreditAccount = Accounts.Single(a => a.AccountId == hint.CreditAccount.AccountId);
+                SelectedDebitAccount = Accounts.Single(a => a.AccountId == hint.DebitAccount.AccountId);
             }
             else
             {
@@ -60,9 +58,9 @@ namespace Financier.Desktop.ViewModels
             At = DateTime.Now;
         }
 
-        public void SetupForEdit(int budgetId)
+        public void SetupForEdit(int transactionId)
         {
-            m_transactionId = budgetId;
+            m_transactionId = transactionId;
 
             Transaction transaction = m_transactionService.Get(m_transactionId);
 

@@ -69,7 +69,7 @@ namespace Financier.Tests.Concrete
             return false;
         }
 
-        public bool OpenTransactionCreateView(out Transaction transaction)
+        public bool OpenTransactionCreateView(Transaction hint, out Transaction transaction)
         {
             transaction = null;
             return false;

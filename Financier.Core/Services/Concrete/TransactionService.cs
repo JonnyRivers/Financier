@@ -69,20 +69,6 @@ namespace Financier.Services
             return FromEntity(transactionEntity);
         }
 
-        public Transaction GetMostRecent()
-        {
-            Entities.Transaction transactionEntity =
-                m_dbContext.Transactions
-                    .Include(t => t.CreditAccount)
-                    .Include(t => t.DebitAccount)
-                    .LastOrDefault();
-
-            if (transactionEntity == null)
-                throw new InvalidOperationException($"Unable to get most recent transaction as there are none");
-
-            return FromEntity(transactionEntity);
-        }
-
         public IEnumerable<Transaction> GetAll()
         {
             return m_dbContext.Transactions

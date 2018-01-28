@@ -8,7 +8,6 @@ namespace Financier.Services
         void Create(Transaction transaction);
         void Delete(int transactionId);
         Transaction Get(int transactionId);
-        Transaction GetMostRecent();
         IEnumerable<Transaction> GetAll();
         IEnumerable<Transaction> GetAll(IEnumerable<int> accountIds);// TODO: tests
         void Update(Transaction transaction);

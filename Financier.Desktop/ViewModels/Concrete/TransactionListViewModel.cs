@@ -94,8 +94,15 @@ namespace Financier.Desktop.ViewModels
 
         private void CreateExecute(object obj)
         {
-            Transaction transaction;
-            if (m_viewService.OpenTransactionCreateView(out transaction))
+            Transaction hint = null;
+            ITransactionItemViewModel hintViewModel = Transactions.FirstOrDefault();
+            if (Transactions.Any())
+            {
+                hint = m_transactionService.Get(Transactions.First().TransactionId);
+            }
+
+            Transaction newTransaction;
+            if (m_viewService.OpenTransactionCreateView(hint, out newTransaction))
             {
                 PopulateTransactions();
             }

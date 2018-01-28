@@ -7,7 +7,7 @@ namespace Financier.Desktop.ViewModels
 {
     public interface ITransactionEditViewModel
     {
-        void SetupForCreate();
+        void SetupForCreate(Transaction hint);
         void SetupForEdit(int transactionId);
 
         Transaction ToTransaction();

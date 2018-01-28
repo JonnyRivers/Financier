@@ -163,13 +163,13 @@ namespace Financier.Desktop.Services
             return false;
         }
 
-        public bool OpenTransactionCreateView(out Transaction transaction)
+        public bool OpenTransactionCreateView(Transaction hint, out Transaction transaction)
         {
             transaction = null;
 
             ITransactionEditViewModel transactionEditViewModel =
                 IoC.ServiceProvider.Instance.GetRequiredService<ITransactionEditViewModel>();
-            transactionEditViewModel.SetupForCreate();
+            transactionEditViewModel.SetupForCreate(hint);
             var transactionEditWindow = new TransactionEditWindow(transactionEditViewModel);
             bool? result = transactionEditWindow.ShowDialog();
 

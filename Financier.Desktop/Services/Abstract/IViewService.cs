@@ -22,7 +22,7 @@ namespace Financier.Desktop.Services
         bool OpenPaydayEventStartView(int budgetId, out PaydayStart paydayStart);
 
         bool OpenTransactionBatchCreateConfirmView(IEnumerable<Transaction> transactions);
-        bool OpenTransactionCreateView(out Transaction transaction);
+        bool OpenTransactionCreateView(Transaction hint, out Transaction transaction);
         bool OpenTransactionDeleteConfirmationView();
         bool OpenTransactionEditView(int transactionId);
         void OpenTransactionListView();
