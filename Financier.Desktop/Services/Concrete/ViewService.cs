@@ -93,7 +93,21 @@ namespace Financier.Desktop.Services
 
         public bool OpenPaydayEventStartView(int budgetId, out PaydayStart paydayStart)
         {
-            throw new System.NotImplementedException();
+            paydayStart = null;
+
+            IPaydayEventStartViewModel paydayEventStartViewModel =
+                IoC.ServiceProvider.Instance.GetRequiredService<IPaydayEventStartViewModel>();
+            paydayEventStartViewModel.Setup(budgetId);
+            var paydayEventStartWindow = new PaydayEventStartWindow(paydayEventStartViewModel);
+            bool? result = paydayEventStartWindow.ShowDialog();
+
+            if (result.HasValue)
+            {
+                paydayStart = paydayEventStartViewModel.ToPaydayStart();
+                return result.Value;
+            }
+            
+            return false;
         }
 
         public bool OpenTransactionBatchCreateConfirmView(IEnumerable<Transaction> transactions)

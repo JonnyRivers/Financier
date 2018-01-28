@@ -161,9 +161,53 @@ namespace Financier.Services
             m_dbContext.SaveChanges();
         }
 
-        public IEnumerable<Transaction> MakePaydayTransactions(PaydayStart paydayStart)
+        public IEnumerable<Transaction> MakePaydayTransactions(int budgetId, PaydayStart paydayStart)
         {
-            throw new NotImplementedException();
+            var paydayTransactions = new List<Transaction>();
+
+            Budget budget = Get(budgetId);
+
+            Transaction initialTransaction = new Transaction
+            {
+                CreditAccount = budget.InitialTransaction.CreditAccount,
+                DebitAccount = budget.InitialTransaction.DebitAccount,
+                Amount = paydayStart.AmountPaid,
+                At = paydayStart.At
+            };
+            paydayTransactions.Add(initialTransaction);
+
+            foreach (BudgetTransaction budgetTransaction in budget.Transactions)
+            {
+                Transaction paydayTransaction = new Transaction
+                {
+                    CreditAccount = budgetTransaction.CreditAccount,
+                    DebitAccount = budgetTransaction.DebitAccount,
+                    Amount = budgetTransaction.Amount,
+                    At = paydayStart.At
+                };
+                paydayTransactions.Add(paydayTransaction);
+            }
+
+            IEnumerable<BudgetTransaction> initialDebitOutgoingTransactions = 
+                budget.Transactions
+                    .Where(t => t.CreditAccount.AccountId == initialTransaction.DebitAccount.AccountId);
+            IEnumerable<BudgetTransaction> initialDebitIncomingTransactions =
+                budget.Transactions
+                    .Where(t => t.DebitAccount.AccountId == initialTransaction.DebitAccount.AccountId);
+            decimal surplusAmount = 
+                paydayStart.AmountPaid + 
+                initialDebitIncomingTransactions.Select(t => t.Amount).Sum() - 
+                initialDebitOutgoingTransactions.Select(t => t.Amount).Sum();
+            Transaction surplusTransaction = new Transaction
+            {
+                CreditAccount = budget.SurplusTransaction.CreditAccount,
+                DebitAccount = budget.SurplusTransaction.DebitAccount,
+                Amount = surplusAmount,
+                At = paydayStart.At
+            };
+            paydayTransactions.Add(surplusTransaction);
+
+            return paydayTransactions;
         }
 
         private static Budget FromEntity(Entities.Budget budgetEntity)

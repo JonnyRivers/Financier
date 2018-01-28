@@ -4,7 +4,7 @@ namespace Financier.Services
 {
     public class PaydayStart
     {
-        decimal Amount { get; set; }
-        DateTime At { get; set; }
+        public decimal AmountPaid { get; set; }
+        public DateTime At { get; set; }
     }
 }

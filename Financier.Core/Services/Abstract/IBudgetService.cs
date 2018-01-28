@@ -10,6 +10,6 @@ namespace Financier.Services
         Budget Get(int budgetId);
         void Update(Budget budget);
 
-        IEnumerable<Transaction> MakePaydayTransactions(PaydayStart paydayStart);
+        IEnumerable<Transaction> MakePaydayTransactions(int budgetId, PaydayStart paydayStart);
     }
 }

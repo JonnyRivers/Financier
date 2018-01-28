@@ -60,6 +60,7 @@ namespace Financier.Desktop.IoC
             serviceCollection.AddTransient<IBudgetListViewModel, BudgetListViewModel>();
             serviceCollection.AddTransient<IBudgetTransactionItemViewModel, BudgetTransactionItemViewModel>();
             serviceCollection.AddTransient<IBudgetTransactionListViewModel, BudgetTransactionListViewModel>();
+            serviceCollection.AddTransient<IPaydayEventStartViewModel, PaydayEventStartViewModel>();
             serviceCollection.AddTransient<ITransactionEditViewModel, TransactionEditViewModel>();
             serviceCollection.AddTransient<ITransactionItemViewModel, TransactionItemViewModel>();
             serviceCollection.AddTransient<ITransactionListViewModel, TransactionListViewModel>();

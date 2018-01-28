@@ -132,7 +132,7 @@ namespace Financier.Desktop.ViewModels
             if (m_viewService.OpenPaydayEventStartView(SelectedBudget.BudgetId, out paydayStart))
             {
                 IEnumerable<Transaction> prospectiveTransasctions =
-                    m_budgetService.MakePaydayTransactions(paydayStart);
+                    m_budgetService.MakePaydayTransactions(SelectedBudget.BudgetId, paydayStart);
 
                 if (m_viewService.OpenTransactionBatchCreateConfirmView(prospectiveTransasctions))
                 {

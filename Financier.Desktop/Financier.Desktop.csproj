@@ -133,6 +133,7 @@
     <Compile Include="ViewModels\Abstract\IBudgetListViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IBudgetTransactionItemViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IBudgetTransactionListViewModel.cs" />
+    <Compile Include="ViewModels\Abstract\IPaydayEventStartViewModel.cs" />
     <Compile Include="ViewModels\Concrete\AccountEditViewModel.cs" />
     <Compile Include="ViewModels\Concrete\AccountItemViewModel.cs" />
     <Compile Include="ViewModels\Concrete\AccountLinkViewModel.cs" />
@@ -151,6 +152,7 @@
     <Compile Include="ViewModels\Concrete\BudgetTransactionItemViewModel.cs" />
     <Compile Include="ViewModels\Concrete\BudgetTransactionListViewModel.cs" />
     <Compile Include="ViewModels\Concrete\MainWindowViewModel.cs" />
+    <Compile Include="ViewModels\Concrete\PaydayEventStartViewModel.cs" />
     <Compile Include="ViewModels\Concrete\TransactionEditViewModel.cs" />
     <Compile Include="ViewModels\Concrete\TransactionListViewModel.cs" />
     <Compile Include="ViewModels\Concrete\TransactionItemViewModel.cs" />
@@ -177,6 +179,9 @@
     </Compile>
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PaydayEventStartWindow.xaml.cs">
+      <DependentUpon>PaydayEventStartWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\TransactionListControl.xaml.cs">
       <DependentUpon>TransactionListControl.xaml</DependentUpon>
@@ -211,6 +216,10 @@
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\PaydayEventStartWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\TransactionListControl.xaml">
       <SubType>Designer</SubType>
