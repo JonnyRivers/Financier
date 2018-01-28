@@ -33,8 +33,6 @@ namespace Financier.Desktop.ViewModels
             m_budgetService = budgetService;
             m_viewService = viewService;
 
-            // TODO: ObservableCollection<T> instances can easily become out of date
-            // https://github.com/JonnyRivers/Financier/issues/7
             m_accountLinks = new ObservableCollection<IAccountLinkViewModel>(
                 m_accountService
                     .GetAllAsLinks()
@@ -183,8 +181,6 @@ namespace Financier.Desktop.ViewModels
             return transactionViewModel;
         }
 
-        // TODO: Bring consistency to Model -> ViewModel conversions
-        // https://github.com/JonnyRivers/Financier/issues/18
         private static IAccountLinkViewModel CreateAccountLink(AccountLink accountLink)
         {
             IAccountLinkViewModel accountLinkViewModel = 
