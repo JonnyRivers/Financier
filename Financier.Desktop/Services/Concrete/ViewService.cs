@@ -112,7 +112,16 @@ namespace Financier.Desktop.Services
 
         public bool OpenTransactionBatchCreateConfirmView(IEnumerable<Transaction> transactions)
         {
-            throw new System.NotImplementedException();
+            ITransactionBatchCreateConfirmViewModel viewModel =
+                IoC.ServiceProvider.Instance.GetRequiredService<ITransactionBatchCreateConfirmViewModel>();
+            viewModel.Setup(transactions);
+            var window = new TransactionBatchCreateConfirmWindow(viewModel);
+            bool? result = window.ShowDialog();
+
+            if (result.HasValue)
+                return result.Value;
+
+            return false;
         }
 
         public int OpenTransactionCreateView()

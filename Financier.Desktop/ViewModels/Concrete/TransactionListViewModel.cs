@@ -52,6 +52,7 @@ namespace Financier.Desktop.ViewModels
 
             m_messageService.Register<AccountCreateMessage>(OnAccountCreated);
             m_messageService.Register<AccountUpdateMessage>(OnAccountUpdated);
+            m_messageService.Register<TransactionCreateMessage>(OnTransactionCreated);
 
             SetupTransactions();
 
@@ -329,6 +330,13 @@ namespace Financier.Desktop.ViewModels
             updatedAccountViewModel.LogicalAccountIds = updatedAccount.LogicalAccounts.Select(a => a.AccountId).ToList();
             updatedAccountViewModel.Name = updatedAccount.Name;
             updatedAccountViewModel.Type = updatedAccount.Type;
+        }
+
+        private void OnTransactionCreated(TransactionCreateMessage message)
+        {
+            m_allTransactions.Add(message.Transaction);
+
+            PopulateTransactions();
         }
     }
 }

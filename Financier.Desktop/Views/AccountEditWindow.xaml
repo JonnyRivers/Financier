@@ -38,7 +38,7 @@
                   ItemsSource="{Binding Currencies}" 
                   ItemTemplate="{StaticResource CurrencyComboBoxItemTemplate}"
                   SelectedItem="{Binding SelectedCurrency}"/>
-        <Grid Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="5">
+        <Grid Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="4">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
