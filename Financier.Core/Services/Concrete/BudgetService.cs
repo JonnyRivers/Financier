@@ -237,12 +237,16 @@ namespace Financier.Services
             var budgetTransaction = new BudgetTransaction
             {
                 BudgetTransactionId = budgetTransactionEntity.BudgetTransactionId,
+                // TODO: LogicalAccountIds are not fully populated in some places
+                // https://github.com/JonnyRivers/Financier/issues/34
                 CreditAccount = new AccountLink
                 {
                     AccountId = budgetTransactionEntity.CreditAccount.AccountId,
                     Name = budgetTransactionEntity.CreditAccount.Name,
                     Type = (AccountType)budgetTransactionEntity.CreditAccount.Type
                 },
+                // TODO: LogicalAccountIds are not fully populated in some places
+                // https://github.com/JonnyRivers/Financier/issues/34
                 DebitAccount = new AccountLink
                 {
                     AccountId = budgetTransactionEntity.DebitAccount.AccountId,

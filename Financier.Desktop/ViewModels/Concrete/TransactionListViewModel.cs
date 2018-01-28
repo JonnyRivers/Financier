@@ -243,14 +243,8 @@ namespace Financier.Desktop.ViewModels
 
         private void CreateExecute(object obj)
         {
-            int newTransactionId = m_viewService.OpenTransactionCreateView();
-            if (newTransactionId > 0)
-            {
-                Transaction newTransaction = m_transactionService.Get(newTransactionId);
-                m_allTransactions.Add(newTransaction);
-                
-                PopulateTransactions();
-            }
+            m_viewService.OpenTransactionCreateView();
+            // OnTransactionCreated() is called if a transaction is created
         }
 
         private void EditExecute(object obj)

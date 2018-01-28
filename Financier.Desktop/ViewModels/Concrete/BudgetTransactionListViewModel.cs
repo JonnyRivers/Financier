@@ -64,13 +64,21 @@ namespace Financier.Desktop.ViewModels
             var transactions = new List<IBudgetTransactionItemViewModel>();
             BudgetTransaction initialTransaction = new BudgetTransaction
             {
+                // TODO: LogicalAccountIds are not fully populated in some places
+                // https://github.com/JonnyRivers/Financier/issues/34
                 CreditAccount = new AccountLink { AccountId = firstIncomeAccountId },
+                // TODO: LogicalAccountIds are not fully populated in some places
+                // https://github.com/JonnyRivers/Financier/issues/34
                 DebitAccount = new AccountLink { AccountId = firstAssetAccountId },
                 Amount = 0
             };
             BudgetTransaction surplusTransaction = new BudgetTransaction
             {
+                // TODO: LogicalAccountIds are not fully populated in some places
+                // https://github.com/JonnyRivers/Financier/issues/34
                 CreditAccount = new AccountLink { AccountId = firstAssetAccountId },
+                // TODO: LogicalAccountIds are not fully populated in some places
+                // https://github.com/JonnyRivers/Financier/issues/34
                 DebitAccount = new AccountLink { AccountId = secondAssetAccountId },
                 Amount = 0
             };

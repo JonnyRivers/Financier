@@ -143,6 +143,8 @@ namespace Financier.Services
 
         private static AccountLink FromEntity(Entities.Account accountEntity)
         {
+            // TODO: LogicalAccountIds are not fully populated in some places
+            // https://github.com/JonnyRivers/Financier/issues/34
             return new AccountLink
             {
                 AccountId = accountEntity.AccountId,

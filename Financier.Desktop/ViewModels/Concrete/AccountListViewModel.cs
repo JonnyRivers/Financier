@@ -131,27 +131,67 @@ namespace Financier.Desktop.ViewModels
         private void AddTransactionToBalances(Transaction transaction)
         {
             IAccountItemViewModel creditAccountBefore =
-                Accounts
-                    .Single(a => a.AccountId == transaction.CreditAccount.AccountId);
-            IAccountItemViewModel debitAccountBefore =
-                Accounts
-                    .Single(a => a.AccountId == transaction.DebitAccount.AccountId);
-
+                   Accounts
+                       .Single(a => a.AccountId == transaction.CreditAccount.AccountId);
             creditAccountBefore.Balance -= transaction.Amount;
+
+            IAccountItemViewModel debitAccountBefore =
+                    Accounts
+                        .Single(a => a.AccountId == transaction.DebitAccount.AccountId);
             debitAccountBefore.Balance += transaction.Amount;
         }
 
         private void RemoveTransactionFromBalances(Transaction transaction)
         {
-            IAccountItemViewModel creditAccountAfter =
-                Accounts
-                    .Single(a => a.AccountId == transaction.CreditAccount.AccountId);
-            IAccountItemViewModel debitAccountAfter =
-                Accounts
-                    .Single(a => a.AccountId == transaction.DebitAccount.AccountId);
+            IAccountItemViewModel creditAccountBefore =
+                    Accounts
+                        .Single(a => a.AccountId == transaction.CreditAccount.AccountId);
+            creditAccountBefore.Balance += transaction.Amount;
 
-            creditAccountAfter.Balance += transaction.Amount;
-            debitAccountAfter.Balance -= transaction.Amount;
+            IAccountItemViewModel debitAccountBefore =
+                    Accounts
+                        .Single(a => a.AccountId == transaction.DebitAccount.AccountId);
+            debitAccountBefore.Balance -= transaction.Amount;
         }
+
+        // TODO: Account balances are not updated if the transaction is between physical/logical related accounts
+        // https://github.com/JonnyRivers/Financier/issues/33
+        //private void AddTransactionToBalances(Transaction transaction)
+        //{
+        //    if (!transaction.CreditAccount.LogicalAccountIds.Any(id => id == transaction.DebitAccount.AccountId))
+        //    {
+        //        IAccountItemViewModel creditAccountBefore =
+        //            Accounts
+        //                .Single(a => a.AccountId == transaction.CreditAccount.AccountId);
+        //        creditAccountBefore.Balance -= transaction.Amount;
+        //    }
+
+        //    if (!transaction.CreditAccount.LogicalAccountIds.Any(id => id == transaction.CreditAccount.AccountId))
+        //    { 
+        //        IAccountItemViewModel debitAccountBefore =
+        //            Accounts
+        //                .Single(a => a.AccountId == transaction.DebitAccount.AccountId);
+        //        debitAccountBefore.Balance += transaction.Amount;
+        //    }
+        //}
+
+        //private void RemoveTransactionFromBalances(Transaction transaction)
+        //{
+        //    if (!transaction.CreditAccount.LogicalAccountIds.Any(id => id == transaction.DebitAccount.AccountId))
+        //    {
+        //        IAccountItemViewModel creditAccountBefore =
+        //            Accounts
+        //                .Single(a => a.AccountId == transaction.CreditAccount.AccountId);
+        //        creditAccountBefore.Balance += transaction.Amount;
+        //    }
+
+        //    if (!transaction.CreditAccount.LogicalAccountIds.Any(id => id == transaction.CreditAccount.AccountId))
+        //    {
+        //        IAccountItemViewModel debitAccountBefore =
+        //            Accounts
+        //                .Single(a => a.AccountId == transaction.DebitAccount.AccountId);
+        //        debitAccountBefore.Balance -= transaction.Amount;
+        //    }
+        //}
     }
 }
