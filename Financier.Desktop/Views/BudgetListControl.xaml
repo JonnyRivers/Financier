@@ -15,6 +15,7 @@
             <Button Margin="5" Command="{Binding CreateCommand}">Create New Budget</Button>
             <Button Margin="5" Command="{Binding EditCommand}">Edit Selected Budget</Button>
             <Button Margin="5" Command="{Binding DeleteCommand}">Delete Selected Budget</Button>
+            <Button Margin="5" Command="{Binding PaydayCommand}">Run Payday</Button>
         </StackPanel>
         <ListView Grid.Row="1" SelectedItem="{Binding SelectedBudget}" ItemsSource="{Binding Budgets}">
             <ListView.View>

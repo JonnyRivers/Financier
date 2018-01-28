@@ -1,7 +1,9 @@
 ﻿using Financier.Desktop.ViewModels;
 using Financier.Desktop.Views;
+using Financier.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 using System.Windows;
 
 namespace Financier.Desktop.Services
@@ -87,6 +89,16 @@ namespace Financier.Desktop.Services
         public bool OpenBudgetTransactionDeleteConfirmationView()
         {
             return OpenDeleteConfirmationView("budget transaction");
+        }
+
+        public bool OpenPaydayEventStartView(int budgetId, out PaydayStart paydayStart)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public bool OpenTransactionBatchCreateConfirmView(IEnumerable<Transaction> transactions)
+        {
+            throw new System.NotImplementedException();
         }
 
         public int OpenTransactionCreateView()

@@ -161,6 +161,11 @@ namespace Financier.Services
             m_dbContext.SaveChanges();
         }
 
+        public IEnumerable<Transaction> MakePaydayTransactions(PaydayStart paydayStart)
+        {
+            throw new NotImplementedException();
+        }
+
         private static Budget FromEntity(Entities.Budget budgetEntity)
         {
             Entities.BudgetTransaction initialTransactionEntity = 
