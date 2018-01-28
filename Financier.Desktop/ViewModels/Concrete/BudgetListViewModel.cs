@@ -26,7 +26,6 @@ namespace Financier.Desktop.ViewModels
             IBudgetService budgetService,
             IConversionService conversionService,
             ICurrencyService currencyService,
-            IMessageService messageService,
             ITransactionService transactionService,
             IViewService viewService)
         {

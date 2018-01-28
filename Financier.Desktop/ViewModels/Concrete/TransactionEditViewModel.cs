@@ -15,20 +15,17 @@ namespace Financier.Desktop.ViewModels
         private ILogger<TransactionEditViewModel> m_logger;
         private IAccountService m_accountService;
         private IConversionService m_conversionService;
-        private IMessageService m_messageService;
         private ITransactionService m_transactionService;
 
         public TransactionEditViewModel(
             ILogger<TransactionEditViewModel> logger, 
             IAccountService accountService,
             IConversionService conversionService,
-            IMessageService messageService,
             ITransactionService transactionService)
         {
             m_logger = logger;
             m_accountService = accountService;
             m_conversionService = conversionService;
-            m_messageService = messageService;
             m_transactionService = transactionService;
 
             IEnumerable<AccountLink> accountLinks = m_accountService.GetAllAsLinks();
@@ -171,13 +168,11 @@ namespace Financier.Desktop.ViewModels
             {
                 Transaction before = m_transactionService.Get(m_transactionId);
                 m_transactionService.Update(transaction);
-                m_messageService.Send(new TransactionUpdateMessage(before, transaction));
             }
             else
             {
                 m_transactionService.Create(transaction);
                 m_transactionId = transaction.TransactionId;
-                m_messageService.Send(new TransactionCreateMessage(transaction));
             }
         }
 

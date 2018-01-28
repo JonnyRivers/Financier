@@ -41,8 +41,6 @@ namespace Financier.Core.Tests
                 Assert.AreEqual(usdCurrencyEntity.Name, accounts[0].Currency.Name);
                 Assert.AreEqual(usdCurrencyEntity.ShortName, accounts[0].Currency.ShortName);
                 Assert.AreEqual(usdCurrencyEntity.Symbol, accounts[0].Currency.Symbol);
-                Assert.AreEqual(0, accounts[0].LogicalAccounts.Count());
-                Assert.AreEqual(0, accounts[0].Balance);
                 Assert.AreEqual(checkingAccountEntity.AccountId, accounts[1].AccountId);
                 Assert.AreEqual(checkingAccountEntity.Name, accounts[1].Name);
                 Assert.AreEqual(AccountType.Asset, accounts[1].Type);
@@ -51,8 +49,6 @@ namespace Financier.Core.Tests
                 Assert.AreEqual(usdCurrencyEntity.Name, accounts[1].Currency.Name);
                 Assert.AreEqual(usdCurrencyEntity.ShortName, accounts[1].Currency.ShortName);
                 Assert.AreEqual(usdCurrencyEntity.Symbol, accounts[1].Currency.Symbol);
-                Assert.AreEqual(0, accounts[1].LogicalAccounts.Count());
-                Assert.AreEqual(0, accounts[1].Balance);
             }
         }
 
@@ -122,7 +118,7 @@ namespace Financier.Core.Tests
         }
 
         [TestMethod]
-        public void TestGetAccountNoTransactions()
+        public void TestGetAccount()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
             ILogger<AccountService> logger = loggerFactory.CreateLogger<AccountService>();
@@ -149,141 +145,6 @@ namespace Financier.Core.Tests
                 Assert.AreEqual(usdCurrencyEntity.Name, checkingAccount.Currency.Name);
                 Assert.AreEqual(usdCurrencyEntity.ShortName, checkingAccount.Currency.ShortName);
                 Assert.AreEqual(usdCurrencyEntity.Symbol, checkingAccount.Currency.Symbol);
-                Assert.AreEqual(0, checkingAccount.LogicalAccounts.Count());
-                Assert.AreEqual(0, checkingAccount.Balance);
-            }
-        }
-
-        [TestMethod]
-        public void TestGetAccountWithTransacions()
-        {
-            ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<AccountService> logger = loggerFactory.CreateLogger<AccountService>();
-
-            using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
-            {
-                var currencyFactory = new DbSetup.CurrencyFactory();
-                var usdCurrencyEntity = currencyFactory.Create(DbSetup.CurrencyPrefab.Usd, true);
-                currencyFactory.Add(sqliteMemoryWrapper.DbContext, usdCurrencyEntity);
-
-                var accountFactory = new DbSetup.AccountFactory();
-                Entities.Account incomeAccountEntity = accountFactory.Create(DbSetup.AccountPrefab.Income, usdCurrencyEntity);
-                Entities.Account checkingAccountEntity = accountFactory.Create(DbSetup.AccountPrefab.Checking, usdCurrencyEntity);
-                accountFactory.Add(sqliteMemoryWrapper.DbContext, incomeAccountEntity);
-                accountFactory.Add(sqliteMemoryWrapper.DbContext, checkingAccountEntity);
-
-                var transactions = new Entities.Transaction[]
-                {
-                    new Entities.Transaction
-                    {
-                        CreditAccount = incomeAccountEntity,
-                        DebitAccount = checkingAccountEntity,
-                        Amount = 100m,
-                        At = new DateTime(2018, 1, 1, 8, 30, 1)
-                    }
-                };
-
-                sqliteMemoryWrapper.DbContext.Transactions.AddRange(transactions);
-                sqliteMemoryWrapper.DbContext.SaveChanges();
-
-                var accountService = new AccountService(logger, sqliteMemoryWrapper.DbContext);
-
-                Account checkingAccount = accountService.Get(checkingAccountEntity.AccountId);
-                Account incomeAccount = accountService.Get(incomeAccountEntity.AccountId);
-
-                Assert.AreEqual(0, checkingAccount.LogicalAccounts.Count());
-                Assert.AreEqual(100m, checkingAccount.Balance);
-                Assert.AreEqual(0, incomeAccount.LogicalAccounts.Count());
-                Assert.AreEqual(-100m, incomeAccount.Balance);
-            }
-        }
-
-        [TestMethod]
-        public void TestGetAccountWithLogicalAccounts()
-        {
-            ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<AccountService> logger = loggerFactory.CreateLogger<AccountService>();
-
-            using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
-            {
-                var currencyFactory = new DbSetup.CurrencyFactory();
-                var usdCurrencyEntity = currencyFactory.Create(DbSetup.CurrencyPrefab.Usd, true);
-                currencyFactory.Add(sqliteMemoryWrapper.DbContext, usdCurrencyEntity);
-
-                var accountFactory = new DbSetup.AccountFactory();
-                Entities.Account incomeAccountEntity = 
-                    accountFactory.Create(DbSetup.AccountPrefab.Income, usdCurrencyEntity);
-                Entities.Account checkingAccountEntity = 
-                    accountFactory.Create(DbSetup.AccountPrefab.Checking, usdCurrencyEntity);
-                Entities.Account rentPrepaymentAccountEntity = 
-                    accountFactory.Create(DbSetup.AccountPrefab.RentPrepayment, usdCurrencyEntity);
-                Entities.Account groceriesPrepaymentAccountEntity = 
-                    accountFactory.Create(DbSetup.AccountPrefab.GroceriesPrepayment, usdCurrencyEntity);
-                accountFactory.Add(sqliteMemoryWrapper.DbContext, incomeAccountEntity);
-                accountFactory.Add(sqliteMemoryWrapper.DbContext, checkingAccountEntity);
-                accountFactory.Add(sqliteMemoryWrapper.DbContext, rentPrepaymentAccountEntity);
-                accountFactory.Add(sqliteMemoryWrapper.DbContext, groceriesPrepaymentAccountEntity);
-
-                var transactions = new Entities.Transaction[]
-                {
-                    new Entities.Transaction
-                    {
-                        CreditAccount = incomeAccountEntity,
-                        DebitAccount = checkingAccountEntity,
-                        Amount = 100m,
-                        At = new DateTime(2018, 1, 1, 8, 30, 0)
-                    },
-                    new Entities.Transaction
-                    {
-                        CreditAccount = checkingAccountEntity,
-                        DebitAccount = rentPrepaymentAccountEntity,
-                        Amount = 60m,
-                        At = new DateTime(2018, 1, 1, 8, 31, 0)
-                    },
-                    new Entities.Transaction
-                    {
-                        CreditAccount = checkingAccountEntity,
-                        DebitAccount = groceriesPrepaymentAccountEntity,
-                        Amount = 10m,
-                        At = new DateTime(2018, 1, 1, 8, 31, 0)
-                    }
-                };
-
-                sqliteMemoryWrapper.DbContext.Transactions.AddRange(transactions);
-                sqliteMemoryWrapper.DbContext.SaveChanges();
-
-                var checkingToRentPrepaymentRelationship = new Entities.AccountRelationship
-                {
-                    SourceAccount = checkingAccountEntity,
-                    DestinationAccount = rentPrepaymentAccountEntity,
-                    Type = Entities.AccountRelationshipType.PhysicalToLogical
-                };
-                var checkingToGroceriesPrepaymentRelationship = new Entities.AccountRelationship
-                {
-                    SourceAccount = checkingAccountEntity,
-                    DestinationAccount = groceriesPrepaymentAccountEntity,
-                    Type = Entities.AccountRelationshipType.PhysicalToLogical
-                };
-
-                sqliteMemoryWrapper.DbContext.AccountRelationships.Add(checkingToRentPrepaymentRelationship);
-                sqliteMemoryWrapper.DbContext.AccountRelationships.Add(checkingToGroceriesPrepaymentRelationship);
-                sqliteMemoryWrapper.DbContext.SaveChanges();
-
-                var accountService = new AccountService(logger, sqliteMemoryWrapper.DbContext);
-
-                Account checkingAccount = accountService.Get(checkingAccountEntity.AccountId);
-                Account incomeAccount = accountService.Get(incomeAccountEntity.AccountId);
-                Account rentPrepaymentAccount = accountService.Get(rentPrepaymentAccountEntity.AccountId);
-                Account groceriesPrepaymentAccount = accountService.Get(groceriesPrepaymentAccountEntity.AccountId);
-
-                Assert.AreEqual(2, checkingAccount.LogicalAccounts.Count());
-                Assert.AreEqual(100m, checkingAccount.Balance);
-                Assert.AreEqual(0, incomeAccount.LogicalAccounts.Count());
-                Assert.AreEqual(-100m, incomeAccount.Balance);
-                Assert.AreEqual(0, rentPrepaymentAccount.LogicalAccounts.Count());
-                Assert.AreEqual(60m, rentPrepaymentAccount.Balance);
-                Assert.AreEqual(0, groceriesPrepaymentAccount.LogicalAccounts.Count());
-                Assert.AreEqual(10m, groceriesPrepaymentAccount.Balance);
             }
         }
 
@@ -312,9 +173,7 @@ namespace Financier.Core.Tests
                         ShortName = usdCurrencyEntity.ShortName,
                         Symbol = usdCurrencyEntity.Symbol,
                         IsPrimary = usdCurrencyEntity.IsPrimary
-                    },
-                    LogicalAccounts = new Account[0],
-                    Balance = 0m
+                    }
                 };
                 accountService.Create(account);
 

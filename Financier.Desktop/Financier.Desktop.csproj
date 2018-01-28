@@ -158,17 +158,12 @@
     <Compile Include="ViewModels\Concrete\TransactionEditViewModel.cs" />
     <Compile Include="ViewModels\Concrete\TransactionListViewModel.cs" />
     <Compile Include="ViewModels\Concrete\TransactionItemViewModel.cs" />
-    <Compile Include="ViewModels\Model\AccountCreateMessage.cs" />
-    <Compile Include="ViewModels\Model\AccountUpdateMessage.cs" />
     <Compile Include="ViewModels\Model\BudgetTransactionType.cs" />
-    <Compile Include="ViewModels\Model\TransactionCreateMessage.cs" />
-    <Compile Include="ViewModels\Model\TransactionDeleteMessage.cs" />
-    <Compile Include="ViewModels\Model\TransactionUpdateMessage.cs" />
     <Compile Include="Views\AccountEditWindow.xaml.cs">
       <DependentUpon>AccountEditWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\AccountListControl.xaml.cs">
-      <DependentUpon>AccountListControl.xaml</DependentUpon>
+    <Compile Include="Views\AccountListWindow.xaml.cs">
+      <DependentUpon>AccountListWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\BudgetEditWindow.xaml.cs">
       <DependentUpon>BudgetEditWindow.xaml</DependentUpon>
@@ -202,7 +197,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\AccountListControl.xaml">
+    <Page Include="Views\AccountListWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

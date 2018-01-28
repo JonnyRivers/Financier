@@ -26,7 +26,7 @@ namespace Financier.Desktop.ViewModels
 
         private void AccountsViewExecute(object obj)
         {
-            throw new NotImplementedException();
+            m_viewService.OpenAccountListView();
         }
 
         private void BudgetsViewExecute(object obj)

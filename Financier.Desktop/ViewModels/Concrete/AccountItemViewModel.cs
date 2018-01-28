@@ -10,7 +10,6 @@ namespace Financier.Desktop.ViewModels
         private string m_name;
         private AccountType m_type;
         private string m_currencyName;
-        private decimal m_balance;
 
         public AccountItemViewModel(
             ILogger<AccountItemViewModel> logger)
@@ -24,7 +23,6 @@ namespace Financier.Desktop.ViewModels
             m_name = account.Name;
             m_type = account.Type;
             m_currencyName = account.Currency.Name;
-            m_balance = account.Balance;
         }
 
         public int AccountId { get; private set; }
@@ -57,24 +55,11 @@ namespace Financier.Desktop.ViewModels
         public string CurrencyName
         {
             get { return m_currencyName; }
-            set
+            private set
             {
                 if (m_currencyName != value)
                 {
                     m_currencyName = value;
-
-                    OnPropertyChanged();
-                }
-            }
-        }
-        public decimal Balance
-        {
-            get { return m_balance; }
-            set
-            {
-                if (m_balance != value)
-                {
-                    m_balance = value;
 
                     OnPropertyChanged();
                 }

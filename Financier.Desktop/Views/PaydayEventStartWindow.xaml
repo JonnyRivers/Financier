@@ -5,7 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Financier.Desktop.Views"
         mc:Ignorable="d"
-        Title="Payday Event" Height="180" Width="300">
+        Title="Payday Event" 
+        MinHeight="140" MinWidth="300"
+        Height="160" Width="300">
     <Grid Margin="5">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>

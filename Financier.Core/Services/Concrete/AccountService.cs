@@ -125,18 +125,6 @@ namespace Financier.Services
 
         private Account FromEntity(Entities.Account accountEntity)
         {
-            // Get all logical accounts
-            List<int> logicalAccountIds = m_dbContext.AccountRelationships
-                .Where(r => r.SourceAccountId == accountEntity.AccountId && 
-                            r.Type == Entities.AccountRelationshipType.PhysicalToLogical)
-                .Select(r => r.DestinationAccountId)
-                .ToList();
-            List<Account> logicalAccounts = logicalAccountIds.Select(id => Get(id)).ToList();
-
-            decimal balance = GetBalance(accountEntity.AccountId, false);
-
-            decimal totalBalance = balance + logicalAccounts.Sum(a => a.Balance);
-
             var currency = new Currency
             {
                 CurrencyId = accountEntity.Currency.CurrencyId,
@@ -151,9 +139,7 @@ namespace Financier.Services
                 AccountId = accountEntity.AccountId,
                 Name = accountEntity.Name,
                 Type = (AccountType)accountEntity.Type,
-                Currency = currency,
-                LogicalAccounts = logicalAccounts,
-                Balance = totalBalance
+                Currency = currency
             };
         }
 

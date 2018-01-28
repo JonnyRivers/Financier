@@ -24,19 +24,23 @@ namespace Financier.Desktop.Services
             mainWindow.Show();
         }
 
-        public int OpenAccountCreateView()
+        public bool OpenAccountCreateView(out Account account)
         {
-            IAccountEditViewModel accountEditViewModel =
+            account = null;
+
+            IAccountEditViewModel viewModel =
                 IoC.ServiceProvider.Instance.GetRequiredService<IAccountEditViewModel>();
-            accountEditViewModel.SetupForCreate();
-            var accountEditWindow = new AccountEditWindow(
-                accountEditViewModel);
-            bool? result = accountEditWindow.ShowDialog();
+            viewModel.SetupForCreate();
+            var window = new AccountEditWindow(viewModel);
+            bool? result = window.ShowDialog();
 
-            if (result.HasValue)
-                return accountEditViewModel.AccountId;
+            if (result.HasValue && result.Value)
+            {
+                account = viewModel.ToAccount();
+                return true;
+            }
 
-            return 0;
+            return false;
         }
 
         public bool OpenAccountEditView(int accountId)
@@ -51,6 +55,14 @@ namespace Financier.Desktop.Services
                 return result.Value;
 
             return false;
+        }
+
+        public void OpenAccountListView()
+        {
+            IAccountListViewModel viewModel =
+                IoC.ServiceProvider.Instance.GetRequiredService<IAccountListViewModel>();
+            var window = new AccountListWindow(viewModel);
+            window.ShowDialog();
         }
 
         public int OpenBudgetCreateView()

@@ -14,19 +14,16 @@ namespace Financier.Desktop.ViewModels
         private ILogger<AccountEditViewModel> m_logger;
         private IAccountService m_accountService;
         private ICurrencyService m_currencyService;
-        private IMessageService m_messageService;
         private int m_accountId;
 
         public AccountEditViewModel(
             ILogger<AccountEditViewModel> logger,
             IAccountService accountService, 
-            ICurrencyService currencyService,
-            IMessageService messageService)
+            ICurrencyService currencyService)
         {
             m_logger = logger;
             m_accountService = accountService;
             m_currencyService = currencyService;
-            m_messageService = messageService;
 
             AccountTypes = Enum.GetValues(typeof(AccountType)).Cast<AccountType>();
             Currencies = m_currencyService.GetAll();
@@ -59,8 +56,7 @@ namespace Financier.Desktop.ViewModels
                 AccountId = m_accountId,
                 Name = Name,
                 Type = SelectedAccountType,
-                Currency = SelectedCurrency,
-                LogicalAccounts = new Account[0]
+                Currency = SelectedCurrency
             };
         }
 
@@ -86,13 +82,11 @@ namespace Financier.Desktop.ViewModels
             if (m_accountId != 0)
             {
                 m_accountService.Update(account);
-                m_messageService.Send(new AccountUpdateMessage(account));
             }
             else
             {
                 m_accountService.Create(account);
                 m_accountId = account.AccountId;
-                m_messageService.Send(new AccountCreateMessage(account));
             }
         }
 

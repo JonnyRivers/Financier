@@ -9,7 +9,6 @@ namespace Financier.Desktop.ViewModels
         int AccountId { get; }
         string Name { get; }
         AccountType Type { get; }
-        string CurrencyName { get; set; }
-        decimal Balance { get; set; }
+        string CurrencyName { get; }
     }
 }
