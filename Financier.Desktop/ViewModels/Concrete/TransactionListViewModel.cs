@@ -113,14 +113,17 @@ namespace Financier.Desktop.ViewModels
 
         private void PopulateTransactionBalances(IEnumerable<ITransactionItemViewModel> transactionViewModels)
         {
+            HashSet<int> relevantAccountIds = new HashSet<int>(SelectedAccountFilter.LogicalAccountIds);
+            relevantAccountIds.Add(SelectedAccountFilter.AccountId);
+
             decimal balance = 0;
             foreach (ITransactionItemViewModel transactionViewModel in transactionViewModels)
             {
-                if (transactionViewModel.CreditAccount.AccountId == SelectedAccountFilter.AccountId)
+                if (relevantAccountIds.Contains(transactionViewModel.CreditAccount.AccountId))
                 {
                     balance -= transactionViewModel.Amount;
                 }
-                else if (transactionViewModel.DebitAccount.AccountId == SelectedAccountFilter.AccountId)
+                else if (relevantAccountIds.Contains(transactionViewModel.DebitAccount.AccountId))
                 {
                     balance += transactionViewModel.Amount;
                 }
