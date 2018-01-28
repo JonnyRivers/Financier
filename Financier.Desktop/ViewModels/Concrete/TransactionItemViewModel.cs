@@ -1,34 +1,53 @@
-﻿using Financier.Services;
+﻿using Financier.Desktop.Services;
+using Financier.Services;
 using Microsoft.Extensions.Logging;
 using System;
 
 namespace Financier.Desktop.ViewModels
 {
-    public class TransactionItemViewModel : ITransactionItemViewModel
+    public class TransactionItemViewModel : BaseViewModel, ITransactionItemViewModel
     {
         private ILogger<TransactionItemViewModel> m_logger;
+        private IConversionService m_conversionService;
+
+        private decimal m_balance;
 
         public TransactionItemViewModel(
-            ILogger<TransactionItemViewModel> logger)
+            ILogger<TransactionItemViewModel> logger,
+            IConversionService conversionService)
         {
             m_logger = logger;
+            m_conversionService = conversionService;
+
+            m_balance = 0;
         }
 
-        public void Setup(Transaction transaction, decimal balance)
+        public void Setup(Transaction transaction)
         {
             TransactionId = transaction.TransactionId;
-            CreditAccountName = transaction.CreditAccount.Name;
-            DebitAccountName = transaction.DebitAccount.Name;
+            CreditAccount = m_conversionService.AccountLinkToViewModel(transaction.CreditAccount);
+            DebitAccount = m_conversionService.AccountLinkToViewModel(transaction.DebitAccount);
             At = transaction.At;
             Amount = transaction.Amount;
-            Balance = balance;
         }
 
         public int TransactionId { get; private set; }
-        public string CreditAccountName { get; private set; }
-        public string DebitAccountName { get; private set; }
+        public IAccountLinkViewModel CreditAccount { get; private set; }
+        public IAccountLinkViewModel DebitAccount { get; private set; }
         public DateTime At { get; private set; }
         public decimal Amount { get; private set; }
-        public decimal Balance { get; private set; }
+        public decimal Balance
+        {
+            get { return m_balance; }
+            set
+            {
+                if (m_balance != value)
+                {
+                    m_balance = value;
+
+                    OnPropertyChanged();
+                }
+            }
+        }
     }
 }

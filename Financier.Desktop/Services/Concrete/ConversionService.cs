@@ -36,12 +36,12 @@ namespace Financier.Desktop.Services
             return budgetItemViewModel;
         }
 
-        public ITransactionItemViewModel TransactionToItemViewModel(Transaction transaction, decimal balance)
+        public ITransactionItemViewModel TransactionToItemViewModel(Transaction transaction)
         {
             ITransactionItemViewModel transactionItemViewModel
                 = IoC.ServiceProvider.Instance.GetRequiredService<ITransactionItemViewModel>();
 
-            transactionItemViewModel.Setup(transaction, balance);
+            transactionItemViewModel.Setup(transaction);
 
             return transactionItemViewModel;
         }

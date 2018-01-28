@@ -53,15 +53,19 @@ namespace Financier.Services
 
         public IEnumerable<AccountLink> GetAllAsLinks()
         {
-            var accountsWithLogicalRelativesById = 
-                new HashSet<int>(
-                    m_dbContext.AccountRelationships
-                        .Where(ar => ar.Type == Entities.AccountRelationshipType.PhysicalToLogical)
-                        .Select(ar => ar.SourceAccountId)
-                );
+            List<Entities.AccountRelationship> physicalToLogicalRelationships =
+                m_dbContext.AccountRelationships
+                    .Where(ar => ar.Type == Entities.AccountRelationshipType.PhysicalToLogical)
+                    .ToList();
+
+            Dictionary<int, IEnumerable<int>> logicalAccountIdsByAccountId = physicalToLogicalRelationships
+                .GroupBy(ar => ar.SourceAccountId)
+                .ToDictionary(
+                    g => g.Key, 
+                    g => g.ToList().Select(ar => ar.DestinationAccountId));
 
             return m_dbContext.Accounts
-                .Select(a => FromEntityToAccountLink(a, accountsWithLogicalRelativesById))
+                .Select(a => FromEntityToAccountLink(a, logicalAccountIdsByAccountId))
                 .ToList();
         }
 
@@ -164,12 +168,24 @@ namespace Financier.Services
             };
         }
 
-        private AccountLink FromEntityToAccountLink(Entities.Account accountEntity, HashSet<int> accountsWithLogicalRelativesById)
+        private AccountLink FromEntityToAccountLink(
+            Entities.Account accountEntity,
+            Dictionary<int, IEnumerable<int>> logicalAccountIdsByAccountId)
         {
+            IEnumerable<int> logicalAccountIds;
+            if (logicalAccountIdsByAccountId.ContainsKey(accountEntity.AccountId))
+            {
+                logicalAccountIds = new List<int>(logicalAccountIdsByAccountId[accountEntity.AccountId]);
+            }
+            else
+            {
+                logicalAccountIds = new int[0];
+            }
+
             return new AccountLink
             {
                 AccountId = accountEntity.AccountId,
-                HasLogicalAccounts = accountsWithLogicalRelativesById.Contains(accountEntity.AccountId),
+                LogicalAccountIds = logicalAccountIds,
                 Name = accountEntity.Name,
                 Type = (AccountType)accountEntity.Type
             };

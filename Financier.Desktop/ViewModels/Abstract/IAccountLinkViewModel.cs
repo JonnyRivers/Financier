@@ -1,4 +1,5 @@
 ﻿using Financier.Services;
+using System.Collections.Generic;
 
 namespace Financier.Desktop.ViewModels
 {
@@ -9,7 +10,7 @@ namespace Financier.Desktop.ViewModels
         AccountLink ToAccountLink();
 
         int AccountId { get; }
-        bool HasLogicalAccounts { get; set; }
+        IEnumerable<int> LogicalAccountIds { get; set; }
         string Name { get; set; }
         AccountType Type { get; set; }
     }

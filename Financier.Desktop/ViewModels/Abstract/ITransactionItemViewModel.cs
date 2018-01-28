@@ -5,13 +5,13 @@ namespace Financier.Desktop.ViewModels
 {
     public interface ITransactionItemViewModel
     {
-        void Setup(Transaction transaction, decimal balance);
+        void Setup(Transaction transaction);
 
         int TransactionId { get; }
-        string CreditAccountName { get; }
-        string DebitAccountName { get; }
+        IAccountLinkViewModel CreditAccount { get; }
+        IAccountLinkViewModel DebitAccount { get; }
         DateTime At { get; }
         decimal Amount { get; }
-        decimal Balance { get; }
+        decimal Balance { get; set; }
     }
 }

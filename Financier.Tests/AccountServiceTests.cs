@@ -110,15 +110,16 @@ namespace Financier.Core.Tests
 
                 Assert.AreEqual(3, accountLinks.Count);
                 Assert.AreEqual(incomeAccountEntity.AccountId, accountLinks[0].AccountId);
-                Assert.AreEqual(false, accountLinks[0].HasLogicalAccounts);
+                Assert.AreEqual(0, accountLinks[0].LogicalAccountIds.Count());
                 Assert.AreEqual(incomeAccountEntity.Name, accountLinks[0].Name);
                 Assert.AreEqual(AccountType.Income, accountLinks[0].Type);
                 Assert.AreEqual(checkingAccountEntity.AccountId, accountLinks[1].AccountId);
-                Assert.AreEqual(true, accountLinks[1].HasLogicalAccounts);
+                Assert.AreEqual(1, accountLinks[1].LogicalAccountIds.Count());
+                Assert.AreEqual(rentPrepaymentAccountEntity.AccountId, accountLinks[1].LogicalAccountIds.ElementAt(0));
                 Assert.AreEqual(checkingAccountEntity.Name, accountLinks[1].Name);
                 Assert.AreEqual(AccountType.Asset, accountLinks[1].Type);
                 Assert.AreEqual(rentPrepaymentAccountEntity.AccountId, accountLinks[2].AccountId);
-                Assert.AreEqual(false, accountLinks[2].HasLogicalAccounts);
+                Assert.AreEqual(0, accountLinks[2].LogicalAccountIds.Count());
                 Assert.AreEqual(rentPrepaymentAccountEntity.Name, accountLinks[2].Name);
                 Assert.AreEqual(AccountType.Asset, accountLinks[2].Type);
             }

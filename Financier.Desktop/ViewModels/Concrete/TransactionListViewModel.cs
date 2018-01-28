@@ -2,6 +2,7 @@
 using Financier.Desktop.Services;
 using Financier.Services;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -11,6 +12,7 @@ namespace Financier.Desktop.ViewModels
 {
     public class TransactionListViewModel : BaseViewModel, ITransactionListViewModel
     {
+        // Dependencies
         private ILogger<AccountListViewModel> m_logger;
         private IAccountService m_accountService;
         private IAccountRelationshipService m_accountRelationshipService;
@@ -19,8 +21,18 @@ namespace Financier.Desktop.ViewModels
         private ITransactionService m_transactionService;
         private IViewService m_viewService;
 
+        // Private data
+        private ObservableCollection<IAccountLinkViewModel> m_accountFilters;
+        private IAccountLinkViewModel m_nullAccountFilter;
+        private IAccountLinkViewModel m_selectedAccountFilter;
+        private bool m_includeLogicalAccounts;
+        private bool m_accountFilterHasLogicalAcounts;
+        private List<Transaction> m_allTransactions;
+        private ObservableCollection<ITransactionItemViewModel> m_transactions;
+        private ITransactionItemViewModel m_selectedTransaction;
+
         public TransactionListViewModel(
-            ILogger<AccountListViewModel> logger, 
+            ILogger<AccountListViewModel> logger,
             IAccountService accountService,
             IAccountRelationshipService accountRelationshipService,
             IConversionService conversionService,
@@ -36,10 +48,28 @@ namespace Financier.Desktop.ViewModels
             m_transactionService = transactionService;
             m_viewService = viewService;
 
+            SetupAccountFilters();
+
+            m_messageService.Register<AccountCreateMessage>(OnAccountCreated);
+            m_messageService.Register<AccountUpdateMessage>(OnAccountUpdated);
+
+            SetupTransactions();
+
+            // The set here populates the transactions
+            SelectedAccountFilter = m_nullAccountFilter;
+        }
+
+        private void SetupAccountFilters()
+        {
             IEnumerable<AccountLink> accountLinks = m_accountService.GetAllAsLinks();
 
             var accountFilters = new List<IAccountLinkViewModel>();
-            var nullAccountLink = new AccountLink { AccountId = 0, Name = "(All Accounts)" };
+            var nullAccountLink = new AccountLink
+            {
+                AccountId = 0,
+                Name = "(All Accounts)",
+                LogicalAccountIds = new int[0]
+            };
             m_nullAccountFilter = m_conversionService.AccountLinkToViewModel(nullAccountLink);
             accountFilters.Add(m_nullAccountFilter);
             accountFilters.AddRange(
@@ -48,22 +78,74 @@ namespace Financier.Desktop.ViewModels
                     .Select(a => m_conversionService.AccountLinkToViewModel(a))
             );
             AccountFilters = new ObservableCollection<IAccountLinkViewModel>(accountFilters);
-            SelectedAccountFilter = m_nullAccountFilter;
             m_includeLogicalAccounts = true;
-
-            m_messageService.Register<AccountCreateMessage>(OnAccountCreated);
-            m_messageService.Register<AccountUpdateMessage>(OnAccountUpdated);
-
-            PopulateTransactions();
         }
 
-        private ObservableCollection<IAccountLinkViewModel> m_accountFilters;
-        private IAccountLinkViewModel m_nullAccountFilter;
-        private IAccountLinkViewModel m_selectedAccountFilter;
-        private bool m_includeLogicalAccounts;
-        private bool m_accountFilterHasLogicalAcounts;
-        private ObservableCollection<ITransactionItemViewModel> m_transactions;
-        private ITransactionItemViewModel m_selectedTransaction;
+        private void SetupTransactions()
+        {
+            m_allTransactions = m_transactionService.GetAll().ToList();
+        }
+
+        private IEnumerable<Transaction> GetFilteredTransactions()
+        {
+            if (SelectedAccountFilter != m_nullAccountFilter)
+            {
+                var relevantAccountIds = new List<int>();
+                relevantAccountIds.Add(SelectedAccountFilter.AccountId);
+                if (IncludeLogicalAccounts)
+                {
+                    relevantAccountIds.AddRange(SelectedAccountFilter.LogicalAccountIds);
+                }
+                IEnumerable<Transaction> accountTransactions =
+                    m_allTransactions
+                        .Where(t => relevantAccountIds.Contains(t.CreditAccount.AccountId) ||
+                                    relevantAccountIds.Contains(t.DebitAccount.AccountId));
+
+                return accountTransactions;
+            }
+
+            IEnumerable<Transaction> recentTransactions = m_allTransactions
+                    .OrderByDescending(t => t.TransactionId)
+                    .Take(100);
+
+            return recentTransactions;
+        }
+
+        private void PopulateTransactionBalances(IEnumerable<ITransactionItemViewModel> transactionViewModels)
+        {
+            decimal balance = 0;
+            foreach (ITransactionItemViewModel transactionViewModel in transactionViewModels)
+            {
+                if (transactionViewModel.CreditAccount.AccountId == SelectedAccountFilter.AccountId)
+                {
+                    balance -= transactionViewModel.Amount;
+                }
+                else if (transactionViewModel.DebitAccount.AccountId == SelectedAccountFilter.AccountId)
+                {
+                    balance += transactionViewModel.Amount;
+                }
+                else
+                {
+                    throw new InvalidOperationException("Encountered unrelated transaction when calculating balance");
+                }
+                transactionViewModel.Balance = balance;
+            }
+        }
+
+        private void PopulateTransactions()
+        {
+            IEnumerable<Transaction> filteredTransactions = GetFilteredTransactions();
+            List<ITransactionItemViewModel> transactionVMs =
+                filteredTransactions
+                    .Select(t => m_conversionService.TransactionToItemViewModel(t))
+                    .ToList();
+            if (SelectedAccountFilter != m_nullAccountFilter)
+            {
+                PopulateTransactionBalances(transactionVMs);
+            }
+            Transactions = new ObservableCollection<ITransactionItemViewModel>(
+                transactionVMs.OrderByDescending(t => t.TransactionId));
+        }
 
         public ObservableCollection<IAccountLinkViewModel> AccountFilters
         {
@@ -87,11 +169,9 @@ namespace Financier.Desktop.ViewModels
                 {
                     m_selectedAccountFilter = value;
 
-                    AccountFilterHasLogicalAccounts = m_selectedAccountFilter.HasLogicalAccounts;
+                    AccountFilterHasLogicalAccounts = m_selectedAccountFilter.LogicalAccountIds.Any();
                     OnPropertyChanged();
 
-                    // TODO: Transaction list VM should not re-filter, not reload when filters are updated
-                    // https://github.com/JonnyRivers/Financier/issues/28
                     PopulateTransactions();
                 }
             }
@@ -107,8 +187,6 @@ namespace Financier.Desktop.ViewModels
 
                     OnPropertyChanged();
 
-                    // TODO: Transaction list VM should not re-filter, not reload when filters are updated
-                    // https://github.com/JonnyRivers/Financier/issues/28
                     PopulateTransactions();
                 }
             }
@@ -164,9 +242,9 @@ namespace Financier.Desktop.ViewModels
             int newTransactionId = m_viewService.OpenTransactionCreateView();
             if (newTransactionId > 0)
             {
-                // TODO: Transaction list VM should be partially repopulated after adds, deletes and edits
-                // https://github.com/JonnyRivers/Financier/issues/27
-                // This is complicated by having balances in the view model, which must be recalculated
+                Transaction newTransaction = m_transactionService.Get(newTransactionId);
+                m_allTransactions.Add(newTransaction);
+                
                 PopulateTransactions();
             }
         }
@@ -175,9 +253,14 @@ namespace Financier.Desktop.ViewModels
         {
             if (m_viewService.OpenTransactionEditView(SelectedTransaction.TransactionId))
             {
-                // TODO: Transaction list VM should be partially repopulated after adds, deletes and edits
-                // https://github.com/JonnyRivers/Financier/issues/27
-                // This is complicated by having balances in the view model, which must be recalculated
+                Transaction existingTransaction =
+                    m_allTransactions
+                        .Single(t => t.TransactionId == SelectedTransaction.TransactionId);
+                m_allTransactions.Remove(existingTransaction);
+
+                Transaction updtedTransaction = m_transactionService.Get(SelectedTransaction.TransactionId);
+                m_allTransactions.Add(updtedTransaction);
+
                 PopulateTransactions();
             }
         }
@@ -206,46 +289,6 @@ namespace Financier.Desktop.ViewModels
             return (SelectedTransaction != null);
         }
 
-        private void PopulateTransactions()
-        {
-            if (SelectedAccountFilter == m_nullAccountFilter)
-            {
-                IEnumerable<Transaction> transactions = m_transactionService
-                    .GetAll()
-                    .OrderByDescending(t => t.TransactionId)
-                    .Take(100)
-                    .ToList();
-                IEnumerable<ITransactionItemViewModel> transactionVMs =
-                    transactions.Select(t => m_conversionService.TransactionToItemViewModel(t, 0));
-                Transactions = new ObservableCollection<ITransactionItemViewModel>(transactionVMs);
-            }
-            else
-            {
-                IEnumerable<Transaction> transactions = m_transactionService
-                    .GetAll(SelectedAccountFilter.AccountId, IncludeLogicalAccounts);
-                
-                var itemVMs = new List<ITransactionItemViewModel>();
-                decimal balance = 0;
-                foreach(Transaction transaction in transactions)
-                {
-                    if (transaction.CreditAccount.AccountId == SelectedAccountFilter.AccountId)
-                    {
-                        balance -= transaction.Amount;
-                    }
-                    else
-                    {
-                        balance += transaction.Amount;
-                    }
-                    itemVMs.Add(m_conversionService.TransactionToItemViewModel(transaction, balance));
-                }
-                Transactions = new ObservableCollection<ITransactionItemViewModel>(
-                    itemVMs.OrderByDescending(t => t.TransactionId)
-                );
-            }
-            
-            OnPropertyChanged(nameof(Transactions));
-        }
-
         private void OnAccountCreated(AccountCreateMessage message)
         {
             Account newAccount = message.Account;
@@ -255,7 +298,7 @@ namespace Financier.Desktop.ViewModels
                 AccountId = newAccount.AccountId,
                 Name = newAccount.Name,
                 Type = newAccount.Type,
-                HasLogicalAccounts = newAccount.LogicalAccounts.Any()
+                LogicalAccountIds = newAccount.LogicalAccounts.Select(a => a.AccountId).ToList()
             };
 
             List<IAccountLinkViewModel> accountFilters = 
@@ -280,7 +323,7 @@ namespace Financier.Desktop.ViewModels
                 AccountFilters
                     .Single(alvm => alvm.AccountId == updatedAccount.AccountId);
 
-            updatedAccountViewModel.HasLogicalAccounts = updatedAccount.LogicalAccounts.Any();
+            updatedAccountViewModel.LogicalAccountIds = updatedAccount.LogicalAccounts.Select(a => a.AccountId).ToList();
             updatedAccountViewModel.Name = updatedAccount.Name;
             updatedAccountViewModel.Type = updatedAccount.Type;
         }

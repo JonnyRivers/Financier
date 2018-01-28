@@ -39,8 +39,8 @@
         <ListView Grid.Row="2" SelectedItem="{Binding SelectedTransaction}" ItemsSource="{Binding Transactions}">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Credit Account" Width="240" DisplayMemberBinding="{Binding CreditAccountName}"/>
-                    <GridViewColumn Header="Debit Account" Width="240" DisplayMemberBinding="{Binding DebitAccountName}"/>
+                    <GridViewColumn Header="Credit Account" Width="240" DisplayMemberBinding="{Binding CreditAccount.Name}"/>
+                    <GridViewColumn Header="Debit Account" Width="240" DisplayMemberBinding="{Binding DebitAccount.Name}"/>
                     <GridViewColumn Header="At" Width="160" DisplayMemberBinding="{Binding At}"/>
                     <GridViewColumn Header="Amount" Width="100" DisplayMemberBinding="{Binding Amount}"/>
                     <GridViewColumn Header="Balance" Width="100" DisplayMemberBinding="{Binding Balance}"/>
