@@ -93,7 +93,58 @@ namespace Financier.Services
 
         public IEnumerable<Payment> GetPendingCreditCardPayments(int accountId)
         {
-            throw new NotImplementedException();
+            var linkedExpenseAccountIds = new HashSet<int>(
+                m_dbContext.AccountRelationships
+                    .Where(ar => ar.Type == AccountRelationshipType.PrepaymentToExpense)
+                    .Select(ar => ar.DestinationAccountId)
+            );
+
+            List<int> linkedOutgoingTransactionsIds = m_dbContext.Transactions
+                .Where(t => t.CreditAccountId == accountId && linkedExpenseAccountIds.Contains(t.DebitAccountId))
+                .Select(t => t.TransactionId)
+                .ToList();
+
+            var paidTransactionIds = new HashSet<int>(
+                m_dbContext.TransactionRelationships
+                    .Where(tr => tr.Type == TransactionRelationshipType.CreditCardPayment &&
+                                 tr.DestinationTransaction.CreditAccountId == accountId)
+                    .Select(tr => tr.SourceTransactionId)
+            );
+
+            var pendingTransactionIds = new HashSet<int>(
+                linkedOutgoingTransactionsIds.Except(paidTransactionIds)
+                .ToList()
+            );
+
+            if (!pendingTransactionIds.Any())
+                return new Payment[0];
+
+            Dictionary<int, AccountLink> prepaymentAccountLinksByLinkedExpenseAccountId =
+                m_dbContext.AccountRelationships
+                    .Include(ar => ar.SourceAccount)
+                    .Where(ar => ar.Type == AccountRelationshipType.PrepaymentToExpense &&
+                                 linkedExpenseAccountIds.Contains(ar.DestinationAccountId))
+                    .ToDictionary(ar => ar.DestinationAccountId, ar => FromEntity(ar.SourceAccount));
+
+            List<Transaction> pendingTransactions = 
+                m_dbContext.Transactions
+                    .Where(t => pendingTransactionIds.Contains(t.TransactionId))
+                    .Select(FromEntity)
+                    .ToList();
+
+            List<Payment> pendingPayments = pendingTransactions
+                .Select(t => new Payment(
+                    t,
+                    new Transaction
+                    {
+                        At = DateTime.Now,
+                        DebitAccount = t.CreditAccount,
+                        CreditAccount = prepaymentAccountLinksByLinkedExpenseAccountId[t.DebitAccount.AccountId],
+                        Amount = t.Amount
+                    }))
+                .ToList();
+
+            return pendingPayments;
         }
 
         public void Update(Transaction transaction)
@@ -123,8 +174,6 @@ namespace Financier.Services
 
         private static AccountLink FromEntity(Entities.Account accountEntity)
         {
-            // TODO: LogicalAccountIds are not fully populated in some places
-            // https://github.com/JonnyRivers/Financier/issues/34
             return new AccountLink
             {
                 AccountId = accountEntity.AccountId,

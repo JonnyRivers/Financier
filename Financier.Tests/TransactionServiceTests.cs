@@ -308,6 +308,23 @@ namespace Financier.Tests
                 accountFactory.Add(sqliteMemoryWrapper.DbContext, rentExpenseAccountEntity);
                 accountFactory.Add(sqliteMemoryWrapper.DbContext, creditCardAccountEntity);
 
+                var checkingToRentPrepaymentRelationship = new Entities.AccountRelationship
+                {
+                    SourceAccount = checkingAccountEntity,
+                    DestinationAccount = rentPrepaymentAccountEntity,
+                    Type = AccountRelationshipType.PhysicalToLogical
+                };
+                var rentPrepaymentToExpenseRelationship = new Entities.AccountRelationship
+                {
+                    SourceAccount = rentPrepaymentAccountEntity,
+                    DestinationAccount = rentExpenseAccountEntity,
+                    Type = AccountRelationshipType.PrepaymentToExpense
+                };
+
+                sqliteMemoryWrapper.DbContext.AccountRelationships.Add(checkingToRentPrepaymentRelationship);
+                sqliteMemoryWrapper.DbContext.AccountRelationships.Add(rentPrepaymentToExpenseRelationship);
+                sqliteMemoryWrapper.DbContext.SaveChanges();
+
                 var transactionsToAdd = new Entities.Transaction[4]
                 {
                     new Entities.Transaction
@@ -390,6 +407,23 @@ namespace Financier.Tests
                 accountFactory.Add(sqliteMemoryWrapper.DbContext, rentExpenseAccountEntity);
                 accountFactory.Add(sqliteMemoryWrapper.DbContext, creditCardAccountEntity);
 
+                var checkingToRentPrepaymentRelationship = new Entities.AccountRelationship
+                {
+                    SourceAccount = checkingAccountEntity,
+                    DestinationAccount = rentPrepaymentAccountEntity,
+                    Type = AccountRelationshipType.PhysicalToLogical
+                };
+                var rentPrepaymentToExpenseRelationship = new Entities.AccountRelationship
+                {
+                    SourceAccount = rentPrepaymentAccountEntity,
+                    DestinationAccount = rentExpenseAccountEntity,
+                    Type = AccountRelationshipType.PrepaymentToExpense
+                };
+
+                sqliteMemoryWrapper.DbContext.AccountRelationships.Add(checkingToRentPrepaymentRelationship);
+                sqliteMemoryWrapper.DbContext.AccountRelationships.Add(rentPrepaymentToExpenseRelationship);
+                sqliteMemoryWrapper.DbContext.SaveChanges();
+
                 var transactionsToAdd = new Entities.Transaction[4]
                 {
                     new Entities.Transaction
@@ -421,6 +455,9 @@ namespace Financier.Tests
                         At = new DateTime(2018, 1, 1, 8, 30, 4)
                     }
                 };
+
+                sqliteMemoryWrapper.DbContext.Transactions.AddRange(transactionsToAdd);
+                sqliteMemoryWrapper.DbContext.SaveChanges();
 
                 ILoggerFactory loggerFactory = new LoggerFactory();
                 ILogger<TransactionService> logger = loggerFactory.CreateLogger<TransactionService>();
