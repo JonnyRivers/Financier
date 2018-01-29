@@ -9,6 +9,7 @@ namespace Financier.Desktop.ViewModels
         int AccountId { get; }
         string Name { get; }
         AccountType Type { get; }
+        AccountSubType SubType { get; }
         string CurrencyName { get; }
     }
 }

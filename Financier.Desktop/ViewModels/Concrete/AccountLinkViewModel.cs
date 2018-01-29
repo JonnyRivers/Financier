@@ -10,6 +10,7 @@ namespace Financier.Desktop.ViewModels
 
         private string m_name;
         private AccountType m_type;
+        private AccountSubType m_subType;
 
         public AccountLinkViewModel(
             ILogger<AccountLinkViewModel> logger)
@@ -22,6 +23,7 @@ namespace Financier.Desktop.ViewModels
             AccountId = accountLink.AccountId;
             m_name = accountLink.Name;
             m_type = accountLink.Type;
+            m_subType = accountLink.SubType;
         }
 
         public AccountLink ToAccountLink()
@@ -30,7 +32,8 @@ namespace Financier.Desktop.ViewModels
             {
                 AccountId = AccountId,
                 Name = Name,
-                Type = Type
+                Type = Type,
+                SubType = SubType
             };
         }
 
@@ -56,6 +59,19 @@ namespace Financier.Desktop.ViewModels
                 if (m_type != value)
                 {
                     m_type = value;
+
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public AccountSubType SubType
+        {
+            get { return m_subType; }
+            set
+            {
+                if (m_subType != value)
+                {
+                    m_subType = value;
 
                     OnPropertyChanged();
                 }

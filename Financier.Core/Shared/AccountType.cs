@@ -1,4 +1,4 @@
-﻿namespace Financier.Services
+﻿namespace Financier
 {
     public enum AccountType
     {

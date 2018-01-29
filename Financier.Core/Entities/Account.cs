@@ -9,6 +9,8 @@ namespace Financier.Entities
         [Required]
         public AccountType Type { get; set; }
         [Required]
+        public AccountSubType SubType { get; set; }
+        [Required]
         public string Name { get; set; }
         [Required]
         public int CurrencyId { get; set; }

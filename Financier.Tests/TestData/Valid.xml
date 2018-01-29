@@ -2,13 +2,19 @@
 <Data>
   <Currency name="US Dollar" shortName="USD" symbol="$" isPrimary="True"/>
   <Currency name="UK Sterling" shortName="GBP" symbol="£" isPrimary="False"/>
-  <Account name="Checking" currency="USD" type="Asset"/>
-  <Account name="Savings" currency="USD" type="Asset"/>
-  <Account name="Income" currency="USD" type="Income"/>
-  <Account name="Rent Prepayment" currency="USD" type="Asset"/>
+  <Account name="Checking" currency="USD" type="Asset" subType="Checking"/>
+  <Account name="Savings" currency="USD" type="Asset" subType="None"/>
+  <Account name="Income" currency="USD" type="Income" subType="None"/>
+  <Account name="Credit Card" currency="USD" type="Liability" subType="CreditCard"/>
+  <Account name="Rent Prepayment" currency="USD" type="Asset" subType="None"/>
+  <Account name="Rent Expense" currency="USD" type="Expense" subType="None"/>
   <AccountRelationship source="Checking" destination="Rent Prepayment" type="PhysicalToLogical"/>
-  <Transaction credit="Income" debit="Checking" at="2018-01-01 09:00:00" amount="100.00"/>
-  <Transaction credit="Checking" debit="Rent Prepayment" at="2018-01-02 08:30:00" amount="50.00"/>
+  <AccountRelationship source="Rent Prepayment" destination="Rent Expense" type="PrepaymentToExpense"/>
+  <Transaction id="9" credit="Income" debit="Checking" at="2018-01-01 09:00:00" amount="100.00"/>
+  <Transaction id="6" credit="Checking" debit="Rent Prepayment" at="2018-01-02 08:30:00" amount="50.00"/>
+  <Transaction id="1" credit="Credit Card" debit="Rent Expense" at="2018-01-03 08:30:00" amount="30.00"/>
+  <Transaction id="2" credit="Rent Prepayment" debit="Credit Card" at="2018-01-04 08:30:00" amount="30.00"/>
+  <TransactionRelationship source="1" destination="2" type="CreditCardPayment"/>
   <Budget name="The Budget" period="Fortnightly">
     <BudgetTransaction credit="Income" debit="Checking" amount="100" isInitial="True" />
     <BudgetTransaction credit="Checking" debit="Rent Prepayment" amount="80"/>

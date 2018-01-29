@@ -22,7 +22,8 @@ namespace Financier.Services
             var accountEntity = new Entities.Account
             {
                 Name = account.Name,
-                Type = (Entities.AccountType)account.Type,
+                Type = account.Type,
+                SubType = account.SubType,
                 CurrencyId = account.Currency.CurrencyId
             };
             m_dbContext.Accounts.Add(accountEntity);
@@ -62,13 +63,13 @@ namespace Financier.Services
         {
             var logicalAccountIds = new HashSet<int>(
                 m_dbContext.AccountRelationships
-                    .Where(ar => ar.Type == Entities.AccountRelationshipType.PhysicalToLogical)
+                    .Where(ar => ar.Type == AccountRelationshipType.PhysicalToLogical)
                     .Select(ar => ar.DestinationAccountId)
             );
 
             return m_dbContext.Accounts
                 .Include(a => a.Currency)
-                .Where(a => a.Type == Entities.AccountType.Asset || a.Type == Entities.AccountType.Liability)
+                .Where(a => a.Type == AccountType.Asset || a.Type == AccountType.Liability)
                 .Where(a => !logicalAccountIds.Contains(a.AccountId))
                 .Select(FromEntity)
                 .ToList();
@@ -78,7 +79,7 @@ namespace Financier.Services
         {
             return m_dbContext.AccountRelationships
                 .Where(ar => ar.SourceAccountId == accountId &&
-                                ar.Type == Entities.AccountRelationshipType.PhysicalToLogical)
+                                ar.Type == AccountRelationshipType.PhysicalToLogical)
                 .Select(ar => ar.DestinationAccountId)
                 .ToList();
         }
@@ -89,7 +90,8 @@ namespace Financier.Services
                 .Single(a => a.AccountId == account.AccountId);
 
             accountEntity.Name = account.Name;
-            accountEntity.Type = (Entities.AccountType)account.Type;
+            accountEntity.Type = account.Type;
+            accountEntity.SubType = account.SubType;
             accountEntity.CurrencyId = account.Currency.CurrencyId;
 
             m_dbContext.SaveChanges();
@@ -108,7 +110,7 @@ namespace Financier.Services
             {
                 IEnumerable<int> logicalAccountIds = m_dbContext.AccountRelationships
                     .Where(r => r.SourceAccountId == accountId &&
-                                r.Type == Entities.AccountRelationshipType.PhysicalToLogical)
+                                r.Type == AccountRelationshipType.PhysicalToLogical)
                     .Select(r => r.DestinationAccountId);
                 foreach(int logicalAccountId in logicalAccountIds)
                 {
@@ -147,7 +149,8 @@ namespace Financier.Services
             {
                 AccountId = accountEntity.AccountId,
                 Name = accountEntity.Name,
-                Type = (AccountType)accountEntity.Type,
+                Type = accountEntity.Type,
+                SubType = accountEntity.SubType,
                 Currency = currency
             };
         }
@@ -159,7 +162,8 @@ namespace Financier.Services
             {
                 AccountId = accountEntity.AccountId,
                 Name = accountEntity.Name,
-                Type = (AccountType)accountEntity.Type
+                Type = accountEntity.Type,
+                SubType = accountEntity.SubType
             };
         }
     }

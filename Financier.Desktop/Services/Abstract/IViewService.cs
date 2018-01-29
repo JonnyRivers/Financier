@@ -21,6 +21,7 @@ namespace Financier.Desktop.Services
 
         bool OpenPaydayEventStartView(int budgetId, out PaydayStart paydayStart);
 
+        void OpenNoPendingCreditCardTransactionsView(string accountName);
         bool OpenTransactionBatchCreateConfirmView(IEnumerable<Transaction> transactions);
         bool OpenTransactionCreateView(Transaction hint, out Transaction transaction);
         bool OpenTransactionDeleteConfirmationView();

@@ -15,7 +15,8 @@ namespace Financier.Tests.DbSetup
                     new Entities.Account
                     {
                         Name = "Capital",
-                        Type = Entities.AccountType.Capital
+                        Type = AccountType.Capital,
+                        SubType = AccountSubType.None
                     }
                 },
                 {
@@ -23,7 +24,8 @@ namespace Financier.Tests.DbSetup
                     new Entities.Account
                     {
                         Name = "Checking",
-                        Type = Entities.AccountType.Asset
+                        Type = AccountType.Asset,
+                        SubType = AccountSubType.Checking
                     }
                 },
                 {
@@ -31,7 +33,8 @@ namespace Financier.Tests.DbSetup
                     new Entities.Account
                     {
                         Name = "Credit Card",
-                        Type = Entities.AccountType.Liability
+                        Type = AccountType.Liability,
+                        SubType = AccountSubType.CreditCard
                     }
                 },
                 {
@@ -39,7 +42,8 @@ namespace Financier.Tests.DbSetup
                     new Entities.Account
                     {
                         Name = "Groceries Expense",
-                        Type = Entities.AccountType.Expense
+                        Type = AccountType.Expense,
+                        SubType = AccountSubType.None
                     }
                 },
                 {
@@ -47,7 +51,8 @@ namespace Financier.Tests.DbSetup
                     new Entities.Account
                     {
                         Name = "Groceries Prepayment",
-                        Type = Entities.AccountType.Asset
+                        Type = AccountType.Asset,
+                        SubType = AccountSubType.None
                     }
                 },
                 {
@@ -55,7 +60,8 @@ namespace Financier.Tests.DbSetup
                     new Entities.Account
                     {
                         Name = "Income",
-                        Type = Entities.AccountType.Income
+                        Type = AccountType.Income,
+                        SubType = AccountSubType.None
                     }
                 },
                 {
@@ -63,7 +69,8 @@ namespace Financier.Tests.DbSetup
                     new Entities.Account
                     {
                         Name = "Rent Expense",
-                        Type = Entities.AccountType.Expense
+                        Type = AccountType.Expense,
+                        SubType = AccountSubType.None
                     }
                 },
                 {
@@ -71,7 +78,8 @@ namespace Financier.Tests.DbSetup
                     new Entities.Account
                     {
                         Name = "Rent Prepayment",
-                        Type = Entities.AccountType.Asset
+                        Type = AccountType.Asset,
+                        SubType = AccountSubType.None
                     }
                 },
                 {
@@ -79,7 +87,8 @@ namespace Financier.Tests.DbSetup
                     new Entities.Account
                     {
                         Name = "Savings",
-                        Type = Entities.AccountType.Asset
+                        Type = AccountType.Asset,
+                        SubType = AccountSubType.None
                     }
                 }
             };
@@ -91,7 +100,8 @@ namespace Financier.Tests.DbSetup
             {
                 Currency = currencyEntity,
                 Name = m_entitiesByPrefab[prefab].Name,
-                Type = m_entitiesByPrefab[prefab].Type
+                Type = m_entitiesByPrefab[prefab].Type,
+                SubType = m_entitiesByPrefab[prefab].SubType
             };
 
             return accountEntity;

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Financier.Tests.Concrete
 {
-    class FakeViewServce : IViewService
+    internal class FakeViewService : IViewService
     {
         public bool OpenAccountCreateView(out Account account)
         {
@@ -54,6 +54,11 @@ namespace Financier.Tests.Concrete
         }
 
         public void OpenMainView()
+        {
+            
+        }
+
+        public void OpenNoPendingCreditCardTransactionsView(string accountName)
         {
             
         }

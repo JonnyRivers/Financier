@@ -96,13 +96,13 @@ namespace Financier.Tests
                 {
                     SourceAccount = checkingAccountEntity,
                     DestinationAccount = rentPrepaymentAccountEntity,
-                    Type = Entities.AccountRelationshipType.PhysicalToLogical
+                    Type = AccountRelationshipType.PhysicalToLogical
                 };
                 var rentPrepaymentToExpenseRelationshipEntity = new Entities.AccountRelationship
                 {
                     SourceAccount = rentPrepaymentAccountEntity,
                     DestinationAccount = rentExpenseAccountEntity,
-                    Type = Entities.AccountRelationshipType.PrepaymentToExpense
+                    Type = AccountRelationshipType.PrepaymentToExpense
                 };
 
                 sqliteMemoryWrapper.DbContext.AccountRelationships.Add(checkingToRentPrepaymentRelationshipEntity);
@@ -175,7 +175,7 @@ namespace Financier.Tests
                 Assert.AreEqual(1, budgetEntities.Count);
                 Assert.AreEqual(budget.BudgetId, budgetEntities[0].BudgetId);
                 Assert.AreEqual(budget.Name, budgetEntities[0].Name);
-                Assert.AreEqual(Entities.BudgetPeriod.Fortnightly, budgetEntities[0].Period);
+                Assert.AreEqual(BudgetPeriod.Fortnightly, budgetEntities[0].Period);
                 Assert.AreEqual(3, budgetEntities[0].Transactions.Count);
 
                 Assert.AreEqual(3, budgetTransactionEntities.Count);
@@ -254,25 +254,25 @@ namespace Financier.Tests
                 {
                     SourceAccount = checkingAccountEntity,
                     DestinationAccount = rentPrepaymentAccountEntity,
-                    Type = Entities.AccountRelationshipType.PhysicalToLogical
+                    Type = AccountRelationshipType.PhysicalToLogical
                 };
                 var checkingToGroceriesPrepaymentRelationshipEntity = new Entities.AccountRelationship
                 {
                     SourceAccount = checkingAccountEntity,
                     DestinationAccount = groceriesPrepaymentAccountEntity,
-                    Type = Entities.AccountRelationshipType.PhysicalToLogical
+                    Type = AccountRelationshipType.PhysicalToLogical
                 };
                 var rentPrepaymentToExpenseRelationshipEntity = new Entities.AccountRelationship
                 {
                     SourceAccount = rentPrepaymentAccountEntity,
                     DestinationAccount = rentExpenseAccountEntity,
-                    Type = Entities.AccountRelationshipType.PrepaymentToExpense
+                    Type = AccountRelationshipType.PrepaymentToExpense
                 };
                 var groceriesPrepaymentToExpenseRelationshipEntity = new Entities.AccountRelationship
                 {
                     SourceAccount = groceriesPrepaymentAccountEntity,
                     DestinationAccount = groceriesExpenseAccountEntity,
-                    Type = Entities.AccountRelationshipType.PrepaymentToExpense
+                    Type = AccountRelationshipType.PrepaymentToExpense
                 };
 
                 sqliteMemoryWrapper.DbContext.AccountRelationships.Add(checkingToRentPrepaymentRelationshipEntity);
@@ -284,12 +284,12 @@ namespace Financier.Tests
                 var budget1Entity = new Entities.Budget
                 {
                     Name = "Full Budget",
-                    Period = Entities.BudgetPeriod.Fortnightly
+                    Period = BudgetPeriod.Fortnightly
                 };
                 var budget2Entity = new Entities.Budget
                 {
                     Name = "Half Budget",
-                    Period = Entities.BudgetPeriod.Fortnightly
+                    Period = BudgetPeriod.Fortnightly
                 };
                 sqliteMemoryWrapper.DbContext.Budgets.Add(budget1Entity);
                 sqliteMemoryWrapper.DbContext.Budgets.Add(budget2Entity);
@@ -438,25 +438,25 @@ namespace Financier.Tests
                 {
                     SourceAccount = checkingAccountEntity,
                     DestinationAccount = rentPrepaymentAccountEntity,
-                    Type = Entities.AccountRelationshipType.PhysicalToLogical
+                    Type = AccountRelationshipType.PhysicalToLogical
                 };
                 var checkingToGroceriesPrepaymentRelationshipEntity = new Entities.AccountRelationship
                 {
                     SourceAccount = checkingAccountEntity,
                     DestinationAccount = groceriesPrepaymentAccountEntity,
-                    Type = Entities.AccountRelationshipType.PhysicalToLogical
+                    Type = AccountRelationshipType.PhysicalToLogical
                 };
                 var rentPrepaymentToExpenseRelationshipEntity = new Entities.AccountRelationship
                 {
                     SourceAccount = rentPrepaymentAccountEntity,
                     DestinationAccount = rentExpenseAccountEntity,
-                    Type = Entities.AccountRelationshipType.PrepaymentToExpense
+                    Type = AccountRelationshipType.PrepaymentToExpense
                 };
                 var groceriesPrepaymentToExpenseRelationshipEntity = new Entities.AccountRelationship
                 {
                     SourceAccount = groceriesPrepaymentAccountEntity,
                     DestinationAccount = groceriesExpenseAccountEntity,
-                    Type = Entities.AccountRelationshipType.PrepaymentToExpense
+                    Type = AccountRelationshipType.PrepaymentToExpense
                 };
 
                 sqliteMemoryWrapper.DbContext.AccountRelationships.Add(checkingToRentPrepaymentRelationshipEntity);
@@ -468,12 +468,12 @@ namespace Financier.Tests
                 var budget1Entity = new Entities.Budget
                 {
                     Name = "Full Budget",
-                    Period = Entities.BudgetPeriod.Fortnightly
+                    Period = BudgetPeriod.Fortnightly
                 };
                 var budget2Entity = new Entities.Budget
                 {
                     Name = "Half Budget",
-                    Period = Entities.BudgetPeriod.Fortnightly
+                    Period = BudgetPeriod.Fortnightly
                 };
                 sqliteMemoryWrapper.DbContext.Budgets.Add(budget1Entity);
                 sqliteMemoryWrapper.DbContext.Budgets.Add(budget2Entity);
@@ -665,13 +665,13 @@ namespace Financier.Tests
                 {
                     SourceAccount = checkingAccountEntity,
                     DestinationAccount = rentPrepaymentAccountEntity,
-                    Type = Entities.AccountRelationshipType.PhysicalToLogical
+                    Type = AccountRelationshipType.PhysicalToLogical
                 };
                 var rentPrepaymentToExpenseRelationshipEntity = new Entities.AccountRelationship
                 {
                     SourceAccount = rentPrepaymentAccountEntity,
                     DestinationAccount = rentExpenseAccountEntity,
-                    Type = Entities.AccountRelationshipType.PrepaymentToExpense
+                    Type = AccountRelationshipType.PrepaymentToExpense
                 };
 
                 sqliteMemoryWrapper.DbContext.AccountRelationships.Add(checkingToRentPrepaymentRelationshipEntity);
@@ -681,7 +681,7 @@ namespace Financier.Tests
                 var budget1Entity = new Entities.Budget
                 {
                     Name = "Full Budget",
-                    Period = Entities.BudgetPeriod.Fortnightly
+                    Period = BudgetPeriod.Fortnightly
                 };
                 sqliteMemoryWrapper.DbContext.Budgets.Add(budget1Entity);
                 sqliteMemoryWrapper.DbContext.SaveChanges();
@@ -779,13 +779,13 @@ namespace Financier.Tests
                 {
                     SourceAccount = checkingAccountEntity,
                     DestinationAccount = rentPrepaymentAccountEntity,
-                    Type = Entities.AccountRelationshipType.PhysicalToLogical
+                    Type = AccountRelationshipType.PhysicalToLogical
                 };
                 var rentPrepaymentToExpenseRelationshipEntity = new Entities.AccountRelationship
                 {
                     SourceAccount = rentPrepaymentAccountEntity,
                     DestinationAccount = rentExpenseAccountEntity,
-                    Type = Entities.AccountRelationshipType.PrepaymentToExpense
+                    Type = AccountRelationshipType.PrepaymentToExpense
                 };
 
                 sqliteMemoryWrapper.DbContext.AccountRelationships.Add(checkingToRentPrepaymentRelationshipEntity);
@@ -795,7 +795,7 @@ namespace Financier.Tests
                 var budgetEntity = new Entities.Budget
                 {
                     Name = "Full Budget",
-                    Period = Entities.BudgetPeriod.Fortnightly
+                    Period = BudgetPeriod.Fortnightly
                 };
                 sqliteMemoryWrapper.DbContext.Budgets.Add(budgetEntity);
                 sqliteMemoryWrapper.DbContext.SaveChanges();
@@ -855,7 +855,7 @@ namespace Financier.Tests
                 Assert.AreEqual(1, updatedBudgetEntities.Count);
                 Assert.AreEqual(3, updatedBudgetTransactionEntities.Count);
                 Assert.AreEqual(budget.Name, updatedBudgetEntities[0].Name);
-                Assert.AreEqual(Entities.BudgetPeriod.Weekly, updatedBudgetEntities[0].Period);
+                Assert.AreEqual(BudgetPeriod.Weekly, updatedBudgetEntities[0].Period);
                 Assert.AreEqual(budget.InitialTransaction.Amount, 
                     updatedBudgetTransactionEntities[0].Amount);
                 Assert.AreEqual(budget.InitialTransaction.CreditAccount.AccountId, 
@@ -909,13 +909,13 @@ namespace Financier.Tests
                 {
                     SourceAccount = checkingAccountEntity,
                     DestinationAccount = rentPrepaymentAccountEntity,
-                    Type = Entities.AccountRelationshipType.PhysicalToLogical
+                    Type = AccountRelationshipType.PhysicalToLogical
                 };
                 var rentPrepaymentToExpenseRelationshipEntity = new Entities.AccountRelationship
                 {
                     SourceAccount = rentPrepaymentAccountEntity,
                     DestinationAccount = rentExpenseAccountEntity,
-                    Type = Entities.AccountRelationshipType.PrepaymentToExpense
+                    Type = AccountRelationshipType.PrepaymentToExpense
                 };
 
                 sqliteMemoryWrapper.DbContext.AccountRelationships.Add(checkingToRentPrepaymentRelationshipEntity);
@@ -925,7 +925,7 @@ namespace Financier.Tests
                 var budgetEntity = new Entities.Budget
                 {
                     Name = "Full Budget",
-                    Period = Entities.BudgetPeriod.Fortnightly
+                    Period = BudgetPeriod.Fortnightly
                 };
                 sqliteMemoryWrapper.DbContext.Budgets.Add(budgetEntity);
                 sqliteMemoryWrapper.DbContext.SaveChanges();
@@ -975,7 +975,7 @@ namespace Financier.Tests
                 Assert.AreEqual(1, updatedBudgetEntities.Count);
                 Assert.AreEqual(2, updatedBudgetTransactionEntities.Count);
                 Assert.AreEqual(budget.Name, updatedBudgetEntities[0].Name);
-                Assert.AreEqual(Entities.BudgetPeriod.Fortnightly, updatedBudgetEntities[0].Period);
+                Assert.AreEqual(BudgetPeriod.Fortnightly, updatedBudgetEntities[0].Period);
                 Assert.AreEqual(budget.InitialTransaction.Amount,
                     updatedBudgetTransactionEntities[0].Amount);
                 Assert.AreEqual(budget.InitialTransaction.CreditAccount.AccountId,
@@ -1024,13 +1024,13 @@ namespace Financier.Tests
                 {
                     SourceAccount = checkingAccountEntity,
                     DestinationAccount = rentPrepaymentAccountEntity,
-                    Type = Entities.AccountRelationshipType.PhysicalToLogical
+                    Type = AccountRelationshipType.PhysicalToLogical
                 };
                 var rentPrepaymentToExpenseRelationshipEntity = new Entities.AccountRelationship
                 {
                     SourceAccount = rentPrepaymentAccountEntity,
                     DestinationAccount = rentExpenseAccountEntity,
-                    Type = Entities.AccountRelationshipType.PrepaymentToExpense
+                    Type = AccountRelationshipType.PrepaymentToExpense
                 };
 
                 sqliteMemoryWrapper.DbContext.AccountRelationships.Add(checkingToRentPrepaymentRelationshipEntity);
@@ -1040,7 +1040,7 @@ namespace Financier.Tests
                 var budgetEntity = new Entities.Budget
                 {
                     Name = "Full Budget",
-                    Period = Entities.BudgetPeriod.Fortnightly
+                    Period = BudgetPeriod.Fortnightly
                 };
                 sqliteMemoryWrapper.DbContext.Budgets.Add(budgetEntity);
                 sqliteMemoryWrapper.DbContext.SaveChanges();
@@ -1098,7 +1098,7 @@ namespace Financier.Tests
                 Assert.AreEqual(1, updatedBudgetEntities.Count);
                 Assert.AreEqual(4, updatedBudgetTransactionEntities.Count);
                 Assert.AreEqual(budget.Name, updatedBudgetEntities[0].Name);
-                Assert.AreEqual(Entities.BudgetPeriod.Fortnightly, updatedBudgetEntities[0].Period);
+                Assert.AreEqual(BudgetPeriod.Fortnightly, updatedBudgetEntities[0].Period);
                 Assert.AreEqual(budget.InitialTransaction.Amount,
                     updatedBudgetTransactionEntities[0].Amount);
                 Assert.AreEqual(budget.InitialTransaction.CreditAccount.AccountId,
@@ -1159,13 +1159,13 @@ namespace Financier.Tests
                 {
                     SourceAccount = checkingAccountEntity,
                     DestinationAccount = rentPrepaymentAccountEntity,
-                    Type = Entities.AccountRelationshipType.PhysicalToLogical
+                    Type = AccountRelationshipType.PhysicalToLogical
                 };
                 var rentPrepaymentToExpenseRelationshipEntity = new Entities.AccountRelationship
                 {
                     SourceAccount = rentPrepaymentAccountEntity,
                     DestinationAccount = rentExpenseAccountEntity,
-                    Type = Entities.AccountRelationshipType.PrepaymentToExpense
+                    Type = AccountRelationshipType.PrepaymentToExpense
                 };
 
                 sqliteMemoryWrapper.DbContext.AccountRelationships.Add(checkingToRentPrepaymentRelationshipEntity);
@@ -1175,7 +1175,7 @@ namespace Financier.Tests
                 var budget1Entity = new Entities.Budget
                 {
                     Name = "Full Budget",
-                    Period = Entities.BudgetPeriod.Fortnightly
+                    Period = BudgetPeriod.Fortnightly
                 };
                 sqliteMemoryWrapper.DbContext.Budgets.Add(budget1Entity);
                 sqliteMemoryWrapper.DbContext.SaveChanges();

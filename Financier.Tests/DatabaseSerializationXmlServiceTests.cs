@@ -28,13 +28,15 @@ namespace Financier.Tests
                 List<Entities.BudgetTransaction> budgetTransactions = sqliteMemoryWrapper.DbContext.BudgetTransactions.ToList();
                 List<Entities.Currency> currencies = sqliteMemoryWrapper.DbContext.Currencies.ToList();
                 List<Entities.Transaction> transactions = sqliteMemoryWrapper.DbContext.Transactions.ToList();
+                List<Entities.TransactionRelationship> transactionRelationships = sqliteMemoryWrapper.DbContext.TransactionRelationships.ToList();
 
-                Assert.AreEqual(4, accounts.Count);
-                Assert.AreEqual(1, accountRelationships.Count);
+                Assert.AreEqual(6, accounts.Count);
+                Assert.AreEqual(2, accountRelationships.Count);
                 Assert.AreEqual(2, budgets.Count);
                 Assert.AreEqual(5, budgetTransactions.Count);
                 Assert.AreEqual(2, currencies.Count);
-                Assert.AreEqual(2, transactions.Count);
+                Assert.AreEqual(4, transactions.Count);
+                Assert.AreEqual(1, transactionRelationships.Count);
 
                 Assert.AreEqual("US Dollar", currencies[0].Name);
                 Assert.AreEqual("USD", currencies[0].ShortName);
@@ -46,23 +48,41 @@ namespace Financier.Tests
 
                 Assert.AreEqual("Checking", accounts[0].Name);
                 Assert.AreEqual("USD", accounts[0].Currency.ShortName);
-                Assert.AreEqual(Entities.AccountType.Asset, accounts[0].Type);
+                Assert.AreEqual(AccountType.Asset, accounts[0].Type);
+                Assert.AreEqual(AccountSubType.Checking, accounts[0].SubType);
 
                 Assert.AreEqual("Savings", accounts[1].Name);
                 Assert.AreEqual("USD", accounts[1].Currency.ShortName);
-                Assert.AreEqual(Entities.AccountType.Asset, accounts[1].Type);
+                Assert.AreEqual(AccountType.Asset, accounts[1].Type);
+                Assert.AreEqual(AccountSubType.None, accounts[1].SubType);
 
                 Assert.AreEqual("Income", accounts[2].Name);
                 Assert.AreEqual("USD", accounts[2].Currency.ShortName);
-                Assert.AreEqual(Entities.AccountType.Income, accounts[2].Type);
+                Assert.AreEqual(AccountType.Income, accounts[2].Type);
+                Assert.AreEqual(AccountSubType.None, accounts[2].SubType);
 
-                Assert.AreEqual("Rent Prepayment", accounts[3].Name);
+                Assert.AreEqual("Credit Card", accounts[3].Name);
                 Assert.AreEqual("USD", accounts[3].Currency.ShortName);
-                Assert.AreEqual(Entities.AccountType.Asset, accounts[3].Type);
+                Assert.AreEqual(AccountType.Liability, accounts[3].Type);
+                Assert.AreEqual(AccountSubType.CreditCard, accounts[3].SubType);
+
+                Assert.AreEqual("Rent Prepayment", accounts[4].Name);
+                Assert.AreEqual("USD", accounts[4].Currency.ShortName);
+                Assert.AreEqual(AccountType.Asset, accounts[4].Type);
+                Assert.AreEqual(AccountSubType.None, accounts[4].SubType);
+
+                Assert.AreEqual("Rent Expense", accounts[5].Name);
+                Assert.AreEqual("USD", accounts[5].Currency.ShortName);
+                Assert.AreEqual(AccountType.Expense, accounts[5].Type);
+                Assert.AreEqual(AccountSubType.None, accounts[5].SubType);
 
                 Assert.AreEqual("Checking", accountRelationships[0].SourceAccount.Name);
                 Assert.AreEqual("Rent Prepayment", accountRelationships[0].DestinationAccount.Name);
-                Assert.AreEqual(Entities.AccountRelationshipType.PhysicalToLogical, accountRelationships[0].Type);
+                Assert.AreEqual(AccountRelationshipType.PhysicalToLogical, accountRelationships[0].Type);
+
+                Assert.AreEqual("Rent Prepayment", accountRelationships[1].SourceAccount.Name);
+                Assert.AreEqual("Rent Expense", accountRelationships[1].DestinationAccount.Name);
+                Assert.AreEqual(AccountRelationshipType.PrepaymentToExpense, accountRelationships[1].Type);
 
                 Assert.AreEqual("Income", transactions[0].CreditAccount.Name);
                 Assert.AreEqual(100m, transactions[0].Amount);
@@ -74,8 +94,22 @@ namespace Financier.Tests
                 Assert.AreEqual("Rent Prepayment", transactions[1].DebitAccount.Name);
                 Assert.AreEqual(new DateTime(2018, 1, 2, 8, 30, 0), transactions[1].At);
 
+                Assert.AreEqual("Credit Card", transactions[2].CreditAccount.Name);
+                Assert.AreEqual(30m, transactions[2].Amount);
+                Assert.AreEqual("Rent Expense", transactions[2].DebitAccount.Name);
+                Assert.AreEqual(new DateTime(2018, 1, 3, 8, 30, 0), transactions[2].At);
+
+                Assert.AreEqual("Rent Prepayment", transactions[3].CreditAccount.Name);
+                Assert.AreEqual(30m, transactions[3].Amount);
+                Assert.AreEqual("Credit Card", transactions[3].DebitAccount.Name);
+                Assert.AreEqual(new DateTime(2018, 1, 4, 8, 30, 0), transactions[3].At);
+
+                Assert.AreEqual(transactions[2].TransactionId, transactionRelationships[0].SourceTransactionId);
+                Assert.AreEqual(transactions[3].TransactionId, transactionRelationships[0].DestinationTransactionId);
+                Assert.AreEqual(TransactionRelationshipType.CreditCardPayment, transactionRelationships[0].Type);
+
                 Assert.AreEqual("The Budget", budgets[0].Name);
-                Assert.AreEqual(Entities.BudgetPeriod.Fortnightly, budgets[0].Period);
+                Assert.AreEqual(BudgetPeriod.Fortnightly, budgets[0].Period);
                 
                 Assert.AreEqual("Income", budgetTransactions[0].CreditAccount.Name);
                 Assert.AreEqual(100m, budgetTransactions[0].Amount);
@@ -97,7 +131,7 @@ namespace Financier.Tests
                 Assert.AreEqual(budgets[0].BudgetId, budgetTransactions[2].BudgetId);
 
                 Assert.AreEqual("Another Budget", budgets[1].Name);
-                Assert.AreEqual(Entities.BudgetPeriod.Weekly, budgets[1].Period);
+                Assert.AreEqual(BudgetPeriod.Weekly, budgets[1].Period);
 
                 Assert.AreEqual("Income", budgetTransactions[3].CreditAccount.Name);
                 Assert.AreEqual(50m, budgetTransactions[3].Amount);
@@ -297,7 +331,7 @@ namespace Financier.Tests
             {
                 SourceAccount = checkingAccountEntity,
                 DestinationAccount = rentPrepaymentAccountEntity,
-                Type = Entities.AccountRelationshipType.PhysicalToLogical
+                Type = AccountRelationshipType.PhysicalToLogical
             };
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
@@ -355,7 +389,7 @@ namespace Financier.Tests
             {
                 SourceAccount = checkingAccountEntity,
                 DestinationAccount = rentPrepaymentAccountEntity,
-                Type = Entities.AccountRelationshipType.PhysicalToLogical
+                Type = AccountRelationshipType.PhysicalToLogical
             };
             var transaction = new Entities.Transaction
             {
@@ -428,12 +462,12 @@ namespace Financier.Tests
             {
                 SourceAccount = checkingAccountEntity,
                 DestinationAccount = rentPrepaymentAccountEntity,
-                Type = Entities.AccountRelationshipType.PhysicalToLogical
+                Type = AccountRelationshipType.PhysicalToLogical
             };
             var budget = new Entities.Budget
             {
                 Name = "The Budget",
-                Period = Entities.BudgetPeriod.Fortnightly,
+                Period = BudgetPeriod.Fortnightly,
                 Transactions = new List<Entities.BudgetTransaction>
                 {
                     new Entities.BudgetTransaction

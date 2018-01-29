@@ -53,6 +53,19 @@ namespace Financier.Entities
                 .HasOne(ar => ar.DebitAccount)
                 .WithMany()
                 .OnDelete(DeleteBehavior.Restrict);
+
+            // WithMany() is required as each Transaction could appear twice in any TransactionRelationship
+            // WithMany() has no lambda because there is no matching navigation property in Transaction
+            // We use DeleteBehavior.Restrict to prevent attempts to delete an Transaction that has 
+            // any TransactionRelationship references, which would break refential integrity
+            modelBuilder.Entity<TransactionRelationship>()
+                .HasOne(tr => tr.SourceTransaction)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<TransactionRelationship>()
+                .HasOne(tr => tr.DestinationTransaction)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict);
         }
 
         public DbSet<Account> Accounts { get; set; }
@@ -61,5 +74,6 @@ namespace Financier.Entities
         public DbSet<BudgetTransaction> BudgetTransactions { get; set; }
         public DbSet<Currency> Currencies { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
+        public DbSet<TransactionRelationship> TransactionRelationships { get; set; }
     }
 }

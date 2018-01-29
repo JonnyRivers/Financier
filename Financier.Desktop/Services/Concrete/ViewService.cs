@@ -149,6 +149,15 @@ namespace Financier.Desktop.Services
             return false;
         }
 
+        public void OpenNoPendingCreditCardTransactionsView(string accountName)
+        {
+            MessageBox.Show(
+               $"There are no transactions to pay off from account '{accountName}'.",
+               $"Nothing to pay off",
+               MessageBoxButton.OK
+            );
+        }
+
         public bool OpenTransactionBatchCreateConfirmView(IEnumerable<Transaction> transactions)
         {
             ITransactionBatchCreateConfirmViewModel viewModel =
@@ -162,7 +171,7 @@ namespace Financier.Desktop.Services
 
             return false;
         }
-
+        
         public bool OpenTransactionCreateView(Transaction hint, out Transaction transaction)
         {
             transaction = null;
@@ -215,7 +224,7 @@ namespace Financier.Desktop.Services
                $"Are you sure you want to delete this {context}?  This cannot be undone.",
                $"Really delete {context}?",
                MessageBoxButton.YesNo
-           );
+            );
 
             return (confirmResult == MessageBoxResult.Yes);
         }

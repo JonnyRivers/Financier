@@ -38,7 +38,7 @@ namespace Financier.Tests
                     loggerFactory.CreateLogger<TransactionService>(),
                     sqliteMemoryWrapper.DbContext);
 
-                var viewService = new Concrete.FakeViewServce();
+                var viewService = new Concrete.FakeViewService();
 
                 var viewModel = new AccountTransactionListViewModel(
                     logger,
@@ -112,13 +112,13 @@ namespace Financier.Tests
                 {
                     SourceAccount = checkingAccountEntity,
                     DestinationAccount = rentPrepaymentAccountEntity,
-                    Type = Entities.AccountRelationshipType.PhysicalToLogical
+                    Type = AccountRelationshipType.PhysicalToLogical
                 };
                 var checkingToGroceriesPrepaymentRelationship = new Entities.AccountRelationship
                 {
                     SourceAccount = checkingAccountEntity,
                     DestinationAccount = groceriesPrepaymentAccountEntity,
-                    Type = Entities.AccountRelationshipType.PhysicalToLogical
+                    Type = AccountRelationshipType.PhysicalToLogical
                 };
 
                 sqliteMemoryWrapper.DbContext.AccountRelationships.Add(checkingToRentPrepaymentRelationship);
@@ -135,7 +135,7 @@ namespace Financier.Tests
                     loggerFactory.CreateLogger<TransactionService>(),
                     sqliteMemoryWrapper.DbContext);
 
-                var viewService = new Concrete.FakeViewServce();
+                var viewService = new Concrete.FakeViewService();
 
                 var viewModel = new AccountTransactionListViewModel(
                     logger,

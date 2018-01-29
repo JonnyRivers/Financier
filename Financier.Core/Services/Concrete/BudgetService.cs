@@ -33,7 +33,7 @@ namespace Financier.Services
                 var budgetEntity = new Entities.Budget
                 {
                     Name = budget.Name,
-                    Period = (Entities.BudgetPeriod)budget.Period
+                    Period = budget.Period
                 };
                 m_dbContext.Budgets.Add(budgetEntity);
                 m_dbContext.SaveChanges();
@@ -116,7 +116,7 @@ namespace Financier.Services
                 .Include(b => b.Transactions)
                 .Single(b => b.BudgetId == budget.BudgetId);
             budgetEntity.Name = budget.Name;
-            budgetEntity.Period = (Entities.BudgetPeriod)budget.Period;
+            budgetEntity.Period = (BudgetPeriod)budget.Period;
 
             Entities.BudgetTransaction initialTransactionEntity = budgetEntity.Transactions.Single(t => t.IsInitial);
             UpdateTransactionEntity(budget.InitialTransaction, initialTransactionEntity);
@@ -241,13 +241,15 @@ namespace Financier.Services
                 {
                     AccountId = budgetTransactionEntity.CreditAccount.AccountId,
                     Name = budgetTransactionEntity.CreditAccount.Name,
-                    Type = (AccountType)budgetTransactionEntity.CreditAccount.Type
+                    Type = budgetTransactionEntity.CreditAccount.Type,
+                    SubType = budgetTransactionEntity.CreditAccount.SubType
                 },
                 DebitAccount = new AccountLink
                 {
                     AccountId = budgetTransactionEntity.DebitAccount.AccountId,
                     Name = budgetTransactionEntity.DebitAccount.Name,
-                    Type = (AccountType)budgetTransactionEntity.DebitAccount.Type
+                    Type = budgetTransactionEntity.DebitAccount.Type,
+                    SubType = budgetTransactionEntity.DebitAccount.SubType
                 },
                 Amount = budgetTransactionEntity.Amount
             };

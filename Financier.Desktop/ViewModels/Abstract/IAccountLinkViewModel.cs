@@ -1,5 +1,4 @@
 ﻿using Financier.Services;
-using System.Collections.Generic;
 
 namespace Financier.Desktop.ViewModels
 {
@@ -12,5 +11,6 @@ namespace Financier.Desktop.ViewModels
         int AccountId { get; }
         string Name { get; set; }
         AccountType Type { get; set; }
+        AccountSubType SubType { get; set; }
     }
 }

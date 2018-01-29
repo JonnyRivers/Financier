@@ -48,6 +48,7 @@ namespace Financier.Desktop.IoC
             serviceCollection.AddSingleton<IBudgetService, BudgetService>();
             serviceCollection.AddSingleton<ICurrencyService, CurrencyService>();
             serviceCollection.AddSingleton<ITransactionService, TransactionService>();
+            serviceCollection.AddSingleton<ITransactionRelationshipService, TransactionRelationshipService>();
 
             serviceCollection.AddSingleton<IConversionService, ConversionService>();
             serviceCollection.AddSingleton<IMessageService, MessageService>();
