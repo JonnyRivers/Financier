@@ -152,7 +152,8 @@ namespace Financier.Services
             {
                 Currency = currenciesByShortName[currencyShortName],
                 Name = GetRequiredAttribute(element, "name").Value,
-                Type = (Entities.AccountType)Enum.Parse(typeof(Entities.AccountType), GetRequiredAttribute(element, "type").Value)
+                Type = (AccountType)Enum.Parse(typeof(AccountType), GetRequiredAttribute(element, "type").Value),
+                SubType = (AccountSubType)Enum.Parse(typeof(AccountSubType), GetRequiredAttribute(element, "subType").Value)
             };
 
             return account;
@@ -163,7 +164,8 @@ namespace Financier.Services
             var element = new XElement(XName.Get("Account"),
                 new XAttribute(XName.Get("name"), account.Name),
                 new XAttribute(XName.Get("currency"), account.Currency.ShortName),
-                new XAttribute(XName.Get("type"), account.Type)
+                new XAttribute(XName.Get("type"), account.Type),
+                new XAttribute(XName.Get("subType"), account.SubType)
             );
 
             return element;
@@ -179,7 +181,7 @@ namespace Financier.Services
             {
                 DestinationAccount = accountsByShortName[destinationAccountName],
                 SourceAccount = accountsByShortName[sourceAcountName],
-                Type = (Entities.AccountRelationshipType)Enum.Parse(typeof(Entities.AccountRelationshipType), type)
+                Type = (AccountRelationshipType)Enum.Parse(typeof(AccountRelationshipType), type)
             };
 
             return accountRelationship;
@@ -236,7 +238,7 @@ namespace Financier.Services
             var budget = new Entities.Budget
             {
                 Name = name,
-                Period = (Entities.BudgetPeriod)Enum.Parse(typeof(Entities.BudgetPeriod), period),
+                Period = (BudgetPeriod)Enum.Parse(typeof(BudgetPeriod), period),
                 Transactions = element
                     .Elements(XName.Get("BudgetTransaction"))
                     .Select(e => BudgetTransactionFromElement(e, accountsByName)).ToList()

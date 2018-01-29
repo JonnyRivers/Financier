@@ -112,13 +112,13 @@ namespace Financier.Tests
                 {
                     SourceAccount = checkingAccountEntity,
                     DestinationAccount = rentPrepaymentAccountEntity,
-                    Type = Entities.AccountRelationshipType.PhysicalToLogical
+                    Type = AccountRelationshipType.PhysicalToLogical
                 };
                 var checkingToGroceriesPrepaymentRelationship = new Entities.AccountRelationship
                 {
                     SourceAccount = checkingAccountEntity,
                     DestinationAccount = groceriesPrepaymentAccountEntity,
-                    Type = Entities.AccountRelationshipType.PhysicalToLogical
+                    Type = AccountRelationshipType.PhysicalToLogical
                 };
 
                 sqliteMemoryWrapper.DbContext.AccountRelationships.Add(checkingToRentPrepaymentRelationship);

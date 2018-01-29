@@ -46,23 +46,23 @@ namespace Financier.Tests
 
                 Assert.AreEqual("Checking", accounts[0].Name);
                 Assert.AreEqual("USD", accounts[0].Currency.ShortName);
-                Assert.AreEqual(Entities.AccountType.Asset, accounts[0].Type);
+                Assert.AreEqual(AccountType.Asset, accounts[0].Type);
 
                 Assert.AreEqual("Savings", accounts[1].Name);
                 Assert.AreEqual("USD", accounts[1].Currency.ShortName);
-                Assert.AreEqual(Entities.AccountType.Asset, accounts[1].Type);
+                Assert.AreEqual(AccountType.Asset, accounts[1].Type);
 
                 Assert.AreEqual("Income", accounts[2].Name);
                 Assert.AreEqual("USD", accounts[2].Currency.ShortName);
-                Assert.AreEqual(Entities.AccountType.Income, accounts[2].Type);
+                Assert.AreEqual(AccountType.Income, accounts[2].Type);
 
                 Assert.AreEqual("Rent Prepayment", accounts[3].Name);
                 Assert.AreEqual("USD", accounts[3].Currency.ShortName);
-                Assert.AreEqual(Entities.AccountType.Asset, accounts[3].Type);
+                Assert.AreEqual(AccountType.Asset, accounts[3].Type);
 
                 Assert.AreEqual("Checking", accountRelationships[0].SourceAccount.Name);
                 Assert.AreEqual("Rent Prepayment", accountRelationships[0].DestinationAccount.Name);
-                Assert.AreEqual(Entities.AccountRelationshipType.PhysicalToLogical, accountRelationships[0].Type);
+                Assert.AreEqual(AccountRelationshipType.PhysicalToLogical, accountRelationships[0].Type);
 
                 Assert.AreEqual("Income", transactions[0].CreditAccount.Name);
                 Assert.AreEqual(100m, transactions[0].Amount);
@@ -75,7 +75,7 @@ namespace Financier.Tests
                 Assert.AreEqual(new DateTime(2018, 1, 2, 8, 30, 0), transactions[1].At);
 
                 Assert.AreEqual("The Budget", budgets[0].Name);
-                Assert.AreEqual(Entities.BudgetPeriod.Fortnightly, budgets[0].Period);
+                Assert.AreEqual(BudgetPeriod.Fortnightly, budgets[0].Period);
                 
                 Assert.AreEqual("Income", budgetTransactions[0].CreditAccount.Name);
                 Assert.AreEqual(100m, budgetTransactions[0].Amount);
@@ -97,7 +97,7 @@ namespace Financier.Tests
                 Assert.AreEqual(budgets[0].BudgetId, budgetTransactions[2].BudgetId);
 
                 Assert.AreEqual("Another Budget", budgets[1].Name);
-                Assert.AreEqual(Entities.BudgetPeriod.Weekly, budgets[1].Period);
+                Assert.AreEqual(BudgetPeriod.Weekly, budgets[1].Period);
 
                 Assert.AreEqual("Income", budgetTransactions[3].CreditAccount.Name);
                 Assert.AreEqual(50m, budgetTransactions[3].Amount);
@@ -297,7 +297,7 @@ namespace Financier.Tests
             {
                 SourceAccount = checkingAccountEntity,
                 DestinationAccount = rentPrepaymentAccountEntity,
-                Type = Entities.AccountRelationshipType.PhysicalToLogical
+                Type = AccountRelationshipType.PhysicalToLogical
             };
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
@@ -355,7 +355,7 @@ namespace Financier.Tests
             {
                 SourceAccount = checkingAccountEntity,
                 DestinationAccount = rentPrepaymentAccountEntity,
-                Type = Entities.AccountRelationshipType.PhysicalToLogical
+                Type = AccountRelationshipType.PhysicalToLogical
             };
             var transaction = new Entities.Transaction
             {
@@ -428,12 +428,12 @@ namespace Financier.Tests
             {
                 SourceAccount = checkingAccountEntity,
                 DestinationAccount = rentPrepaymentAccountEntity,
-                Type = Entities.AccountRelationshipType.PhysicalToLogical
+                Type = AccountRelationshipType.PhysicalToLogical
             };
             var budget = new Entities.Budget
             {
                 Name = "The Budget",
-                Period = Entities.BudgetPeriod.Fortnightly,
+                Period = BudgetPeriod.Fortnightly,
                 Transactions = new List<Entities.BudgetTransaction>
                 {
                     new Entities.BudgetTransaction

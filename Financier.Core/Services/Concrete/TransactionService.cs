@@ -99,7 +99,7 @@ namespace Financier.Services
             {
                 IEnumerable<int> logicalAccountIds = m_dbContext.AccountRelationships
                     .Where(r => r.SourceAccountId == accountId &&
-                                r.Type == Entities.AccountRelationshipType.PhysicalToLogical)
+                                r.Type == AccountRelationshipType.PhysicalToLogical)
                     .Select(r => r.DestinationAccountId);
                 foreach (int logicalAccountId in logicalAccountIds)
                     relevantAccountIds.Add(logicalAccountId);

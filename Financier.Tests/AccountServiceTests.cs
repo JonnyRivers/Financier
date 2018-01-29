@@ -82,13 +82,13 @@ namespace Financier.Tests
                 {
                     SourceAccount = checkingAccountEntity,
                     DestinationAccount = groceriesPrepaymentAccountEntity,
-                    Type = Entities.AccountRelationshipType.PhysicalToLogical
+                    Type = AccountRelationshipType.PhysicalToLogical
                 };
                 var checkingToRentPrepaymentRelationship = new Entities.AccountRelationship
                 {
                     SourceAccount = checkingAccountEntity,
                     DestinationAccount = rentPrepaymentAccountEntity,
-                    Type = Entities.AccountRelationshipType.PhysicalToLogical
+                    Type = AccountRelationshipType.PhysicalToLogical
                 };
 
                 sqliteMemoryWrapper.DbContext.AccountRelationships.Add(checkingToGroceriesPrepaymentRelationship);
@@ -151,7 +151,7 @@ namespace Financier.Tests
                 {
                     SourceAccount = checkingAccountEntity,
                     DestinationAccount = rentPrepaymentAccountEntity,
-                    Type = Entities.AccountRelationshipType.PhysicalToLogical
+                    Type = AccountRelationshipType.PhysicalToLogical
                 };
 
                 sqliteMemoryWrapper.DbContext.AccountRelationships.Add(checkingToRentPrepaymentRelationship);
@@ -238,7 +238,7 @@ namespace Financier.Tests
 
                 Assert.AreEqual(1, accountEntities.Count);
                 Assert.AreEqual(account.Name, accountEntities[0].Name);
-                Assert.AreEqual(Entities.AccountType.Asset, accountEntities[0].Type);
+                Assert.AreEqual(AccountType.Asset, accountEntities[0].Type);
                 Assert.AreEqual(usdCurrencyEntity.CurrencyId, accountEntities[0].Currency.CurrencyId);
                 Assert.AreEqual(usdCurrencyEntity.IsPrimary, accountEntities[0].Currency.IsPrimary);
                 Assert.AreEqual(usdCurrencyEntity.Name, accountEntities[0].Currency.Name);
@@ -280,7 +280,7 @@ namespace Financier.Tests
 
                 Assert.AreEqual(2, accountEntities.Count);
                 Assert.AreEqual(checkingAccount.Name, accountEntities[1].Name);
-                Assert.AreEqual(Entities.AccountType.Expense, accountEntities[1].Type);
+                Assert.AreEqual(AccountType.Expense, accountEntities[1].Type);
                 Assert.AreEqual(gbpCurrencyEntity.CurrencyId, accountEntities[1].Currency.CurrencyId);
                 Assert.AreEqual(gbpCurrencyEntity.IsPrimary, accountEntities[1].Currency.IsPrimary);
                 Assert.AreEqual(gbpCurrencyEntity.Name, accountEntities[1].Currency.Name);
