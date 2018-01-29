@@ -15,7 +15,6 @@ namespace Financier.Desktop.ViewModels
         // Dependencies
         private ILogger<AccountListViewModel> m_logger;
         private IAccountService m_accountService;
-        private IAccountRelationshipService m_accountRelationshipService;
         private IConversionService m_conversionService;
         private ITransactionService m_transactionService;
         private IViewService m_viewService;
@@ -34,7 +33,6 @@ namespace Financier.Desktop.ViewModels
         {
             m_logger = logger;
             m_accountService = accountService;
-            m_accountRelationshipService = accountRelationshipService;
             m_conversionService = conversionService;
             m_transactionService = transactionService;
             m_viewService = viewService;

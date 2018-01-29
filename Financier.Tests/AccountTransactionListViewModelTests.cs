@@ -38,7 +38,7 @@ namespace Financier.Tests
                     loggerFactory.CreateLogger<TransactionService>(),
                     sqliteMemoryWrapper.DbContext);
 
-                var viewService = new Concrete.FakeViewServce();
+                var viewService = new Concrete.FakeViewService();
 
                 var viewModel = new AccountTransactionListViewModel(
                     logger,
@@ -135,7 +135,7 @@ namespace Financier.Tests
                     loggerFactory.CreateLogger<TransactionService>(),
                     sqliteMemoryWrapper.DbContext);
 
-                var viewService = new Concrete.FakeViewServce();
+                var viewService = new Concrete.FakeViewService();
 
                 var viewModel = new AccountTransactionListViewModel(
                     logger,

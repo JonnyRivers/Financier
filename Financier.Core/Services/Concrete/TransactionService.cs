@@ -91,28 +91,9 @@ namespace Financier.Services
                 .ToList();
         }
 
-        public IEnumerable<Transaction> GetAll(int accountId, bool includeLogicalAccounts)
+        public IEnumerable<Payment> GetPendingCreditCardPayments(int accountId)
         {
-            var relevantAccountIds = new HashSet<int>();
-            relevantAccountIds.Add(accountId);
-            if (includeLogicalAccounts)
-            {
-                IEnumerable<int> logicalAccountIds = m_dbContext.AccountRelationships
-                    .Where(r => r.SourceAccountId == accountId &&
-                                r.Type == AccountRelationshipType.PhysicalToLogical)
-                    .Select(r => r.DestinationAccountId);
-                foreach (int logicalAccountId in logicalAccountIds)
-                    relevantAccountIds.Add(logicalAccountId);
-            }
-
-            return m_dbContext.Transactions
-                .Include(t => t.CreditAccount)
-                .Include(t => t.DebitAccount)
-                .Where(t => relevantAccountIds.Contains(t.CreditAccountId) ||
-                            relevantAccountIds.Contains(t.DebitAccountId))
-                .OrderBy(t => t.TransactionId)
-                .Select(FromEntity)
-                .ToList();
+            throw new NotImplementedException();
         }
 
         public void Update(Transaction transaction)

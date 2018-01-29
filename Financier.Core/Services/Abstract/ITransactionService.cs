@@ -9,7 +9,8 @@ namespace Financier.Services
         void Delete(int transactionId);
         Transaction Get(int transactionId);
         IEnumerable<Transaction> GetAll();
-        IEnumerable<Transaction> GetAll(IEnumerable<int> accountIds);// TODO: tests
+        IEnumerable<Transaction> GetAll(IEnumerable<int> accountIds);
+        IEnumerable<Payment> GetPendingCreditCardPayments(int accountId);
         void Update(Transaction transaction);
     }
 }
