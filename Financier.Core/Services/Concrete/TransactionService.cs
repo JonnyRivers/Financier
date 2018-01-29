@@ -148,7 +148,8 @@ namespace Financier.Services
             {
                 AccountId = accountEntity.AccountId,
                 Name = accountEntity.Name,
-                Type = (AccountType)accountEntity.Type
+                Type = accountEntity.Type,
+                SubType = accountEntity.SubType
             };
         }
     }

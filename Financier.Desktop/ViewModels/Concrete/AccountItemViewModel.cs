@@ -9,6 +9,7 @@ namespace Financier.Desktop.ViewModels
 
         private string m_name;
         private AccountType m_type;
+        private AccountSubType m_subType;
         private string m_currencyName;
 
         public AccountItemViewModel(
@@ -22,6 +23,7 @@ namespace Financier.Desktop.ViewModels
             AccountId = account.AccountId;
             m_name = account.Name;
             m_type = account.Type;
+            m_subType = account.SubType;
             m_currencyName = account.Currency.Name;
         }
 
@@ -47,6 +49,19 @@ namespace Financier.Desktop.ViewModels
                 if (m_type != value)
                 {
                     m_type = value;
+
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public AccountSubType SubType
+        {
+            get { return m_subType; }
+            private set
+            {
+                if (m_subType != value)
+                {
+                    m_subType = value;
 
                     OnPropertyChanged();
                 }

@@ -90,7 +90,8 @@ namespace Financier.Services
                 .Single(a => a.AccountId == account.AccountId);
 
             accountEntity.Name = account.Name;
-            accountEntity.Type = (AccountType)account.Type;
+            accountEntity.Type = account.Type;
+            accountEntity.SubType = account.SubType;
             accountEntity.CurrencyId = account.Currency.CurrencyId;
 
             m_dbContext.SaveChanges();
@@ -149,6 +150,7 @@ namespace Financier.Services
                 AccountId = accountEntity.AccountId,
                 Name = accountEntity.Name,
                 Type = accountEntity.Type,
+                SubType = accountEntity.SubType,
                 Currency = currency
             };
         }
@@ -160,7 +162,8 @@ namespace Financier.Services
             {
                 AccountId = accountEntity.AccountId,
                 Name = accountEntity.Name,
-                Type = (AccountType)accountEntity.Type
+                Type = accountEntity.Type,
+                SubType = accountEntity.SubType
             };
         }
     }

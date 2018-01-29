@@ -26,6 +26,7 @@ namespace Financier.Desktop.ViewModels
             m_currencyService = currencyService;
 
             AccountTypes = Enum.GetValues(typeof(AccountType)).Cast<AccountType>();
+            AccountSubTypes = Enum.GetValues(typeof(AccountSubType)).Cast<AccountSubType>();
             Currencies = m_currencyService.GetAll();
         }
 
@@ -35,6 +36,7 @@ namespace Financier.Desktop.ViewModels
 
             Name = "New Account";
             SelectedAccountType = AccountType.Asset;
+            SelectedAccountSubType = AccountSubType.None;
             SelectedCurrency = Currencies.Single(c => c.IsPrimary);
         }
 
@@ -46,6 +48,7 @@ namespace Financier.Desktop.ViewModels
             
             Name = account.Name;
             SelectedAccountType = account.Type;
+            SelectedAccountSubType = account.SubType;
             SelectedCurrency = Currencies.Single(c => c.CurrencyId == account.Currency.CurrencyId);
         }
 
@@ -56,11 +59,13 @@ namespace Financier.Desktop.ViewModels
                 AccountId = m_accountId,
                 Name = Name,
                 Type = SelectedAccountType,
+                SubType = SelectedAccountSubType,
                 Currency = SelectedCurrency
             };
         }
 
         public IEnumerable<AccountType> AccountTypes { get; }
+        public IEnumerable<AccountSubType> AccountSubTypes { get; }
         public IEnumerable<Currency> Currencies { get; }
 
         public int AccountId
@@ -70,6 +75,7 @@ namespace Financier.Desktop.ViewModels
 
         public string Name { get; set; }
         public AccountType SelectedAccountType { get; set; }
+        public AccountSubType SelectedAccountSubType { get; set; }
         public Currency SelectedCurrency { get; set; }
 
         public ICommand OKCommand => new RelayCommand(OKExecute);

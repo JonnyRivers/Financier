@@ -241,13 +241,15 @@ namespace Financier.Services
                 {
                     AccountId = budgetTransactionEntity.CreditAccount.AccountId,
                     Name = budgetTransactionEntity.CreditAccount.Name,
-                    Type = (AccountType)budgetTransactionEntity.CreditAccount.Type
+                    Type = budgetTransactionEntity.CreditAccount.Type,
+                    SubType = budgetTransactionEntity.CreditAccount.SubType
                 },
                 DebitAccount = new AccountLink
                 {
                     AccountId = budgetTransactionEntity.DebitAccount.AccountId,
                     Name = budgetTransactionEntity.DebitAccount.Name,
-                    Type = (AccountType)budgetTransactionEntity.DebitAccount.Type
+                    Type = budgetTransactionEntity.DebitAccount.Type,
+                    SubType = budgetTransactionEntity.DebitAccount.SubType
                 },
                 Amount = budgetTransactionEntity.Amount
             };

@@ -14,9 +14,14 @@ namespace Financier.Tests
         {
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
-                Assert.AreEqual(0, sqliteMemoryWrapper.DbContext.Accounts.Count());
-                Assert.AreEqual(0, sqliteMemoryWrapper.DbContext.Currencies.Count());
-                Assert.AreEqual(0, sqliteMemoryWrapper.DbContext.Transactions.Count());
+                FinancierDbContext dbContext = sqliteMemoryWrapper.DbContext;
+                Assert.AreEqual(0, dbContext.Accounts.Count());
+                Assert.AreEqual(0, dbContext.AccountRelationships.Count());
+                Assert.AreEqual(0, dbContext.Budgets.Count());
+                Assert.AreEqual(0, dbContext.BudgetTransactions.Count());
+                Assert.AreEqual(0, dbContext.Currencies.Count());
+                Assert.AreEqual(0, dbContext.Transactions.Count());
+                Assert.AreEqual(0, dbContext.TransactionRelationships.Count());
             }
         }
 
@@ -306,6 +311,94 @@ namespace Financier.Tests
                 Assert.AreEqual(surplusTransaction.Amount, budgetTransactions[3].Amount);
                 Assert.AreEqual(false, budgetTransactions[3].IsInitial);
                 Assert.AreEqual(true, budgetTransactions[3].IsSurplus);
+            }
+        }
+
+        [TestMethod]
+        public void TestCreateTransactionRelationship()
+        {
+            using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
+            {
+                var currencyFactory = new DbSetup.CurrencyFactory();
+                Entities.Currency usdCurrencyEntity = currencyFactory.Create(DbSetup.CurrencyPrefab.Usd, true);
+                currencyFactory.Add(sqliteMemoryWrapper.DbContext, usdCurrencyEntity);
+
+                var accountFactory = new DbSetup.AccountFactory();
+                Entities.Account incomeAccountEntity =
+                    accountFactory.Create(DbSetup.AccountPrefab.Income, usdCurrencyEntity);
+                Entities.Account checkingAccountEntity =
+                    accountFactory.Create(DbSetup.AccountPrefab.Checking, usdCurrencyEntity);
+                Entities.Account rentPrepaymentAccountEntity =
+                    accountFactory.Create(DbSetup.AccountPrefab.RentPrepayment, usdCurrencyEntity);
+                Entities.Account rentExpenseAccountEntity =
+                    accountFactory.Create(DbSetup.AccountPrefab.RentExpense, usdCurrencyEntity);
+                Entities.Account creditCardAccountEntity =
+                    accountFactory.Create(DbSetup.AccountPrefab.CreditCard, usdCurrencyEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, incomeAccountEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, checkingAccountEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, rentPrepaymentAccountEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, rentExpenseAccountEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, creditCardAccountEntity);
+
+                var transactionsToAdd = new Entities.Transaction[4]
+                {
+                    new Entities.Transaction
+                    {
+                        CreditAccount = incomeAccountEntity,
+                        DebitAccount = checkingAccountEntity,
+                        Amount = 109m,
+                        At = new DateTime(2018, 1, 1, 8, 30, 1)
+                    },
+                    new Entities.Transaction
+                    {
+                        CreditAccount = checkingAccountEntity,
+                        DebitAccount = rentPrepaymentAccountEntity,
+                        Amount = 50m,
+                        At = new DateTime(2018, 1, 1, 8, 30, 2)
+                    },
+                    new Entities.Transaction
+                    {
+                        CreditAccount = creditCardAccountEntity,
+                        DebitAccount = rentExpenseAccountEntity,
+                        Amount = 20m,
+                        At = new DateTime(2018, 1, 1, 8, 30, 3)
+                    },
+                    new Entities.Transaction
+                    {
+                        CreditAccount = rentPrepaymentAccountEntity,
+                        DebitAccount = creditCardAccountEntity,
+                        Amount = 20m,
+                        At = new DateTime(2018, 1, 1, 8, 30, 4)
+                    }
+                };
+
+                sqliteMemoryWrapper.DbContext.Transactions.AddRange(transactionsToAdd);
+                sqliteMemoryWrapper.DbContext.SaveChanges();
+
+                var expenseToPaymentRelationship = new Entities.TransactionRelationship
+                {
+                    SourceTransaction = transactionsToAdd[2],
+                    DestinationTransaction = transactionsToAdd[2],
+                    Type = TransactionRelationshipType.CreditCardPayment
+                };
+
+                sqliteMemoryWrapper.DbContext.TransactionRelationships.Add(expenseToPaymentRelationship);
+                sqliteMemoryWrapper.DbContext.SaveChanges();
+
+                List<Account> accounts = sqliteMemoryWrapper.DbContext.Accounts.ToList();
+                List<Currency> currencies = sqliteMemoryWrapper.DbContext.Currencies.ToList();
+                List<Transaction> transactions = sqliteMemoryWrapper.DbContext.Transactions.ToList();
+                List<TransactionRelationship> transactionRelationships = sqliteMemoryWrapper.DbContext.TransactionRelationships.ToList();
+
+                Assert.AreEqual(5, accounts.Count);
+                Assert.AreEqual(1, currencies.Count);
+                Assert.AreEqual(4, transactions.Count);
+                Assert.AreEqual(1, transactionRelationships.Count);
+                Assert.AreEqual(expenseToPaymentRelationship.SourceTransactionId,
+                    transactionRelationships[0].SourceTransactionId);
+                Assert.AreEqual(expenseToPaymentRelationship.DestinationTransactionId,
+                    transactionRelationships[0].DestinationTransactionId);
+                Assert.AreEqual(expenseToPaymentRelationship.Type, transactionRelationships[0].Type);
             }
         }
     }
