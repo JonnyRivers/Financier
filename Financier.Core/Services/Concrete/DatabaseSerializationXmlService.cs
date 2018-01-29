@@ -47,9 +47,20 @@ namespace Financier.Services
             m_dbContext.AccountRelationships.AddRange(accountRelationships);
             m_dbContext.SaveChanges();
 
+            var transactionsByIncomingId = new Dictionary<int, Entities.Transaction>();
             List<XElement> transactionElements = rootElement.Elements(XName.Get("Transaction")).ToList();
-            List<Entities.Transaction> transactions = transactionElements.Select(e => TransactionFromElement(e, accountsByName)).ToList();
+            List<Entities.Transaction> transactions = 
+                transactionElements
+                    .Select(e => TransactionFromElement(e, accountsByName, transactionsByIncomingId))
+                    .ToList();
             m_dbContext.Transactions.AddRange(transactions);
+            m_dbContext.SaveChanges();
+
+            List<XElement> transactionRelationshipElements = rootElement.Elements(XName.Get("TransactionRelationship")).ToList();
+            List<Entities.TransactionRelationship> transactionRelationships = 
+                transactionRelationshipElements
+                    .Select(e => TransactionRelationshipFromElement(e, transactionsByIncomingId)).ToList();
+            m_dbContext.TransactionRelationships.AddRange(transactionRelationships);
             m_dbContext.SaveChanges();
 
             List<XElement> budgetElements = rootElement.Elements(XName.Get("Budget")).ToList();
@@ -72,6 +83,9 @@ namespace Financier.Services
             List<Entities.Transaction> transactions = m_dbContext.Transactions.ToList();
             List<XElement> transactionElements = transactions.Select(ElementFromTransaction).ToList();
 
+            List<Entities.TransactionRelationship> transactionRelationships = m_dbContext.TransactionRelationships.ToList();
+            List<XElement> transactionRelationshipElements = transactionRelationships.Select(ElementFromTransactionRelationship).ToList();
+
             List<Entities.Budget> budgets = m_dbContext
                 .Budgets
                 .Include(b => b.Transactions)
@@ -84,6 +98,7 @@ namespace Financier.Services
                     accountElements,
                     accountRelationshipElements,
                     transactionElements,
+                    transactionRelationshipElements,
                     budgetsElements)
             );
             document.Save(path);
@@ -198,8 +213,15 @@ namespace Financier.Services
             return element;
         }
 
-        private static Entities.Transaction TransactionFromElement(XElement element, Dictionary<string, Entities.Account> accountsByShortName)
+        private static Entities.Transaction TransactionFromElement(
+            XElement element, 
+            Dictionary<string, Entities.Account> accountsByShortName,
+            Dictionary<int, Entities.Transaction> transactionsByIncomingId
+            )
         {
+            string incomingIdText = GetRequiredAttribute(element, "id").Value;
+            int incomingId = Int32.Parse(incomingIdText);
+
             string at = GetRequiredAttribute(element, "at").Value;
             string creditAccountName = GetRequiredAttribute(element, "credit").Value;
             string amount = GetRequiredAttribute(element, "amount").Value;
@@ -213,16 +235,50 @@ namespace Financier.Services
                 DebitAccount = accountsByShortName[debitAccountName]
             };
 
+            transactionsByIncomingId.Add(incomingId, transaction);
+
             return transaction;
         }
 
         private static XElement ElementFromTransaction(Entities.Transaction transaction)
         {
             var element = new XElement(XName.Get("Transaction"),
+                new XAttribute(XName.Get("id"), transaction.TransactionId),
                 new XAttribute(XName.Get("at"), transaction.At),
                 new XAttribute(XName.Get("credit"), transaction.CreditAccount.Name),
                 new XAttribute(XName.Get("amount"), transaction.Amount),
                 new XAttribute(XName.Get("debit"), transaction.DebitAccount.Name)
+            );
+
+            return element;
+        }
+
+        private static Entities.TransactionRelationship TransactionRelationshipFromElement(
+            XElement element, 
+            Dictionary<int, Entities.Transaction> transactionsById)
+        {
+            string destinationTransactionIdText = GetRequiredAttribute(element, "destination").Value;
+            int destinationTransactionId = Int32.Parse(destinationTransactionIdText);
+            string sourceTransactionIdText = GetRequiredAttribute(element, "source").Value;
+            int sourceTransactionId = Int32.Parse(sourceTransactionIdText);
+            string type = GetRequiredAttribute(element, "type").Value;
+
+            var transactionRelationship = new Entities.TransactionRelationship
+            {
+                DestinationTransaction = transactionsById[destinationTransactionId],
+                SourceTransaction = transactionsById[sourceTransactionId],
+                Type = (TransactionRelationshipType)Enum.Parse(typeof(TransactionRelationshipType), type)
+            };
+
+            return transactionRelationship;
+        }
+
+        private static XElement ElementFromTransactionRelationship(Entities.TransactionRelationship transactionRelationship)
+        {
+            var element = new XElement(XName.Get("TransactionRelationship"),
+                new XAttribute(XName.Get("destination"), transactionRelationship.DestinationTransactionId),
+                new XAttribute(XName.Get("source"), transactionRelationship.SourceTransactionId),
+                new XAttribute(XName.Get("type"), transactionRelationship.Type.ToString())
             );
 
             return element;
