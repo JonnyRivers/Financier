@@ -46,8 +46,7 @@ namespace Financier.Desktop
             serviceCollection.AddSingleton<ICurrencyService, CurrencyService>();
             serviceCollection.AddSingleton<ITransactionService, TransactionService>();
             serviceCollection.AddSingleton<ITransactionRelationshipService, TransactionRelationshipService>();
-
-            serviceCollection.AddSingleton<IConversionService, ConversionService>();
+            
             serviceCollection.AddSingleton<IMessageService, MessageService>();
             serviceCollection.AddSingleton<IViewModelFactory, ViewModelFactory>();
             serviceCollection.AddSingleton<IViewService, ViewService>();

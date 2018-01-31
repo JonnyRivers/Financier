@@ -14,23 +14,23 @@ namespace Financier.Desktop.ViewModels
     {
         private ILogger<TransactionEditViewModel> m_logger;
         private IAccountService m_accountService;
-        private IConversionService m_conversionService;
         private ITransactionService m_transactionService;
+        private IViewModelFactory m_viewModelFactory;
 
         public TransactionEditViewModel(
             ILogger<TransactionEditViewModel> logger, 
             IAccountService accountService,
-            IConversionService conversionService,
-            ITransactionService transactionService)
+            ITransactionService transactionService,
+            IViewModelFactory viewModelFactory)
         {
             m_logger = logger;
             m_accountService = accountService;
-            m_conversionService = conversionService;
             m_transactionService = transactionService;
+            m_viewModelFactory = viewModelFactory;
 
             IEnumerable<AccountLink> accountLinks = m_accountService.GetAllAsLinks();
             IEnumerable<IAccountLinkViewModel> accountLinkViewModels = 
-                accountLinks.Select(al => m_conversionService.AccountLinkToViewModel(al));
+                accountLinks.Select(al => m_viewModelFactory.CreateAccountLinkViewModel(al));
             
             Accounts = new ObservableCollection<IAccountLinkViewModel>(accountLinkViewModels.OrderBy(alvm => alvm.Name));
         }
@@ -38,9 +38,9 @@ namespace Financier.Desktop.ViewModels
         public TransactionEditViewModel(
             ILogger<TransactionEditViewModel> logger,
             IAccountService accountService,
-            IConversionService conversionService,
             ITransactionService transactionService,
-            Transaction hint)
+            IViewModelFactory viewModelFactory,
+            Transaction hint) : this(logger, accountService, transactionService, viewModelFactory)
         {
             m_transactionId = 0;
 
@@ -66,9 +66,9 @@ namespace Financier.Desktop.ViewModels
         public TransactionEditViewModel(
             ILogger<TransactionEditViewModel> logger,
             IAccountService accountService,
-            IConversionService conversionService,
             ITransactionService transactionService,
-            int transactionId) : this(logger, accountService, conversionService, transactionService)
+            IViewModelFactory viewModelFactory,
+            int transactionId) : this(logger, accountService, transactionService, viewModelFactory)
         {
             m_transactionId = transactionId;
 

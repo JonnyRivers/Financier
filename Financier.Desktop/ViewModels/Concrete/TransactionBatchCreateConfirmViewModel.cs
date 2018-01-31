@@ -12,20 +12,20 @@ namespace Financier.Desktop.ViewModels
     public class TransactionBatchCreateConfirmViewModel : BaseViewModel, ITransactionBatchCreateConfirmViewModel
     {
         private ILogger<TransactionBatchCreateConfirmViewModel> m_logger;
-        private IConversionService m_conversionService;
+        private IViewModelFactory m_viewModelFactory;
 
         private ObservableCollection<ITransactionItemViewModel> m_transactions;
 
         public TransactionBatchCreateConfirmViewModel(
             ILogger<TransactionBatchCreateConfirmViewModel> logger,
-            IConversionService conversionService,
+            IViewModelFactory viewModelFactory,
             IEnumerable<Transaction> transactions)
         {
             m_logger = logger;
-            m_conversionService = conversionService;
+            m_viewModelFactory = viewModelFactory;
 
             IEnumerable<ITransactionItemViewModel> transactionViewModels =
-                transactions.Select(t => m_conversionService.TransactionToItemViewModel(t));
+                transactions.Select(t => m_viewModelFactory.CreateTransactionItemViewModel(t));
 
             Transactions = new ObservableCollection<ITransactionItemViewModel>(transactionViewModels);
         }

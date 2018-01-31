@@ -37,10 +37,19 @@ namespace Financier.Desktop.Services
             );
         }
 
+        public IAccountItemViewModel CreateAccountItemViewModel(Account account)
+        {
+            return new AccountItemViewModel(
+                m_serviceProvider.GetRequiredService<ILogger<AccountItemViewModel>>(),
+                account
+            );
+        }
+
         public IAccountLinkViewModel CreateAccountLinkViewModel(AccountLink accountLink)
         {
             return new AccountLinkViewModel(
-                m_serviceProvider.GetRequiredService<ILogger<AccountLinkViewModel>>()
+                m_serviceProvider.GetRequiredService<ILogger<AccountLinkViewModel>>(),
+                accountLink
             );
         }
 
@@ -49,9 +58,9 @@ namespace Financier.Desktop.Services
             return new AccountListViewModel(
                 m_serviceProvider.GetRequiredService<ILogger<AccountListViewModel>>(),
                 m_serviceProvider.GetRequiredService<IAccountService>(),
-                m_serviceProvider.GetRequiredService<IConversionService>(),
                 m_serviceProvider.GetRequiredService<ITransactionService>(),
                 m_serviceProvider.GetRequiredService<ITransactionRelationshipService>(),
+                m_serviceProvider.GetRequiredService<IViewModelFactory>(),
                 m_serviceProvider.GetRequiredService<IViewService>()
             );
         }
@@ -61,9 +70,19 @@ namespace Financier.Desktop.Services
             return new AccountTransactionListViewModel(
                 m_serviceProvider.GetRequiredService<ILogger<AccountTransactionListViewModel>>(),
                 m_serviceProvider.GetRequiredService<IAccountService>(),
-                m_serviceProvider.GetRequiredService<IConversionService>(),
                 m_serviceProvider.GetRequiredService<ITransactionService>(),
-                m_serviceProvider.GetRequiredService<IViewService>()
+                m_serviceProvider.GetRequiredService<IViewModelFactory>(),
+                m_serviceProvider.GetRequiredService<IViewService>(),
+                accountId
+            );
+        }
+
+        public IAccountTransactionItemViewModel CreateAccountTransactionItemViewModel(Transaction transaction)
+        {
+            return new AccountTransactionItemViewModel(
+                m_serviceProvider.GetRequiredService<ILogger<AccountTransactionItemViewModel>>(),
+                m_serviceProvider.GetRequiredService<IViewModelFactory>(),
+                transaction
             );
         }
 
@@ -77,14 +96,23 @@ namespace Financier.Desktop.Services
             );
         }
 
+        public IBudgetItemViewModel CreateBudgetItemViewModel(Budget budget, Currency primaryCurrency)
+        {
+            return new BudgetItemViewModel(
+                m_serviceProvider.GetRequiredService<ILogger<BudgetItemViewModel>>(),
+                budget,
+                primaryCurrency
+            );
+        }
+
         public IBudgetListViewModel CreateBudgetListViewModel()
         {
             return new BudgetListViewModel(
                 m_serviceProvider.GetRequiredService<ILogger<BudgetListViewModel>>(),
                 m_serviceProvider.GetRequiredService<IBudgetService>(),
-                m_serviceProvider.GetRequiredService<IConversionService>(),
                 m_serviceProvider.GetRequiredService<ICurrencyService>(),
                 m_serviceProvider.GetRequiredService<ITransactionService>(),
+                m_serviceProvider.GetRequiredService<IViewModelFactory>(),
                 m_serviceProvider.GetRequiredService<IViewService>()
             );
         }
@@ -128,7 +156,7 @@ namespace Financier.Desktop.Services
         {
             return new TransactionBatchCreateConfirmViewModel(
                 m_serviceProvider.GetRequiredService<ILogger<TransactionBatchCreateConfirmViewModel>>(),
-                m_serviceProvider.GetRequiredService<IConversionService>(),
+                m_serviceProvider.GetRequiredService<IViewModelFactory>(),
                 transactions
             );
         }
@@ -138,8 +166,8 @@ namespace Financier.Desktop.Services
             return new TransactionEditViewModel(
                 m_serviceProvider.GetRequiredService<ILogger<TransactionEditViewModel>>(),
                 m_serviceProvider.GetRequiredService<IAccountService>(),
-                m_serviceProvider.GetRequiredService<IConversionService>(),
                 m_serviceProvider.GetRequiredService<ITransactionService>(),
+                m_serviceProvider.GetRequiredService<IViewModelFactory>(),
                 hint
             );
         }
@@ -149,9 +177,18 @@ namespace Financier.Desktop.Services
             return new TransactionEditViewModel(
                 m_serviceProvider.GetRequiredService<ILogger<TransactionEditViewModel>>(),
                 m_serviceProvider.GetRequiredService<IAccountService>(),
-                m_serviceProvider.GetRequiredService<IConversionService>(),
                 m_serviceProvider.GetRequiredService<ITransactionService>(),
+                m_serviceProvider.GetRequiredService<IViewModelFactory>(),
                 transactionId
+            );
+        }
+
+        public ITransactionItemViewModel CreateTransactionItemViewModel(Transaction transaction)
+        {
+            return new TransactionItemViewModel(
+                m_serviceProvider.GetRequiredService<ILogger<TransactionItemViewModel>>(),
+                m_serviceProvider.GetRequiredService<IViewModelFactory>(),
+                transaction
             );
         }
 
@@ -160,8 +197,8 @@ namespace Financier.Desktop.Services
             return new TransactionListViewModel(
                 m_serviceProvider.GetRequiredService<ILogger<TransactionListViewModel>>(),
                 m_serviceProvider.GetRequiredService<IAccountService>(),
-                m_serviceProvider.GetRequiredService<IConversionService>(),
                 m_serviceProvider.GetRequiredService<ITransactionService>(),
+                m_serviceProvider.GetRequiredService<IViewModelFactory>(),
                 m_serviceProvider.GetRequiredService<IViewService>()
             );
         }

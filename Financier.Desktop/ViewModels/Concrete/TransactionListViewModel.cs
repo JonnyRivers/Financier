@@ -14,8 +14,8 @@ namespace Financier.Desktop.ViewModels
     {
         // Dependencies
         private ILogger<TransactionListViewModel> m_logger;
-        private IConversionService m_conversionService;
         private ITransactionService m_transactionService;
+        private IViewModelFactory m_viewModelFactory;
         private IViewService m_viewService;
 
         // Private data
@@ -25,13 +25,13 @@ namespace Financier.Desktop.ViewModels
         public TransactionListViewModel(
             ILogger<TransactionListViewModel> logger,
             IAccountService accountService,
-            IConversionService conversionService,
             ITransactionService transactionService,
+            IViewModelFactory viewModelFactory,
             IViewService viewService)
         {
             m_logger = logger;
-            m_conversionService = conversionService;
             m_transactionService = transactionService;
+            m_viewModelFactory = viewModelFactory;
             m_viewService = viewService;
 
             PopulateTransactions();
@@ -45,7 +45,7 @@ namespace Financier.Desktop.ViewModels
                     .Take(100);
             List<ITransactionItemViewModel> recentTransactionViewModels =
                 recentTransactions
-                    .Select(t => m_conversionService.TransactionToItemViewModel(t))
+                    .Select(t => m_viewModelFactory.CreateTransactionItemViewModel(t))
                     .ToList();
 
             Transactions = new ObservableCollection<ITransactionItemViewModel>(

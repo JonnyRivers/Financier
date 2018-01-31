@@ -9,13 +9,12 @@ namespace Financier.Desktop.ViewModels
         private ILogger<BudgetItemViewModel> m_logger;
 
         public BudgetItemViewModel(
-            ILogger<BudgetItemViewModel> logger)
+            ILogger<BudgetItemViewModel> logger,
+            Budget budget, 
+            Currency currency)
         {
             m_logger = logger;
-        }
 
-        public void Setup(Budget budget, Currency currency)
-        {
             BudgetId = budget.BudgetId;
             Name = budget.Name;
             Period = budget.Period;
@@ -26,10 +25,10 @@ namespace Financier.Desktop.ViewModels
             Transactions = budget.Transactions.Count();
         }
 
-        public int BudgetId { get; private set; }
-        public string Name { get; private set; }
-        public BudgetPeriod Period { get; private set; }
-        public string InitialTransactionHint { get; private set; }
-        public int Transactions { get; private set; }
+        public int BudgetId { get; }
+        public string Name { get; }
+        public BudgetPeriod Period { get; }
+        public string InitialTransactionHint { get; }
+        public int Transactions { get; }
     }
 }

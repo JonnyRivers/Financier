@@ -10,11 +10,14 @@ namespace Financier.Desktop.Services
         IMainWindowViewModel CreateMainWindowViewModel();
         
         IAccountEditViewModel CreateAccountEditViewModel(int accountId);
+        IAccountItemViewModel CreateAccountItemViewModel(Account account);
         IAccountLinkViewModel CreateAccountLinkViewModel(AccountLink accountLink);
         IAccountListViewModel CreateAccountListViewModel();
         IAccountTransactionListViewModel CreateAccountTransactionListViewModel(int accountId);
+        IAccountTransactionItemViewModel CreateAccountTransactionItemViewModel(Transaction transaction);
 
         IBudgetEditViewModel CreateBudgetEditViewModel(int budgetId);
+        IBudgetItemViewModel CreateBudgetItemViewModel(Budget budget, Currency primaryCurrency);
         IBudgetListViewModel CreateBudgetListViewModel();
         IBudgetTransactionListViewModel CreateBudgetTransactionListViewModel(int budgetId);
         IBudgetTransactionItemViewModel CreateBudgetTransactionItemViewModel(
@@ -27,6 +30,7 @@ namespace Financier.Desktop.Services
 
         ITransactionEditViewModel CreateTransactionCreateViewModel(Transaction hint);
         ITransactionEditViewModel CreateTransactionEditViewModel(int transactionId);
+        ITransactionItemViewModel CreateTransactionItemViewModel(Transaction transaction);
         ITransactionListViewModel CreateTransactionListViewModel();
     }
 }

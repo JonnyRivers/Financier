@@ -5,8 +5,6 @@ namespace Financier.Desktop.ViewModels
 {
     public interface ITransactionItemViewModel
     {
-        void Setup(Transaction transaction);
-
         int TransactionId { get; }
         IAccountLinkViewModel CreditAccount { get; }
         IAccountLinkViewModel DebitAccount { get; }
