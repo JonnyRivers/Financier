@@ -85,11 +85,10 @@ namespace Financier.Desktop.ViewModels
 
         private void CreateExecute(object obj)
         {
-            int newBudgetId = m_viewService.OpenBudgetCreateView();
-            if (newBudgetId > 0)
+            Budget newBudget;
+            if (m_viewService.OpenBudgetCreateView(out newBudget))
             {
                 Currency primaryCurrency = m_currencyService.GetPrimary();
-                Budget newBudget = m_budgetService.Get(newBudgetId);
                 IBudgetItemViewModel newBudgetViewModel = m_conversionService.BudgetToItemViewModel(newBudget, primaryCurrency);
                 Budgets.Add(newBudgetViewModel);
                 // TODO: Is there a better way to maintain ObservableCollection<T> sorting?
@@ -100,11 +99,11 @@ namespace Financier.Desktop.ViewModels
 
         private void EditExecute(object obj)
         {
-            if (m_viewService.OpenBudgetEditView(SelectedBudget.BudgetId))
+            Budget updatedBudget;
+            if (m_viewService.OpenBudgetEditView(SelectedBudget.BudgetId, out updatedBudget))
             {
                 Currency primaryCurrency = m_currencyService.GetPrimary();
-                Budget budget = m_budgetService.Get(SelectedBudget.BudgetId);
-                SelectedBudget.Setup(budget, primaryCurrency);
+                SelectedBudget.Setup(updatedBudget, primaryCurrency);
                 // TODO: Is there a better way to maintain ObservableCollection<T> sorting?
                 // https://github.com/JonnyRivers/Financier/issues/29
                 Budgets = new ObservableCollection<IBudgetItemViewModel>(Budgets.OrderBy(b => b.Name));

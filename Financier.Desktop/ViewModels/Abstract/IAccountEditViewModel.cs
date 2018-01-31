@@ -6,9 +6,6 @@ namespace Financier.Desktop.ViewModels
 {
     public interface IAccountEditViewModel
     {
-        void SetupForCreate();
-        void SetupForEdit(int accountId);
-
         Account ToAccount();
 
         IEnumerable<AccountType> AccountTypes { get; }

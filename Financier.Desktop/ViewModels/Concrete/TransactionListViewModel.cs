@@ -13,8 +13,7 @@ namespace Financier.Desktop.ViewModels
     public class TransactionListViewModel : BaseViewModel, ITransactionListViewModel
     {
         // Dependencies
-        private ILogger<AccountListViewModel> m_logger;
-        private IAccountService m_accountService;
+        private ILogger<TransactionListViewModel> m_logger;
         private IConversionService m_conversionService;
         private ITransactionService m_transactionService;
         private IViewService m_viewService;
@@ -24,15 +23,13 @@ namespace Financier.Desktop.ViewModels
         private ITransactionItemViewModel m_selectedTransaction;
 
         public TransactionListViewModel(
-            ILogger<AccountListViewModel> logger,
+            ILogger<TransactionListViewModel> logger,
             IAccountService accountService,
-            IAccountRelationshipService accountRelationshipService,
             IConversionService conversionService,
             ITransactionService transactionService,
             IViewService viewService)
         {
             m_logger = logger;
-            m_accountService = accountService;
             m_conversionService = conversionService;
             m_transactionService = transactionService;
             m_viewService = viewService;

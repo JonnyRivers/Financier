@@ -32,7 +32,9 @@ namespace Financier.Tests
                     loggerFactory.CreateLogger<AccountService>(), 
                     sqliteMemoryWrapper.DbContext);
 
-                var conversionService = new ConversionService(loggerFactory.CreateLogger<ConversionService>());
+                var conversionService = new ConversionService(
+                    loggerFactory.CreateLogger<ConversionService>(),
+                    null);
 
                 var transactionService = new TransactionService(
                     loggerFactory.CreateLogger<TransactionService>(),
@@ -129,7 +131,9 @@ namespace Financier.Tests
                     loggerFactory.CreateLogger<AccountService>(),
                     sqliteMemoryWrapper.DbContext);
 
-                var conversionService = new ConversionService(loggerFactory.CreateLogger<ConversionService>());
+                var conversionService = new ConversionService(
+                    loggerFactory.CreateLogger<ConversionService>(),
+                    null);
 
                 var transactionService = new TransactionService(
                     loggerFactory.CreateLogger<TransactionService>(),

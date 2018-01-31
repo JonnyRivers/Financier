@@ -35,7 +35,12 @@ namespace Financier.Desktop.ViewModels
             Accounts = new ObservableCollection<IAccountLinkViewModel>(accountLinkViewModels.OrderBy(alvm => alvm.Name));
         }
 
-        public void SetupForCreate(Transaction hint)
+        public TransactionEditViewModel(
+            ILogger<TransactionEditViewModel> logger,
+            IAccountService accountService,
+            IConversionService conversionService,
+            ITransactionService transactionService,
+            Transaction hint)
         {
             m_transactionId = 0;
 
@@ -46,19 +51,24 @@ namespace Financier.Desktop.ViewModels
             }
             else
             {
-                SelectedCreditAccount = 
+                SelectedCreditAccount =
                     Accounts
                         .FirstOrDefault(a => a.Type == AccountType.Capital || a.Type == AccountType.Income);
-                SelectedDebitAccount = 
+                SelectedDebitAccount =
                     Accounts
                         .FirstOrDefault(a => a.Type == AccountType.Asset || a.Type == AccountType.Expense);
             }
-            
+
             Amount = 0m;
             At = DateTime.Now;
         }
 
-        public void SetupForEdit(int transactionId)
+        public TransactionEditViewModel(
+            ILogger<TransactionEditViewModel> logger,
+            IAccountService accountService,
+            IConversionService conversionService,
+            ITransactionService transactionService,
+            int transactionId) : this(logger, accountService, conversionService, transactionService)
         {
             m_transactionId = transactionId;
 

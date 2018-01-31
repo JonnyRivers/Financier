@@ -9,16 +9,14 @@ namespace Financier.Desktop.ViewModels
     {
         private ILogger<BudgetTransactionItemViewModel> m_logger;
 
-        public BudgetTransactionItemViewModel(ILogger<BudgetTransactionItemViewModel> logger)
-        {
-            m_logger = logger;
-        }
-
-        public void Setup(
+        public BudgetTransactionItemViewModel(
+            ILogger<BudgetTransactionItemViewModel> logger,
             ObservableCollection<IAccountLinkViewModel> accountLinks,
-            BudgetTransaction budgetTransaction, 
+            BudgetTransaction budgetTransaction,
             BudgetTransactionType type)
         {
+            m_logger = logger;
+
             AccountLinks = accountLinks;
             Amount = budgetTransaction.Amount;
             BudgetTransactionId = budgetTransaction.BudgetTransactionId;

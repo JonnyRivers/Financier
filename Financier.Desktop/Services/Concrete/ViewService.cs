@@ -10,46 +10,32 @@ namespace Financier.Desktop.Services
 {
     public class ViewService : IViewService
     {
-        private ILogger<ViewService> m_logger;
+        private readonly ILogger<ViewService> m_logger;
+        private readonly IViewModelFactory m_viewModelFactory;
 
-        public ViewService(ILogger<ViewService> logger)
+        public ViewService(ILogger<ViewService> logger, IViewModelFactory viewModelFactory)
         {
             m_logger = logger;
+            m_viewModelFactory = viewModelFactory;
         }
 
         public void OpenMainView()
         {
-            var mainWindow = new MainWindow(
-                IoC.ServiceProvider.Instance.GetRequiredService<IMainWindowViewModel>());
+            var viewModel = m_viewModelFactory.CreateMainWindowViewModel();
+            var mainWindow = new MainWindow(viewModel);
             mainWindow.Show();
         }
 
         public bool OpenAccountCreateView(out Account account)
         {
-            account = null;
-
-            IAccountEditViewModel viewModel =
-                IoC.ServiceProvider.Instance.GetRequiredService<IAccountEditViewModel>();
-            viewModel.SetupForCreate();
-            var window = new AccountEditWindow(viewModel);
-            bool? result = window.ShowDialog();
-
-            if (result.HasValue && result.Value)
-            {
-                account = viewModel.ToAccount();
-                return true;
-            }
-
-            return false;
+            return OpenAccountEditView(0, out account);
         }
 
         public bool OpenAccountEditView(int accountId, out Account account)
         {
             account = null;
 
-            IAccountEditViewModel viewModel = 
-                IoC.ServiceProvider.Instance.GetRequiredService<IAccountEditViewModel>();
-            viewModel.SetupForEdit(accountId);
+            IAccountEditViewModel viewModel = m_viewModelFactory.CreateAccountEditViewModel(accountId);
             var window = new AccountEditWindow(viewModel);
             bool? result = window.ShowDialog();
 
@@ -64,17 +50,14 @@ namespace Financier.Desktop.Services
 
         public void OpenAccountListView()
         {
-            IAccountListViewModel viewModel =
-                IoC.ServiceProvider.Instance.GetRequiredService<IAccountListViewModel>();
+            IAccountListViewModel viewModel = m_viewModelFactory.CreateAccountListViewModel();
             var window = new AccountListWindow(viewModel);
             window.ShowDialog();
         }
 
         public bool OpenAccountTransactionsEditView(int accountId)
         {
-            IAccountTransactionListViewModel viewModel =
-                IoC.ServiceProvider.Instance.GetRequiredService<IAccountTransactionListViewModel>();
-            viewModel.Setup(accountId);
+            IAccountTransactionListViewModel viewModel = m_viewModelFactory.CreateAccountTransactionListViewModel(accountId);
             var window = new AccountTransactionListWindow(viewModel);
             bool? result = window.ShowDialog();
 
@@ -84,18 +67,9 @@ namespace Financier.Desktop.Services
             return false;
         }
 
-        public int OpenBudgetCreateView()
+        public bool OpenBudgetCreateView(out Budget budget)
         {
-            IBudgetEditViewModel budgetEditViewModel = 
-                IoC.ServiceProvider.Instance.GetRequiredService<IBudgetEditViewModel>();
-            budgetEditViewModel.SetupForCreate();
-            var budgetEditWindow = new BudgetEditWindow(budgetEditViewModel);
-            bool? result = budgetEditWindow.ShowDialog();
-
-            if (result.HasValue)
-                return budgetEditViewModel.BudgetId;
-
-            return 0;
+            return OpenBudgetEditView(0, out budget);
         }
 
         public bool OpenBudgetDeleteConfirmationView()
@@ -103,24 +77,26 @@ namespace Financier.Desktop.Services
             return OpenDeleteConfirmationView("budget");
         }
 
-        public bool OpenBudgetEditView(int budgetId)
+        public bool OpenBudgetEditView(int budgetId, out Budget budget)
         {
-            IBudgetEditViewModel budgetEditViewModel =
-                IoC.ServiceProvider.Instance.GetRequiredService<IBudgetEditViewModel>();
-            budgetEditViewModel.SetupForEdit(budgetId);
-            var budgetEditWindow = new BudgetEditWindow(budgetEditViewModel);
-            bool? result = budgetEditWindow.ShowDialog();
+            budget = null;
 
-            if (result.HasValue)
-                return result.Value;
+            IBudgetEditViewModel viewModel = m_viewModelFactory.CreateBudgetEditViewModel(budgetId);
+            var window = new BudgetEditWindow(viewModel);
+            bool? result = window.ShowDialog();
+
+            if (result.HasValue && result.Value)
+            {
+                budget = viewModel.ToBudget();
+                return true;
+            }
 
             return false;
         }
 
         public void OpenBudgetListView()
         {
-            IBudgetListViewModel viewModel =
-                IoC.ServiceProvider.Instance.GetRequiredService<IBudgetListViewModel>();
+            IBudgetListViewModel viewModel = m_viewModelFactory.CreateBudgetListViewModel();
             var window = new BudgetListWindow(viewModel);
             window.ShowDialog();
         }
@@ -134,15 +110,13 @@ namespace Financier.Desktop.Services
         {
             paydayStart = null;
 
-            IPaydayEventStartViewModel paydayEventStartViewModel =
-                IoC.ServiceProvider.Instance.GetRequiredService<IPaydayEventStartViewModel>();
-            paydayEventStartViewModel.Setup(budgetId);
-            var paydayEventStartWindow = new PaydayEventStartWindow(paydayEventStartViewModel);
-            bool? result = paydayEventStartWindow.ShowDialog();
+            IPaydayEventStartViewModel viewModel = m_viewModelFactory.CreatePaydayEventStartViewModel(budgetId);
+            var window = new PaydayEventStartWindow(viewModel);
+            bool? result = window.ShowDialog();
 
             if (result.HasValue && result.Value)
             {
-                paydayStart = paydayEventStartViewModel.ToPaydayStart();
+                paydayStart = viewModel.ToPaydayStart();
                 return true;
             }
             
@@ -161,8 +135,7 @@ namespace Financier.Desktop.Services
         public bool OpenTransactionBatchCreateConfirmView(IEnumerable<Transaction> transactions)
         {
             ITransactionBatchCreateConfirmViewModel viewModel =
-                IoC.ServiceProvider.Instance.GetRequiredService<ITransactionBatchCreateConfirmViewModel>();
-            viewModel.Setup(transactions);
+                m_viewModelFactory.CreateTransactionBatchCreateConfirmViewModel(transactions);
             var window = new TransactionBatchCreateConfirmWindow(viewModel);
             bool? result = window.ShowDialog();
 
@@ -176,15 +149,13 @@ namespace Financier.Desktop.Services
         {
             transaction = null;
 
-            ITransactionEditViewModel transactionEditViewModel =
-                IoC.ServiceProvider.Instance.GetRequiredService<ITransactionEditViewModel>();
-            transactionEditViewModel.SetupForCreate(hint);
-            var transactionEditWindow = new TransactionEditWindow(transactionEditViewModel);
-            bool? result = transactionEditWindow.ShowDialog();
+            ITransactionEditViewModel viewModel = m_viewModelFactory.CreateTransactionCreateViewModel(hint);
+            var window = new TransactionEditWindow(viewModel);
+            bool? result = window.ShowDialog();
 
             if (result.HasValue && result.Value)
             {
-                transaction = transactionEditViewModel.ToTransaction();
+                transaction = viewModel.ToTransaction();
                 return true;
             }
 
@@ -198,11 +169,9 @@ namespace Financier.Desktop.Services
 
         public bool OpenTransactionEditView(int transactionId)
         {
-            ITransactionEditViewModel transactionEditViewModel =
-                IoC.ServiceProvider.Instance.GetRequiredService<ITransactionEditViewModel>();
-            transactionEditViewModel.SetupForEdit(transactionId);
-            var transactionEditWindow = new TransactionEditWindow(transactionEditViewModel);
-            bool? result = transactionEditWindow.ShowDialog();
+            ITransactionEditViewModel viewModel = m_viewModelFactory.CreateTransactionEditViewModel(transactionId);
+            var window = new TransactionEditWindow(viewModel);
+            bool? result = window.ShowDialog();
 
             if (result.HasValue)
                 return result.Value;
@@ -212,8 +181,7 @@ namespace Financier.Desktop.Services
 
         public void OpenTransactionListView()
         {
-            ITransactionListViewModel viewModel =
-                IoC.ServiceProvider.Instance.GetRequiredService<ITransactionListViewModel>();
+            ITransactionListViewModel viewModel = m_viewModelFactory.CreateTransactionListViewModel();
             var window = new TransactionListWindow(viewModel);
             window.ShowDialog();
         }

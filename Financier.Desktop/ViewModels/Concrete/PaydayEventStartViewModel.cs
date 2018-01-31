@@ -13,10 +13,16 @@ namespace Financier.Desktop.ViewModels
 
         public PaydayEventStartViewModel(
             ILogger<PaydayEventStartViewModel> logger,
-            IBudgetService budgetService)
+            IBudgetService budgetService,
+            int budgetId)
         {
             m_logger = logger;
             m_budgetService = budgetService;
+
+            Budget budget = m_budgetService.Get(budgetId);
+
+            AmountPaid = budget.InitialTransaction.Amount;
+            At = DateTime.Now;
         }
 
         public decimal AmountPaid { get; set; }
@@ -24,14 +30,6 @@ namespace Financier.Desktop.ViewModels
 
         public ICommand OKCommand => new RelayCommand(OKExecute);
         public ICommand CancelCommand => new RelayCommand(CancelExecute);
-
-        public void Setup(int budgetId)
-        {
-            Budget budget = m_budgetService.Get(budgetId);
-
-            AmountPaid = budget.InitialTransaction.Amount;
-            At = DateTime.Now;
-        }
 
         public PaydayStart ToPaydayStart()
         {

@@ -2,22 +2,25 @@
 using Financier.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System;
 
 namespace Financier.Desktop.Services
 {
     public class ConversionService : IConversionService
     {
         private ILogger<ConversionService> m_logger;
+        private readonly IServiceProvider m_serviceProvider;
 
-        public ConversionService(ILogger<ConversionService> logger)
+        public ConversionService(ILogger<ConversionService> logger, IServiceProvider serviceProvider)
         {
             m_logger = logger;
+            m_serviceProvider = serviceProvider;
         }
 
         public IAccountItemViewModel AccountToItemViewModel(Account account)
         {
             IAccountItemViewModel viewModel
-                = IoC.ServiceProvider.Instance.GetRequiredService<IAccountItemViewModel>();
+                = m_serviceProvider.GetRequiredService<IAccountItemViewModel>();
 
             viewModel.Setup(account);
 
@@ -27,7 +30,7 @@ namespace Financier.Desktop.Services
         public IAccountLinkViewModel AccountLinkToViewModel(AccountLink accountLink)
         {
             IAccountLinkViewModel viewModel
-                = IoC.ServiceProvider.Instance.GetRequiredService<IAccountLinkViewModel>();
+                = m_serviceProvider.GetRequiredService<IAccountLinkViewModel>();
 
             viewModel.Setup(accountLink);
 
@@ -37,7 +40,7 @@ namespace Financier.Desktop.Services
         public IAccountTransactionItemViewModel TransactionToAccountTransactionItemViewModel(Transaction transaction)
         {
             IAccountTransactionItemViewModel viewModel
-                = IoC.ServiceProvider.Instance.GetRequiredService<IAccountTransactionItemViewModel>();
+                = m_serviceProvider.GetRequiredService<IAccountTransactionItemViewModel>();
 
             viewModel.Setup(transaction);
 
@@ -47,7 +50,7 @@ namespace Financier.Desktop.Services
         public IBudgetItemViewModel BudgetToItemViewModel(Budget budget, Currency currency)
         {
             IBudgetItemViewModel viewModel
-                = IoC.ServiceProvider.Instance.GetRequiredService<IBudgetItemViewModel>();
+                = m_serviceProvider.GetRequiredService<IBudgetItemViewModel>();
 
             viewModel.Setup(budget, currency);
 
@@ -57,7 +60,7 @@ namespace Financier.Desktop.Services
         public ITransactionItemViewModel TransactionToItemViewModel(Transaction transaction)
         {
             ITransactionItemViewModel viewModel
-                = IoC.ServiceProvider.Instance.GetRequiredService<ITransactionItemViewModel>();
+                = m_serviceProvider.GetRequiredService<ITransactionItemViewModel>();
 
             viewModel.Setup(transaction);
 

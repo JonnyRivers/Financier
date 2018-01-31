@@ -18,10 +18,16 @@ namespace Financier.Desktop.ViewModels
 
         public TransactionBatchCreateConfirmViewModel(
             ILogger<TransactionBatchCreateConfirmViewModel> logger,
-            IConversionService conversionService)
+            IConversionService conversionService,
+            IEnumerable<Transaction> transactions)
         {
             m_logger = logger;
             m_conversionService = conversionService;
+
+            IEnumerable<ITransactionItemViewModel> transactionViewModels =
+                transactions.Select(t => m_conversionService.TransactionToItemViewModel(t));
+
+            Transactions = new ObservableCollection<ITransactionItemViewModel>(transactionViewModels);
         }
 
         public ObservableCollection<ITransactionItemViewModel> Transactions
@@ -40,14 +46,6 @@ namespace Financier.Desktop.ViewModels
 
         public ICommand OKCommand => new RelayCommand(OKExecute);
         public ICommand CancelCommand => new RelayCommand(CancelExecute);
-
-        public void Setup(IEnumerable<Transaction> transactions)
-        {
-            IEnumerable<ITransactionItemViewModel> transactionViewModels =
-                transactions.Select(t => m_conversionService.TransactionToItemViewModel(t));
-
-            Transactions = new ObservableCollection<ITransactionItemViewModel>(transactionViewModels);
-        }
 
         private void OKExecute(object obj)
         {

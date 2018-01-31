@@ -5,11 +5,6 @@ namespace Financier.Desktop.ViewModels
 {
     public interface IBudgetTransactionItemViewModel
     {
-        void Setup(
-            ObservableCollection<IAccountLinkViewModel> accountLinks,
-            BudgetTransaction budgetTransaction, 
-            BudgetTransactionType type);
-
         BudgetTransaction ToBudgetTransaction();
 
         int BudgetTransactionId { get; set; }
