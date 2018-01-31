@@ -1,4 +1,5 @@
 ﻿using Financier.Desktop.Commands;
+using Financier.Desktop.Services;
 using Financier.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -11,39 +12,39 @@ namespace Financier.Desktop.ViewModels
 {
     public class BudgetEditViewModel : IBudgetEditViewModel
     {
-        private ILogger<AccountLinkViewModel> m_logger;
+        private ILogger<BudgetEditViewModel> m_logger;
         private IBudgetService m_budgetService;
+        private IViewModelFactory m_viewModelFactory;
         private int m_budgetId;
 
-        public BudgetEditViewModel(ILogger<AccountLinkViewModel> logger, IBudgetService budgetService)
+        public BudgetEditViewModel(
+            ILogger<BudgetEditViewModel> logger, 
+            IBudgetService budgetService,
+            IViewModelFactory viewModelFactory,
+            int budgetId)
         {
             m_logger = logger;
             m_budgetService = budgetService;
-            
+            m_viewModelFactory = viewModelFactory;
+
             Periods = Enum.GetValues(typeof(BudgetPeriod)).Cast<BudgetPeriod>();
 
-            TransactionListViewModel =
-                IoC.ServiceProvider.Instance.GetRequiredService<IBudgetTransactionListViewModel>();
-        }
-
-        public void SetupForCreate()
-        {
-            m_budgetId = 0;
-
-            Name = "New Budget";
-            SelectedPeriod = BudgetPeriod.Fortnightly;
-            TransactionListViewModel.SetupForCreate();
-        }
-
-        public void SetupForEdit(int budgetId)
-        {
             m_budgetId = budgetId;
 
-            Budget budget = m_budgetService.Get(m_budgetId);
+            TransactionListViewModel = m_viewModelFactory.CreateBudgetTransactionListViewModel(m_budgetId);
 
-            Name = budget.Name;
-            SelectedPeriod = budget.Period;
-            TransactionListViewModel.SetupForEdit(budget);
+            if (m_budgetId == 0)
+            {
+                Name = "New Budget";
+                SelectedPeriod = BudgetPeriod.Fortnightly;
+            }
+            else
+            {
+                Budget budget = m_budgetService.Get(m_budgetId);
+
+                Name = budget.Name;
+                SelectedPeriod = budget.Period;
+            }
         }
 
         public Budget ToBudget()

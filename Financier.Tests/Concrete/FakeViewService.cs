@@ -28,9 +28,10 @@ namespace Financier.Tests.Concrete
             return false;
         }
 
-        public int OpenBudgetCreateView()
+        public bool OpenBudgetCreateView(out Budget budget)
         {
-            return 0;
+            budget = null;
+            return false;
         }
 
         public bool OpenBudgetDeleteConfirmationView()
@@ -38,8 +39,9 @@ namespace Financier.Tests.Concrete
             return false;
         }
 
-        public bool OpenBudgetEditView(int budgetId)
+        public bool OpenBudgetEditView(int budgetId, out Budget budget)
         {
+            budget = null;
             return false;
         }
 

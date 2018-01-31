@@ -19,7 +19,8 @@ namespace Financier.Desktop.ViewModels
         public AccountEditViewModel(
             ILogger<AccountEditViewModel> logger,
             IAccountService accountService, 
-            ICurrencyService currencyService)
+            ICurrencyService currencyService,
+            int accountId)
         {
             m_logger = logger;
             m_accountService = accountService;
@@ -28,28 +29,25 @@ namespace Financier.Desktop.ViewModels
             AccountTypes = Enum.GetValues(typeof(AccountType)).Cast<AccountType>();
             AccountSubTypes = Enum.GetValues(typeof(AccountSubType)).Cast<AccountSubType>();
             Currencies = m_currencyService.GetAll();
-        }
 
-        public void SetupForCreate()
-        {
-            m_accountId = 0;
-
-            Name = "New Account";
-            SelectedAccountType = AccountType.Asset;
-            SelectedAccountSubType = AccountSubType.None;
-            SelectedCurrency = Currencies.Single(c => c.IsPrimary);
-        }
-
-        public void SetupForEdit(int accountId)
-        {
             m_accountId = accountId;
 
-            Account account = m_accountService.Get(accountId);
-            
-            Name = account.Name;
-            SelectedAccountType = account.Type;
-            SelectedAccountSubType = account.SubType;
-            SelectedCurrency = Currencies.Single(c => c.CurrencyId == account.Currency.CurrencyId);
+            if (m_accountId == 0)
+            {
+                Name = "New Account";
+                SelectedAccountType = AccountType.Asset;
+                SelectedAccountSubType = AccountSubType.None;
+                SelectedCurrency = Currencies.Single(c => c.IsPrimary);
+            }
+            else
+            {
+                Account account = m_accountService.Get(accountId);
+
+                Name = account.Name;
+                SelectedAccountType = account.Type;
+                SelectedAccountSubType = account.SubType;
+                SelectedCurrency = Currencies.Single(c => c.CurrencyId == account.Currency.CurrencyId);
+            }
         }
 
         public Account ToAccount()

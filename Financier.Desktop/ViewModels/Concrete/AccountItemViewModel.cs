@@ -13,13 +13,11 @@ namespace Financier.Desktop.ViewModels
         private string m_currencyName;
 
         public AccountItemViewModel(
-            ILogger<AccountItemViewModel> logger)
+            ILogger<AccountItemViewModel> logger,
+            Account account)
         {
             m_logger = logger;
-        }
 
-        public void Setup(Account account)
-        {
             AccountId = account.AccountId;
             m_name = account.Name;
             m_type = account.Type;

@@ -15,6 +15,7 @@ namespace Financier.Desktop.ViewModels
         private ILogger<BudgetTransactionListViewModel> m_logger;
         private IAccountService m_accountService;
         private IBudgetService m_budgetService;
+        private IViewModelFactory m_viewModelFactory;
         private IViewService m_viewService;
 
         private ObservableCollection<IAccountLinkViewModel> m_accountLinks;
@@ -26,72 +27,76 @@ namespace Financier.Desktop.ViewModels
             ILogger<BudgetTransactionListViewModel> logger,
             IAccountService accountService,
             IBudgetService budgetService,
-            IViewService viewService)
+            IViewModelFactory viewModelFactory,
+            IViewService viewService,
+            int budgetId)
         {
             m_logger = logger;
             m_accountService = accountService;
             m_budgetService = budgetService;
+            m_viewModelFactory = viewModelFactory;
             m_viewService = viewService;
 
             m_accountLinks = new ObservableCollection<IAccountLinkViewModel>(
                 m_accountService
                     .GetAllAsLinks()
-                    .OrderBy(a => a.Name)
-                    .Select(CreateAccountLink));
-        }
+                    .OrderBy(al => al.Name)
+                    .Select(al => m_viewModelFactory.CreateAccountLinkViewModel(al)));
 
-        public void SetupForCreate()
-        {
-            int firstIncomeAccountId = 0;
-            int firstAssetAccountId = 0;
-            int secondAssetAccountId = 0;
+            m_budgetId = budgetId;
 
-            IAccountLinkViewModel firstIncomeAccount =
-                m_accountLinks.FirstOrDefault(al => al.Type == AccountType.Income);
-            IAccountLinkViewModel firstAssetAccount =
-                m_accountLinks.FirstOrDefault(al => al.Type == AccountType.Asset);
-            IAccountLinkViewModel secondAssetAccount =
-                m_accountLinks.Where(al => al.Type == AccountType.Asset)
-                              .ElementAtOrDefault(1);
-
-            if (firstIncomeAccount != null)
-                firstIncomeAccountId = firstIncomeAccount.AccountId;
-            if (firstAssetAccount != null)
-                firstAssetAccountId = secondAssetAccount.AccountId;
-            if (secondAssetAccount != null)
-                secondAssetAccountId = secondAssetAccount.AccountId;
-
-            var transactions = new List<IBudgetTransactionItemViewModel>();
-            BudgetTransaction initialTransaction = new BudgetTransaction
+            if (m_budgetId == 0)
             {
-                CreditAccount = new AccountLink { AccountId = firstIncomeAccountId },
-                DebitAccount = new AccountLink { AccountId = firstAssetAccountId },
-                Amount = 0
-            };
-            BudgetTransaction surplusTransaction = new BudgetTransaction
+                int firstIncomeAccountId = 0;
+                int firstAssetAccountId = 0;
+                int secondAssetAccountId = 0;
+
+                IAccountLinkViewModel firstIncomeAccount =
+                    m_accountLinks.FirstOrDefault(al => al.Type == AccountType.Income);
+                IAccountLinkViewModel firstAssetAccount =
+                    m_accountLinks.FirstOrDefault(al => al.Type == AccountType.Asset);
+                IAccountLinkViewModel secondAssetAccount =
+                    m_accountLinks.Where(al => al.Type == AccountType.Asset)
+                                  .ElementAtOrDefault(1);
+
+                if (firstIncomeAccount != null)
+                    firstIncomeAccountId = firstIncomeAccount.AccountId;
+                if (firstAssetAccount != null)
+                    firstAssetAccountId = secondAssetAccount.AccountId;
+                if (secondAssetAccount != null)
+                    secondAssetAccountId = secondAssetAccount.AccountId;
+
+                var transactions = new List<IBudgetTransactionItemViewModel>();
+                BudgetTransaction initialTransaction = new BudgetTransaction
+                {
+                    CreditAccount = new AccountLink { AccountId = firstIncomeAccountId },
+                    DebitAccount = new AccountLink { AccountId = firstAssetAccountId },
+                    Amount = 0
+                };
+                BudgetTransaction surplusTransaction = new BudgetTransaction
+                {
+                    CreditAccount = new AccountLink { AccountId = firstAssetAccountId },
+                    DebitAccount = new AccountLink { AccountId = secondAssetAccountId },
+                    Amount = 0
+                };
+                transactions.Add(CreateItemViewModel(initialTransaction, BudgetTransactionType.Initial));
+                transactions.Add(CreateItemViewModel(surplusTransaction, BudgetTransactionType.Surplus));
+
+                Transactions = new ObservableCollection<IBudgetTransactionItemViewModel>(transactions);
+            }
+            else
             {
-                CreditAccount = new AccountLink { AccountId = firstAssetAccountId },
-                DebitAccount = new AccountLink { AccountId = secondAssetAccountId },
-                Amount = 0
-            };
-            transactions.Add(CreateItemViewModel(initialTransaction, BudgetTransactionType.Initial));
-            transactions.Add(CreateItemViewModel(surplusTransaction, BudgetTransactionType.Surplus));
+                Budget budget = m_budgetService.Get(m_budgetId);
 
-            Transactions = new ObservableCollection<IBudgetTransactionItemViewModel>(transactions);
-        }
+                var transactions = new List<IBudgetTransactionItemViewModel>();
+                transactions.Add(CreateItemViewModel(budget.InitialTransaction, BudgetTransactionType.Initial));
+                transactions.AddRange(
+                    budget.Transactions.Select(t => CreateItemViewModel(t, BudgetTransactionType.Regular))
+                );
+                transactions.Add(CreateItemViewModel(budget.SurplusTransaction, BudgetTransactionType.Surplus));
 
-        public void SetupForEdit(Budget budget)
-        {
-            m_budgetId = budget.BudgetId;
-
-            var transactions = new List<IBudgetTransactionItemViewModel>();
-            transactions.Add(CreateItemViewModel(budget.InitialTransaction, BudgetTransactionType.Initial));
-            transactions.AddRange(
-                budget.Transactions.Select(t => CreateItemViewModel(t, BudgetTransactionType.Regular))
-            );
-            transactions.Add(CreateItemViewModel(budget.SurplusTransaction, BudgetTransactionType.Surplus));
-
-            Transactions = new ObservableCollection<IBudgetTransactionItemViewModel>(transactions);
+                Transactions = new ObservableCollection<IBudgetTransactionItemViewModel>(transactions);
+            }
         }
 
         public ObservableCollection<IBudgetTransactionItemViewModel> Transactions { get; set; }
@@ -173,21 +178,18 @@ namespace Financier.Desktop.ViewModels
             );
         }
 
-        private IBudgetTransactionItemViewModel CreateItemViewModel(BudgetTransaction budgetTransaction, BudgetTransactionType type)
+        private IBudgetTransactionItemViewModel CreateItemViewModel(
+            BudgetTransaction budgetTransaction, 
+            BudgetTransactionType type)
         {
-            IBudgetTransactionItemViewModel transactionViewModel = IoC.ServiceProvider.Instance.GetRequiredService<IBudgetTransactionItemViewModel>();
-            transactionViewModel.Setup(m_accountLinks, budgetTransaction, type);
+            IBudgetTransactionItemViewModel transactionViewModel =
+                m_viewModelFactory.CreateBudgetTransactionItemViewModel(
+                    m_accountLinks,
+                    budgetTransaction,
+                    type
+            );
 
             return transactionViewModel;
-        }
-
-        private static IAccountLinkViewModel CreateAccountLink(AccountLink accountLink)
-        {
-            IAccountLinkViewModel accountLinkViewModel = 
-                IoC.ServiceProvider.Instance.GetRequiredService<IAccountLinkViewModel>();
-            accountLinkViewModel.Setup(accountLink);
-
-            return accountLinkViewModel;
         }
     }
 }

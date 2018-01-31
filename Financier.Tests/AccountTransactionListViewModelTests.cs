@@ -32,22 +32,21 @@ namespace Financier.Tests
                     loggerFactory.CreateLogger<AccountService>(), 
                     sqliteMemoryWrapper.DbContext);
 
-                var conversionService = new ConversionService(loggerFactory.CreateLogger<ConversionService>());
-
                 var transactionService = new TransactionService(
                     loggerFactory.CreateLogger<TransactionService>(),
                     sqliteMemoryWrapper.DbContext);
+
+                var viewModelFactory = new Concrete.FakeViewModelFactory();
 
                 var viewService = new Concrete.FakeViewService();
 
                 var viewModel = new AccountTransactionListViewModel(
                     logger,
                     accountService,
-                    conversionService,
                     transactionService,
-                    viewService);
-
-                viewModel.Setup(checkingAccountEntity.AccountId);
+                    viewModelFactory,
+                    viewService,
+                    checkingAccountEntity.AccountId);
 
                 Assert.AreEqual(false, viewModel.HasLogicalAcounts);
                 Assert.AreEqual(0, viewModel.Transactions.Count);
@@ -129,22 +128,21 @@ namespace Financier.Tests
                     loggerFactory.CreateLogger<AccountService>(),
                     sqliteMemoryWrapper.DbContext);
 
-                var conversionService = new ConversionService(loggerFactory.CreateLogger<ConversionService>());
-
                 var transactionService = new TransactionService(
                     loggerFactory.CreateLogger<TransactionService>(),
                     sqliteMemoryWrapper.DbContext);
+
+                var viewModelFactory = new Concrete.FakeViewModelFactory();
 
                 var viewService = new Concrete.FakeViewService();
 
                 var viewModel = new AccountTransactionListViewModel(
                     logger,
                     accountService,
-                    conversionService,
                     transactionService,
-                    viewService);
-
-                viewModel.Setup(checkingAccountEntity.AccountId);
+                    viewModelFactory,
+                    viewService,
+                    checkingAccountEntity.AccountId);
 
                 Assert.AreEqual(true, viewModel.HasLogicalAcounts);
                 Assert.AreEqual(3, viewModel.Transactions.Count);

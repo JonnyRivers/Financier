@@ -14,8 +14,8 @@ namespace Financier.Desktop.ViewModels
         // Dependencies
         private ILogger<AccountTransactionListViewModel> m_logger;
         private IAccountService m_accountService;
-        private IConversionService m_conversionService;
         private ITransactionService m_transactionService;
+        private IViewModelFactory m_viewModelFactory;
         private IViewService m_viewService;
 
         // Private data
@@ -29,19 +29,17 @@ namespace Financier.Desktop.ViewModels
         public AccountTransactionListViewModel(
             ILogger<AccountTransactionListViewModel> logger,
             IAccountService accountService,
-            IConversionService conversionService,
             ITransactionService transactionService,
-            IViewService viewService)
+            IViewModelFactory viewModelFactory,
+            IViewService viewService,
+            int accountId)
         {
             m_logger = logger;
             m_accountService = accountService;
-            m_conversionService = conversionService;
             m_transactionService = transactionService;
+            m_viewModelFactory = viewModelFactory;
             m_viewService = viewService;
-        }
 
-        public void Setup(int accountId)
-        {
             m_accountId = accountId;
             m_logicalAccountIds = new List<int>(m_accountService.GetLogicalAccountIds(m_accountId));
             m_hasLogicalAccounts = m_logicalAccountIds.Any();
@@ -62,7 +60,7 @@ namespace Financier.Desktop.ViewModels
             IEnumerable<Transaction> transactions = m_transactionService.GetAll(relevantAccountIds);
             List<IAccountTransactionItemViewModel> transactionViewModels =
                 transactions
-                    .Select(t => m_conversionService.TransactionToAccountTransactionItemViewModel(t))
+                    .Select(t => m_viewModelFactory.CreateAccountTransactionItemViewModel(t))
                     .ToList();
             decimal balance = 0;
             foreach (IAccountTransactionItemViewModel transactionViewModel in transactionViewModels.OrderBy(t => t.At))

@@ -12,9 +12,9 @@ namespace Financier.Desktop.Services
         void OpenAccountListView();
         bool OpenAccountTransactionsEditView(int accountId);
 
-        int OpenBudgetCreateView();
+        bool OpenBudgetCreateView(out Budget budget);
         bool OpenBudgetDeleteConfirmationView();
-        bool OpenBudgetEditView(int budgetId);
+        bool OpenBudgetEditView(int budgetId, out Budget budget);
         void OpenBudgetListView();
 
         bool OpenBudgetTransactionDeleteConfirmationView();

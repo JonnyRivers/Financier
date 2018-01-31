@@ -129,6 +129,8 @@ namespace Financier.Services
             List<Transaction> pendingTransactions = 
                 m_dbContext.Transactions
                     .Where(t => pendingTransactionIds.Contains(t.TransactionId))
+                    .Include(t => t.CreditAccount)
+                    .Include(t => t.DebitAccount)
                     .Select(FromEntity)
                     .ToList();
 

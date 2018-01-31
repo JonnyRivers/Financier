@@ -13,9 +13,9 @@ namespace Financier.Desktop.ViewModels
     {
         private ILogger<BudgetListViewModel> m_logger;
         private IBudgetService m_budgetService;
-        private IConversionService m_conversionService;
         private ICurrencyService m_currencyService;
         private ITransactionService m_transactionService;
+        private IViewModelFactory m_viewModelFactory;
         private IViewService m_viewService;
 
         private ObservableCollection<IBudgetItemViewModel> m_budgets;
@@ -24,16 +24,16 @@ namespace Financier.Desktop.ViewModels
         public BudgetListViewModel(
             ILogger<BudgetListViewModel> logger,
             IBudgetService budgetService,
-            IConversionService conversionService,
             ICurrencyService currencyService,
             ITransactionService transactionService,
+            IViewModelFactory viewModelFactory,
             IViewService viewService)
         {
             m_logger = logger;
             m_budgetService = budgetService;
-            m_conversionService = conversionService;
             m_currencyService = currencyService;
             m_transactionService = transactionService;
+            m_viewModelFactory = viewModelFactory;
             m_viewService = viewService;
 
             PopulateBudgets();
@@ -44,7 +44,7 @@ namespace Financier.Desktop.ViewModels
             Currency primaryCurrency = m_currencyService.GetPrimary();
             IEnumerable<Budget> budgets = m_budgetService.GetAll();
             IEnumerable<IBudgetItemViewModel> budgetViewModels =
-                budgets.Select(b => m_conversionService.BudgetToItemViewModel(b, primaryCurrency));
+                budgets.Select(b => m_viewModelFactory.CreateBudgetItemViewModel(b, primaryCurrency));
 
             Budgets = new ObservableCollection<IBudgetItemViewModel>(budgetViewModels.OrderBy(b => b.Name));
         }
@@ -85,12 +85,12 @@ namespace Financier.Desktop.ViewModels
 
         private void CreateExecute(object obj)
         {
-            int newBudgetId = m_viewService.OpenBudgetCreateView();
-            if (newBudgetId > 0)
+            Budget newBudget;
+            if (m_viewService.OpenBudgetCreateView(out newBudget))
             {
                 Currency primaryCurrency = m_currencyService.GetPrimary();
-                Budget newBudget = m_budgetService.Get(newBudgetId);
-                IBudgetItemViewModel newBudgetViewModel = m_conversionService.BudgetToItemViewModel(newBudget, primaryCurrency);
+                IBudgetItemViewModel newBudgetViewModel = 
+                    m_viewModelFactory.CreateBudgetItemViewModel(newBudget, primaryCurrency);
                 Budgets.Add(newBudgetViewModel);
                 // TODO: Is there a better way to maintain ObservableCollection<T> sorting?
                 // https://github.com/JonnyRivers/Financier/issues/29
@@ -100,11 +100,15 @@ namespace Financier.Desktop.ViewModels
 
         private void EditExecute(object obj)
         {
-            if (m_viewService.OpenBudgetEditView(SelectedBudget.BudgetId))
+            Budget updatedBudget;
+            if (m_viewService.OpenBudgetEditView(SelectedBudget.BudgetId, out updatedBudget))
             {
                 Currency primaryCurrency = m_currencyService.GetPrimary();
-                Budget budget = m_budgetService.Get(SelectedBudget.BudgetId);
-                SelectedBudget.Setup(budget, primaryCurrency);
+
+                Budgets.Remove(SelectedBudget);
+                SelectedBudget = m_viewModelFactory.CreateBudgetItemViewModel(updatedBudget, primaryCurrency);
+                Budgets.Add(SelectedBudget);
+                
                 // TODO: Is there a better way to maintain ObservableCollection<T> sorting?
                 // https://github.com/JonnyRivers/Financier/issues/29
                 Budgets = new ObservableCollection<IBudgetItemViewModel>(Budgets.OrderBy(b => b.Name));

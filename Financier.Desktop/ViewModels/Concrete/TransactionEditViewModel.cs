@@ -14,28 +14,33 @@ namespace Financier.Desktop.ViewModels
     {
         private ILogger<TransactionEditViewModel> m_logger;
         private IAccountService m_accountService;
-        private IConversionService m_conversionService;
         private ITransactionService m_transactionService;
+        private IViewModelFactory m_viewModelFactory;
 
         public TransactionEditViewModel(
             ILogger<TransactionEditViewModel> logger, 
             IAccountService accountService,
-            IConversionService conversionService,
-            ITransactionService transactionService)
+            ITransactionService transactionService,
+            IViewModelFactory viewModelFactory)
         {
             m_logger = logger;
             m_accountService = accountService;
-            m_conversionService = conversionService;
             m_transactionService = transactionService;
+            m_viewModelFactory = viewModelFactory;
 
             IEnumerable<AccountLink> accountLinks = m_accountService.GetAllAsLinks();
             IEnumerable<IAccountLinkViewModel> accountLinkViewModels = 
-                accountLinks.Select(al => m_conversionService.AccountLinkToViewModel(al));
+                accountLinks.Select(al => m_viewModelFactory.CreateAccountLinkViewModel(al));
             
             Accounts = new ObservableCollection<IAccountLinkViewModel>(accountLinkViewModels.OrderBy(alvm => alvm.Name));
         }
 
-        public void SetupForCreate(Transaction hint)
+        public TransactionEditViewModel(
+            ILogger<TransactionEditViewModel> logger,
+            IAccountService accountService,
+            ITransactionService transactionService,
+            IViewModelFactory viewModelFactory,
+            Transaction hint) : this(logger, accountService, transactionService, viewModelFactory)
         {
             m_transactionId = 0;
 
@@ -46,19 +51,24 @@ namespace Financier.Desktop.ViewModels
             }
             else
             {
-                SelectedCreditAccount = 
+                SelectedCreditAccount =
                     Accounts
                         .FirstOrDefault(a => a.Type == AccountType.Capital || a.Type == AccountType.Income);
-                SelectedDebitAccount = 
+                SelectedDebitAccount =
                     Accounts
                         .FirstOrDefault(a => a.Type == AccountType.Asset || a.Type == AccountType.Expense);
             }
-            
+
             Amount = 0m;
             At = DateTime.Now;
         }
 
-        public void SetupForEdit(int transactionId)
+        public TransactionEditViewModel(
+            ILogger<TransactionEditViewModel> logger,
+            IAccountService accountService,
+            ITransactionService transactionService,
+            IViewModelFactory viewModelFactory,
+            int transactionId) : this(logger, accountService, transactionService, viewModelFactory)
         {
             m_transactionId = transactionId;
 

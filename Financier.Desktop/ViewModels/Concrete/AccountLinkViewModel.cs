@@ -1,6 +1,5 @@
 ﻿using Financier.Services;
 using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
 
 namespace Financier.Desktop.ViewModels
 {
@@ -13,13 +12,11 @@ namespace Financier.Desktop.ViewModels
         private AccountSubType m_subType;
 
         public AccountLinkViewModel(
-            ILogger<AccountLinkViewModel> logger)
+            ILogger<AccountLinkViewModel> logger,
+            AccountLink accountLink)
         {
             m_logger = logger;
-        }
 
-        public void Setup(AccountLink accountLink)
-        {
             AccountId = accountLink.AccountId;
             m_name = accountLink.Name;
             m_type = accountLink.Type;

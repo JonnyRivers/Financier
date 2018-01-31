@@ -7,8 +7,6 @@ namespace Financier.Desktop.ViewModels
 {
     public interface ITransactionBatchCreateConfirmViewModel
     {
-        void Setup(IEnumerable<Transaction> transactions);
-
         ObservableCollection<ITransactionItemViewModel> Transactions { get; }
 
         ICommand OKCommand { get; }

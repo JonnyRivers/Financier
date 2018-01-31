@@ -13,24 +13,24 @@ namespace Financier.Desktop.ViewModels
     {
         private ILogger<AccountListViewModel> m_logger;
         private IAccountService m_accountService;
-        private IConversionService m_conversionService;
         private ITransactionService m_transactionService;
         private ITransactionRelationshipService m_transactionRelationshipService;
+        private IViewModelFactory m_viewModelFactory;
         private IViewService m_viewService;
 
         public AccountListViewModel(
             ILogger<AccountListViewModel> logger,
             IAccountService accountService,
-            IConversionService conversionService,
             ITransactionService transactionService,
             ITransactionRelationshipService transactionRelationshipService,
+            IViewModelFactory viewModelFactory,
             IViewService viewService)
         {
             m_logger = logger;
             m_accountService = accountService;
-            m_conversionService = conversionService;
             m_transactionService = transactionService;
             m_transactionRelationshipService = transactionRelationshipService;
+            m_viewModelFactory = viewModelFactory;
             m_viewService = viewService;
 
             PopulateAccounts();
@@ -78,7 +78,7 @@ namespace Financier.Desktop.ViewModels
             Account newAccount;
             if (m_viewService.OpenAccountCreateView(out newAccount))
             {
-                IAccountItemViewModel newAccountViewModel = m_conversionService.AccountToItemViewModel(newAccount);
+                IAccountItemViewModel newAccountViewModel = m_viewModelFactory.CreateAccountItemViewModel(newAccount);
                 Accounts.Add(newAccountViewModel);
                 // TODO: Is there a better way to maintain ObservableCollection<T> sorting?
                 // https://github.com/JonnyRivers/Financier/issues/29
@@ -91,7 +91,10 @@ namespace Financier.Desktop.ViewModels
             Account updatedAccount;
             if (m_viewService.OpenAccountEditView(SelectedAccount.AccountId, out updatedAccount))
             {
-                SelectedAccount.Setup(updatedAccount);
+                Accounts.Remove(SelectedAccount);
+                SelectedAccount = m_viewModelFactory.CreateAccountItemViewModel(updatedAccount);
+                Accounts.Add(SelectedAccount);
+
                 // TODO: Is there a better way to maintain ObservableCollection<T> sorting?
                 // https://github.com/JonnyRivers/Financier/issues/29
                 Accounts = new ObservableCollection<IAccountItemViewModel>(Accounts.OrderBy(b => b.Name));
@@ -152,7 +155,7 @@ namespace Financier.Desktop.ViewModels
         {
             IEnumerable<Account> accounts = m_accountService.GetAll();
             IEnumerable<IAccountItemViewModel> accountVMs = 
-                accounts.Select(a => m_conversionService.AccountToItemViewModel(a));
+                accounts.Select(a => m_viewModelFactory.CreateAccountItemViewModel(a));
             Accounts = new ObservableCollection<IAccountItemViewModel>(accountVMs.OrderBy(a => a.Name));
             OnPropertyChanged(nameof(Accounts));
         }

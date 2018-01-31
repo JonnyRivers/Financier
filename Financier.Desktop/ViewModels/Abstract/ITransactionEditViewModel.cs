@@ -7,9 +7,6 @@ namespace Financier.Desktop.ViewModels
 {
     public interface ITransactionEditViewModel
     {
-        void SetupForCreate(Transaction hint);
-        void SetupForEdit(int transactionId);
-
         Transaction ToTransaction();
 
         ObservableCollection<IAccountLinkViewModel> Accounts { get; }
