@@ -107,7 +107,7 @@ namespace Financier.Services
             var paidTransactionIds = new HashSet<int>(
                 m_dbContext.TransactionRelationships
                     .Where(tr => tr.Type == TransactionRelationshipType.CreditCardPayment &&
-                                 tr.DestinationTransaction.CreditAccountId == accountId)
+                                 tr.DestinationTransaction.DebitAccountId == accountId)
                     .Select(tr => tr.SourceTransactionId)
             );
 

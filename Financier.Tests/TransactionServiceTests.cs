@@ -363,7 +363,7 @@ namespace Financier.Tests
                 var expenseToPaymentRelationship = new Entities.TransactionRelationship
                 {
                     SourceTransaction = transactionsToAdd[2],
-                    DestinationTransaction = transactionsToAdd[2],
+                    DestinationTransaction = transactionsToAdd[3],
                     Type = TransactionRelationshipType.CreditCardPayment
                 };
 
