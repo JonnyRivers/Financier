@@ -8,6 +8,14 @@ using Microsoft.Extensions.Logging;
 
 namespace Financier.Desktop.Services
 {
+    public static class ServiceProviderExtensions
+    {
+        public static T CreateInstance<T>(this IServiceProvider serviceProvider, params object[] parameters)
+        {
+            return ActivatorUtilities.CreateInstance<T>(serviceProvider, parameters);
+        }
+    }
+
     public class ViewModelFactory : IViewModelFactory
     {
         private readonly ILogger<ViewModelFactory> m_logger;
@@ -21,112 +29,57 @@ namespace Financier.Desktop.Services
 
         public IMainWindowViewModel CreateMainWindowViewModel()
         {
-            return new MainWindowViewModel(
-                m_serviceProvider.GetRequiredService<ILogger<MainWindowViewModel>>(),
-                m_serviceProvider.GetRequiredService<IViewService>()
-            );
+            return m_serviceProvider.GetRequiredService<IMainWindowViewModel>();
         }
 
         public IAccountEditViewModel CreateAccountEditViewModel(int accountId)
         {
-            return new AccountEditViewModel(
-                m_serviceProvider.GetRequiredService<ILogger<AccountEditViewModel>>(),
-                m_serviceProvider.GetRequiredService<IAccountService>(),
-                m_serviceProvider.GetRequiredService<ICurrencyService>(),
-                accountId
-            );
+            return m_serviceProvider.CreateInstance<AccountEditViewModel>(accountId);
         }
 
         public IAccountItemViewModel CreateAccountItemViewModel(Account account)
         {
-            return new AccountItemViewModel(
-                m_serviceProvider.GetRequiredService<ILogger<AccountItemViewModel>>(),
-                account
-            );
+            return m_serviceProvider.CreateInstance<AccountItemViewModel>(account);
         }
 
         public IAccountLinkViewModel CreateAccountLinkViewModel(AccountLink accountLink)
         {
-            return new AccountLinkViewModel(
-                m_serviceProvider.GetRequiredService<ILogger<AccountLinkViewModel>>(),
-                accountLink
-            );
+            return m_serviceProvider.CreateInstance<AccountLinkViewModel>(accountLink);
         }
 
         public IAccountListViewModel CreateAccountListViewModel()
         {
-            return new AccountListViewModel(
-                m_serviceProvider.GetRequiredService<ILogger<AccountListViewModel>>(),
-                m_serviceProvider.GetRequiredService<IAccountService>(),
-                m_serviceProvider.GetRequiredService<ITransactionService>(),
-                m_serviceProvider.GetRequiredService<ITransactionRelationshipService>(),
-                m_serviceProvider.GetRequiredService<IViewModelFactory>(),
-                m_serviceProvider.GetRequiredService<IViewService>()
-            );
+            return m_serviceProvider.GetRequiredService<AccountListViewModel>();
         }
 
         public IAccountTransactionListViewModel CreateAccountTransactionListViewModel(int accountId)
         {
-            return new AccountTransactionListViewModel(
-                m_serviceProvider.GetRequiredService<ILogger<AccountTransactionListViewModel>>(),
-                m_serviceProvider.GetRequiredService<IAccountService>(),
-                m_serviceProvider.GetRequiredService<ITransactionService>(),
-                m_serviceProvider.GetRequiredService<IViewModelFactory>(),
-                m_serviceProvider.GetRequiredService<IViewService>(),
-                accountId
-            );
+            return m_serviceProvider.CreateInstance<AccountTransactionListViewModel>(accountId);
         }
 
         public IAccountTransactionItemViewModel CreateAccountTransactionItemViewModel(Transaction transaction)
         {
-            return new AccountTransactionItemViewModel(
-                m_serviceProvider.GetRequiredService<ILogger<AccountTransactionItemViewModel>>(),
-                m_serviceProvider.GetRequiredService<IViewModelFactory>(),
-                transaction
-            );
+            return m_serviceProvider.CreateInstance<AccountTransactionItemViewModel>(transaction);
         }
 
         public IBudgetEditViewModel CreateBudgetEditViewModel(int budgetId)
         {
-            return new BudgetEditViewModel(
-                m_serviceProvider.GetRequiredService<ILogger<BudgetEditViewModel>>(),
-                m_serviceProvider.GetRequiredService<IBudgetService>(),
-                m_serviceProvider.GetRequiredService<IViewModelFactory>(),
-                budgetId
-            );
+            return m_serviceProvider.CreateInstance<BudgetEditViewModel>(budgetId);
         }
 
         public IBudgetItemViewModel CreateBudgetItemViewModel(Budget budget, Currency primaryCurrency)
         {
-            return new BudgetItemViewModel(
-                m_serviceProvider.GetRequiredService<ILogger<BudgetItemViewModel>>(),
-                budget,
-                primaryCurrency
-            );
+            return m_serviceProvider.CreateInstance<BudgetItemViewModel>(budget, primaryCurrency);
         }
 
         public IBudgetListViewModel CreateBudgetListViewModel()
         {
-            return new BudgetListViewModel(
-                m_serviceProvider.GetRequiredService<ILogger<BudgetListViewModel>>(),
-                m_serviceProvider.GetRequiredService<IBudgetService>(),
-                m_serviceProvider.GetRequiredService<ICurrencyService>(),
-                m_serviceProvider.GetRequiredService<ITransactionService>(),
-                m_serviceProvider.GetRequiredService<IViewModelFactory>(),
-                m_serviceProvider.GetRequiredService<IViewService>()
-            );
+            return m_serviceProvider.GetRequiredService<IBudgetListViewModel>();
         }
 
         public IBudgetTransactionListViewModel CreateBudgetTransactionListViewModel(int budgetId)
         {
-            return new BudgetTransactionListViewModel(
-                m_serviceProvider.GetRequiredService<ILogger<BudgetTransactionListViewModel>>(),
-                m_serviceProvider.GetRequiredService<IAccountService>(),
-                m_serviceProvider.GetRequiredService<IBudgetService>(),
-                m_serviceProvider.GetRequiredService<IViewModelFactory>(),
-                m_serviceProvider.GetRequiredService<IViewService>(),
-                budgetId
-            );
+            return m_serviceProvider.CreateInstance<BudgetTransactionListViewModel>(budgetId);
         }
 
         public IBudgetTransactionItemViewModel CreateBudgetTransactionItemViewModel(
@@ -134,73 +87,38 @@ namespace Financier.Desktop.Services
             BudgetTransaction budgetTransaction,
             BudgetTransactionType type)
         {
-            return new BudgetTransactionItemViewModel(
-                m_serviceProvider.GetRequiredService<ILogger<BudgetTransactionItemViewModel>>(),
-                accountLinks,
-                budgetTransaction,
-                type
-            );
+            return m_serviceProvider.CreateInstance<BudgetTransactionItemViewModel>(accountLinks, budgetTransaction, type);
         }
 
         public IPaydayEventStartViewModel CreatePaydayEventStartViewModel(int budgetId)
         {
-            return new PaydayEventStartViewModel(
-                   m_serviceProvider.GetRequiredService<ILogger<PaydayEventStartViewModel>>(),
-                   m_serviceProvider.GetRequiredService<IBudgetService>(),
-                   budgetId
-            );
+            return m_serviceProvider.CreateInstance<PaydayEventStartViewModel>(budgetId);
         }
 
         public ITransactionBatchCreateConfirmViewModel CreateTransactionBatchCreateConfirmViewModel(
             IEnumerable<Transaction> transactions)
         {
-            return new TransactionBatchCreateConfirmViewModel(
-                m_serviceProvider.GetRequiredService<ILogger<TransactionBatchCreateConfirmViewModel>>(),
-                m_serviceProvider.GetRequiredService<IViewModelFactory>(),
-                transactions
-            );
+            return m_serviceProvider.CreateInstance<TransactionBatchCreateConfirmViewModel>(transactions);
         }
 
         public ITransactionEditViewModel CreateTransactionCreateViewModel(Transaction hint)
         {
-            return new TransactionEditViewModel(
-                m_serviceProvider.GetRequiredService<ILogger<TransactionEditViewModel>>(),
-                m_serviceProvider.GetRequiredService<IAccountService>(),
-                m_serviceProvider.GetRequiredService<ITransactionService>(),
-                m_serviceProvider.GetRequiredService<IViewModelFactory>(),
-                hint
-            );
+            return m_serviceProvider.CreateInstance<TransactionEditViewModel>(hint);
         }
 
         public ITransactionEditViewModel CreateTransactionEditViewModel(int transactionId)
         {
-            return new TransactionEditViewModel(
-                m_serviceProvider.GetRequiredService<ILogger<TransactionEditViewModel>>(),
-                m_serviceProvider.GetRequiredService<IAccountService>(),
-                m_serviceProvider.GetRequiredService<ITransactionService>(),
-                m_serviceProvider.GetRequiredService<IViewModelFactory>(),
-                transactionId
-            );
+            return m_serviceProvider.CreateInstance<TransactionEditViewModel>(transactionId);
         }
 
         public ITransactionItemViewModel CreateTransactionItemViewModel(Transaction transaction)
         {
-            return new TransactionItemViewModel(
-                m_serviceProvider.GetRequiredService<ILogger<TransactionItemViewModel>>(),
-                m_serviceProvider.GetRequiredService<IViewModelFactory>(),
-                transaction
-            );
+            return m_serviceProvider.CreateInstance<TransactionItemViewModel>(transaction);
         }
 
         public ITransactionListViewModel CreateTransactionListViewModel()
         {
-            return new TransactionListViewModel(
-                m_serviceProvider.GetRequiredService<ILogger<TransactionListViewModel>>(),
-                m_serviceProvider.GetRequiredService<IAccountService>(),
-                m_serviceProvider.GetRequiredService<ITransactionService>(),
-                m_serviceProvider.GetRequiredService<IViewModelFactory>(),
-                m_serviceProvider.GetRequiredService<IViewService>()
-            );
+            return m_serviceProvider.GetRequiredService<ITransactionListViewModel>();
         }
     }
 }
