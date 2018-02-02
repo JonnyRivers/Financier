@@ -34,7 +34,7 @@ namespace Financier.Desktop
 
             string connectionString =
                 @"Server=(localdb)\mssqllocaldb;" +
-                $"Database=Financier_FamilyFortunesTest;" +
+                $"Database=Financier_FamilyFortunes;" +
                 "Trusted_Connection=True;";
             serviceCollection.AddDbContext<FinancierDbContext>(
                 options => options.UseSqlServer(connectionString),
