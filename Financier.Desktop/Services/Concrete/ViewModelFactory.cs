@@ -29,7 +29,7 @@ namespace Financier.Desktop.Services
 
         public IMainWindowViewModel CreateMainWindowViewModel()
         {
-            return m_serviceProvider.CreateInstance<IMainWindowViewModel>();
+            return m_serviceProvider.CreateInstance<MainWindowViewModel>();
         }
 
         public IAccountEditViewModel CreateAccountEditViewModel(int accountId)
@@ -74,7 +74,7 @@ namespace Financier.Desktop.Services
 
         public IBudgetListViewModel CreateBudgetListViewModel()
         {
-            return m_serviceProvider.CreateInstance<IBudgetListViewModel>();
+            return m_serviceProvider.CreateInstance<BudgetListViewModel>();
         }
 
         public IBudgetTransactionListViewModel CreateBudgetTransactionListViewModel(int budgetId)
@@ -118,7 +118,7 @@ namespace Financier.Desktop.Services
 
         public ITransactionListViewModel CreateTransactionListViewModel()
         {
-            return m_serviceProvider.CreateInstance<ITransactionListViewModel>();
+            return m_serviceProvider.CreateInstance<TransactionListViewModel>();
         }
     }
 }
