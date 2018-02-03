@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace Financier.Tests
@@ -92,39 +93,79 @@ namespace Financier.Tests
             accountFactory.Add(dbContext, incomeAccountEntity);
             Entities.Account checkingAccountEntity = accountFactory.Create(DbSetup.AccountPrefab.Checking, usdCurrencyEntity);
             accountFactory.Add(dbContext, checkingAccountEntity);
+            Entities.Account rentPrepaymentAccountEntity = accountFactory.Create(DbSetup.AccountPrefab.RentPrepayment, usdCurrencyEntity);
+            accountFactory.Add(dbContext, rentPrepaymentAccountEntity);
+            Entities.Account savingsAccountEntity = accountFactory.Create(DbSetup.AccountPrefab.Savings, usdCurrencyEntity);
+            accountFactory.Add(dbContext, savingsAccountEntity);
 
-            dbContext.Transactions.Add(
-                new Entities.Transaction
-                {
-                    CreditAccount = incomeAccountEntity,
-                    DebitAccount = checkingAccountEntity,
-                    Amount = 100,
-                    At = new DateTime(2018, 1, 1)
-                }
-            );
+            var budgetEntity = new Entities.Budget
+            {
+                Name = "Budget",
+                Period = BudgetPeriod.Fortnightly
+            };
+            dbContext.Budgets.Add(budgetEntity);
+            dbContext.SaveChanges();
+
+            var initialTransactionEntity = new Entities.BudgetTransaction
+            {
+                CreditAccount = incomeAccountEntity,
+                DebitAccount = checkingAccountEntity,
+                Amount = 200m,
+                IsInitial = true,
+                Budget = budgetEntity
+            };
+            var rentTransactionEntity = new Entities.BudgetTransaction
+            {
+                CreditAccount = checkingAccountEntity,
+                DebitAccount = rentPrepaymentAccountEntity,
+                Amount = 100m,
+                Budget = budgetEntity
+            };
+            var surplusTransactionEntity = new Entities.BudgetTransaction
+            {
+                CreditAccount = checkingAccountEntity,
+                DebitAccount = savingsAccountEntity,
+                IsSurplus = true,
+                Budget = budgetEntity
+            };
+            dbContext.BudgetTransactions.Add(initialTransactionEntity);
+            dbContext.BudgetTransactions.Add(rentTransactionEntity);
+            dbContext.BudgetTransactions.Add(surplusTransactionEntity);
             dbContext.SaveChanges();
 
             IAccountService accountService = serviceProvider.GetRequiredService<IAccountService>();
-            AccountLink incomeAccountLink = accountService.GetAsLink(incomeAccountEntity.AccountId);
-            AccountLink checkingAccountLink = accountService.GetAsLink(checkingAccountEntity.AccountId);
+            IEnumerable<AccountLink> accountLinks = accountService.GetAllAsLinks();
+            IEnumerable<IAccountLinkViewModel> accountLinkViewModels = 
+                accountLinks
+                    .Select(al => viewModelFactory.CreateAccountLinkViewModel(al));
+
+            IBudgetService budgetService = serviceProvider.GetRequiredService<IBudgetService>();
+            Budget budget = budgetService.Get(budgetEntity.BudgetId);
+
+            ICurrencyService currencyService = serviceProvider.GetRequiredService<ICurrencyService>();
+            Currency primaryCurrency = currencyService.GetPrimary();
 
             IBudgetEditViewModel budgetEditViewModel =
-                viewModelFactory.CreateBudgetEditViewModel(-1);
+                viewModelFactory.CreateBudgetEditViewModel(budgetEntity.BudgetId);
 
             IBudgetItemViewModel budgetItemViewModel = 
-                viewModelFactory.CreateBudgetItemViewModel(null, null);
+                viewModelFactory.CreateBudgetItemViewModel(budget, primaryCurrency);
 
             IBudgetListViewModel budgetListViewModel = 
                 viewModelFactory.CreateBudgetListViewModel();
 
             IBudgetTransactionItemViewModel budgetTransactionItemViewModel = 
-                viewModelFactory.CreateBudgetTransactionItemViewModel(null, null, BudgetTransactionType.Initial);
+                viewModelFactory.CreateBudgetTransactionItemViewModel(
+                    new ObservableCollection<IAccountLinkViewModel>(accountLinkViewModels),
+                    budget.InitialTransaction, 
+                    BudgetTransactionType.Initial
+            );
 
             IBudgetTransactionListViewModel budgetTransactionListViewModel = 
-                viewModelFactory.CreateBudgetTransactionListViewModel(-1);
+                viewModelFactory.CreateBudgetTransactionListViewModel(budgetEntity.BudgetId);
 
             IPaydayEventStartViewModel paydayEventStartViewModel = 
-                viewModelFactory.CreatePaydayEventStartViewModel(-1);
+                viewModelFactory.CreatePaydayEventStartViewModel(budgetEntity.BudgetId);
 
             Assert.IsNotNull(budgetEditViewModel);
 
