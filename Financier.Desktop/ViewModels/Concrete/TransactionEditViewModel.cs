@@ -46,21 +46,21 @@ namespace Financier.Desktop.ViewModels
 
             if (hint != null)
             {
-                SelectedCreditAccount = Accounts.Single(a => a.AccountId == hint.CreditAccount.AccountId);
-                SelectedDebitAccount = Accounts.Single(a => a.AccountId == hint.DebitAccount.AccountId);
+                m_selectedCreditAccount = Accounts.Single(a => a.AccountId == hint.CreditAccount.AccountId);
+                m_selectedDebitAccount = Accounts.Single(a => a.AccountId == hint.DebitAccount.AccountId);
             }
             else
             {
-                SelectedCreditAccount =
+                m_selectedCreditAccount =
                     Accounts
                         .FirstOrDefault(a => a.Type == AccountType.Capital || a.Type == AccountType.Income);
-                SelectedDebitAccount =
+                m_selectedDebitAccount =
                     Accounts
                         .FirstOrDefault(a => a.Type == AccountType.Asset || a.Type == AccountType.Expense);
             }
 
-            Amount = 0m;
-            At = DateTime.Now;
+            m_amount = 0m;
+            m_at = DateTime.Now;
         }
 
         public TransactionEditViewModel(
@@ -74,10 +74,10 @@ namespace Financier.Desktop.ViewModels
 
             Transaction transaction = m_transactionService.Get(m_transactionId);
 
-            SelectedCreditAccount = Accounts.Single(a => a.AccountId == transaction.CreditAccount.AccountId);
-            SelectedDebitAccount = Accounts.Single(a => a.AccountId == transaction.DebitAccount.AccountId);
-            Amount = transaction.Amount;
-            At = transaction.At;
+            m_selectedCreditAccount = Accounts.Single(a => a.AccountId == transaction.CreditAccount.AccountId);
+            m_selectedDebitAccount = Accounts.Single(a => a.AccountId == transaction.DebitAccount.AccountId);
+            m_amount = transaction.Amount;
+            m_at = transaction.At;
         }
 
         public Transaction ToTransaction()
