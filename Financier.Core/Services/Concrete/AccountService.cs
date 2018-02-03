@@ -44,6 +44,17 @@ namespace Financier.Services
             return FromEntity(accountEntity);
         }
 
+        public AccountLink GetAsLink(int accountId)
+        {
+            Entities.Account accountEntity = m_dbContext.Accounts
+                .SingleOrDefault(a => a.AccountId == accountId);
+
+            if (accountEntity == null)
+                throw new ArgumentException($"No Account exists with AccountId {accountId}", nameof(accountId));
+
+            return FromEntityToAccountLink(accountEntity);
+        }
+
         public IEnumerable<Account> GetAll()
         {
             return m_dbContext.Accounts

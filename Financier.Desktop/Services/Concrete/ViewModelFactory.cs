@@ -3,19 +3,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Financier.Desktop.ViewModels;
 using Financier.Services;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace Financier.Desktop.Services
 {
-    public static class ServiceProviderExtensions
-    {
-        public static T CreateInstance<T>(this IServiceProvider serviceProvider, params object[] parameters)
-        {
-            return ActivatorUtilities.CreateInstance<T>(serviceProvider, parameters);
-        }
-    }
-
     public class ViewModelFactory : IViewModelFactory
     {
         private readonly ILogger<ViewModelFactory> m_logger;
@@ -29,7 +20,7 @@ namespace Financier.Desktop.Services
 
         public IMainWindowViewModel CreateMainWindowViewModel()
         {
-            return m_serviceProvider.GetRequiredService<IMainWindowViewModel>();
+            return m_serviceProvider.CreateInstance<MainWindowViewModel>();
         }
 
         public IAccountEditViewModel CreateAccountEditViewModel(int accountId)
@@ -49,7 +40,7 @@ namespace Financier.Desktop.Services
 
         public IAccountListViewModel CreateAccountListViewModel()
         {
-            return m_serviceProvider.GetRequiredService<AccountListViewModel>();
+            return m_serviceProvider.CreateInstance<AccountListViewModel>();
         }
 
         public IAccountTransactionListViewModel CreateAccountTransactionListViewModel(int accountId)
@@ -74,7 +65,7 @@ namespace Financier.Desktop.Services
 
         public IBudgetListViewModel CreateBudgetListViewModel()
         {
-            return m_serviceProvider.GetRequiredService<IBudgetListViewModel>();
+            return m_serviceProvider.CreateInstance<BudgetListViewModel>();
         }
 
         public IBudgetTransactionListViewModel CreateBudgetTransactionListViewModel(int budgetId)
@@ -118,7 +109,7 @@ namespace Financier.Desktop.Services
 
         public ITransactionListViewModel CreateTransactionListViewModel()
         {
-            return m_serviceProvider.GetRequiredService<ITransactionListViewModel>();
+            return m_serviceProvider.CreateInstance<TransactionListViewModel>();
         }
     }
 }
