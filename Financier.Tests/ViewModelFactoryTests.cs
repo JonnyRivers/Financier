@@ -16,6 +16,17 @@ namespace Financier.Tests
     public class ViewModelFactoryTests
     {
         [TestMethod]
+        public void TestMainViewModelCreation()
+        {
+            IServiceProvider serviceProvider = BuildServiceProvider();
+            IViewModelFactory viewModelFactory = serviceProvider.GetRequiredService<IViewModelFactory>();
+
+            IMainWindowViewModel mainWindowViewModel = viewModelFactory.CreateMainWindowViewModel();
+
+            Assert.IsNotNull(mainWindowViewModel);
+        }
+
+        [TestMethod]
         public void TestAccountViewModelCreation()
         {
             IServiceProvider serviceProvider = BuildServiceProvider();
@@ -60,6 +71,72 @@ namespace Financier.Tests
 
             Assert.IsNotNull(accountListViewModel);
             Assert.AreEqual(dbContext.Accounts.Count(), accountListViewModel.Accounts.Count);
+        }
+
+        [TestMethod]
+        public void TestBudgetViewModelCreation()
+        {
+            IServiceProvider serviceProvider = BuildServiceProvider();
+            IViewModelFactory viewModelFactory = serviceProvider.GetRequiredService<IViewModelFactory>();
+
+            Entities.FinancierDbContext dbContext =
+                serviceProvider.GetRequiredService<Entities.FinancierDbContext>();
+            dbContext.Database.EnsureCreated();
+
+            var currencyFactory = new DbSetup.CurrencyFactory();
+            Entities.Currency usdCurrencyEntity = currencyFactory.Create(DbSetup.CurrencyPrefab.Usd, true);
+            currencyFactory.Add(dbContext, usdCurrencyEntity);
+
+            var accountFactory = new DbSetup.AccountFactory();
+            Entities.Account incomeAccountEntity = accountFactory.Create(DbSetup.AccountPrefab.Income, usdCurrencyEntity);
+            accountFactory.Add(dbContext, incomeAccountEntity);
+            Entities.Account checkingAccountEntity = accountFactory.Create(DbSetup.AccountPrefab.Checking, usdCurrencyEntity);
+            accountFactory.Add(dbContext, checkingAccountEntity);
+
+            dbContext.Transactions.Add(
+                new Entities.Transaction
+                {
+                    CreditAccount = incomeAccountEntity,
+                    DebitAccount = checkingAccountEntity,
+                    Amount = 100,
+                    At = new DateTime(2018, 1, 1)
+                }
+            );
+            dbContext.SaveChanges();
+
+            IAccountService accountService = serviceProvider.GetRequiredService<IAccountService>();
+            AccountLink incomeAccountLink = accountService.GetAsLink(incomeAccountEntity.AccountId);
+            AccountLink checkingAccountLink = accountService.GetAsLink(checkingAccountEntity.AccountId);
+
+            IBudgetEditViewModel budgetEditViewModel =
+                viewModelFactory.CreateBudgetEditViewModel(-1);
+
+            IBudgetItemViewModel budgetItemViewModel = 
+                viewModelFactory.CreateBudgetItemViewModel(null, null);
+
+            IBudgetListViewModel budgetListViewModel = 
+                viewModelFactory.CreateBudgetListViewModel();
+
+            IBudgetTransactionItemViewModel budgetTransactionItemViewModel = 
+                viewModelFactory.CreateBudgetTransactionItemViewModel(null, null, BudgetTransactionType.Initial);
+
+            IBudgetTransactionListViewModel budgetTransactionListViewModel = 
+                viewModelFactory.CreateBudgetTransactionListViewModel(-1);
+
+            IPaydayEventStartViewModel paydayEventStartViewModel = 
+                viewModelFactory.CreatePaydayEventStartViewModel(-1);
+
+            Assert.IsNotNull(budgetEditViewModel);
+
+            Assert.IsNotNull(budgetItemViewModel);
+
+            Assert.IsNotNull(budgetListViewModel);
+
+            Assert.IsNotNull(budgetTransactionItemViewModel);
+
+            Assert.IsNotNull(budgetTransactionListViewModel);
+
+            Assert.IsNotNull(paydayEventStartViewModel);
         }
 
         [TestMethod]
@@ -134,6 +211,12 @@ namespace Financier.Tests
             ITransactionListViewModel transactionListViewModel = 
                 viewModelFactory.CreateTransactionListViewModel();
 
+            IAccountTransactionListViewModel accountTransactionListViewModel =
+                viewModelFactory.CreateAccountTransactionListViewModel(checkingAccountEntity.AccountId);
+
+            IAccountTransactionItemViewModel accountTransactionItemViewMolde = 
+                viewModelFactory.CreateAccountTransactionItemViewModel(transaction);
+
             Assert.IsNotNull(transactionBatchCreateConfirmViewModel);
 
             Assert.IsNotNull(transactionCreateViewModel);
@@ -143,6 +226,12 @@ namespace Financier.Tests
             Assert.IsNotNull(transactionItemViewModel);
 
             Assert.IsNotNull(transactionListViewModel);
+
+            Assert.IsNotNull(accountTransactionListViewModel);
+            Assert.AreEqual(dbContext.Transactions.Count(), accountTransactionListViewModel.Transactions.Count);
+
+            Assert.IsNotNull(accountTransactionItemViewMolde);
+            Assert.AreEqual(transaction.Amount, accountTransactionItemViewMolde.Amount);
         }
 
         private IServiceProvider BuildServiceProvider()
