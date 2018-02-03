@@ -7,6 +7,7 @@ namespace Financier.Services
     {
         void Create(Account account);
         Account Get(int accountId);
+        AccountLink GetAsLink(int accountId);
         IEnumerable<Account> GetAll();
         IEnumerable<AccountLink> GetAllAsLinks();
         IEnumerable<Account> GetAllPhysical();

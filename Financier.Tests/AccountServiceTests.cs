@@ -206,6 +206,32 @@ namespace Financier.Tests
         }
 
         [TestMethod]
+        public void TestGetAccountAsLink()
+        {
+            ILoggerFactory loggerFactory = new LoggerFactory();
+            ILogger<AccountService> logger = loggerFactory.CreateLogger<AccountService>();
+
+            using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
+            {
+                var currencyFactory = new DbSetup.CurrencyFactory();
+                var usdCurrencyEntity = currencyFactory.Create(DbSetup.CurrencyPrefab.Usd, true);
+                currencyFactory.Add(sqliteMemoryWrapper.DbContext, usdCurrencyEntity);
+
+                var accountFactory = new DbSetup.AccountFactory();
+                Entities.Account checkingAccountEntity = accountFactory.Create(DbSetup.AccountPrefab.Checking, usdCurrencyEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, checkingAccountEntity);
+
+                var accountService = new AccountService(logger, sqliteMemoryWrapper.DbContext);
+
+                AccountLink checkingAccountLink = accountService.GetAsLink(checkingAccountEntity.AccountId);
+
+                Assert.AreEqual(checkingAccountEntity.AccountId, checkingAccountLink.AccountId);
+                Assert.AreEqual(checkingAccountEntity.Name, checkingAccountLink.Name);
+                Assert.AreEqual(AccountType.Asset, checkingAccountLink.Type);
+            }
+        }
+
+        [TestMethod]
         public void TestCreateAccount()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
