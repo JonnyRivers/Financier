@@ -3,19 +3,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Financier.Desktop.ViewModels;
 using Financier.Services;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace Financier.Desktop.Services
 {
-    public static class ServiceProviderExtensions
-    {
-        public static T CreateInstance<T>(this IServiceProvider serviceProvider, params object[] parameters)
-        {
-            return ActivatorUtilities.CreateInstance<T>(serviceProvider, parameters);
-        }
-    }
-
     public class ViewModelFactory : IViewModelFactory
     {
         private readonly ILogger<ViewModelFactory> m_logger;
