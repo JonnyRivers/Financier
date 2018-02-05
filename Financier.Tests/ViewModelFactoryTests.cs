@@ -294,6 +294,7 @@ namespace Financier.Tests
             serviceCollection.AddSingleton<IAccountRelationshipService, AccountRelationshipService>();
             serviceCollection.AddSingleton<IBudgetService, BudgetService>();
             serviceCollection.AddSingleton<ICurrencyService, CurrencyService>();
+            serviceCollection.AddSingleton<IRegistryService, RegistryService>();
             serviceCollection.AddSingleton<ITransactionService, TransactionService>();
             serviceCollection.AddSingleton<ITransactionRelationshipService, TransactionRelationshipService>();
 

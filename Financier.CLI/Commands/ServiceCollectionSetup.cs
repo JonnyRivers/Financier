@@ -1,8 +1,8 @@
 ﻿using Financier.Entities;
+using Financier.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Win32;
 
 namespace Financier.CLI.Commands
 {
@@ -17,9 +17,8 @@ namespace Financier.CLI.Commands
             serviceCollection.AddSingleton(loggerFactory);
             serviceCollection.AddLogging();
 
-            RegistryKey baseKey = RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, RegistryView.Default);
-            RegistryKey databaseKey = baseKey.OpenSubKey($"Software\\Financier\\Databases\\{databaseName}");
-            string connectionString = (string)databaseKey.GetValue("ConnectionString");
+            IRegistryService registryService = new RegistryService();
+            string connectionString = registryService.GetConnectionString(databaseName);
 
             serviceCollection.AddDbContext<FinancierDbContext>(
                 options => options.UseSqlServer(connectionString),

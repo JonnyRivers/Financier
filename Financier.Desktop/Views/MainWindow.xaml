@@ -4,17 +4,24 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         Title="Financier for Windows™" 
-        MinHeight="135" MinWidth="330"
-        Height="135" Width="330">
+        MinHeight="175" MinWidth="330"
+        Height="175" Width="330">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
+        
         <Button Margin="5" Grid.Row="0" Command="{Binding AccountsViewCommand}">Accounts</Button>
         <Button Margin="5" Grid.Row="1" Command="{Binding BudgetsViewCommand}">Budgets</Button>
         <Button Margin="5" Grid.Row="2" Command="{Binding TransactionsViewCommand}">Transactions</Button>
+        <StackPanel Grid.Row="4" Orientation="Horizontal">
+            <TextBlock Margin="5">Connected to:</TextBlock>
+            <TextBlock Margin="5" Text="{Binding CurrentDatabase}"/>
+        </StackPanel>
     </Grid>
 </Window>
