@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Win32;
 
 namespace Financier.CLI.Commands
 {
@@ -15,11 +16,11 @@ namespace Financier.CLI.Commands
             ILoggerFactory loggerFactory = new LoggerFactory().AddConsole().AddDebug();
             serviceCollection.AddSingleton(loggerFactory);
             serviceCollection.AddLogging();
-            
-            string connectionString =
-                @"Server=(localdb)\mssqllocaldb;" +
-                $"Database=Financier_{databaseName};" +
-                "Trusted_Connection=True;";
+
+            RegistryKey baseKey = RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, RegistryView.Default);
+            RegistryKey databaseKey = baseKey.OpenSubKey($"Software\\Financier\\Databases\\{databaseName}");
+            string connectionString = (string)databaseKey.GetValue("ConnectionString");
+
             serviceCollection.AddDbContext<FinancierDbContext>(
                 options => options.UseSqlServer(connectionString),
                 ServiceLifetime.Transient);

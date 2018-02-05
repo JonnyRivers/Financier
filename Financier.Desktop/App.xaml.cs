@@ -1,11 +1,12 @@
-﻿using Financier.Entities;
-using Financier.Desktop.Services;
+﻿using Financier.Desktop.Services;
+using Financier.Entities;
+using Financier.Services;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Win32;
 using System;
 using System.Windows;
-using Microsoft.EntityFrameworkCore;
-using Financier.Services;
 
 namespace Financier.Desktop
 {
@@ -32,10 +33,12 @@ namespace Financier.Desktop
             serviceCollection.AddSingleton(loggerFactory);
             serviceCollection.AddLogging();
 
-            string connectionString =
-                @"Server=(localdb)\mssqllocaldb;" +
-                $"Database=Financier_FamilyFortunes;" +
-                "Trusted_Connection=True;";
+            RegistryKey baseKey = RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, RegistryView.Default);
+            RegistryKey desktopKey = baseKey.OpenSubKey($"Software\\Financier\\Desktop");
+            string currentDatabase = (string)desktopKey.GetValue("CurrentDatabase");
+            RegistryKey databaseKey = baseKey.OpenSubKey($"Software\\Financier\\Databases\\{currentDatabase}");
+            string connectionString = (string)databaseKey.GetValue("ConnectionString");
+
             serviceCollection.AddDbContext<FinancierDbContext>(
                 options => options.UseSqlServer(connectionString),
                 ServiceLifetime.Transient);

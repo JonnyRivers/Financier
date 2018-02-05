@@ -21,8 +21,8 @@ namespace Financier.Services
 
         public void Load(string path)
         {
-            m_dbContext.Database.EnsureDeleted();
-            m_logger.LogInformation("Database is obliterated");
+            //TODO: clean database on Load()
+            //https://github.com/JonnyRivers/Financier/issues/51
 
             m_dbContext.Database.EnsureCreated();
             m_logger.LogInformation("Database is created");
