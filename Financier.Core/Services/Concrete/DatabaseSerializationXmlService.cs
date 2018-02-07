@@ -27,6 +27,21 @@ namespace Financier.Services
             m_dbContext.Database.EnsureCreated();
             m_logger.LogInformation("Database is created");
 
+            m_dbContext.BudgetTransactions.RemoveRange(m_dbContext.BudgetTransactions);
+            m_dbContext.SaveChanges();
+            m_dbContext.Budgets.RemoveRange(m_dbContext.Budgets);
+            m_dbContext.SaveChanges();
+            m_dbContext.TransactionRelationships.RemoveRange(m_dbContext.TransactionRelationships);
+            m_dbContext.SaveChanges();
+            m_dbContext.Transactions.RemoveRange(m_dbContext.Transactions);
+            m_dbContext.SaveChanges();
+            m_dbContext.AccountRelationships.RemoveRange(m_dbContext.AccountRelationships);
+            m_dbContext.SaveChanges();
+            m_dbContext.Accounts.RemoveRange(m_dbContext.Accounts);
+            m_dbContext.SaveChanges();
+            m_dbContext.Currencies.RemoveRange(m_dbContext.Currencies);
+            m_dbContext.SaveChanges();
+
             XDocument document = XDocument.Load(path);
             XElement rootElement = document.Root;
 
