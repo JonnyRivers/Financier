@@ -168,7 +168,7 @@ namespace Financier.Desktop.ViewModels
 
         private void DeleteExecute(object obj)
         {
-            if (m_viewService.OpenTransactionDeleteConfirmationView())
+            if (m_viewService.OpenAccountRelationshipDeleteConfirmationView())
             {
                 // Update model
                 m_accountRelationshipService.Delete(SelectedAccountRelationship.AccountRelationshipId);

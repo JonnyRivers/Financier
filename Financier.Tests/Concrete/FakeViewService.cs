@@ -23,6 +23,21 @@ namespace Financier.Tests.Concrete
             
         }
 
+        public bool OpenAccountRelationshipCreateView(AccountRelationship hint, out AccountRelationship transaction)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public bool OpenAccountRelationshipDeleteConfirmationView()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public bool OpenAccountRelationshipEditView(int accountRelationshipId)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public void OpenAccountRelationshipListView()
         {
             

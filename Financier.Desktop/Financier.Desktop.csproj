@@ -186,6 +186,9 @@
     <Compile Include="Views\AccountRelationshipListWindow.xaml.cs">
       <DependentUpon>AccountRelationshipListWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\AccountRelationshipDetailsWindow.xaml.cs">
+      <DependentUpon>AccountRelationshipDetailsWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\AccountTransactionListWindow.xaml.cs">
       <DependentUpon>AccountTransactionListWindow.xaml</DependentUpon>
     </Compile>
@@ -226,6 +229,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\AccountRelationshipListWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\AccountRelationshipDetailsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

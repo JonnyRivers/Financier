@@ -14,7 +14,7 @@ namespace Financier.Desktop.Services
 
         bool OpenAccountRelationshipCreateView(AccountRelationship hint, out AccountRelationship transaction);
         bool OpenAccountRelationshipDeleteConfirmationView();
-        bool OpenAccountRelationshipEditView(int transactionId);
+        bool OpenAccountRelationshipEditView(int accountRelationshipId);
         void OpenAccountRelationshipListView();
 
         bool OpenBudgetCreateView(out Budget budget);

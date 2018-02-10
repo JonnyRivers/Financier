@@ -1,30 +1,74 @@
-﻿using System;
+﻿using Financier.Desktop.Commands;
+using Financier.Services;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
-using Financier.Services;
 
 namespace Financier.Desktop.ViewModels
 {
     public class AccountRelationshipEditViewModel : IAccountRelationshipDetailsViewModel
     {
-        public IEnumerable<AccountLink> Accounts => throw new NotImplementedException();
+        private ILogger<AccountRelationshipEditViewModel> m_logger;
+        private IAccountService m_accountService;
+        private IAccountRelationshipService m_accountRelationshipService;
 
-        public int AccountRelationshipId => throw new NotImplementedException();
+        private int m_accountRelationshipId;
 
-        public AccountLink SourceAccount { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public AccountLink DestinationAccount { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public AccountRelationshipType Type { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public AccountRelationshipEditViewModel(
+            ILogger<AccountRelationshipEditViewModel> logger,
+            IAccountService accountService,
+            IAccountRelationshipService accountRelationshipService,
+            int accountRelationshipId)
+        {
+            m_logger = logger;
+            m_accountService = accountService;
+            m_accountRelationshipService = accountRelationshipService;
 
-        public ICommand OKCommand => throw new NotImplementedException();
+            Accounts = accountService.GetAllAsLinks();
+            Types = Enum.GetValues(typeof(AccountRelationshipType)).Cast<AccountRelationshipType>();
 
-        public ICommand CancelCommand => throw new NotImplementedException();
+            m_accountRelationshipId = accountRelationshipId;
+
+            AccountRelationship accountRelationship = m_accountRelationshipService.Get(accountRelationshipId);
+
+            SourceAccount = Accounts.Single(a => a.AccountId == accountRelationship.SourceAccount.AccountId);
+            DestinationAccount = Accounts.Single(a => a.AccountId == accountRelationship.DestinationAccount.AccountId);
+            SelectedType = accountRelationship.Type;
+        }
+
+        public IEnumerable<AccountLink> Accounts { get; }
+        public IEnumerable<AccountRelationshipType> Types { get; }
+
+        public AccountLink SourceAccount { get; set; }
+        public AccountLink DestinationAccount { get; set; }
+        public AccountRelationshipType SelectedType { get; set; }
+
+        public ICommand OKCommand => new RelayCommand(OKExecute);
+        public ICommand CancelCommand => new RelayCommand(CancelExecute);
+
+        private void OKExecute(object obj)
+        {
+            AccountRelationship accountRelationship = ToAccountRelationship();
+
+            m_accountRelationshipService.Update(accountRelationship);
+        }
+
+        private void CancelExecute(object obj)
+        {
+
+        }
 
         public AccountRelationship ToAccountRelationship()
         {
-            throw new NotImplementedException();
+            return new AccountRelationship
+            {
+                AccountRelationshipId = m_accountRelationshipId,
+                SourceAccount = SourceAccount,
+                DestinationAccount = DestinationAccount,
+                Type = SelectedType
+            };
         }
     }
 }

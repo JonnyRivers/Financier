@@ -9,12 +9,11 @@ namespace Financier.Desktop.ViewModels
         AccountRelationship ToAccountRelationship();
 
         IEnumerable<AccountLink> Accounts { get; }
-
-        int AccountRelationshipId { get; }
+        IEnumerable<AccountRelationshipType> Types { get; }
 
         AccountLink SourceAccount { get; set; }
         AccountLink DestinationAccount { get; set; }
-        AccountRelationshipType Type { get; set; }
+        AccountRelationshipType SelectedType { get; set; }
 
         ICommand OKCommand { get; }
         ICommand CancelCommand { get; }

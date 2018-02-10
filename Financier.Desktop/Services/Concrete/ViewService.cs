@@ -67,9 +67,22 @@ namespace Financier.Desktop.Services
             return false;
         }
 
-        public bool OpenAccountRelationshipCreateView(AccountRelationship hint, out AccountRelationship transaction)
+        public bool OpenAccountRelationshipCreateView(AccountRelationship hint, out AccountRelationship accountRelationship)
         {
-            throw new System.NotImplementedException();
+            accountRelationship = null;
+
+            IAccountRelationshipDetailsViewModel viewModel = 
+                m_viewModelFactory.CreateAccountRelationshipCreateViewModel(hint);
+            var window = new AccountRelationshipDetailsWindow(viewModel);
+            bool? result = window.ShowDialog();
+
+            if (result.HasValue)
+            {
+                accountRelationship = viewModel.ToAccountRelationship();
+                return result.Value;
+            }
+
+            return false;
         }
 
         public bool OpenAccountRelationshipDeleteConfirmationView()
@@ -77,9 +90,19 @@ namespace Financier.Desktop.Services
             return OpenDeleteConfirmationView("account relationship");
         }
 
-        public bool OpenAccountRelationshipEditView(int transactionId)
+        public bool OpenAccountRelationshipEditView(int accountRelationshipId)
         {
-            throw new System.NotImplementedException();
+            IAccountRelationshipDetailsViewModel viewModel = 
+                m_viewModelFactory.CreateAccountRelationshipEditViewModel(accountRelationshipId);
+            var window = new AccountRelationshipDetailsWindow(viewModel);
+            bool? result = window.ShowDialog();
+
+            if (result.HasValue)
+            {
+                return result.Value;
+            }
+
+            return false;
         }
 
         public void OpenAccountRelationshipListView()
