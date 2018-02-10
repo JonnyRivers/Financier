@@ -9,22 +9,22 @@ namespace Financier.Desktop.ViewModels
     public class MainWindowViewModel : BaseViewModel, IMainWindowViewModel
     {
         private ILogger<MainWindowViewModel> m_logger;
-        private IRegistryService m_registryService;
+        private IDataConfigService m_dataConfigService;
         private IViewService m_viewService;
 
         private string m_currentDatabase;
 
         public MainWindowViewModel(
             ILogger<MainWindowViewModel> logger,
-            IRegistryService registryService,
+            IDataConfigService dataConfigService,
             IViewService viewService
         )
         {
             m_logger = logger;
-            m_registryService = registryService;
+            m_dataConfigService = dataConfigService;
             m_viewService = viewService;
 
-            m_currentDatabase = m_registryService.GetCurrentDatabase();
+            m_currentDatabase = dataConfigService.GetCurrentDatabase();
         }
 
         public string CurrentDatabase => m_currentDatabase;

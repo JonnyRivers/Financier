@@ -166,6 +166,7 @@ namespace Financier.Services
             };
         }
 
+        // TODO: duplicated code
         private AccountLink FromEntityToAccountLink(
             Entities.Account accountEntity)
         {
