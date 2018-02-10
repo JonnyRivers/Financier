@@ -17,8 +17,8 @@ namespace Financier.CLI.Commands
             serviceCollection.AddSingleton(loggerFactory);
             serviceCollection.AddLogging();
 
-            IRegistryService registryService = new RegistryService();
-            string connectionString = registryService.GetConnectionString(databaseName);
+            IDataConfigService dataConfigService = new DataConfigRegistryService();
+            string connectionString = dataConfigService.GetConnectionString(databaseName);
 
             serviceCollection.AddDbContext<FinancierDbContext>(
                 options => options.UseSqlServer(connectionString),

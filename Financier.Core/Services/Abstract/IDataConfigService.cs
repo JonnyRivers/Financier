@@ -2,7 +2,7 @@
 
 namespace Financier.Services
 {
-    public interface IRegistryService
+    public interface IDataConfigService
     {
         IEnumerable<string> GetDatabases();
         string GetCurrentDatabase();

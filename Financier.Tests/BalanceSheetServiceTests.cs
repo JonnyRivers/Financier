@@ -254,13 +254,13 @@ namespace Financier.Tests
                 accountFactory.Add(sqliteMemoryWrapper.DbContext, rentPrepaymentAccountEntity);
                 accountFactory.Add(sqliteMemoryWrapper.DbContext, groceriesPrepaymentAccountEntity);
 
-                var checkingToRentPrepaymentRelationship = new AccountRelationship
+                var checkingToRentPrepaymentRelationship = new Entities.AccountRelationship
                 {
                     SourceAccount = checkingAccountEntity,
                     DestinationAccount = rentPrepaymentAccountEntity,
                     Type = AccountRelationshipType.PhysicalToLogical
                 };
-                var checkingToGroceriesPrepaymentRelationship = new AccountRelationship
+                var checkingToGroceriesPrepaymentRelationship = new Entities.AccountRelationship
                 {
                     SourceAccount = checkingAccountEntity,
                     DestinationAccount = groceriesPrepaymentAccountEntity,

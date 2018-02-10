@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Reflection;
 using Financier.Desktop.ViewModels;
 using Financier.Services;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace Financier.Desktop.Services
@@ -51,6 +53,31 @@ namespace Financier.Desktop.Services
         public IAccountTransactionItemViewModel CreateAccountTransactionItemViewModel(Transaction transaction)
         {
             return m_serviceProvider.CreateInstance<AccountTransactionItemViewModel>(transaction);
+        }
+
+        public IAccountRelationshipDetailsViewModel CreateAccountRelationshipCreateViewModel(AccountRelationship hint)
+        {
+            return m_serviceProvider.CreateInstance<AccountRelationshipCreateViewModel>(hint);
+        }
+
+        public IAccountRelationshipDetailsViewModel CreateAccountRelationshipEditViewModel(int accountRelationshipId)
+        {
+            return m_serviceProvider.CreateInstance<AccountRelationshipEditViewModel>(accountRelationshipId);
+        }
+
+        public IAccountRelationshipItemViewModel CreateAccountRelationshipItemViewModel(AccountRelationship accountRelationship)
+        {
+            return m_serviceProvider.CreateInstance<AccountRelationshipItemViewModel>(accountRelationship);
+        }
+
+        public IAccountRelationshipListViewModel CreateAccountRelationshipListViewModel()
+        {
+            return m_serviceProvider.CreateInstance<AccountRelationshipListViewModel>();
+        }
+
+        public IAccountRelationshipTypeFilterViewModel CreateAccountRelationshipTypeFilterViewModel(AccountRelationshipType? type)
+        {
+            return new AccountRelationshipTypeFilterViewModel(type);
         }
 
         public IBudgetEditViewModel CreateBudgetEditViewModel(int budgetId)

@@ -7,6 +7,7 @@ namespace Financier.Desktop.ViewModels
         string CurrentDatabase { get; }
 
         ICommand AccountsViewCommand { get; }
+        ICommand AccountRelationshipsViewCommand { get; }
         ICommand BudgetsViewCommand { get; }
         ICommand TransactionsViewCommand { get; }
     }

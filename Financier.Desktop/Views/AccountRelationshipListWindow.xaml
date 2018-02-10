@@ -1,0 +1,52 @@
+﻿<Window x:Class="Financier.Desktop.Views.AccountRelationshipListWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Financier.Desktop.Views"
+        mc:Ignorable="d"
+        Title="Financier for Windows™ - Account Relationships" 
+        MinHeight="200" MinWidth="710"
+        Height="600" Width="710">
+    <Window.Resources>
+        <DataTemplate x:Key="NameInTextBlockItemTemplate">
+            <StackPanel>
+                <TextBlock Text="{Binding Name}"/>
+            </StackPanel>
+        </DataTemplate>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Margin="5" Grid.Row="0" Orientation="Horizontal">
+            <TextBlock Margin="5">Account Filter:</TextBlock>
+            <ComboBox Margin="5" 
+                      ItemsSource="{Binding AccountFilters}" 
+                      ItemTemplate="{StaticResource NameInTextBlockItemTemplate}"
+                      SelectedItem="{Binding SelectedAccountFilter}"/>
+            <TextBlock Margin="5">Type Filter:</TextBlock>
+            <ComboBox Margin="5" 
+                      ItemsSource="{Binding RelationshipTypeFilters}" 
+                      ItemTemplate="{StaticResource NameInTextBlockItemTemplate}"
+                      SelectedItem="{Binding SelectedRelationshipTypeFilter}"/>
+        </StackPanel>
+        <StackPanel Margin="5" Grid.Row="1" Orientation="Horizontal">
+            <TextBlock Margin="5">Actions:</TextBlock>
+            <Button Margin="5" Command="{Binding CreateCommand}">Create New Relationship</Button>
+            <Button Margin="5" Command="{Binding EditCommand}">Edit Selected Relationship</Button>
+            <Button Margin="5" Command="{Binding DeleteCommand}">Delete Selected Relationship</Button>
+        </StackPanel>
+        <ListView Grid.Row="2" SelectedItem="{Binding SelectedAccountRelationship}" ItemsSource="{Binding AccountRelationships}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Source Account" Width="240" DisplayMemberBinding="{Binding SourceAccount.Name}"/>
+                    <GridViewColumn Header="Destination Account" Width="240" DisplayMemberBinding="{Binding DestinationAccount.Name}"/>
+                    <GridViewColumn Header="Type" Width="200" DisplayMemberBinding="{Binding Type}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </Grid>
+</Window>

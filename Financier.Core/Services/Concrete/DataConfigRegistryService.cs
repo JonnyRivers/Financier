@@ -3,14 +3,14 @@ using System.Collections.Generic;
 
 namespace Financier.Services
 {
-    public class RegistryService : IRegistryService
+    public class DataConfigRegistryService : IDataConfigService
     {
         private const RegistryHive Hive = RegistryHive.CurrentUser;
         private const RegistryView View = RegistryView.Default;
 
         private readonly RegistryKey m_baseKey;
 
-        public RegistryService()
+        public DataConfigRegistryService()
         {
             m_baseKey = RegistryKey.OpenBaseKey(Hive, View);
         }
