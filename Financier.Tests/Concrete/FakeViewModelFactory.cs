@@ -40,6 +40,31 @@ namespace Financier.Tests.Concrete
             throw new NotImplementedException();
         }
 
+        public IAccountRelationshipDetailsViewModel CreateAccountRelationshipCreateViewModel(AccountRelationship hint)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IAccountRelationshipDetailsViewModel CreateAccountRelationshipEditViewModel(int accountRelationshipId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IAccountRelationshipItemViewModel CreateAccountRelationshipItemViewModel(AccountRelationship accountRelationship)
+        {
+            return new StubAccountRelationshipItemViewModel(this, accountRelationship);
+        }
+
+        public IAccountRelationshipListViewModel CreateAccountRelationshipListViewModel()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IAccountRelationshipTypeViewModel CreateAccountRelationshipTypeViewModel(AccountRelationshipType? type)
+        {
+            return new StubAccountRelationshipTypeViewModel(type);
+        }
+
         public IBudgetEditViewModel CreateBudgetEditViewModel(int budgetId)
         {
             throw new NotImplementedException();

@@ -133,6 +133,10 @@
     <Compile Include="Services\Concrete\ViewModelFactory.cs" />
     <Compile Include="Services\Concrete\ViewService.cs" />
     <Compile Include="ViewModels\Abstract\IAccountLinkViewModel.cs" />
+    <Compile Include="ViewModels\Abstract\IAccountRelationshipDetailsViewModel.cs" />
+    <Compile Include="ViewModels\Abstract\IAccountRelationshipItemViewModel.cs" />
+    <Compile Include="ViewModels\Abstract\IAccountRelationshipListViewModel.cs" />
+    <Compile Include="ViewModels\Abstract\IAccountRelationshipTypeViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IBudgetEditViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IBudgetItemViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IBudgetListViewModel.cs" />
@@ -154,6 +158,11 @@
     <Compile Include="ViewModels\Abstract\ITransactionEditViewModel.cs" />
     <Compile Include="ViewModels\Abstract\ITransactionListViewModel.cs" />
     <Compile Include="ViewModels\Abstract\ITransactionItemViewModel.cs" />
+    <Compile Include="ViewModels\Concrete\AccountRelationshipCreateViewModel.cs" />
+    <Compile Include="ViewModels\Concrete\AccountRelationshipEditViewModel.cs" />
+    <Compile Include="ViewModels\Concrete\AccountRelationshipItemViewModel.cs" />
+    <Compile Include="ViewModels\Concrete\AccountRelationshipListViewModel.cs" />
+    <Compile Include="ViewModels\Concrete\AccountRelationshipTypeViewModel.cs" />
     <Compile Include="ViewModels\Concrete\BudgetEditViewModel.cs" />
     <Compile Include="ViewModels\Concrete\BudgetItemViewModel.cs" />
     <Compile Include="ViewModels\Concrete\BudgetListViewModel.cs" />

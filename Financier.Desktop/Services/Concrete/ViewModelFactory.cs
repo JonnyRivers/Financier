@@ -53,6 +53,31 @@ namespace Financier.Desktop.Services
             return m_serviceProvider.CreateInstance<AccountTransactionItemViewModel>(transaction);
         }
 
+        public IAccountRelationshipDetailsViewModel CreateAccountRelationshipCreateViewModel(AccountRelationship hint)
+        {
+            return m_serviceProvider.CreateInstance<AccountRelationshipCreateViewModel>(hint);
+        }
+
+        public IAccountRelationshipDetailsViewModel CreateAccountRelationshipEditViewModel(int accountRelationshipId)
+        {
+            return m_serviceProvider.CreateInstance<AccountRelationshipEditViewModel>(accountRelationshipId);
+        }
+
+        public IAccountRelationshipItemViewModel CreateAccountRelationshipItemViewModel(AccountRelationship accountRelationship)
+        {
+            return m_serviceProvider.CreateInstance<AccountRelationshipItemViewModel>(accountRelationship);
+        }
+
+        public IAccountRelationshipListViewModel CreateAccountRelationshipListViewModel()
+        {
+            return m_serviceProvider.CreateInstance<AccountRelationshipListViewModel>();
+        }
+
+        public IAccountRelationshipTypeViewModel CreateAccountRelationshipTypeViewModel(AccountRelationshipType? type)
+        {
+            return m_serviceProvider.CreateInstance<AccountRelationshipTypeViewModel>(type);
+        }
+
         public IBudgetEditViewModel CreateBudgetEditViewModel(int budgetId)
         {
             return m_serviceProvider.CreateInstance<BudgetEditViewModel>(budgetId);
