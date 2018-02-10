@@ -20,7 +20,7 @@ namespace Financier.Desktop.Services
         IAccountRelationshipDetailsViewModel CreateAccountRelationshipEditViewModel(int accountRelationshipId);
         IAccountRelationshipItemViewModel CreateAccountRelationshipItemViewModel(AccountRelationship accountRelationship);
         IAccountRelationshipListViewModel CreateAccountRelationshipListViewModel();
-        IAccountRelationshipTypeViewModel CreateAccountRelationshipTypeViewModel(AccountRelationshipType? type);
+        IAccountRelationshipTypeFilterViewModel CreateAccountRelationshipTypeFilterViewModel(AccountRelationshipType? type);
 
         IBudgetEditViewModel CreateBudgetEditViewModel(int budgetId);
         IBudgetItemViewModel CreateBudgetItemViewModel(Budget budget, Currency primaryCurrency);

@@ -7,8 +7,8 @@ namespace Financier.Desktop.ViewModels
     {
         ObservableCollection<IAccountLinkViewModel> AccountFilters { get; }
         IAccountLinkViewModel SelectedAccountFilter { get; }
-        ObservableCollection<IAccountRelationshipTypeViewModel> RelationshipTypeFilters { get; }
-        IAccountRelationshipTypeViewModel SelectedRelationshipTypeFilter { get; }
+        ObservableCollection<IAccountRelationshipTypeFilterViewModel> RelationshipTypeFilters { get; }
+        IAccountRelationshipTypeFilterViewModel SelectedRelationshipTypeFilter { get; }
 
         ObservableCollection<IAccountRelationshipItemViewModel> AccountRelationships { get; }
         IAccountRelationshipItemViewModel SelectedAccountRelationship { get; }

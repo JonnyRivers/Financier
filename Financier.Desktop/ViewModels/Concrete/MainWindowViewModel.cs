@@ -30,12 +30,18 @@ namespace Financier.Desktop.ViewModels
         public string CurrentDatabase => m_currentDatabase;
 
         public ICommand AccountsViewCommand => new RelayCommand(AccountsViewExecute);
+        public ICommand AccountRelationshipsViewCommand => new RelayCommand(AccountRelationshipsViewExecute);
         public ICommand BudgetsViewCommand => new RelayCommand(BudgetsViewExecute);
         public ICommand TransactionsViewCommand => new RelayCommand(TransactionsViewExecute);
 
         private void AccountsViewExecute(object obj)
         {
             m_viewService.OpenAccountListView();
+        }
+
+        private void AccountRelationshipsViewExecute(object obj)
+        {
+            m_viewService.OpenAccountRelationshipListView();
         }
 
         private void BudgetsViewExecute(object obj)

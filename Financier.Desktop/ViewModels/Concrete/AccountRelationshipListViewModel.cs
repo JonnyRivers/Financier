@@ -70,10 +70,10 @@ namespace Financier.Desktop.ViewModels
             }
         }
 
-        private ObservableCollection<IAccountRelationshipTypeViewModel> m_relationshipTypeFilters;
-        private IAccountRelationshipTypeViewModel m_selectedRelationshipTpeFilters;
+        private ObservableCollection<IAccountRelationshipTypeFilterViewModel> m_relationshipTypeFilters;
+        private IAccountRelationshipTypeFilterViewModel m_selectedRelationshipTpeFilters;
 
-        public ObservableCollection<IAccountRelationshipTypeViewModel> RelationshipTypeFilters
+        public ObservableCollection<IAccountRelationshipTypeFilterViewModel> RelationshipTypeFilters
         {
             get { return m_relationshipTypeFilters; }
             set
@@ -87,7 +87,7 @@ namespace Financier.Desktop.ViewModels
             }
         }
 
-        public IAccountRelationshipTypeViewModel SelectedRelationshipTypeFilter
+        public IAccountRelationshipTypeFilterViewModel SelectedRelationshipTypeFilter
         {
             get { return m_selectedRelationshipTpeFilters; }
             set
@@ -133,11 +133,55 @@ namespace Financier.Desktop.ViewModels
             }
         }
 
-        public ICommand CreateCommand => throw new NotImplementedException();
+        public ICommand CreateCommand => new RelayCommand(CreateExecute);
+        public ICommand EditCommand => new RelayCommand(EditExecute, EditCanExecute);
+        public ICommand DeleteCommand => new RelayCommand(DeleteExecute, DeleteCanExecute);
 
-        public ICommand EditCommand => throw new NotImplementedException();
+        private void CreateExecute(object obj)
+        {
+            AccountRelationship hint = null;
+            IAccountRelationshipItemViewModel hintViewModel = AccountRelationships.FirstOrDefault();
+            if (AccountRelationships.Any())
+            {
+                hint = m_accountRelationshipService.Get(AccountRelationships.First().AccountRelationshipId);
+            }
 
-        public ICommand DeleteCommand => throw new NotImplementedException();
+            AccountRelationship newRelationship;
+            if (m_viewService.OpenAccountRelationshipCreateView(hint, out newRelationship))
+            {
+                PopulateAccountRelationships();
+            }
+        }
+
+        private void EditExecute(object obj)
+        {
+            if (m_viewService.OpenAccountRelationshipEditView(SelectedAccountRelationship.AccountRelationshipId))
+            {
+                PopulateAccountRelationships();
+            }
+        }
+
+        private bool EditCanExecute(object obj)
+        {
+            return (SelectedAccountRelationship != null);
+        }
+
+        private void DeleteExecute(object obj)
+        {
+            if (m_viewService.OpenTransactionDeleteConfirmationView())
+            {
+                // Update model
+                m_accountRelationshipService.Delete(SelectedAccountRelationship.AccountRelationshipId);
+
+                // Update view model
+                AccountRelationships.Remove(SelectedAccountRelationship);
+            }
+        }
+
+        private bool DeleteCanExecute(object obj)
+        {
+            return (SelectedAccountRelationship != null);
+        }
 
         private void PopulateAccountFilters()
         {
@@ -162,9 +206,9 @@ namespace Financier.Desktop.ViewModels
             var relationshipTypeFilters = new List<AccountRelationshipType?>();
             relationshipTypeFilters.Add(null);
             relationshipTypeFilters.AddRange(Enum.GetValues(typeof(AccountRelationshipType)).Cast<AccountRelationshipType?>());
-            IEnumerable<IAccountRelationshipTypeViewModel> viewModels =
-                relationshipTypeFilters.Select(t => m_viewModelFactory.CreateAccountRelationshipTypeViewModel(t));
-            RelationshipTypeFilters = new ObservableCollection<IAccountRelationshipTypeViewModel>(viewModels);
+            IEnumerable<IAccountRelationshipTypeFilterViewModel> viewModels =
+                relationshipTypeFilters.Select(t => m_viewModelFactory.CreateAccountRelationshipTypeFilterViewModel(t));
+            RelationshipTypeFilters = new ObservableCollection<IAccountRelationshipTypeFilterViewModel>(viewModels);
             SelectedRelationshipTypeFilter = RelationshipTypeFilters.Single(t => !t.Type.HasValue);
         }
 
@@ -172,9 +216,13 @@ namespace Financier.Desktop.ViewModels
         {
             IEnumerable<AccountRelationship> accountRelationships = m_accountRelationshipService.GetAll();
             IEnumerable<IAccountRelationshipItemViewModel> accountRelationshipVMs =
-                accountRelationships.Select(ar => m_viewModelFactory.CreateAccountRelationshipItemViewModel(ar));
+                accountRelationships
+                    .Select(ar => m_viewModelFactory.CreateAccountRelationshipItemViewModel(ar))
+                    .OrderBy(ar => ar.SourceAccount.Name)
+                    .ThenBy(ar => ar.DestinationAccount.Name)
+                    .ThenBy(ar => ar.AccountRelationshipId);
             AccountRelationships = new ObservableCollection<IAccountRelationshipItemViewModel>(
-                accountRelationshipVMs.OrderBy(ar => ar.AccountRelationshipId));
+                accountRelationshipVMs);
             OnPropertyChanged(nameof(AccountRelationships));
         }
     }

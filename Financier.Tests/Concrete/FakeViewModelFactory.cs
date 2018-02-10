@@ -60,9 +60,9 @@ namespace Financier.Tests.Concrete
             throw new NotImplementedException();
         }
 
-        public IAccountRelationshipTypeViewModel CreateAccountRelationshipTypeViewModel(AccountRelationshipType? type)
+        public IAccountRelationshipTypeFilterViewModel CreateAccountRelationshipTypeFilterViewModel(AccountRelationshipType? type)
         {
-            return new StubAccountRelationshipTypeViewModel(type);
+            return new StubAccountRelationshipTypeFilterViewModel(type);
         }
 
         public IBudgetEditViewModel CreateBudgetEditViewModel(int budgetId)

@@ -1,6 +1,6 @@
 ﻿namespace Financier.Desktop.ViewModels
 {
-    public interface IAccountRelationshipTypeViewModel
+    public interface IAccountRelationshipTypeFilterViewModel
     {
         string Name { get; }
         AccountRelationshipType? Type { get; }

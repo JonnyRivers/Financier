@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
 
 namespace Financier.Desktop.ViewModels
 {
-    public class AccountRelationshipTypeViewModel : IAccountRelationshipTypeViewModel
+    public class AccountRelationshipTypeFilterViewModel : IAccountRelationshipTypeFilterViewModel
     {
-        public AccountRelationshipTypeViewModel(AccountRelationshipType? type)
+        public AccountRelationshipTypeFilterViewModel(
+            AccountRelationshipType? type)
         {
             m_type = type;
             m_name = type.ToReadableString();

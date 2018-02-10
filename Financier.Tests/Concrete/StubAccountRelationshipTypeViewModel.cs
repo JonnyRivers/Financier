@@ -2,11 +2,11 @@
 
 namespace Financier.Tests.Concrete
 {
-    internal class StubAccountRelationshipTypeViewModel : IAccountRelationshipTypeViewModel
+    internal class StubAccountRelationshipTypeFilterViewModel : IAccountRelationshipTypeFilterViewModel
     {
         private AccountRelationshipType? m_type;
 
-        public StubAccountRelationshipTypeViewModel(AccountRelationshipType? type)
+        public StubAccountRelationshipTypeFilterViewModel(AccountRelationshipType? type)
         {
             m_type = type;
         }

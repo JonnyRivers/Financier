@@ -23,6 +23,11 @@ namespace Financier.Tests.Concrete
             
         }
 
+        public void OpenAccountRelationshipListView()
+        {
+            
+        }
+
         public bool OpenAccountTransactionsEditView(int accountId)
         {
             return false;

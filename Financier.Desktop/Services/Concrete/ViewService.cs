@@ -67,6 +67,28 @@ namespace Financier.Desktop.Services
             return false;
         }
 
+        public bool OpenAccountRelationshipCreateView(AccountRelationship hint, out AccountRelationship transaction)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public bool OpenAccountRelationshipDeleteConfirmationView()
+        {
+            return OpenDeleteConfirmationView("account relationship");
+        }
+
+        public bool OpenAccountRelationshipEditView(int transactionId)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void OpenAccountRelationshipListView()
+        {
+            IAccountRelationshipListViewModel viewModel = m_viewModelFactory.CreateAccountRelationshipListViewModel();
+            var window = new AccountRelationshipListWindow(viewModel);
+            window.ShowDialog();
+        }
+
         public bool OpenBudgetCreateView(out Budget budget)
         {
             return OpenBudgetEditView(0, out budget);
@@ -196,5 +218,7 @@ namespace Financier.Desktop.Services
 
             return (confirmResult == MessageBoxResult.Yes);
         }
+
+        
     }
 }
