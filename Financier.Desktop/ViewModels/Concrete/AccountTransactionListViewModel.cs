@@ -2,6 +2,7 @@
 using Financier.Desktop.Services;
 using Financier.Services;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -137,7 +138,18 @@ namespace Financier.Desktop.ViewModels
             if(Transactions.Any())
             {
                 hint = m_transactionService.Get(Transactions.First().TransactionId);
-            }           
+            }
+            else
+            {
+                AccountLink thisAccountLink = m_accountService.GetAsLink(m_accountId);
+                hint = new Transaction
+                {
+                    CreditAccount = thisAccountLink,
+                    DebitAccount = thisAccountLink,
+                    Amount = 0,
+                    At = DateTime.Now
+                };
+            }
             
             Transaction newTransaction;
             if (m_viewService.OpenTransactionCreateView(hint, out newTransaction))
