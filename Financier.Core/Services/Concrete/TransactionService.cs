@@ -116,6 +116,20 @@ namespace Financier.Services
                 .ToList();
         }
 
+        public IEnumerable<Transaction> GetAll(IEnumerable<int> accountIds, DateTime startAt, DateTime endAt)
+        {
+            var accountIdSet = new HashSet<int>(accountIds);
+
+            return m_dbContext.Transactions
+                .Where(t => t.At >= startAt && t.At <= endAt)
+                .Where(t => accountIdSet.Contains(t.CreditAccountId) ||
+                            accountIdSet.Contains(t.DebitAccountId))
+                .Include(t => t.CreditAccount)
+                .Include(t => t.DebitAccount)
+                .Select(FromEntity)
+                .ToList();
+        }
+
         public IEnumerable<Payment> GetPendingCreditCardPayments(int accountId)
         {
             var linkedExpenseAccountIds = new HashSet<int>(

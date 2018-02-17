@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Financier.Services
 {
@@ -11,6 +12,7 @@ namespace Financier.Services
         Transaction Get(int transactionId);
         IEnumerable<Transaction> GetAll();
         IEnumerable<Transaction> GetAll(IEnumerable<int> accountIds);
+        IEnumerable<Transaction> GetAll(IEnumerable<int> accountIds, DateTime startAt, DateTime endAt);
         IEnumerable<Payment> GetPendingCreditCardPayments(int accountId);
         void Update(Transaction transaction);
     }
