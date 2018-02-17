@@ -129,6 +129,11 @@ namespace Financier.Desktop.Services
             return m_serviceProvider.CreateInstance<TransactionEditViewModel>(transactionId);
         }
 
+        public IReconcileBalanceViewModel CreateReconcileBalanceViewModel(int accountId)
+        {
+            return m_serviceProvider.CreateInstance<ReconcileBalanceViewModel>(accountId);
+        }
+
         public ITransactionItemViewModel CreateTransactionItemViewModel(Transaction transaction)
         {
             return m_serviceProvider.CreateInstance<TransactionItemViewModel>(transaction);

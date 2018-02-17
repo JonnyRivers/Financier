@@ -91,6 +91,11 @@ namespace Financier.Tests.Concrete
             return false;
         }
 
+        public bool OpenReconcileBalanceView(int accountId, out Transaction transaction)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public bool OpenTransactionBatchCreateConfirmView(IEnumerable<Transaction> transactions)
         {
             return false;

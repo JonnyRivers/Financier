@@ -1,6 +1,5 @@
 ﻿using System;
 using Financier.Services;
-using Financier.Desktop.Services;
 using Financier.Desktop.ViewModels;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

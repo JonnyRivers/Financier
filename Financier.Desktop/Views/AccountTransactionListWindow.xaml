@@ -17,6 +17,7 @@
         <StackPanel Margin="5" Grid.Row="0" Orientation="Horizontal">
             <TextBlock Width="60" Margin="5">Actions:</TextBlock>
             <Button Margin="5" Command="{Binding CreateCommand}">Create New Transaction</Button>
+            <Button Margin="5" Command="{Binding ReconcileBalanceCommand}">Reconcile Balance</Button>
             <Button Margin="5" Command="{Binding EditCommand}">Edit Selected Transaction</Button>
             <Button Margin="5" Command="{Binding DeleteCommand}">Delete Selected Transaction</Button>
         </StackPanel>

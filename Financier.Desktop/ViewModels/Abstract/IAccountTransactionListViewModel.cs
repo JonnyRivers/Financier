@@ -12,6 +12,7 @@ namespace Financier.Desktop.ViewModels
         IAccountTransactionItemViewModel SelectedTransaction { get; }
 
         ICommand CreateCommand { get; }
+        ICommand ReconcileBalanceCommand { get; }
         ICommand EditCommand { get; }
         ICommand DeleteCommand { get; }
     }

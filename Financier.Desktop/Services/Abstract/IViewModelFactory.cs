@@ -35,6 +35,7 @@ namespace Financier.Desktop.Services
             IEnumerable<Transaction> transactions);
 
         ITransactionEditViewModel CreateTransactionCreateViewModel(Transaction hint);
+        IReconcileBalanceViewModel CreateReconcileBalanceViewModel(int accountId);
         ITransactionEditViewModel CreateTransactionEditViewModel(int transactionId);
         ITransactionItemViewModel CreateTransactionItemViewModel(Transaction transaction);
         ITransactionListViewModel CreateTransactionListViewModel();

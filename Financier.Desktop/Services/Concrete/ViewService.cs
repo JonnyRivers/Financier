@@ -207,6 +207,23 @@ namespace Financier.Desktop.Services
             return false;
         }
 
+        public bool OpenReconcileBalanceView(int accountId, out Transaction transaction)
+        {
+            transaction = null;
+
+            IReconcileBalanceViewModel viewModel = m_viewModelFactory.CreateReconcileBalanceViewModel(accountId);
+            var window = new ReconcileBalanceWindow(viewModel);
+            bool? result = window.ShowDialog();
+
+            if (result.HasValue && result.Value)
+            {
+                transaction = viewModel.ToTransaction();
+                return true;
+            }
+
+            return false;
+        }
+
         public bool OpenTransactionDeleteConfirmationView()
         {
             return OpenDeleteConfirmationView("transaction");

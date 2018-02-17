@@ -143,6 +143,7 @@
     <Compile Include="ViewModels\Abstract\IBudgetTransactionItemViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IBudgetTransactionListViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IPaydayEventStartViewModel.cs" />
+    <Compile Include="ViewModels\Abstract\IReconcileBalanceViewModel.cs" />
     <Compile Include="ViewModels\Abstract\ITransactionBatchCreateConfirmViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IAccountTransactionListViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IAccountTransactionItemViewModel.cs" />
@@ -170,6 +171,7 @@
     <Compile Include="ViewModels\Concrete\BudgetTransactionListViewModel.cs" />
     <Compile Include="ViewModels\Concrete\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\Concrete\PaydayEventStartViewModel.cs" />
+    <Compile Include="ViewModels\Concrete\ReconcileBalanceViewModel.cs" />
     <Compile Include="ViewModels\Concrete\TransactionBatchCreateConfirmViewModel.cs" />
     <Compile Include="ViewModels\Concrete\TransactionEditViewModel.cs" />
     <Compile Include="ViewModels\Concrete\AccountTransactionItemViewModel.cs" />
@@ -206,6 +208,9 @@
     </Compile>
     <Compile Include="Views\PaydayEventStartWindow.xaml.cs">
       <DependentUpon>PaydayEventStartWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ReconcileBalanceWindow.xaml.cs">
+      <DependentUpon>ReconcileBalanceWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\TransactionBatchCreateConfirmWindow.xaml.cs">
       <DependentUpon>TransactionBatchCreateConfirmWindow.xaml</DependentUpon>
@@ -257,6 +262,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\PaydayEventStartWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ReconcileBalanceWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

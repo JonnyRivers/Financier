@@ -124,5 +124,10 @@ namespace Financier.Tests.Concrete
         {
             throw new NotImplementedException();
         }
+
+        public IReconcileBalanceViewModel CreateReconcileBalanceViewModel(int accountId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

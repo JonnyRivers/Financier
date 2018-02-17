@@ -128,6 +128,7 @@ namespace Financier.Desktop.ViewModels
         }
 
         public ICommand CreateCommand => new RelayCommand(CreateExecute);
+        public ICommand ReconcileBalanceCommand => new RelayCommand(ReconcileBalanceExecute);
         public ICommand EditCommand => new RelayCommand(EditExecute, EditCanExecute);
         public ICommand DeleteCommand => new RelayCommand(DeleteExecute, DeleteCanExecute);
 
@@ -153,6 +154,15 @@ namespace Financier.Desktop.ViewModels
             
             Transaction newTransaction;
             if (m_viewService.OpenTransactionCreateView(hint, out newTransaction))
+            {
+                PopulateTransactions();
+            }
+        }
+
+        private void ReconcileBalanceExecute(object obj)
+        {
+            Transaction newTransaction;
+            if (m_viewService.OpenReconcileBalanceView(m_accountId, out newTransaction))
             {
                 PopulateTransactions();
             }
