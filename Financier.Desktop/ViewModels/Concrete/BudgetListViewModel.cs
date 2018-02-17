@@ -147,10 +147,7 @@ namespace Financier.Desktop.ViewModels
 
                 if (m_viewService.OpenTransactionBatchCreateConfirmView(prospectiveTransasctions))
                 {
-                    foreach (Transaction prospectiveTransasction in prospectiveTransasctions)
-                    {
-                        m_transactionService.Create(prospectiveTransasction);
-                    }
+                    m_transactionService.CreateMany(prospectiveTransasctions);
                 }
             }
         }

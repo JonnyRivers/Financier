@@ -6,6 +6,7 @@ namespace Financier.Services
     {
         bool Any();
         void Create(Transaction transaction);
+        void CreateMany(IEnumerable<Transaction> transactions);
         void Delete(int transactionId);
         Transaction Get(int transactionId);
         IEnumerable<Transaction> GetAll();

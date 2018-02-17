@@ -38,6 +38,31 @@ namespace Financier.Services
             transaction.TransactionId = transactionEntity.TransactionId;
         }
 
+        public void CreateMany(IEnumerable<Transaction> transactions)
+        {
+            var entitiesByTransaction = new Dictionary<Transaction, Entities.Transaction>();
+            foreach (Transaction transaction in transactions)
+            {
+                var transactionEntity = new Entities.Transaction
+                {
+                    CreditAccountId = transaction.CreditAccount.AccountId,
+                    DebitAccountId = transaction.DebitAccount.AccountId,
+                    Amount = transaction.Amount,
+                    At = transaction.At
+                };
+
+                m_dbContext.Transactions.Add(transactionEntity);
+                entitiesByTransaction.Add(transaction, transactionEntity);
+            }
+
+            m_dbContext.SaveChanges();
+
+            foreach (KeyValuePair<Transaction, Entities.Transaction> entityByTransaction in entitiesByTransaction)
+            {
+                entityByTransaction.Key.TransactionId = entityByTransaction.Value.TransactionId;
+            }
+        }
+
         public void Delete(int transactionId)
         {
             Entities.Transaction transactionEntity =

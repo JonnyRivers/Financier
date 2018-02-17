@@ -10,7 +10,7 @@ namespace Financier.Tests
     public class FinancierDbContextTests
     {
         [TestMethod]
-        public void TestCreateInMemory()
+        public void TestCreateInMemoryInDbContext()
         {
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
@@ -26,7 +26,7 @@ namespace Financier.Tests
         }
 
         [TestMethod]
-        public void TestCreateCurrency()
+        public void TestCreateCurrencyInDbContext()
         {
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
@@ -45,7 +45,7 @@ namespace Financier.Tests
         }
 
         [TestMethod]
-        public void TestCreateAccount()
+        public void TestCreateAccountInDbContext()
         {
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
@@ -70,7 +70,7 @@ namespace Financier.Tests
         }
 
         [TestMethod]
-        public void TestCreateTransaction()
+        public void TestCreateTransactionInDbContext()
         {
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
@@ -111,7 +111,7 @@ namespace Financier.Tests
         }
 
         [TestMethod]
-        public void TestCreateAccountRelationships()
+        public void TestCreateAccountRelationshipsInDbContext()
         {
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
@@ -164,7 +164,7 @@ namespace Financier.Tests
         }
 
         [TestMethod]
-        public void TestCreateBudget()
+        public void TestCreateBudgetInDbContext()
         {
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
@@ -315,7 +315,7 @@ namespace Financier.Tests
         }
 
         [TestMethod]
-        public void TestCreateTransactionRelationship()
+        public void TestCreateTransactionRelationshipInDbContext()
         {
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {

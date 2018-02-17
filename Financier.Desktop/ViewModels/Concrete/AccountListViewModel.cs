@@ -126,18 +126,22 @@ namespace Financier.Desktop.ViewModels
                 IEnumerable<Transaction> paymentTransactions = pendingCreditCardPayments.Select(p => p.PaymentTransaction);
                 if (m_viewService.OpenTransactionBatchCreateConfirmView(paymentTransactions))
                 {
+                    m_transactionService.CreateMany(paymentTransactions);
+
+                    var newTransactionRelationships = new List<TransactionRelationship>();
                     foreach (Payment pendingCreditCardPayment in pendingCreditCardPayments)
                     {
-                        m_transactionService.Create(pendingCreditCardPayment.PaymentTransaction);
-
                         var transactionRelationship = new TransactionRelationship
                         {
                             SourceTransaction = pendingCreditCardPayment.OriginalTransaction,
                             DestinationTransaction = pendingCreditCardPayment.PaymentTransaction,
                             Type = TransactionRelationshipType.CreditCardPayment
                         };
-                        m_transactionRelationshipService.Create(transactionRelationship);
+
+                        newTransactionRelationships.Add(transactionRelationship);
                     }
+
+                    m_transactionRelationshipService.CreateMany(newTransactionRelationships);
                 }
             }
             else

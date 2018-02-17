@@ -11,6 +11,113 @@ namespace Financier.Tests
     public class TransactionServiceTests
     {
         [TestMethod]
+        public void TestCreateTransaction()
+        {
+            ILoggerFactory loggerFactory = new LoggerFactory();
+
+            using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
+            {
+                var currencyFactory = new DbSetup.CurrencyFactory();
+                var usdCurrencyEntity = currencyFactory.Create(DbSetup.CurrencyPrefab.Usd, true);
+                currencyFactory.Add(sqliteMemoryWrapper.DbContext, usdCurrencyEntity);
+
+                var accountFactory = new DbSetup.AccountFactory();
+                Entities.Account incomeAccountEntity =
+                    accountFactory.Create(DbSetup.AccountPrefab.Income, usdCurrencyEntity);
+                Entities.Account checkingAccountEntity =
+                    accountFactory.Create(DbSetup.AccountPrefab.Checking, usdCurrencyEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, incomeAccountEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, checkingAccountEntity);
+
+                var accountService = new AccountService(
+                    loggerFactory.CreateLogger<AccountService>(), 
+                    sqliteMemoryWrapper.DbContext
+                );
+                var transactionService = new TransactionService(
+                    loggerFactory.CreateLogger<TransactionService>(),
+                    sqliteMemoryWrapper.DbContext
+                );
+                var newTransaction = new Transaction
+                {
+                    CreditAccount = accountService.GetAsLink(incomeAccountEntity.AccountId),
+                    DebitAccount = accountService.GetAsLink(checkingAccountEntity.AccountId),
+                    Amount = 100m,
+                    At = new DateTime(2018, 1, 1, 9, 0, 0)
+                };
+                transactionService.Create(newTransaction);
+
+                List<Entities.Transaction> transactionEntities = sqliteMemoryWrapper.DbContext.Transactions.ToList();
+
+                Assert.AreEqual(1, transactionEntities.Count);
+                Assert.AreEqual(newTransaction.TransactionId, transactionEntities[0].TransactionId);
+                Assert.AreEqual(newTransaction.CreditAccount.AccountId, transactionEntities[0].CreditAccount.AccountId);
+                Assert.AreEqual(newTransaction.DebitAccount.AccountId, transactionEntities[0].DebitAccount.AccountId);
+                Assert.AreEqual(newTransaction.Amount, transactionEntities[0].Amount);
+                Assert.AreEqual(newTransaction.At, transactionEntities[0].At);
+            }
+        }
+
+        [TestMethod]
+        public void TestCreateManyTransactions()
+        {
+            ILoggerFactory loggerFactory = new LoggerFactory();
+
+            using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
+            {
+                var currencyFactory = new DbSetup.CurrencyFactory();
+                var usdCurrencyEntity = currencyFactory.Create(DbSetup.CurrencyPrefab.Usd, true);
+                currencyFactory.Add(sqliteMemoryWrapper.DbContext, usdCurrencyEntity);
+
+                var accountFactory = new DbSetup.AccountFactory();
+                Entities.Account incomeAccountEntity =
+                    accountFactory.Create(DbSetup.AccountPrefab.Income, usdCurrencyEntity);
+                Entities.Account checkingAccountEntity =
+                    accountFactory.Create(DbSetup.AccountPrefab.Checking, usdCurrencyEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, incomeAccountEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, checkingAccountEntity);
+
+                var accountService = new AccountService(
+                    loggerFactory.CreateLogger<AccountService>(),
+                    sqliteMemoryWrapper.DbContext
+                );
+                var transactionService = new TransactionService(
+                    loggerFactory.CreateLogger<TransactionService>(),
+                    sqliteMemoryWrapper.DbContext
+                );
+                var newTransactions = new Transaction[]
+                {
+                    new Transaction {
+                        CreditAccount = accountService.GetAsLink(incomeAccountEntity.AccountId),
+                        DebitAccount = accountService.GetAsLink(checkingAccountEntity.AccountId),
+                        Amount = 100m,
+                        At = new DateTime(2018, 1, 1, 9, 0, 0)
+                    },
+                    new Transaction {
+                        CreditAccount = accountService.GetAsLink(incomeAccountEntity.AccountId),
+                        DebitAccount = accountService.GetAsLink(checkingAccountEntity.AccountId),
+                        Amount = 70m,
+                        At = new DateTime(2018, 1, 1, 9, 25, 0)
+                    }
+                };
+                transactionService.CreateMany(newTransactions);
+
+                List<Entities.Transaction> transactionEntities = sqliteMemoryWrapper.DbContext.Transactions.ToList();
+
+                Assert.AreEqual(2, transactionEntities.Count);
+                Assert.AreEqual(newTransactions[0].TransactionId, transactionEntities[0].TransactionId);
+                Assert.AreEqual(newTransactions[0].CreditAccount.AccountId, transactionEntities[0].CreditAccount.AccountId);
+                Assert.AreEqual(newTransactions[0].DebitAccount.AccountId, transactionEntities[0].DebitAccount.AccountId);
+                Assert.AreEqual(newTransactions[0].Amount, transactionEntities[0].Amount);
+                Assert.AreEqual(newTransactions[0].At, transactionEntities[0].At);
+                Assert.AreEqual(newTransactions[1].TransactionId, transactionEntities[1].TransactionId);
+                Assert.AreEqual(newTransactions[1].CreditAccount.AccountId, transactionEntities[1].CreditAccount.AccountId);
+                Assert.AreEqual(newTransactions[1].DebitAccount.AccountId, transactionEntities[1].DebitAccount.AccountId);
+                Assert.AreEqual(newTransactions[1].Amount, transactionEntities[1].Amount);
+                Assert.AreEqual(newTransactions[1].At, transactionEntities[1].At);
+            }
+        }
+
+        [TestMethod]
         public void TestGetAllTransactions()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
