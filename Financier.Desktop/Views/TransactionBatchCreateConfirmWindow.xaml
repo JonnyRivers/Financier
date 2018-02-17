@@ -17,7 +17,7 @@
             <RowDefinition/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <ListView Grid.Row="0" ItemsSource="{Binding Transactions}" IsEnabled="False">
+        <ListView Grid.Row="0" ItemsSource="{Binding Transactions}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Credit Account" Width="240" DisplayMemberBinding="{Binding CreditAccount.Name}"/>
