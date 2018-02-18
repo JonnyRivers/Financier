@@ -33,10 +33,12 @@ namespace Financier.CLI.Commands
                 var serviceCollection = ServiceCollectionSetup.SetupCoreServices(databaseName);
 
                 // Application services
+                serviceCollection.AddSingleton<IAccountRelationshipService, AccountRelationshipService>();
                 serviceCollection.AddSingleton<IAccountService, AccountService>();
                 serviceCollection.AddSingleton<ICurrencyService, CurrencyService>();
                 serviceCollection.AddSingleton<ICashflowService, CashflowService>();
                 serviceCollection.AddSingleton<ICashflowStatementWriterService, CashflowStatementConsoleWriterService>();
+                serviceCollection.AddSingleton<ITransactionService, TransactionService>();
 
                 IServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
 

@@ -29,11 +29,11 @@ namespace Financier.Services
 
         public string CurrencySymbol { get; }
 
-        IEnumerable<CashflowStatementItem> Items { get; }
+        public IEnumerable<CashflowStatementItem> Items { get; }
 
-        decimal TotalInflow { get; }
-        decimal TotalOutflow { get; }
+        public decimal TotalInflow { get; }
+        public decimal TotalOutflow { get; }
 
-        decimal NetCashflow { get; }
+        public decimal NetCashflow { get; }
     }
 }

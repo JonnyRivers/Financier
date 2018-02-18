@@ -47,12 +47,30 @@ namespace Financier.Services
                 )
             );
 
-            List<Transaction> relevantTransactions = m_transactionService.GetAll(relevantAccountIds).ToList();
+            List<Transaction> relevantTransactions = m_transactionService.GetAll(
+                relevantAccountIds,
+                startAt,
+                endAt).ToList();
 
             var cashflowStatementItems = new List<CashflowStatementItem>();
             foreach (AccountRelationship prepaymentToExpenseRelationship in prepaymentToExpenseRelationships)
             {
-                
+                string name = prepaymentToExpenseRelationship.DestinationAccount.Name.Replace(" Expense", "");
+
+                IEnumerable<Transaction> inflowTransactions =
+                    relevantTransactions.Where(t =>
+                        t.DebitAccount.AccountId == prepaymentToExpenseRelationship.SourceAccount.AccountId);
+                IEnumerable<Transaction> outflowTransactions =
+                    relevantTransactions.Where(t =>
+                        t.DebitAccount.AccountId == prepaymentToExpenseRelationship.DestinationAccount.AccountId);
+
+                var item = new CashflowStatementItem(
+                    name,
+                    inflowTransactions.Sum(t => t.Amount),
+                    outflowTransactions.Sum(t => t.Amount)
+                );
+
+                cashflowStatementItems.Add(item);
             }
 
             return new CashflowStatement(
