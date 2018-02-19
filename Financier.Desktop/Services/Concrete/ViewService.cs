@@ -151,6 +151,31 @@ namespace Financier.Desktop.Services
             return OpenDeleteConfirmationView("budget transaction");
         }
 
+        public bool OpenForeignAmountView(
+            decimal nativeAmount,
+            string nativeCurrencyCode,
+            string foreignCurrencyCode, 
+            out decimal exchangedAmount)
+        {
+            exchangedAmount = 0m;
+
+            IForeignAmountViewModel viewModel = m_viewModelFactory.CreateForeignAmountViewModel(
+                nativeAmount,
+                nativeCurrencyCode,
+                foreignCurrencyCode
+            );
+            var window = new ForeignAmountWindow(viewModel);
+            bool? result = window.ShowDialog();
+
+            if (result.HasValue && result.Value)
+            {
+                exchangedAmount = viewModel.NativeAmount;
+                return true;
+            }
+
+            return false;
+        }
+
         public bool OpenPaydayEventStartView(int budgetId, out PaydayStart paydayStart)
         {
             paydayStart = null;
@@ -258,7 +283,5 @@ namespace Financier.Desktop.Services
 
             return (confirmResult == MessageBoxResult.Yes);
         }
-
-        
     }
 }

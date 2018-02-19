@@ -129,5 +129,13 @@ namespace Financier.Tests.Concrete
         {
             throw new NotImplementedException();
         }
+
+        public IForeignAmountViewModel CreateForeignAmountViewModel(
+            decimal nativeAmount,
+            string nativeCurrencyCode,
+            string foreignCurrencyCode)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

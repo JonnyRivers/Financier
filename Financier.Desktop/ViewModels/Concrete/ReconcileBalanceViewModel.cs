@@ -14,10 +14,14 @@ namespace Financier.Desktop.ViewModels
     {
         private ILogger<ReconcileBalanceViewModel> m_logger;
         private IAccountService m_accountService;
+        private ICurrencyService m_currencyService;
         private ITransactionService m_transactionService;
         private IViewModelFactory m_viewModelFactory;
+        private IViewService m_viewService;
 
         private int m_accountId;
+        private string m_primaryCurrencyCode;
+        private string m_accountCurrencyCode;
         private decimal m_openingBalance;
         private decimal m_targetBalance;
         private IAccountLinkViewModel m_selectedCreditAccount;
@@ -28,16 +32,23 @@ namespace Financier.Desktop.ViewModels
         public ReconcileBalanceViewModel(
             ILogger<ReconcileBalanceViewModel> logger,
             IAccountService accountService,
+            ICurrencyService currencyService,
             ITransactionService transactionService,
             IViewModelFactory viewModelFactory,
+            IViewService viewService,
             int accountId)
         {
             m_logger = logger;
             m_accountService = accountService;
+            m_currencyService = currencyService;
             m_transactionService = transactionService;
             m_viewModelFactory = viewModelFactory;
+            m_viewService = viewService;
 
             m_accountId = accountId;
+            m_primaryCurrencyCode = m_currencyService.GetPrimary().ShortName;
+            m_accountCurrencyCode = m_accountService.Get(m_accountId).Currency.ShortName;
+
             m_openingBalance = m_targetBalance = m_accountService.GetBalance(m_accountId, true);
             m_at = DateTime.Now;
 
@@ -92,8 +103,28 @@ namespace Financier.Desktop.ViewModels
             }
         }
 
+        public ICommand LookupForeignBalanceCommand 
+            => new RelayCommand(LookupForeignBalanceExecute, LookupForeignBalanceCanExecute);
         public ICommand OKCommand => new RelayCommand(OKExecute, OKCanExecute);
         public ICommand CancelCommand => new RelayCommand(CancelExecute);
+
+        private void LookupForeignBalanceExecute(object obj)
+        {
+            decimal exchangedAmount;
+            if(m_viewService.OpenForeignAmountView(
+                Balance,
+                m_primaryCurrencyCode,
+                m_accountCurrencyCode,
+                out exchangedAmount))
+            {
+                Balance = exchangedAmount;
+            }
+        }
+
+        private bool LookupForeignBalanceCanExecute(object obj)
+        {
+            return (m_primaryCurrencyCode != m_accountCurrencyCode);
+        }
 
         private void OKExecute(object obj)
         {
