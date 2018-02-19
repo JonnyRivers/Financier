@@ -304,6 +304,109 @@ namespace Financier.Tests
         }
 
         [TestMethod]
+        public void TestGetAllTransactionsFilteredByAccountAndDateRange()
+        {
+            ILoggerFactory loggerFactory = new LoggerFactory();
+            ILogger<TransactionService> logger = loggerFactory.CreateLogger<TransactionService>();
+
+            using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
+            {
+                var currencyFactory = new DbSetup.CurrencyFactory();
+                var usdCurrencyEntity = currencyFactory.Create(DbSetup.CurrencyPrefab.Usd, true);
+                currencyFactory.Add(sqliteMemoryWrapper.DbContext, usdCurrencyEntity);
+
+                var accountFactory = new DbSetup.AccountFactory();
+                Entities.Account incomeAccountEntity =
+                    accountFactory.Create(DbSetup.AccountPrefab.Income, usdCurrencyEntity);
+                Entities.Account checkingAccountEntity =
+                    accountFactory.Create(DbSetup.AccountPrefab.Checking, usdCurrencyEntity);
+                Entities.Account rentPrepaymentAccountEntity =
+                    accountFactory.Create(DbSetup.AccountPrefab.RentPrepayment, usdCurrencyEntity);
+                Entities.Account groceriesPrepaymentAccountEntity =
+                    accountFactory.Create(DbSetup.AccountPrefab.GroceriesPrepayment, usdCurrencyEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, incomeAccountEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, checkingAccountEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, rentPrepaymentAccountEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, groceriesPrepaymentAccountEntity);
+
+                var transactionEntities = new Entities.Transaction[]
+                {
+                    new Entities.Transaction
+                    {
+                        CreditAccount = incomeAccountEntity,
+                        DebitAccount = checkingAccountEntity,
+                        Amount = 100m,
+                        At = new DateTime(2018, 1, 1, 8, 30, 0)
+                    },
+                    new Entities.Transaction
+                    {
+                        CreditAccount = checkingAccountEntity,
+                        DebitAccount = rentPrepaymentAccountEntity,
+                        Amount = 60m,
+                        At = new DateTime(2018, 1, 1, 8, 35, 0)
+                    },
+                    new Entities.Transaction
+                    {
+                        CreditAccount = checkingAccountEntity,
+                        DebitAccount = rentPrepaymentAccountEntity,
+                        Amount = 10m,
+                        At = new DateTime(2018, 1, 1, 9, 45, 0)
+                    },
+                    new Entities.Transaction
+                    {
+                        CreditAccount = checkingAccountEntity,
+                        DebitAccount = rentPrepaymentAccountEntity,
+                        Amount = 10m,
+                        At = new DateTime(2018, 1, 1, 11, 15, 0)
+                    }
+                };
+
+                sqliteMemoryWrapper.DbContext.Transactions.AddRange(transactionEntities);
+                sqliteMemoryWrapper.DbContext.SaveChanges();
+
+                var checkingToRentPrepaymentRelationship = new Entities.AccountRelationship
+                {
+                    SourceAccount = checkingAccountEntity,
+                    DestinationAccount = rentPrepaymentAccountEntity,
+                    Type = AccountRelationshipType.PhysicalToLogical
+                };
+                var checkingToGroceriesPrepaymentRelationship = new Entities.AccountRelationship
+                {
+                    SourceAccount = checkingAccountEntity,
+                    DestinationAccount = groceriesPrepaymentAccountEntity,
+                    Type = AccountRelationshipType.PhysicalToLogical
+                };
+
+                sqliteMemoryWrapper.DbContext.AccountRelationships.Add(checkingToRentPrepaymentRelationship);
+                sqliteMemoryWrapper.DbContext.AccountRelationships.Add(checkingToGroceriesPrepaymentRelationship);
+                sqliteMemoryWrapper.DbContext.SaveChanges();
+
+                var transactionService = new TransactionService(logger, sqliteMemoryWrapper.DbContext);
+
+                int[] accountIds = new int[1] { rentPrepaymentAccountEntity.AccountId };
+                List<Transaction> transactions = transactionService
+                    .GetAll(
+                        accountIds, 
+                        new DateTime(2018, 1, 1, 8, 35, 0), 
+                        new DateTime(2018, 1, 1, 10, 0, 0)
+                    )
+                    .ToList();
+
+                Assert.AreEqual(2, transactions.Count);
+
+                Assert.AreEqual(2, transactions[0].TransactionId);
+                Assert.AreEqual(checkingAccountEntity.AccountId, transactions[0].CreditAccount.AccountId);
+                Assert.AreEqual(rentPrepaymentAccountEntity.AccountId, transactions[0].DebitAccount.AccountId);
+                Assert.AreEqual(transactionEntities[1].Amount, transactions[0].Amount);
+                Assert.AreEqual(transactionEntities[1].At, transactions[0].At);
+                Assert.AreEqual(checkingAccountEntity.AccountId, transactions[1].CreditAccount.AccountId);
+                Assert.AreEqual(rentPrepaymentAccountEntity.AccountId, transactions[1].DebitAccount.AccountId);
+                Assert.AreEqual(transactionEntities[2].Amount, transactions[1].Amount);
+                Assert.AreEqual(transactionEntities[2].At, transactions[1].At);
+            }
+        }
+
+        [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void TestGetTransactionFailInvalidId()
         {

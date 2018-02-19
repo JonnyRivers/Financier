@@ -17,6 +17,7 @@ namespace Financier.CLI
             app.Command("load", Commands.LoadCommand.Configure);
             app.Command("save", Commands.SaveCommand.Configure);
             app.Command("balance-sheet", Commands.BalanceSheetCommand.Configure);
+            app.Command("cashflow", Commands.CashflowCommand.Configure);
 
             return app.Execute(args);
         }

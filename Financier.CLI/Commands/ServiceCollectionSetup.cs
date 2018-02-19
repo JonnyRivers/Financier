@@ -13,7 +13,7 @@ namespace Financier.CLI.Commands
             var serviceCollection = new ServiceCollection();
 
             // .NET Services
-            ILoggerFactory loggerFactory = new LoggerFactory().AddConsole().AddDebug();
+            ILoggerFactory loggerFactory = new LoggerFactory().AddDebug();
             serviceCollection.AddSingleton(loggerFactory);
             serviceCollection.AddLogging();
 
