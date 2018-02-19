@@ -5,7 +5,7 @@ using System.Windows.Input;
 
 namespace Financier.Desktop.ViewModels
 {
-    public interface ITransactionEditViewModel
+    public interface ITransactionDetailsViewModel
     {
         Transaction ToTransaction();
 

@@ -10,19 +10,19 @@ using System.Windows.Input;
 
 namespace Financier.Desktop.ViewModels
 {
-    public class TransactionEditViewModel : BaseViewModel, ITransactionDetailsViewModel
+    public class TransactionCreateViewModel : BaseViewModel, ITransactionDetailsViewModel
     {
         private ILogger<TransactionEditViewModel> m_logger;
         private IAccountService m_accountService;
         private ITransactionService m_transactionService;
         private IViewModelFactory m_viewModelFactory;
 
-        public TransactionEditViewModel(
+        public TransactionCreateViewModel(
             ILogger<TransactionEditViewModel> logger,
             IAccountService accountService,
             ITransactionService transactionService,
             IViewModelFactory viewModelFactory,
-            int transactionId)
+            Transaction hint)
         {
             m_logger = logger;
             m_accountService = accountService;
@@ -35,14 +35,25 @@ namespace Financier.Desktop.ViewModels
 
             Accounts = new ObservableCollection<IAccountLinkViewModel>(accountLinkViewModels.OrderBy(alvm => alvm.Name));
 
-            m_transactionId = transactionId;
+            m_transactionId = 0;
 
-            Transaction transaction = m_transactionService.Get(m_transactionId);
+            if (hint != null)
+            {
+                m_selectedCreditAccount = Accounts.Single(a => a.AccountId == hint.CreditAccount.AccountId);
+                m_selectedDebitAccount = Accounts.Single(a => a.AccountId == hint.DebitAccount.AccountId);
+            }
+            else
+            {
+                m_selectedCreditAccount =
+                    Accounts
+                        .FirstOrDefault(a => a.Type == AccountType.Capital || a.Type == AccountType.Income);
+                m_selectedDebitAccount =
+                    Accounts
+                        .FirstOrDefault(a => a.Type == AccountType.Asset || a.Type == AccountType.Expense);
+            }
 
-            m_selectedCreditAccount = Accounts.Single(a => a.AccountId == transaction.CreditAccount.AccountId);
-            m_selectedDebitAccount = Accounts.Single(a => a.AccountId == transaction.DebitAccount.AccountId);
-            m_amount = transaction.Amount;
-            m_at = transaction.At;
+            m_amount = 0m;
+            m_at = DateTime.Now;
         }
 
         public Transaction ToTransaction()
@@ -137,7 +148,8 @@ namespace Financier.Desktop.ViewModels
         {
             Transaction transaction = ToTransaction();
 
-            m_transactionService.Update(transaction);
+            m_transactionService.Create(transaction);
+            m_transactionId = transaction.TransactionId;
         }
 
         private bool OKCanExecute(object obj)

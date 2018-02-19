@@ -10,7 +10,12 @@ namespace Financier.Tests.Concrete
 {
     internal class FakeViewModelFactory : IViewModelFactory
     {
-        public IAccountEditViewModel CreateAccountEditViewModel(int accountId)
+        public IAccountDetailsViewModel CreateAccountCreateViewModel()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IAccountDetailsViewModel CreateAccountEditViewModel(int accountId)
         {
             throw new NotImplementedException();
         }
@@ -65,7 +70,12 @@ namespace Financier.Tests.Concrete
             return new StubAccountRelationshipTypeFilterViewModel(type);
         }
 
-        public IBudgetEditViewModel CreateBudgetEditViewModel(int budgetId)
+        public IBudgetDetailsViewModel CreateBudgetCreateViewModel()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IBudgetDetailsViewModel CreateBudgetEditViewModel(int budgetId)
         {
             throw new NotImplementedException();
         }
@@ -105,12 +115,12 @@ namespace Financier.Tests.Concrete
             throw new NotImplementedException();
         }
 
-        public ITransactionEditViewModel CreateTransactionCreateViewModel(Transaction hint)
+        public ITransactionDetailsViewModel CreateTransactionCreateViewModel(Transaction hint)
         {
             throw new NotImplementedException();
         }
 
-        public ITransactionEditViewModel CreateTransactionEditViewModel(int transactionId)
+        public ITransactionDetailsViewModel CreateTransactionEditViewModel(int transactionId)
         {
             throw new NotImplementedException();
         }

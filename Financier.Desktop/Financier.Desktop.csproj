@@ -162,7 +162,7 @@
     <Compile Include="ViewModels\Abstract\IAccountRelationshipItemViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IAccountRelationshipListViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IAccountRelationshipTypeViewModel.cs" />
-    <Compile Include="ViewModels\Abstract\IBudgetEditViewModel.cs" />
+    <Compile Include="ViewModels\Abstract\IBudgetDetailsViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IBudgetItemViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IBudgetListViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IBudgetTransactionItemViewModel.cs" />
@@ -173,16 +173,17 @@
     <Compile Include="ViewModels\Abstract\ITransactionBatchCreateConfirmViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IAccountTransactionListViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IAccountTransactionItemViewModel.cs" />
+    <Compile Include="ViewModels\Concrete\AccountCreateViewModel.cs" />
     <Compile Include="ViewModels\Concrete\AccountEditViewModel.cs" />
     <Compile Include="ViewModels\Concrete\AccountItemViewModel.cs" />
     <Compile Include="ViewModels\Concrete\AccountLinkViewModel.cs" />
     <Compile Include="ViewModels\Concrete\AccountListViewModel.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
-    <Compile Include="ViewModels\Abstract\IAccountEditViewModel.cs" />
+    <Compile Include="ViewModels\Abstract\IAccountDetailsViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IAccountItemViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IAccountListViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IMainWindowViewModel.cs" />
-    <Compile Include="ViewModels\Abstract\ITransactionEditViewModel.cs" />
+    <Compile Include="ViewModels\Abstract\ITransactionDetailsViewModel.cs" />
     <Compile Include="ViewModels\Abstract\ITransactionListViewModel.cs" />
     <Compile Include="ViewModels\Abstract\ITransactionItemViewModel.cs" />
     <Compile Include="ViewModels\Concrete\AccountRelationshipCreateViewModel.cs" />
@@ -190,6 +191,7 @@
     <Compile Include="ViewModels\Concrete\AccountRelationshipItemViewModel.cs" />
     <Compile Include="ViewModels\Concrete\AccountRelationshipListViewModel.cs" />
     <Compile Include="ViewModels\Concrete\AccountRelationshipTypeViewModel.cs" />
+    <Compile Include="ViewModels\Concrete\BudgetCreateViewModel.cs" />
     <Compile Include="ViewModels\Concrete\BudgetEditViewModel.cs" />
     <Compile Include="ViewModels\Concrete\BudgetItemViewModel.cs" />
     <Compile Include="ViewModels\Concrete\BudgetListViewModel.cs" />
@@ -200,14 +202,15 @@
     <Compile Include="ViewModels\Concrete\PaydayEventStartViewModel.cs" />
     <Compile Include="ViewModels\Concrete\ReconcileBalanceViewModel.cs" />
     <Compile Include="ViewModels\Concrete\TransactionBatchCreateConfirmViewModel.cs" />
+    <Compile Include="ViewModels\Concrete\TransactionCreateViewModel.cs" />
     <Compile Include="ViewModels\Concrete\TransactionEditViewModel.cs" />
     <Compile Include="ViewModels\Concrete\AccountTransactionItemViewModel.cs" />
     <Compile Include="ViewModels\Concrete\AccountTransactionListViewModel.cs" />
     <Compile Include="ViewModels\Concrete\TransactionListViewModel.cs" />
     <Compile Include="ViewModels\Concrete\TransactionItemViewModel.cs" />
     <Compile Include="ViewModels\Model\BudgetTransactionType.cs" />
-    <Compile Include="Views\AccountEditWindow.xaml.cs">
-      <DependentUpon>AccountEditWindow.xaml</DependentUpon>
+    <Compile Include="Views\AccountDetailsWindow.xaml.cs">
+      <DependentUpon>AccountDetailsWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\AccountListWindow.xaml.cs">
       <DependentUpon>AccountListWindow.xaml</DependentUpon>
@@ -221,8 +224,8 @@
     <Compile Include="Views\AccountTransactionListWindow.xaml.cs">
       <DependentUpon>AccountTransactionListWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\BudgetEditWindow.xaml.cs">
-      <DependentUpon>BudgetEditWindow.xaml</DependentUpon>
+    <Compile Include="Views\BudgetDetailsWindow.xaml.cs">
+      <DependentUpon>BudgetDetailsWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\BudgetListWindow.xaml.cs">
       <DependentUpon>BudgetListWindow.xaml</DependentUpon>
@@ -252,10 +255,10 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Views\TransactionEditWindow.xaml.cs">
-      <DependentUpon>TransactionEditWindow.xaml</DependentUpon>
+    <Compile Include="Views\TransactionDetailsWindow.xaml.cs">
+      <DependentUpon>TransactionDetailsWindow.xaml</DependentUpon>
     </Compile>
-    <Page Include="Views\AccountEditWindow.xaml">
+    <Page Include="Views\AccountDetailsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -275,7 +278,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\BudgetEditWindow.xaml">
+    <Page Include="Views\BudgetDetailsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -311,7 +314,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\TransactionEditWindow.xaml">
+    <Page Include="Views\TransactionDetailsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

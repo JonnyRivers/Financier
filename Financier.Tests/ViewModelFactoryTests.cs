@@ -49,7 +49,7 @@ namespace Financier.Tests
             Account checkingAccount = accountService.Get(checkingAccountEntity.AccountId);
             AccountLink checkingAccountLink = accountService.GetAsLink(checkingAccountEntity.AccountId);
 
-            IAccountEditViewModel accountEditViewModel = 
+            IAccountDetailsViewModel accountDetailsViewModel = 
                 viewModelFactory.CreateAccountEditViewModel(checkingAccountEntity.AccountId);
 
             IAccountItemViewModel accountItemViewModel =
@@ -61,8 +61,8 @@ namespace Financier.Tests
             IAccountListViewModel accountListViewModel =
                 viewModelFactory.CreateAccountListViewModel();
 
-            Assert.IsNotNull(accountEditViewModel);
-            Assert.AreEqual(checkingAccountEntity.AccountId, accountEditViewModel.AccountId);
+            Assert.IsNotNull(accountDetailsViewModel);
+            Assert.AreEqual(checkingAccountEntity.AccountId, accountDetailsViewModel.AccountId);
 
             Assert.IsNotNull(accountItemViewModel);
             Assert.AreEqual(checkingAccountEntity.AccountId, accountItemViewModel.AccountId);
@@ -145,7 +145,7 @@ namespace Financier.Tests
             ICurrencyService currencyService = serviceProvider.GetRequiredService<ICurrencyService>();
             Currency primaryCurrency = currencyService.GetPrimary();
 
-            IBudgetEditViewModel budgetEditViewModel =
+            IBudgetDetailsViewModel budgetDetailsViewModel =
                 viewModelFactory.CreateBudgetEditViewModel(budgetEntity.BudgetId);
 
             IBudgetItemViewModel budgetItemViewModel = 
@@ -167,7 +167,7 @@ namespace Financier.Tests
             IPaydayEventStartViewModel paydayEventStartViewModel = 
                 viewModelFactory.CreatePaydayEventStartViewModel(budgetEntity.BudgetId);
 
-            Assert.IsNotNull(budgetEditViewModel);
+            Assert.IsNotNull(budgetDetailsViewModel);
 
             Assert.IsNotNull(budgetItemViewModel);
 
@@ -238,11 +238,11 @@ namespace Financier.Tests
                 Amount = 50m,
                 At = new DateTime(2018, 1, 3)
             };
-            ITransactionEditViewModel transactionCreateViewModel = 
+            ITransactionDetailsViewModel transactionCreateViewModel = 
                 viewModelFactory.CreateTransactionCreateViewModel(hint);
 
             int transactionId = firstTransaction.TransactionId;
-            ITransactionEditViewModel transactionEditViewModel = 
+            ITransactionDetailsViewModel transactionEditViewModel = 
                 viewModelFactory.CreateTransactionEditViewModel(transactionId);
 
             Transaction transaction = firstTransaction;

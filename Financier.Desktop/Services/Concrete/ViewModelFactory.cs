@@ -23,7 +23,12 @@ namespace Financier.Desktop.Services
             return m_serviceProvider.CreateInstance<MainWindowViewModel>();
         }
 
-        public IAccountEditViewModel CreateAccountEditViewModel(int accountId)
+        public IAccountDetailsViewModel CreateAccountCreateViewModel()
+        {
+            return m_serviceProvider.CreateInstance<AccountCreateViewModel>();
+        }
+
+        public IAccountDetailsViewModel CreateAccountEditViewModel(int accountId)
         {
             return m_serviceProvider.CreateInstance<AccountEditViewModel>(accountId);
         }
@@ -78,7 +83,12 @@ namespace Financier.Desktop.Services
             return new AccountRelationshipTypeFilterViewModel(type);
         }
 
-        public IBudgetEditViewModel CreateBudgetEditViewModel(int budgetId)
+        public IBudgetDetailsViewModel CreateBudgetCreateViewModel()
+        {
+            return m_serviceProvider.CreateInstance<BudgetCreateViewModel>();
+        }
+
+        public IBudgetDetailsViewModel CreateBudgetEditViewModel(int budgetId)
         {
             return m_serviceProvider.CreateInstance<BudgetEditViewModel>(budgetId);
         }
@@ -125,12 +135,12 @@ namespace Financier.Desktop.Services
             return m_serviceProvider.CreateInstance<TransactionBatchCreateConfirmViewModel>(transactions);
         }
 
-        public ITransactionEditViewModel CreateTransactionCreateViewModel(Transaction hint)
+        public ITransactionDetailsViewModel CreateTransactionCreateViewModel(Transaction hint)
         {
-            return m_serviceProvider.CreateInstance<TransactionEditViewModel>(hint);
+            return m_serviceProvider.CreateInstance<TransactionCreateViewModel>(hint);
         }
 
-        public ITransactionEditViewModel CreateTransactionEditViewModel(int transactionId)
+        public ITransactionDetailsViewModel CreateTransactionEditViewModel(int transactionId)
         {
             return m_serviceProvider.CreateInstance<TransactionEditViewModel>(transactionId);
         }

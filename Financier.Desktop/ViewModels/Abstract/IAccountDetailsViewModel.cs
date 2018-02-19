@@ -4,7 +4,7 @@ using System.Windows.Input;
 
 namespace Financier.Desktop.ViewModels
 {
-    public interface IAccountEditViewModel
+    public interface IAccountDetailsViewModel
     {
         Account ToAccount();
 

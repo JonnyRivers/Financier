@@ -8,18 +8,17 @@ using System.Windows.Input;
 
 namespace Financier.Desktop.ViewModels
 {
-    public class AccountEditViewModel : IAccountDetailsViewModel
+    public class AccountCreateViewModel : IAccountDetailsViewModel
     {
         private ILogger<AccountEditViewModel> m_logger;
         private IAccountService m_accountService;
         private ICurrencyService m_currencyService;
         private int m_accountId;
 
-        public AccountEditViewModel(
+        public AccountCreateViewModel(
             ILogger<AccountEditViewModel> logger,
             IAccountService accountService, 
-            ICurrencyService currencyService,
-            int accountId)
+            ICurrencyService currencyService)
         {
             m_logger = logger;
             m_accountService = accountService;
@@ -29,13 +28,12 @@ namespace Financier.Desktop.ViewModels
             AccountSubTypes = Enum.GetValues(typeof(AccountSubType)).Cast<AccountSubType>();
             Currencies = m_currencyService.GetAll();
 
-            m_accountId = accountId;
-            Account account = m_accountService.Get(accountId);
+            m_accountId = 0;
 
-            Name = account.Name;
-            SelectedAccountType = account.Type;
-            SelectedAccountSubType = account.SubType;
-            SelectedCurrency = Currencies.Single(c => c.CurrencyId == account.Currency.CurrencyId);
+            Name = "New Account";
+            SelectedAccountType = AccountType.Asset;
+            SelectedAccountSubType = AccountSubType.None;
+            SelectedCurrency = Currencies.Single(c => c.IsPrimary);
         }
 
         public Account ToAccount()
@@ -71,7 +69,8 @@ namespace Financier.Desktop.ViewModels
         {
             Account account = ToAccount();
 
-            m_accountService.Update(account);
+            m_accountService.Create(account);
+            m_accountId = account.AccountId;
         }
 
         private void CancelExecute(object obj)

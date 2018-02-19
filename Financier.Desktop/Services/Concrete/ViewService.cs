@@ -28,15 +28,27 @@ namespace Financier.Desktop.Services
 
         public bool OpenAccountCreateView(out Account account)
         {
-            return OpenAccountEditView(0, out account);
+            account = null;
+
+            IAccountDetailsViewModel viewModel = m_viewModelFactory.CreateAccountCreateViewModel();
+            var window = new AccountDetailsWindow(viewModel);
+            bool? result = window.ShowDialog();
+
+            if (result.HasValue && result.Value)
+            {
+                account = viewModel.ToAccount();
+                return true;
+            }
+
+            return false;
         }
 
         public bool OpenAccountEditView(int accountId, out Account account)
         {
             account = null;
 
-            IAccountEditViewModel viewModel = m_viewModelFactory.CreateAccountEditViewModel(accountId);
-            var window = new AccountEditWindow(viewModel);
+            IAccountDetailsViewModel viewModel = m_viewModelFactory.CreateAccountEditViewModel(accountId);
+            var window = new AccountDetailsWindow(viewModel);
             bool? result = window.ShowDialog();
 
             if (result.HasValue && result.Value)
@@ -114,7 +126,19 @@ namespace Financier.Desktop.Services
 
         public bool OpenBudgetCreateView(out Budget budget)
         {
-            return OpenBudgetEditView(0, out budget);
+            budget = null;
+
+            IBudgetDetailsViewModel viewModel = m_viewModelFactory.CreateBudgetCreateViewModel();
+            var window = new BudgetDetailsWindow(viewModel);
+            bool? result = window.ShowDialog();
+
+            if (result.HasValue && result.Value)
+            {
+                budget = viewModel.ToBudget();
+                return true;
+            }
+
+            return false;
         }
 
         public bool OpenBudgetDeleteConfirmationView()
@@ -126,8 +150,8 @@ namespace Financier.Desktop.Services
         {
             budget = null;
 
-            IBudgetEditViewModel viewModel = m_viewModelFactory.CreateBudgetEditViewModel(budgetId);
-            var window = new BudgetEditWindow(viewModel);
+            IBudgetDetailsViewModel viewModel = m_viewModelFactory.CreateBudgetEditViewModel(budgetId);
+            var window = new BudgetDetailsWindow(viewModel);
             bool? result = window.ShowDialog();
 
             if (result.HasValue && result.Value)
@@ -219,8 +243,8 @@ namespace Financier.Desktop.Services
         {
             transaction = null;
 
-            ITransactionEditViewModel viewModel = m_viewModelFactory.CreateTransactionCreateViewModel(hint);
-            var window = new TransactionEditWindow(viewModel);
+            ITransactionDetailsViewModel viewModel = m_viewModelFactory.CreateTransactionCreateViewModel(hint);
+            var window = new TransactionDetailsWindow(viewModel);
             bool? result = window.ShowDialog();
 
             if (result.HasValue && result.Value)
@@ -256,8 +280,8 @@ namespace Financier.Desktop.Services
 
         public bool OpenTransactionEditView(int transactionId)
         {
-            ITransactionEditViewModel viewModel = m_viewModelFactory.CreateTransactionEditViewModel(transactionId);
-            var window = new TransactionEditWindow(viewModel);
+            ITransactionDetailsViewModel viewModel = m_viewModelFactory.CreateTransactionEditViewModel(transactionId);
+            var window = new TransactionDetailsWindow(viewModel);
             bool? result = window.ShowDialog();
 
             if (result.HasValue)

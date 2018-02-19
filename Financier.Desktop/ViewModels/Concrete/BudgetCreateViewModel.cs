@@ -9,18 +9,17 @@ using System.Windows.Input;
 
 namespace Financier.Desktop.ViewModels
 {
-    public class BudgetEditViewModel : IBudgetDetailsViewModel
+    public class BudgetCreateViewModel : IBudgetDetailsViewModel
     {
         private ILogger<BudgetEditViewModel> m_logger;
         private IBudgetService m_budgetService;
         private IViewModelFactory m_viewModelFactory;
         private int m_budgetId;
 
-        public BudgetEditViewModel(
+        public BudgetCreateViewModel(
             ILogger<BudgetEditViewModel> logger, 
             IBudgetService budgetService,
-            IViewModelFactory viewModelFactory,
-            int budgetId)
+            IViewModelFactory viewModelFactory)
         {
             m_logger = logger;
             m_budgetService = budgetService;
@@ -28,14 +27,12 @@ namespace Financier.Desktop.ViewModels
 
             Periods = Enum.GetValues(typeof(BudgetPeriod)).Cast<BudgetPeriod>();
 
-            m_budgetId = budgetId;
+            m_budgetId = 0;
 
             TransactionListViewModel = m_viewModelFactory.CreateBudgetTransactionListViewModel(m_budgetId);
 
-            Budget budget = m_budgetService.Get(m_budgetId);
-
-            Name = budget.Name;
-            SelectedPeriod = budget.Period;
+            Name = "New Budget";
+            SelectedPeriod = BudgetPeriod.Fortnightly;
         }
 
         public Budget ToBudget()
@@ -77,9 +74,10 @@ namespace Financier.Desktop.ViewModels
 
         private void OKExecute(object obj)
         {
-            Budget budget = this.ToBudget();
+            Budget budget = ToBudget();
 
-            m_budgetService.Update(budget);
+            m_budgetService.Create(budget);
+            m_budgetId = budget.BudgetId;
         }
 
         private void CancelExecute(object obj)

@@ -8,8 +8,9 @@ namespace Financier.Desktop.Services
     public interface IViewModelFactory
     {
         IMainWindowViewModel CreateMainWindowViewModel();
-        
-        IAccountEditViewModel CreateAccountEditViewModel(int accountId);
+
+        IAccountDetailsViewModel CreateAccountCreateViewModel();
+        IAccountDetailsViewModel CreateAccountEditViewModel(int accountId);
         IAccountItemViewModel CreateAccountItemViewModel(Account account);
         IAccountLinkViewModel CreateAccountLinkViewModel(AccountLink accountLink);
         IAccountListViewModel CreateAccountListViewModel();
@@ -27,7 +28,8 @@ namespace Financier.Desktop.Services
             string nativeCurrencyCode,
             string foreignCurrencyCode);
 
-        IBudgetEditViewModel CreateBudgetEditViewModel(int budgetId);
+        IBudgetDetailsViewModel CreateBudgetCreateViewModel();
+        IBudgetDetailsViewModel CreateBudgetEditViewModel(int budgetId);
         IBudgetItemViewModel CreateBudgetItemViewModel(Budget budget, Currency primaryCurrency);
         IBudgetListViewModel CreateBudgetListViewModel();
         IBudgetTransactionListViewModel CreateBudgetTransactionListViewModel(int budgetId);
@@ -39,9 +41,9 @@ namespace Financier.Desktop.Services
         ITransactionBatchCreateConfirmViewModel CreateTransactionBatchCreateConfirmViewModel(
             IEnumerable<Transaction> transactions);
 
-        ITransactionEditViewModel CreateTransactionCreateViewModel(Transaction hint);
+        ITransactionDetailsViewModel CreateTransactionCreateViewModel(Transaction hint);
         IReconcileBalanceViewModel CreateReconcileBalanceViewModel(int accountId);
-        ITransactionEditViewModel CreateTransactionEditViewModel(int transactionId);
+        ITransactionDetailsViewModel CreateTransactionEditViewModel(int transactionId);
         ITransactionItemViewModel CreateTransactionItemViewModel(Transaction transaction);
         ITransactionListViewModel CreateTransactionListViewModel();
     }
