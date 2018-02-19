@@ -18,7 +18,7 @@ namespace Financier.Services
             m_logger = logger;
         }
 
-        public async Task<decimal> GetExchangeRateAsync(
+        public decimal GetExchangeRate(
             string sourceCurrencyCode, 
             string destinationCurrencyCode, 
             DateTime at)
@@ -26,12 +26,12 @@ namespace Financier.Services
             var client = new HttpClient();
             string atParameter = $"{at.Year}-{at.Month}-{at.Day}";
             string requestUri = $"https://api.fixer.io/latest?base={sourceCurrencyCode}&date={atParameter}";
-            HttpResponseMessage responseMessage = await client.GetAsync(requestUri);
+            HttpResponseMessage responseMessage = client.GetAsync(requestUri).Result;
 
             if (!responseMessage.IsSuccessStatusCode)
                 throw new HttpRequestException($"Received {responseMessage.StatusCode} from call to {requestUri}");
 
-            string responseContent = await responseMessage.Content.ReadAsStringAsync();
+            string responseContent = responseMessage.Content.ReadAsStringAsync().Result;
 
             JObject responseJsonObject = JObject.Parse(responseContent);
             JObject ratesJsonObject = (JObject)responseJsonObject["rates"];

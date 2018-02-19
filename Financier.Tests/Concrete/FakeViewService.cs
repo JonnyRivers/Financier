@@ -75,6 +75,11 @@ namespace Financier.Tests.Concrete
             return false;
         }
 
+        public bool OpenForeignAmountView(decimal primaryAmount, string foreignCurrencyCode, string primaryCurrencyCode, out decimal exchangedAmount)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public void OpenMainView()
         {
             

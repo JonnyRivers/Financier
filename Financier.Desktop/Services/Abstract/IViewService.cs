@@ -24,6 +24,12 @@ namespace Financier.Desktop.Services
 
         bool OpenBudgetTransactionDeleteConfirmationView();
 
+        bool OpenForeignAmountView(
+            decimal nativeAmount,
+            string nativeCurrencyCode,
+            string foreignCurrencyCode, 
+            out decimal exchangedAmount);
+
         bool OpenPaydayEventStartView(int budgetId, out PaydayStart paydayStart);
 
         void OpenNoPendingCreditCardTransactionsView(string accountName);

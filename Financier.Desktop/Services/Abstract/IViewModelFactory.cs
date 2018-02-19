@@ -22,6 +22,11 @@ namespace Financier.Desktop.Services
         IAccountRelationshipListViewModel CreateAccountRelationshipListViewModel();
         IAccountRelationshipTypeFilterViewModel CreateAccountRelationshipTypeFilterViewModel(AccountRelationshipType? type);
 
+        IForeignAmountViewModel CreateForeignAmountViewModel(
+            decimal nativeAmount,
+            string nativeCurrencyCode,
+            string foreignCurrencyCode);
+
         IBudgetEditViewModel CreateBudgetEditViewModel(int budgetId);
         IBudgetItemViewModel CreateBudgetItemViewModel(Budget budget, Currency primaryCurrency);
         IBudgetListViewModel CreateBudgetListViewModel();

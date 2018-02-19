@@ -44,6 +44,10 @@ namespace Financier.Tests
                     loggerFactory.CreateLogger<AccountService>(),
                     sqliteMemoryWrapper.DbContext);
 
+                var currencyService = new CurrencyService(
+                    loggerFactory.CreateLogger<CurrencyService>(),
+                    sqliteMemoryWrapper.DbContext);
+
                 var transactionService = new TransactionService(
                     loggerFactory.CreateLogger<TransactionService>(),
                     sqliteMemoryWrapper.DbContext);
@@ -55,8 +59,10 @@ namespace Financier.Tests
                 var viewModel = new ReconcileBalanceViewModel(
                     loggerFactory.CreateLogger<ReconcileBalanceViewModel>(),
                     accountService,
+                    currencyService,
                     transactionService,
                     viewModelFactory,
+                    viewService,
                     checkingAccountEntity.AccountId);
                 viewModel.Balance = 140m;
                 viewModel.At = new DateTime(2018, 1, 2, 7, 0, 0);

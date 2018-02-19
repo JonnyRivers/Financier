@@ -11,14 +11,14 @@ namespace Financier.Tests
     {
         [TestMethod]
         [Ignore]// This hits a live API, so shouldn't be aprt of the normal suite
-        public async Task TestGetUSDGBPOnNewYearsDay2018()
+        public void TestGetUSDGBPOnNewYearsDay2018()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
             var service = new FixerIOCurrencyExchangeService(
                 loggerFactory.CreateLogger<FixerIOCurrencyExchangeService>()
             );
 
-            decimal gbpUsdRate = await service.GetExchangeRateAsync("GBP", "USD", new DateTime(2018, 1, 1));
+            decimal gbpUsdRate = service.GetExchangeRate("GBP", "USD", new DateTime(2018, 1, 1));
             // => https://api.fixer.io/latest?base=GBP&date=2018-01-01
 
             Assert.AreEqual(1.3517m, gbpUsdRate);

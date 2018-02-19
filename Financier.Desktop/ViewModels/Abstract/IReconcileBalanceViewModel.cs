@@ -15,6 +15,7 @@ namespace Financier.Desktop.ViewModels
         IAccountLinkViewModel SelectedCreditAccount { get; set; }
         DateTime At { get; set; }
 
+        ICommand LookupForeignBalanceCommand { get; }
         ICommand OKCommand { get; }
         ICommand CancelCommand { get; }
     }
