@@ -76,9 +76,7 @@ namespace Financier.Tests
                     viewService
                 );
 
-                Assert.AreEqual(5, viewModel.AccountFilters.Count);
                 Assert.AreEqual(2, viewModel.AccountRelationships.Count);
-                Assert.AreEqual(3, viewModel.RelationshipTypeFilters.Count);
             }
         }
     }

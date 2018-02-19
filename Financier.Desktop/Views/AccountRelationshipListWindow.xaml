@@ -18,28 +18,15 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <StackPanel Margin="5" Grid.Row="0" Orientation="Horizontal">
-            <TextBlock Margin="5">Account Filter:</TextBlock>
-            <ComboBox Margin="5" 
-                      ItemsSource="{Binding AccountFilters}" 
-                      ItemTemplate="{StaticResource NameInTextBlockItemTemplate}"
-                      SelectedItem="{Binding SelectedAccountFilter}"/>
-            <TextBlock Margin="5">Type Filter:</TextBlock>
-            <ComboBox Margin="5" 
-                      ItemsSource="{Binding RelationshipTypeFilters}" 
-                      ItemTemplate="{StaticResource NameInTextBlockItemTemplate}"
-                      SelectedItem="{Binding SelectedRelationshipTypeFilter}"/>
-        </StackPanel>
-        <StackPanel Margin="5" Grid.Row="1" Orientation="Horizontal">
             <TextBlock Margin="5">Actions:</TextBlock>
             <Button Margin="5" Command="{Binding CreateCommand}">Create New Relationship</Button>
             <Button Margin="5" Command="{Binding EditCommand}">Edit Selected Relationship</Button>
             <Button Margin="5" Command="{Binding DeleteCommand}">Delete Selected Relationship</Button>
         </StackPanel>
-        <ListView Grid.Row="2" SelectedItem="{Binding SelectedAccountRelationship}" ItemsSource="{Binding AccountRelationships}">
+        <ListView Grid.Row="1" SelectedItem="{Binding SelectedAccountRelationship}" ItemsSource="{Binding AccountRelationships}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Source Account" Width="240" DisplayMemberBinding="{Binding SourceAccount.Name}"/>
