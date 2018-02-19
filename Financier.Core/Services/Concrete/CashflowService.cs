@@ -55,14 +55,17 @@ namespace Financier.Services
             var cashflowStatementItems = new List<CashflowStatementItem>();
             foreach (AccountRelationship prepaymentToExpenseRelationship in prepaymentToExpenseRelationships)
             {
-                string name = prepaymentToExpenseRelationship.DestinationAccount.Name.Replace(" Expense", "");
+                string name = 
+                    prepaymentToExpenseRelationship.DestinationAccount.Name
+                        .Replace("Expense", "")
+                        .Trim();
 
                 IEnumerable<Transaction> inflowTransactions =
                     relevantTransactions.Where(t =>
                         t.DebitAccount.AccountId == prepaymentToExpenseRelationship.SourceAccount.AccountId);
                 IEnumerable<Transaction> outflowTransactions =
                     relevantTransactions.Where(t =>
-                        t.DebitAccount.AccountId == prepaymentToExpenseRelationship.DestinationAccount.AccountId);
+                        t.CreditAccount.AccountId == prepaymentToExpenseRelationship.SourceAccount.AccountId);
 
                 var item = new CashflowStatementItem(
                     name,
