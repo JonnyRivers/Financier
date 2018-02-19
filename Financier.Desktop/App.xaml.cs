@@ -4,7 +4,6 @@ using Financier.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Win32;
 using System;
 using System.Windows;
 
@@ -29,7 +28,12 @@ namespace Financier.Desktop
             var serviceCollection = new ServiceCollection();
 
             // Framework services
-            ILoggerFactory loggerFactory = new LoggerFactory().AddDebug();
+            string localApplicationDataDirectory =
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            ILoggerFactory loggerFactory =
+                new LoggerFactory()
+                    .AddDebug()
+                    .AddFile($"{localApplicationDataDirectory}/Financier.Desktop/{{Date}}.txt", LogLevel.Trace);
             serviceCollection.AddSingleton(loggerFactory);
             serviceCollection.AddLogging();
 
