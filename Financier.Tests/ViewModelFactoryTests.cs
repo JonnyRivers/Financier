@@ -255,7 +255,7 @@ namespace Financier.Tests
             IAccountTransactionListViewModel accountTransactionListViewModel =
                 viewModelFactory.CreateAccountTransactionListViewModel(checkingAccountEntity.AccountId);
 
-            IAccountTransactionItemViewModel accountTransactionItemViewMolde = 
+            IAccountTransactionItemViewModel accountTransactionItemViewModel = 
                 viewModelFactory.CreateAccountTransactionItemViewModel(transaction);
 
             Assert.IsNotNull(transactionBatchCreateConfirmViewModel);
@@ -271,8 +271,8 @@ namespace Financier.Tests
             Assert.IsNotNull(accountTransactionListViewModel);
             Assert.AreEqual(dbContext.Transactions.Count(), accountTransactionListViewModel.Transactions.Count);
 
-            Assert.IsNotNull(accountTransactionItemViewMolde);
-            Assert.AreEqual(transaction.Amount, accountTransactionItemViewMolde.Amount);
+            Assert.IsNotNull(accountTransactionItemViewModel);
+            Assert.AreEqual(transaction.Amount, accountTransactionItemViewModel.Amount);
         }
 
         private IServiceProvider BuildServiceProvider()
