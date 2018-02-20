@@ -1,11 +1,17 @@
 ﻿<Window x:Class="Financier.Desktop.Views.BudgetListWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"  
         Title="Financier for Windows™ - Budgets" 
         MinHeight="200" MinWidth="810"
         Height="300" Width="810">
+    <Window.Resources>
+        <CollectionViewSource x:Key="BudgetsByName" Source="{Binding Budgets}">
+            <CollectionViewSource.SortDescriptions>
+                <scm:SortDescription PropertyName="Name"/>
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -18,7 +24,9 @@
             <Button Margin="5" Command="{Binding DeleteCommand}">Delete Selected Budget</Button>
             <Button Margin="5" Command="{Binding PaydayCommand}">Run Payday</Button>
         </StackPanel>
-        <ListView Grid.Row="1" SelectedItem="{Binding SelectedBudget}" ItemsSource="{Binding Budgets}">
+        <ListView Grid.Row="1" 
+                  SelectedItem="{Binding SelectedBudget}" 
+                  ItemsSource="{Binding Source={StaticResource BudgetsByName}}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Name" Width="220" DisplayMemberBinding="{Binding Name}"/>
