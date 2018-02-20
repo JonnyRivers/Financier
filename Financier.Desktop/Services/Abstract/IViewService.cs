@@ -37,7 +37,7 @@ namespace Financier.Desktop.Services
         bool OpenTransactionCreateView(Transaction hint, out Transaction newTransaction);
         bool OpenReconcileBalanceView(int accountId, out Transaction newTransaction);
         bool OpenTransactionDeleteConfirmationView();
-        bool OpenTransactionEditView(int transactionId);
+        bool OpenTransactionEditView(int transactionId, out Transaction updatedTransaction);
         void OpenTransactionListView();
     }
 }

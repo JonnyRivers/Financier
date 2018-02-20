@@ -74,11 +74,7 @@ namespace Financier.Desktop.ViewModels
                 transactionViewModel.Balance = balance;
             }
 
-            // TODO: control how many are shown?
-            Transactions = new ObservableCollection<IAccountTransactionItemViewModel>(
-                transactionViewModels
-                    .OrderByDescending(t => t.At)
-                    .ThenByDescending(t => t.TransactionId));
+            Transactions = new ObservableCollection<IAccountTransactionItemViewModel>(transactionViewModels);
         }
 
         public bool HasLogicalAcounts => m_hasLogicalAccounts;
@@ -135,10 +131,14 @@ namespace Financier.Desktop.ViewModels
         private void CreateExecute(object obj)
         {
             Transaction hint = null;
-            IAccountTransactionItemViewModel hintViewModel = Transactions.FirstOrDefault();
-            if(Transactions.Any())
+            if (SelectedTransaction != null)
             {
-                hint = m_transactionService.Get(Transactions.First().TransactionId);
+                hint = m_transactionService.Get(SelectedTransaction.TransactionId);
+            }
+            else if(Transactions.Any())
+            {
+                hint = m_transactionService.Get(
+                    Transactions.OrderByDescending(t => t.At).First().TransactionId);
             }
             else
             {
@@ -151,11 +151,13 @@ namespace Financier.Desktop.ViewModels
                     At = DateTime.Now
                 };
             }
-            
+
             Transaction newTransaction;
             if (m_viewService.OpenTransactionCreateView(hint, out newTransaction))
             {
-                PopulateTransactions();
+                IAccountTransactionItemViewModel newTransactionViewModel
+                    = m_viewModelFactory.CreateAccountTransactionItemViewModel(newTransaction);
+                Transactions.Add(newTransactionViewModel);
             }
         }
 
@@ -164,15 +166,18 @@ namespace Financier.Desktop.ViewModels
             Transaction newTransaction;
             if (m_viewService.OpenReconcileBalanceView(m_accountId, out newTransaction))
             {
-                PopulateTransactions();
+                Transactions.Add(m_viewModelFactory.CreateAccountTransactionItemViewModel(newTransaction));
             }
         }
 
         private void EditExecute(object obj)
         {
-            if (m_viewService.OpenTransactionEditView(SelectedTransaction.TransactionId))
+            Transaction updatedTransaction;
+            if (m_viewService.OpenTransactionEditView(SelectedTransaction.TransactionId, out updatedTransaction))
             {
-                PopulateTransactions();
+                Transactions.Remove(SelectedTransaction);
+                SelectedTransaction = m_viewModelFactory.CreateAccountTransactionItemViewModel(updatedTransaction);
+                Transactions.Add(SelectedTransaction);
             }
         }
 

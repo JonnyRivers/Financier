@@ -281,14 +281,19 @@ namespace Financier.Desktop.Services
             return OpenDeleteConfirmationView("transaction");
         }
 
-        public bool OpenTransactionEditView(int transactionId)
+        public bool OpenTransactionEditView(int transactionId, out Transaction updatedTransaction)
         {
+            updatedTransaction = null;
+
             ITransactionDetailsViewModel viewModel = m_viewModelFactory.CreateTransactionEditViewModel(transactionId);
             var window = new TransactionDetailsWindow(viewModel);
             bool? result = window.ShowDialog();
 
             if (result.HasValue)
+            {
+                updatedTransaction = viewModel.ToTransaction();
                 return result.Value;
+            }
 
             return false;
         }
