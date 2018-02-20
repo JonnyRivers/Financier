@@ -84,15 +84,22 @@ namespace Financier.Desktop.ViewModels
             AccountRelationship newRelationship;
             if (m_viewService.OpenAccountRelationshipCreateView(hint, out newRelationship))
             {
-                PopulateAccountRelationships();
+                IAccountRelationshipItemViewModel viewModel = 
+                    m_viewModelFactory.CreateAccountRelationshipItemViewModel(newRelationship);
+                AccountRelationships.Add(viewModel);
             }
         }
 
         private void EditExecute(object obj)
         {
-            if (m_viewService.OpenAccountRelationshipEditView(SelectedAccountRelationship.AccountRelationshipId))
+            AccountRelationship updatedRelationship;
+            if (m_viewService.OpenAccountRelationshipEditView(
+                SelectedAccountRelationship.AccountRelationshipId, 
+                out updatedRelationship))
             {
-                PopulateAccountRelationships();
+                AccountRelationships.Remove(SelectedAccountRelationship);
+                SelectedAccountRelationship = m_viewModelFactory.CreateAccountRelationshipItemViewModel(updatedRelationship);
+                AccountRelationships.Add(SelectedAccountRelationship);
             }
         }
 
@@ -123,10 +130,7 @@ namespace Financier.Desktop.ViewModels
             IEnumerable<AccountRelationship> accountRelationships = m_accountRelationshipService.GetAll();
             IEnumerable<IAccountRelationshipItemViewModel> accountRelationshipVMs =
                 accountRelationships
-                    .Select(ar => m_viewModelFactory.CreateAccountRelationshipItemViewModel(ar))
-                    .OrderBy(ar => ar.SourceAccount.Name)
-                    .ThenBy(ar => ar.DestinationAccount.Name)
-                    .ThenBy(ar => ar.AccountRelationshipId);
+                    .Select(ar => m_viewModelFactory.CreateAccountRelationshipItemViewModel(ar));
             AccountRelationships = new ObservableCollection<IAccountRelationshipItemViewModel>(
                 accountRelationshipVMs);
             OnPropertyChanged(nameof(AccountRelationships));

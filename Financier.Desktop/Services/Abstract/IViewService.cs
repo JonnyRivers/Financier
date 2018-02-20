@@ -7,19 +7,19 @@ namespace Financier.Desktop.Services
     {
         void OpenMainView();
 
-        bool OpenAccountCreateView(out Account account);
-        bool OpenAccountEditView(int accountId, out Account account);
+        bool OpenAccountCreateView(out Account newAccount);
+        bool OpenAccountEditView(int accountId, out Account updatedAccount);
         void OpenAccountListView();
         bool OpenAccountTransactionsEditView(int accountId);
 
-        bool OpenAccountRelationshipCreateView(AccountRelationship hint, out AccountRelationship transaction);
+        bool OpenAccountRelationshipCreateView(AccountRelationship hint, out AccountRelationship newAccountRelationship);
         bool OpenAccountRelationshipDeleteConfirmationView();
-        bool OpenAccountRelationshipEditView(int accountRelationshipId);
+        bool OpenAccountRelationshipEditView(int accountRelationshipId, out AccountRelationship updatedAccountRelationship);
         void OpenAccountRelationshipListView();
 
-        bool OpenBudgetCreateView(out Budget budget);
+        bool OpenBudgetCreateView(out Budget newBudget);
         bool OpenBudgetDeleteConfirmationView();
-        bool OpenBudgetEditView(int budgetId, out Budget budget);
+        bool OpenBudgetEditView(int budgetId, out Budget updatedBudget);
         void OpenBudgetListView();
 
         bool OpenBudgetTransactionDeleteConfirmationView();
@@ -34,8 +34,8 @@ namespace Financier.Desktop.Services
 
         void OpenNoPendingCreditCardTransactionsView(string accountName);
         bool OpenTransactionBatchCreateConfirmView(IEnumerable<Transaction> transactions);
-        bool OpenTransactionCreateView(Transaction hint, out Transaction transaction);
-        bool OpenReconcileBalanceView(int accountId, out Transaction transaction);
+        bool OpenTransactionCreateView(Transaction hint, out Transaction newTransaction);
+        bool OpenReconcileBalanceView(int accountId, out Transaction newTransaction);
         bool OpenTransactionDeleteConfirmationView();
         bool OpenTransactionEditView(int transactionId);
         void OpenTransactionListView();
