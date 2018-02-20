@@ -41,18 +41,13 @@ namespace Financier.Desktop.ViewModels
         {
             // TODO: be flexible on how many are shown
             IEnumerable<Transaction> recentTransactions = m_transactionService.GetAll()
-                    .OrderByDescending(t => t.At)
                     .Take(100);
             List<ITransactionItemViewModel> recentTransactionViewModels =
                 recentTransactions
                     .Select(t => m_viewModelFactory.CreateTransactionItemViewModel(t))
                     .ToList();
 
-            Transactions = new ObservableCollection<ITransactionItemViewModel>(
-                recentTransactionViewModels
-                    .OrderByDescending(t => t.At)
-                    .ThenByDescending(t => t.TransactionId)
-            );
+            Transactions = new ObservableCollection<ITransactionItemViewModel>(recentTransactionViewModels);
         }
 
         public ObservableCollection<ITransactionItemViewModel> Transactions
@@ -90,24 +85,43 @@ namespace Financier.Desktop.ViewModels
         private void CreateExecute(object obj)
         {
             Transaction hint = null;
-            ITransactionItemViewModel hintViewModel = Transactions.FirstOrDefault();
-            if (Transactions.Any())
+            if (SelectedTransaction != null)
             {
-                hint = m_transactionService.Get(Transactions.First().TransactionId);
+                hint = m_transactionService.Get(SelectedTransaction.TransactionId);
+            }
+            else if(Transactions.Any())
+            {
+                hint = m_transactionService.Get(
+                    Transactions.OrderByDescending(t => t.At).First().TransactionId);
+            }
+            else
+            {
+                hint = new Transaction
+                {
+                    CreditAccount = null,
+                    DebitAccount = null,
+                    Amount = 0,
+                    At = DateTime.Now
+                };
             }
 
             Transaction newTransaction;
             if (m_viewService.OpenTransactionCreateView(hint, out newTransaction))
             {
-                PopulateTransactions();
+                ITransactionItemViewModel newTransactionViewModel 
+                    = m_viewModelFactory.CreateTransactionItemViewModel(newTransaction);
+                Transactions.Add(newTransactionViewModel);
             }
         }
 
         private void EditExecute(object obj)
         {
-            if (m_viewService.OpenTransactionEditView(SelectedTransaction.TransactionId))
+            Transaction updatedTransaction;
+            if (m_viewService.OpenTransactionEditView(SelectedTransaction.TransactionId, out updatedTransaction))
             {
-                PopulateTransactions();
+                Transactions.Remove(SelectedTransaction);
+                SelectedTransaction = m_viewModelFactory.CreateTransactionItemViewModel(updatedTransaction);
+                Transactions.Add(SelectedTransaction);
             }
         }
 

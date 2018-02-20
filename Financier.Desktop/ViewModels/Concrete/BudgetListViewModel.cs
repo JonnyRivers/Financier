@@ -46,7 +46,7 @@ namespace Financier.Desktop.ViewModels
             IEnumerable<IBudgetItemViewModel> budgetViewModels =
                 budgets.Select(b => m_viewModelFactory.CreateBudgetItemViewModel(b, primaryCurrency));
 
-            Budgets = new ObservableCollection<IBudgetItemViewModel>(budgetViewModels.OrderBy(b => b.Name));
+            Budgets = new ObservableCollection<IBudgetItemViewModel>(budgetViewModels);
         }
 
         public ObservableCollection<IBudgetItemViewModel> Budgets
@@ -92,9 +92,6 @@ namespace Financier.Desktop.ViewModels
                 IBudgetItemViewModel newBudgetViewModel = 
                     m_viewModelFactory.CreateBudgetItemViewModel(newBudget, primaryCurrency);
                 Budgets.Add(newBudgetViewModel);
-                // TODO: Is there a better way to maintain ObservableCollection<T> sorting?
-                // https://github.com/JonnyRivers/Financier/issues/29
-                Budgets = new ObservableCollection<IBudgetItemViewModel>(Budgets.OrderBy(b => b.Name));
             }
         }
 
@@ -108,10 +105,6 @@ namespace Financier.Desktop.ViewModels
                 Budgets.Remove(SelectedBudget);
                 SelectedBudget = m_viewModelFactory.CreateBudgetItemViewModel(updatedBudget, primaryCurrency);
                 Budgets.Add(SelectedBudget);
-                
-                // TODO: Is there a better way to maintain ObservableCollection<T> sorting?
-                // https://github.com/JonnyRivers/Financier/issues/29
-                Budgets = new ObservableCollection<IBudgetItemViewModel>(Budgets.OrderBy(b => b.Name));
             }
         }
 

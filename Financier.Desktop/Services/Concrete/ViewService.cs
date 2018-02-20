@@ -102,8 +102,10 @@ namespace Financier.Desktop.Services
             return OpenDeleteConfirmationView("account relationship");
         }
 
-        public bool OpenAccountRelationshipEditView(int accountRelationshipId)
+        public bool OpenAccountRelationshipEditView(int accountRelationshipId, out AccountRelationship updatedAccountRelationship)
         {
+            updatedAccountRelationship = null;
+
             IAccountRelationshipDetailsViewModel viewModel = 
                 m_viewModelFactory.CreateAccountRelationshipEditViewModel(accountRelationshipId);
             var window = new AccountRelationshipDetailsWindow(viewModel);
@@ -111,6 +113,7 @@ namespace Financier.Desktop.Services
 
             if (result.HasValue)
             {
+                updatedAccountRelationship = viewModel.ToAccountRelationship();
                 return result.Value;
             }
 
@@ -278,14 +281,19 @@ namespace Financier.Desktop.Services
             return OpenDeleteConfirmationView("transaction");
         }
 
-        public bool OpenTransactionEditView(int transactionId)
+        public bool OpenTransactionEditView(int transactionId, out Transaction updatedTransaction)
         {
+            updatedTransaction = null;
+
             ITransactionDetailsViewModel viewModel = m_viewModelFactory.CreateTransactionEditViewModel(transactionId);
             var window = new TransactionDetailsWindow(viewModel);
             bool? result = window.ShowDialog();
 
             if (result.HasValue)
+            {
+                updatedTransaction = viewModel.ToTransaction();
                 return result.Value;
+            }
 
             return false;
         }

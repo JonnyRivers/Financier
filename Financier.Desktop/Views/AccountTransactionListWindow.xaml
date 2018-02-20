@@ -1,6 +1,7 @@
 ﻿<Window x:Class="Financier.Desktop.Views.AccountTransactionListWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Financier.Desktop.Views"
@@ -8,6 +9,14 @@
         Title="Account Transactions" 
         MinHeight="200" MinWidth="910"
         Height="600" Width="910">
+    <Window.Resources>
+        <CollectionViewSource x:Key="TransactionsByDateDescending" Source="{Binding Transactions}">
+            <CollectionViewSource.SortDescriptions>
+                <scm:SortDescription PropertyName="At" Direction="Descending"/>
+                <scm:SortDescription PropertyName="TransactionId" Direction="Descending"/>
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -25,7 +34,9 @@
             <TextBlock Width="60" Margin="5">Filters:</TextBlock>
             <CheckBox Margin="5" IsChecked="{Binding ShowLogicalAccounts}" IsEnabled="{Binding HasLogicalAcounts}">Show Logical Accounts</CheckBox>
         </StackPanel>
-        <ListView Grid.Row="2" SelectedItem="{Binding SelectedTransaction}" ItemsSource="{Binding Transactions}">
+        <ListView Grid.Row="2" 
+                  SelectedItem="{Binding SelectedTransaction}" 
+                  ItemsSource="{Binding Source={StaticResource TransactionsByDateDescending}}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="At" Width="160" DisplayMemberBinding="{Binding At}"/>

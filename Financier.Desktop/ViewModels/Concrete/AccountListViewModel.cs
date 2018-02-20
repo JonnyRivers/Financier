@@ -80,9 +80,6 @@ namespace Financier.Desktop.ViewModels
             {
                 IAccountItemViewModel newAccountViewModel = m_viewModelFactory.CreateAccountItemViewModel(newAccount);
                 Accounts.Add(newAccountViewModel);
-                // TODO: Is there a better way to maintain ObservableCollection<T> sorting?
-                // https://github.com/JonnyRivers/Financier/issues/29
-                Accounts = new ObservableCollection<IAccountItemViewModel>(Accounts.OrderBy(b => b.Name));
             }
         }
 
@@ -94,10 +91,6 @@ namespace Financier.Desktop.ViewModels
                 Accounts.Remove(SelectedAccount);
                 SelectedAccount = m_viewModelFactory.CreateAccountItemViewModel(updatedAccount);
                 Accounts.Add(SelectedAccount);
-
-                // TODO: Is there a better way to maintain ObservableCollection<T> sorting?
-                // https://github.com/JonnyRivers/Financier/issues/29
-                Accounts = new ObservableCollection<IAccountItemViewModel>(Accounts.OrderBy(b => b.Name));
             }
         }
 
@@ -160,8 +153,7 @@ namespace Financier.Desktop.ViewModels
             IEnumerable<Account> accounts = m_accountService.GetAll();
             IEnumerable<IAccountItemViewModel> accountVMs = 
                 accounts.Select(a => m_viewModelFactory.CreateAccountItemViewModel(a));
-            Accounts = new ObservableCollection<IAccountItemViewModel>(accountVMs.OrderBy(a => a.Name));
-            OnPropertyChanged(nameof(Accounts));
+            Accounts = new ObservableCollection<IAccountItemViewModel>(accountVMs);
         }
     }
 }

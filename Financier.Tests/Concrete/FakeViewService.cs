@@ -38,6 +38,11 @@ namespace Financier.Tests.Concrete
             throw new System.NotImplementedException();
         }
 
+        public bool OpenAccountRelationshipEditView(int accountRelationshipId, out AccountRelationship updatedAccountRelationship)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public void OpenAccountRelationshipListView()
         {
             
@@ -120,6 +125,11 @@ namespace Financier.Tests.Concrete
         public bool OpenTransactionEditView(int transactionId)
         {
             return false;
+        }
+
+        public bool OpenTransactionEditView(int transactionId, out Transaction updatedTransaction)
+        {
+            throw new System.NotImplementedException();
         }
 
         public void OpenTransactionListView()
