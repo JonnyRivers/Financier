@@ -6,13 +6,6 @@
         xmlns:local="clr-namespace:Financier.Desktop.Views"
         mc:Ignorable="d"
         Title="Account Relationship" Height="220" Width="300">
-    <Window.Resources>
-        <DataTemplate x:Key="NameInTextBlockItemTemplate">
-            <StackPanel>
-                <TextBlock Text="{Binding Name}"/>
-            </StackPanel>
-        </DataTemplate>
-    </Window.Resources>
     <Grid Margin="5">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -28,14 +21,14 @@
         <TextBlock Grid.Column="0" Grid.Row="0" Margin="5">Source Account</TextBlock>
         <ComboBox Grid.Column="1" Grid.Row="0" 
                   Margin="5" 
-                  ItemsSource="{Binding Accounts}" 
-                  ItemTemplate="{StaticResource NameInTextBlockItemTemplate}"
+                  DisplayMemberPath="Name"
+                  ItemsSource="{Binding Accounts}"
                   SelectedItem="{Binding SourceAccount}"/>
         <TextBlock Grid.Column="0" Grid.Row="1" Margin="5">Destination Account</TextBlock>
         <ComboBox Grid.Column="1" Grid.Row="1" 
                   Margin="5" 
+                  DisplayMemberPath="Name"
                   ItemsSource="{Binding Accounts}" 
-                  ItemTemplate="{StaticResource NameInTextBlockItemTemplate}"
                   SelectedItem="{Binding DestinationAccount}"/>
         <TextBlock Grid.Column="0" Grid.Row="2" Margin="5">Type</TextBlock>
         <ComboBox Grid.Column="1" Grid.Row="2" 

@@ -8,13 +8,6 @@
         Title="Account"
         MinHeight="205" MinWidth="300"
         Height="205" Width="300">
-    <Window.Resources>
-        <DataTemplate x:Key="CurrencyComboBoxItemTemplate">
-            <StackPanel>
-                <TextBlock Text="{Binding Name}"/>
-            </StackPanel>
-        </DataTemplate>
-    </Window.Resources>
     <Grid Margin="5">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -43,8 +36,8 @@
         <TextBlock Grid.Column="0" Grid.Row="3" Margin="5">Currency</TextBlock>
         <ComboBox Grid.Column="1" Grid.Row="3" 
                   Margin="5" 
+                  DisplayMemberPath="Name"
                   ItemsSource="{Binding Currencies}" 
-                  ItemTemplate="{StaticResource CurrencyComboBoxItemTemplate}"
                   SelectedItem="{Binding SelectedCurrency}"/>
         <Grid Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="5">
             <Grid.ColumnDefinitions>
