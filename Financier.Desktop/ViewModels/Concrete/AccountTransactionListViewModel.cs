@@ -63,8 +63,22 @@ namespace Financier.Desktop.ViewModels
                 transactions
                     .Select(t => m_viewModelFactory.CreateAccountTransactionItemViewModel(t))
                     .ToList();
+            Transactions = new ObservableCollection<IAccountTransactionItemViewModel>(transactionViewModels);
+
+            PopulateTransactionBalances();
+        }
+
+        private void PopulateTransactionBalances()
+        {
+            var relevantAccountIds = new List<int>();
+            relevantAccountIds.Add(m_accountId);
+            if (m_showLogicalAccounts)
+            {
+                relevantAccountIds.AddRange(m_logicalAccountIds);
+            }
+
             decimal balance = 0;
-            foreach (IAccountTransactionItemViewModel transactionViewModel in transactionViewModels.OrderBy(t => t.At))
+            foreach (IAccountTransactionItemViewModel transactionViewModel in Transactions.OrderBy(t => t.At))
             {
                 // For physical<->logical trasactions, we add *and* subtract
                 if (relevantAccountIds.Contains(transactionViewModel.DebitAccount.AccountId))
@@ -73,8 +87,6 @@ namespace Financier.Desktop.ViewModels
                     balance -= transactionViewModel.Amount;
                 transactionViewModel.Balance = balance;
             }
-
-            Transactions = new ObservableCollection<IAccountTransactionItemViewModel>(transactionViewModels);
         }
 
         public bool HasLogicalAcounts => m_hasLogicalAccounts;
@@ -158,6 +170,7 @@ namespace Financier.Desktop.ViewModels
                 IAccountTransactionItemViewModel newTransactionViewModel
                     = m_viewModelFactory.CreateAccountTransactionItemViewModel(newTransaction);
                 Transactions.Add(newTransactionViewModel);
+                PopulateTransactionBalances();
             }
         }
 
@@ -167,6 +180,7 @@ namespace Financier.Desktop.ViewModels
             if (m_viewService.OpenReconcileBalanceView(m_accountId, out newTransaction))
             {
                 Transactions.Add(m_viewModelFactory.CreateAccountTransactionItemViewModel(newTransaction));
+                PopulateTransactionBalances();
             }
         }
 
@@ -178,6 +192,7 @@ namespace Financier.Desktop.ViewModels
                 Transactions.Remove(SelectedTransaction);
                 SelectedTransaction = m_viewModelFactory.CreateAccountTransactionItemViewModel(updatedTransaction);
                 Transactions.Add(SelectedTransaction);
+                PopulateTransactionBalances();
             }
         }
 
@@ -195,6 +210,7 @@ namespace Financier.Desktop.ViewModels
 
                 // Update view model
                 Transactions.Remove(SelectedTransaction);
+                PopulateTransactionBalances();
             }
         }
 

@@ -154,7 +154,7 @@ namespace Financier.Tests
         }
 
         [TestMethod]
-        public void TestAccountTransactionListViewModelBalanceRefresh ()
+        public void TestAccountTransactionListViewModelPostCreateBalanceRefresh()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
             ILogger<AccountTransactionListViewModel> logger = loggerFactory.CreateLogger<AccountTransactionListViewModel>();
