@@ -12,10 +12,14 @@ namespace Financier.Services
     public class FixerIOCurrencyExchangeService : ICurrencyExchangeService
     {
         private ILogger<FixerIOCurrencyExchangeService> m_logger;
+        private IHttpClientFactory m_httpClientFactory;
 
-        public FixerIOCurrencyExchangeService(ILogger<FixerIOCurrencyExchangeService> logger)
+        public FixerIOCurrencyExchangeService(
+            ILogger<FixerIOCurrencyExchangeService> logger,
+            IHttpClientFactory httpClientFactory)
         {
             m_logger = logger;
+            m_httpClientFactory = httpClientFactory;
         }
 
         public decimal GetExchangeRate(
@@ -23,7 +27,7 @@ namespace Financier.Services
             string destinationCurrencyCode, 
             DateTime at)
         {
-            var client = new HttpClient();
+            HttpClient client = m_httpClientFactory.Create();
             string atParameter = $"{at.Year}-{at.Month}-{at.Day}";
             string requestUri = $"https://api.fixer.io/latest?base={sourceCurrencyCode}&date={atParameter}";
             HttpResponseMessage responseMessage = client.GetAsync(requestUri).Result;
