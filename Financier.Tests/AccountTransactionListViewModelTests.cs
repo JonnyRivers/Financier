@@ -5,6 +5,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.Linq;
+using Financier.Desktop.Services;
+using Moq;
 
 namespace Financier.Tests
 {
@@ -220,20 +222,37 @@ namespace Financier.Tests
 
                 var newTransactionAmount = 18m;
                 var newTransactionAt = new DateTime(2018, 1, 1, 8, 33, 0);
-                var viewService = new Concrete.AlwaysCreateTransactionViewService(
-                    transactionService,
-                    checkingAccountLink,
-                    rentExpenseAccountLink,
-                    newTransactionAmount,
-                    newTransactionAt
-                );
+                //var viewService = new Concrete.AlwaysCreateTransactionViewService(
+                //    transactionService,
+                //    checkingAccountLink,
+                //    rentExpenseAccountLink,
+                //    newTransactionAmount,
+                //    newTransactionAt
+                //);
+
+                var mockViewService = new Mock<IViewService>();
+                Transaction outTransaction;
+                mockViewService.Setup(viewService => viewService.OpenTransactionCreateView(It.IsAny<Transaction>(), out outTransaction)).Returns(() =>
+                {
+                    var transaction = new Transaction
+                    {
+                        CreditAccount = checkingAccountLink,
+                        DebitAccount = rentExpenseAccountLink,
+                        Amount = newTransactionAmount,
+                        At = newTransactionAt
+                    };
+
+                    transactionService.Create(transaction);
+
+                    return true;
+                });
 
                 var viewModel = new AccountTransactionListViewModel(
                     logger,
                     accountService,
                     transactionService,
                     viewModelFactory,
-                    viewService,
+                    mockViewService.Object,
                     checkingAccountEntity.AccountId
                 );
                 viewModel.CreateCommand.Execute(this);
