@@ -1,11 +1,12 @@
 ﻿using System;
 using Financier.Services;
+using Financier.Desktop.Services;
 using Financier.Desktop.ViewModels;
+using Financier.Tests.Moq;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.Linq;
-using Financier.Desktop.Services;
 using Moq;
 
 namespace Financier.Tests
@@ -219,34 +220,29 @@ namespace Financier.Tests
 
                 AccountLink checkingAccountLink = accountService.GetAsLink(checkingAccountEntity.AccountId);
                 AccountLink rentExpenseAccountLink = accountService.GetAsLink(rentExpenseAccountEntity.AccountId);
-
                 var newTransactionAmount = 18m;
                 var newTransactionAt = new DateTime(2018, 1, 1, 8, 33, 0);
-                //var viewService = new Concrete.AlwaysCreateTransactionViewService(
-                //    transactionService,
-                //    checkingAccountLink,
-                //    rentExpenseAccountLink,
-                //    newTransactionAmount,
-                //    newTransactionAt
-                //);
 
                 var mockViewService = new Mock<IViewService>();
-                Transaction outTransaction;
-                mockViewService.Setup(viewService => viewService.OpenTransactionCreateView(It.IsAny<Transaction>(), out outTransaction)).Returns(() =>
-                {
-                    var transaction = new Transaction
+                Transaction newTransaction;
+                mockViewService
+                    .Setup(viewService => viewService.OpenTransactionCreateView(
+                        It.IsAny<Transaction>(),
+                        out newTransaction))
+                    .OutCallback((Transaction hint, out Transaction t) => 
                     {
-                        CreditAccount = checkingAccountLink,
-                        DebitAccount = rentExpenseAccountLink,
-                        Amount = newTransactionAmount,
-                        At = newTransactionAt
-                    };
+                        t = new Transaction
+                        {
+                            CreditAccount = checkingAccountLink,
+                            DebitAccount = rentExpenseAccountLink,
+                            Amount = newTransactionAmount,
+                            At = newTransactionAt
+                        };
 
-                    transactionService.Create(transaction);
-
-                    return true;
-                });
-
+                        transactionService.Create(t);
+                    })
+                    .Returns(true);
+                
                 var viewModel = new AccountTransactionListViewModel(
                     logger,
                     accountService,
