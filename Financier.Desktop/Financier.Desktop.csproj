@@ -191,6 +191,7 @@
     <Compile Include="ViewModels\Abstract\ITransactionListViewModel.cs" />
     <Compile Include="ViewModels\Abstract\ITransactionItemViewModel.cs" />
     <Compile Include="ViewModels\Concrete\AccountRelationshipCreateViewModel.cs" />
+    <Compile Include="ViewModels\Concrete\AccountRelationshipDetailsBaseViewModel.cs" />
     <Compile Include="ViewModels\Concrete\AccountRelationshipEditViewModel.cs" />
     <Compile Include="ViewModels\Concrete\AccountRelationshipItemViewModel.cs" />
     <Compile Include="ViewModels\Concrete\AccountRelationshipListViewModel.cs" />

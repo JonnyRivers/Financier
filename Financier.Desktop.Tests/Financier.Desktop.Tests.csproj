@@ -165,6 +165,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AccountRelationshipEditViewModelTests.cs" />
+    <Compile Include="AccountRelationshipCreateViewModelTests.cs" />
     <Compile Include="AccountEditViewModelTests.cs" />
     <Compile Include="AccountCreateViewModelTests.cs" />
     <Compile Include="AccountRelationshipListViewModelTests.cs" />
