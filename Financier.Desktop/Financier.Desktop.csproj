@@ -177,6 +177,7 @@
     <Compile Include="ViewModels\Abstract\IAccountTransactionListViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IAccountTransactionItemViewModel.cs" />
     <Compile Include="ViewModels\Concrete\AccountCreateViewModel.cs" />
+    <Compile Include="ViewModels\Concrete\AccountDetailsBaseViewModel.cs" />
     <Compile Include="ViewModels\Concrete\AccountEditViewModel.cs" />
     <Compile Include="ViewModels\Concrete\AccountItemViewModel.cs" />
     <Compile Include="ViewModels\Concrete\AccountLinkViewModel.cs" />
