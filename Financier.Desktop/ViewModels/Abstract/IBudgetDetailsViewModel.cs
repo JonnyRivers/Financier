@@ -8,7 +8,6 @@ namespace Financier.Desktop.ViewModels
     {
         Budget ToBudget();
 
-        int BudgetId { get; }
         string Name { get; set; }
         BudgetPeriod SelectedPeriod { get; set; }
         IBudgetTransactionListViewModel TransactionListViewModel { get; }

@@ -171,6 +171,7 @@
     <Compile Include="AccountCreateViewModelTests.cs" />
     <Compile Include="AccountRelationshipListViewModelTests.cs" />
     <Compile Include="AccountTransactionListViewModelTests.cs" />
+    <Compile Include="BudgetCreateViewModelTests.cs" />
     <Compile Include="Concrete\AlwaysCreateTransactionViewService.cs" />
     <Compile Include="Concrete\FakeViewModelFactory.cs" />
     <Compile Include="Concrete\FakeViewService.cs" />

@@ -197,6 +197,7 @@
     <Compile Include="ViewModels\Concrete\AccountRelationshipListViewModel.cs" />
     <Compile Include="ViewModels\Concrete\AccountRelationshipTypeViewModel.cs" />
     <Compile Include="ViewModels\Concrete\BudgetCreateViewModel.cs" />
+    <Compile Include="ViewModels\Concrete\BudgetDetailsBaseViewModel.cs" />
     <Compile Include="ViewModels\Concrete\BudgetEditViewModel.cs" />
     <Compile Include="ViewModels\Concrete\BudgetItemViewModel.cs" />
     <Compile Include="ViewModels\Concrete\BudgetListViewModel.cs" />
