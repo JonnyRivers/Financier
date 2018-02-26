@@ -11,8 +11,6 @@ namespace Financier.Desktop.ViewModels
 
         ObservableCollection<IAccountLinkViewModel> Accounts { get; }
 
-        int TransactionId { get; }
-
         IAccountLinkViewModel SelectedCreditAccount { get; set; }
         IAccountLinkViewModel SelectedDebitAccount { get; set; }
         decimal Amount { get; set; }

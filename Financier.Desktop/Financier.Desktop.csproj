@@ -209,6 +209,7 @@
     <Compile Include="ViewModels\Concrete\ReconcileBalanceViewModel.cs" />
     <Compile Include="ViewModels\Concrete\TransactionBatchCreateConfirmViewModel.cs" />
     <Compile Include="ViewModels\Concrete\TransactionCreateViewModel.cs" />
+    <Compile Include="ViewModels\Concrete\TransactionDetailsBaseViewModel.cs" />
     <Compile Include="ViewModels\Concrete\TransactionEditViewModel.cs" />
     <Compile Include="ViewModels\Concrete\AccountTransactionItemViewModel.cs" />
     <Compile Include="ViewModels\Concrete\AccountTransactionListViewModel.cs" />
