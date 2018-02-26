@@ -183,6 +183,8 @@
     <Compile Include="MessageServiceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReconcileBalanceViewModelTests.cs" />
+    <Compile Include="TransactionEditViewModelTests.cs" />
+    <Compile Include="TransactionCreateViewModelTests.cs" />
     <Compile Include="ViewModelFactoryTests.cs" />
   </ItemGroup>
   <ItemGroup>
