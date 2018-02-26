@@ -38,9 +38,8 @@ namespace Financier.Desktop
             serviceCollection.AddLogging();
 
             // TODO: how can we use a service that is required for DbContext creation?
-            IDataConfigService dataConfigService = new DataConfigRegistryService();
-            string currentDatabase = dataConfigService.GetCurrentDatabase();
-            string connectionString = dataConfigService.GetConnectionString(currentDatabase);
+            IEnvironmentService environmentService = new EnvironmentService();
+            string connectionString = environmentService.GetConnectionString();
 
             serviceCollection.AddDbContext<FinancierDbContext>(
                 options => options.UseSqlServer(connectionString),
@@ -51,7 +50,7 @@ namespace Financier.Desktop
             serviceCollection.AddSingleton<IBudgetService, BudgetService>();
             serviceCollection.AddSingleton<ICurrencyService, CurrencyService>();
             serviceCollection.AddSingleton<ICurrencyExchangeService, FixerIOCurrencyExchangeService>();
-            serviceCollection.AddSingleton<IDataConfigService, DataConfigRegistryService>();
+            serviceCollection.AddSingleton<IEnvironmentService, EnvironmentService>();
             serviceCollection.AddSingleton<ITransactionService, TransactionService>();
             serviceCollection.AddSingleton<ITransactionRelationshipService, TransactionRelationshipService>();
             

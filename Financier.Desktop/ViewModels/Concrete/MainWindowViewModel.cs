@@ -9,25 +9,25 @@ namespace Financier.Desktop.ViewModels
     public class MainWindowViewModel : BaseViewModel, IMainWindowViewModel
     {
         private ILogger<MainWindowViewModel> m_logger;
-        private IDataConfigService m_dataConfigService;
+        private IEnvironmentService m_environmentService;
         private IViewService m_viewService;
 
-        private string m_currentDatabase;
+        private string m_databaseConnectionSummary;
 
         public MainWindowViewModel(
             ILogger<MainWindowViewModel> logger,
-            IDataConfigService dataConfigService,
+            IEnvironmentService environmentService,
             IViewService viewService
         )
         {
             m_logger = logger;
-            m_dataConfigService = dataConfigService;
+            m_environmentService = environmentService;
             m_viewService = viewService;
 
-            m_currentDatabase = dataConfigService.GetCurrentDatabase();
+            m_databaseConnectionSummary = environmentService.GetConnectionSummary();
         }
 
-        public string CurrentDatabase => m_currentDatabase;
+        public string DatabaseConnectionSummary => m_databaseConnectionSummary;
 
         public ICommand AccountsViewCommand => new RelayCommand(AccountsViewExecute);
         public ICommand AccountRelationshipsViewCommand => new RelayCommand(AccountRelationshipsViewExecute);

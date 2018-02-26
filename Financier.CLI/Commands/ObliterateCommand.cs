@@ -11,15 +11,9 @@ namespace Financier.CLI.Commands
         {
             command.Description = "Ensure the database is obliterated";
 
-            CommandOption databaseOption = command.Option(
-                "-d|--database",
-                "The name of the database to use",
-                CommandOptionType.SingleValue);
-
             command.OnExecute(() =>
             {
-                string databaseName = databaseOption.Value();
-                var serviceCollection = ServiceCollectionSetup.SetupCoreServices(databaseName);                
+                var serviceCollection = ServiceCollectionSetup.SetupCoreServices();                
 
                 // Application services
                 serviceCollection.AddTransient<IDatabaseCreationService, DatabaseCreationService>();

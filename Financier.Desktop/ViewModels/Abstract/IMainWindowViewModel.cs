@@ -4,7 +4,7 @@ namespace Financier.Desktop.ViewModels
 {
     public interface IMainWindowViewModel
     {
-        string CurrentDatabase { get; }
+        string DatabaseConnectionSummary { get; }
 
         ICommand AccountsViewCommand { get; }
         ICommand AccountRelationshipsViewCommand { get; }

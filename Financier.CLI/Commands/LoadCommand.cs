@@ -11,11 +11,6 @@ namespace Financier.CLI.Commands
         {
             command.Description = "Populate the database from a file";
 
-            CommandOption databaseOption = command.Option(
-                "-d|--database",
-                "The name of the database to use",
-                CommandOptionType.SingleValue);
-
             CommandOption pathOption = command.Option(
                 "-p|--path",
                 "The path to the file to load from",
@@ -23,8 +18,7 @@ namespace Financier.CLI.Commands
 
             command.OnExecute(() =>
             {
-                string databaseName = databaseOption.Value();
-                var serviceCollection = ServiceCollectionSetup.SetupCoreServices(databaseName);
+                var serviceCollection = ServiceCollectionSetup.SetupCoreServices();
 
                 // Application services
                 serviceCollection.AddTransient<IDatabaseSerializationService, DatabaseSerializationXmlService>();
