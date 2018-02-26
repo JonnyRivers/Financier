@@ -64,7 +64,7 @@ namespace Financier.Desktop.Tests
                 viewModelFactory.CreateAccountListViewModel();
 
             Assert.IsNotNull(accountDetailsViewModel);
-            Assert.AreEqual(checkingAccountEntity.AccountId, accountDetailsViewModel.AccountId);
+            Assert.AreEqual(checkingAccountEntity.AccountId, accountDetailsViewModel.ToAccount().AccountId);
 
             Assert.IsNotNull(accountItemViewModel);
             Assert.AreEqual(checkingAccountEntity.AccountId, accountItemViewModel.AccountId);

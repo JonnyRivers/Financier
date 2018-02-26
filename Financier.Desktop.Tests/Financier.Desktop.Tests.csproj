@@ -165,8 +165,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AccountRelationshipEditViewModelTests.cs" />
+    <Compile Include="AccountRelationshipCreateViewModelTests.cs" />
+    <Compile Include="AccountEditViewModelTests.cs" />
+    <Compile Include="AccountCreateViewModelTests.cs" />
     <Compile Include="AccountRelationshipListViewModelTests.cs" />
     <Compile Include="AccountTransactionListViewModelTests.cs" />
+    <Compile Include="BudgetEditViewModelTests.cs" />
+    <Compile Include="BudgetCreateViewModelTests.cs" />
     <Compile Include="Concrete\AlwaysCreateTransactionViewService.cs" />
     <Compile Include="Concrete\FakeViewModelFactory.cs" />
     <Compile Include="Concrete\FakeViewService.cs" />
@@ -177,6 +183,8 @@
     <Compile Include="MessageServiceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReconcileBalanceViewModelTests.cs" />
+    <Compile Include="TransactionEditViewModelTests.cs" />
+    <Compile Include="TransactionCreateViewModelTests.cs" />
     <Compile Include="ViewModelFactoryTests.cs" />
   </ItemGroup>
   <ItemGroup>

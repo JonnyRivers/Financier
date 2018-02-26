@@ -177,6 +177,7 @@
     <Compile Include="ViewModels\Abstract\IAccountTransactionListViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IAccountTransactionItemViewModel.cs" />
     <Compile Include="ViewModels\Concrete\AccountCreateViewModel.cs" />
+    <Compile Include="ViewModels\Concrete\AccountDetailsBaseViewModel.cs" />
     <Compile Include="ViewModels\Concrete\AccountEditViewModel.cs" />
     <Compile Include="ViewModels\Concrete\AccountItemViewModel.cs" />
     <Compile Include="ViewModels\Concrete\AccountLinkViewModel.cs" />
@@ -190,11 +191,13 @@
     <Compile Include="ViewModels\Abstract\ITransactionListViewModel.cs" />
     <Compile Include="ViewModels\Abstract\ITransactionItemViewModel.cs" />
     <Compile Include="ViewModels\Concrete\AccountRelationshipCreateViewModel.cs" />
+    <Compile Include="ViewModels\Concrete\AccountRelationshipDetailsBaseViewModel.cs" />
     <Compile Include="ViewModels\Concrete\AccountRelationshipEditViewModel.cs" />
     <Compile Include="ViewModels\Concrete\AccountRelationshipItemViewModel.cs" />
     <Compile Include="ViewModels\Concrete\AccountRelationshipListViewModel.cs" />
     <Compile Include="ViewModels\Concrete\AccountRelationshipTypeViewModel.cs" />
     <Compile Include="ViewModels\Concrete\BudgetCreateViewModel.cs" />
+    <Compile Include="ViewModels\Concrete\BudgetDetailsBaseViewModel.cs" />
     <Compile Include="ViewModels\Concrete\BudgetEditViewModel.cs" />
     <Compile Include="ViewModels\Concrete\BudgetItemViewModel.cs" />
     <Compile Include="ViewModels\Concrete\BudgetListViewModel.cs" />
@@ -206,6 +209,7 @@
     <Compile Include="ViewModels\Concrete\ReconcileBalanceViewModel.cs" />
     <Compile Include="ViewModels\Concrete\TransactionBatchCreateConfirmViewModel.cs" />
     <Compile Include="ViewModels\Concrete\TransactionCreateViewModel.cs" />
+    <Compile Include="ViewModels\Concrete\TransactionDetailsBaseViewModel.cs" />
     <Compile Include="ViewModels\Concrete\TransactionEditViewModel.cs" />
     <Compile Include="ViewModels\Concrete\AccountTransactionItemViewModel.cs" />
     <Compile Include="ViewModels\Concrete\AccountTransactionListViewModel.cs" />
