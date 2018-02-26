@@ -296,7 +296,7 @@ namespace Financier.Desktop.Tests
             serviceCollection.AddSingleton<IAccountRelationshipService, AccountRelationshipService>();
             serviceCollection.AddSingleton<IBudgetService, BudgetService>();
             serviceCollection.AddSingleton<ICurrencyService, CurrencyService>();
-            serviceCollection.AddSingleton<IDataConfigService, DataConfigRegistryService>();
+            serviceCollection.AddSingleton<IEnvironmentService, EnvironmentService>();
             serviceCollection.AddSingleton<ITransactionService, TransactionService>();
             serviceCollection.AddSingleton<ITransactionRelationshipService, TransactionRelationshipService>();
 

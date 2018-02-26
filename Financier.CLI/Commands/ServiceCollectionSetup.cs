@@ -8,7 +8,7 @@ namespace Financier.CLI.Commands
 {
     public class ServiceCollectionSetup
     {
-        public static ServiceCollection SetupCoreServices(string databaseName)
+        public static ServiceCollection SetupCoreServices()
         {
             var serviceCollection = new ServiceCollection();
 
@@ -17,8 +17,8 @@ namespace Financier.CLI.Commands
             serviceCollection.AddSingleton(loggerFactory);
             serviceCollection.AddLogging();
 
-            IDataConfigService dataConfigService = new DataConfigRegistryService();
-            string connectionString = dataConfigService.GetConnectionString(databaseName);
+            IEnvironmentService environmentService = new EnvironmentService();
+            string connectionString = environmentService.GetConnectionString();
 
             serviceCollection.AddDbContext<FinancierDbContext>(
                 options => options.UseSqlServer(connectionString),

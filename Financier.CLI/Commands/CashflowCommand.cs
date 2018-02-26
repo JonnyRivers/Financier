@@ -12,11 +12,6 @@ namespace Financier.CLI.Commands
         {
             command.Description = "Generate a balance sheet from the database at a given time";
 
-            CommandOption databaseOption = command.Option(
-                "-d|--database",
-                "The name of the database to use",
-                CommandOptionType.SingleValue);
-
             CommandOption startAtOption = command.Option(
                 "-s|--startAt",
                 "The start of the cashflow period",
@@ -29,8 +24,7 @@ namespace Financier.CLI.Commands
 
             command.OnExecute(() =>
             {
-                string databaseName = databaseOption.Value();
-                var serviceCollection = ServiceCollectionSetup.SetupCoreServices(databaseName);
+                var serviceCollection = ServiceCollectionSetup.SetupCoreServices();
 
                 // Application services
                 serviceCollection.AddSingleton<IAccountRelationshipService, AccountRelationshipService>();
