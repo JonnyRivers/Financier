@@ -26,13 +26,16 @@ namespace Financier.CLI.Commands
             {
                 var serviceCollection = ServiceCollectionSetup.SetupCoreServices();
 
-                // Application services
+                // Financier.Core services
                 serviceCollection.AddSingleton<IAccountRelationshipService, AccountRelationshipService>();
                 serviceCollection.AddSingleton<IAccountService, AccountService>();
                 serviceCollection.AddSingleton<ICurrencyService, CurrencyService>();
                 serviceCollection.AddSingleton<ICashflowService, CashflowService>();
-                serviceCollection.AddSingleton<ICashflowStatementWriterService, CashflowStatementConsoleWriterService>();
+                serviceCollection.AddSingleton<IEnvironmentService, EnvironmentService>();
                 serviceCollection.AddSingleton<ITransactionService, TransactionService>();
+
+                // Application services
+                serviceCollection.AddSingleton<ICashflowStatementWriterService, CashflowStatementConsoleWriterService>();
 
                 IServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
 

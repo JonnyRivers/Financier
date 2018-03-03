@@ -1,13 +1,27 @@
 ﻿using System;
 using System.Linq;
 using Financier.Services;
+using Microsoft.Extensions.Logging;
 
 namespace Financier.CLI.Services
 {
     public class BalanceSheetConsoleWriterService : IBalanceSheetWriterService
     {
+        private ILogger<BalanceSheetConsoleWriterService> m_logger;
+        private IEnvironmentService m_environmentService;
+
+        public BalanceSheetConsoleWriterService(
+            ILogger<BalanceSheetConsoleWriterService> logger,
+            IEnvironmentService environmentService)
+        {
+            m_logger = logger;
+            m_environmentService = environmentService;
+        }
+
         public void Write(BalanceSheet balanceSheet, DateTime at)
         {
+            Console.WriteLine($"Connnected to {m_environmentService.GetConnectionSummary()}");
+            Console.WriteLine();
             Console.WriteLine($"Balance sheet at {at}");
             Console.WriteLine();
 

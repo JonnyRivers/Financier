@@ -1,4 +1,5 @@
 ﻿using Financier.Services;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
 
@@ -6,8 +7,21 @@ namespace Financier.CLI.Services
 {
     public class CashflowStatementConsoleWriterService : ICashflowStatementWriterService
     {
+        private ILogger<CashflowStatementConsoleWriterService> m_logger;
+        private IEnvironmentService m_environmentService;
+
+        public CashflowStatementConsoleWriterService(
+            ILogger<CashflowStatementConsoleWriterService> logger,
+            IEnvironmentService environmentService)
+        {
+            m_logger = logger;
+            m_environmentService = environmentService;
+        }
+
         public void Write(CashflowStatement cashflowStatement)
         {
+            Console.WriteLine($"Connnected to {m_environmentService.GetConnectionSummary()}");
+            Console.WriteLine();
             Console.WriteLine($"Cashflow Statement from {cashflowStatement.StartAt} to {cashflowStatement.EndAt}");
             Console.WriteLine();
             Console.WriteLine("Name                                     Inflow     Outflow    Cashflow");
