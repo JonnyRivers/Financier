@@ -41,7 +41,8 @@ namespace Financier.Desktop.ViewModels
         {
             // TODO: be flexible on how many are shown
             IEnumerable<Transaction> recentTransactions = m_transactionService.GetAll()
-                    .Take(100);
+                .OrderByDescending(t => t.At)
+                .Take(100);
             List<ITransactionItemViewModel> recentTransactionViewModels =
                 recentTransactions
                     .Select(t => m_viewModelFactory.CreateTransactionItemViewModel(t))
