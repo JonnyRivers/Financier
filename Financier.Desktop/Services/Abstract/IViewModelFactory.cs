@@ -16,6 +16,8 @@ namespace Financier.Desktop.Services
         IAccountListViewModel CreateAccountListViewModel();
         IAccountTransactionListViewModel CreateAccountTransactionListViewModel(int accountId);
         IAccountTransactionItemViewModel CreateAccountTransactionItemViewModel(Transaction transaction);
+        IAccountTreeViewModel CreateAccountTreeViewModel();
+        IAccountTreeItemViewModel CreateAccountTreeItemViewModel(Account account);
 
         IAccountRelationshipDetailsViewModel CreateAccountRelationshipCreateViewModel(AccountRelationship hint);
         IAccountRelationshipDetailsViewModel CreateAccountRelationshipEditViewModel(int accountRelationshipId);

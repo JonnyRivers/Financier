@@ -79,6 +79,13 @@ namespace Financier.Desktop.Services
             return false;
         }
 
+        public void OpenAccountTreeView()
+        {
+            IAccountTreeViewModel viewModel = m_viewModelFactory.CreateAccountTreeViewModel();
+            var window = new AccountTreeWindow(viewModel);
+            window.ShowDialog();
+        }
+
         public bool OpenAccountRelationshipCreateView(AccountRelationship hint, out AccountRelationship accountRelationship)
         {
             accountRelationship = null;
