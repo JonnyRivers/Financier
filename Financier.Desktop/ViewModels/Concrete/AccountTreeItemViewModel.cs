@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace Financier.Desktop.ViewModels
 {
@@ -17,6 +18,7 @@ namespace Financier.Desktop.ViewModels
         public AccountTreeItemViewModel(
             ILogger<AccountItemViewModel> logger,
             Account account,
+            IEnumerable<Transaction> transactions,
             IEnumerable<IAccountTreeItemViewModel> childAccountVMs)
         {
             m_logger = logger;
@@ -27,9 +29,13 @@ namespace Financier.Desktop.ViewModels
             m_subType = account.SubType;
             m_currencyName = account.Currency.Name;
 
-            Balance = 0;
+            decimal debitSum = transactions.Where(t => t.DebitAccount.AccountId == AccountId).Sum(t => t.Amount);
+            decimal creditSum = transactions.Where(t => t.CreditAccount.AccountId == AccountId).Sum(t => t.Amount);
+            decimal balance = debitSum - creditSum;
+
             CurrencySymbol = string.Empty;
             ChildAccountItems = new ObservableCollection<IAccountTreeItemViewModel>(childAccountVMs);
+            Balance = balance + ChildAccountItems.Sum(a => a.Balance);
         }
 
         public int AccountId { get; private set; }

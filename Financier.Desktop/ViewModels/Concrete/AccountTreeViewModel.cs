@@ -79,7 +79,7 @@ namespace Financier.Desktop.ViewModels
                     .Where(a => logicalAccountIds.Contains(a.AccountId))
                     .ToDictionary(
                         a => a.AccountId,
-                        a => m_viewModelFactory.CreateAccountTreeItemViewModel(a));
+                        a => m_viewModelFactory.CreateAccountTreeItemViewModel(a, transactions));
 
             var physicalAccountVMs = new List<IAccountTreeItemViewModel>();
             foreach(Account physicalAccount in accounts.Where(a => !logicalAccountIds.Contains(a.AccountId)))
@@ -87,16 +87,21 @@ namespace Financier.Desktop.ViewModels
                 if (logicalAccountIdsByParentAccountId.ContainsKey(physicalAccount.AccountId))
                 {
                     List<int> childAccountIds = logicalAccountIdsByParentAccountId[physicalAccount.AccountId];
-                    IEnumerable<IAccountTreeItemViewModel> childAccountVMs = childAccountIds.Select(id => logicalAccountVMsById[id]);
-                    physicalAccountVMs.Add(m_viewModelFactory.CreateAccountTreeItemViewModel(physicalAccount, childAccountVMs));
+                    IEnumerable<IAccountTreeItemViewModel> childAccountVMs =
+                        childAccountIds
+                            .Select(id => logicalAccountVMsById[id])
+                            .OrderBy(a => a.Name);
+                    physicalAccountVMs.Add(m_viewModelFactory.CreateAccountTreeItemViewModel(physicalAccount, transactions, childAccountVMs));
                 }
                 else
                 {
-                    physicalAccountVMs.Add(m_viewModelFactory.CreateAccountTreeItemViewModel(physicalAccount));
+                    physicalAccountVMs.Add(m_viewModelFactory.CreateAccountTreeItemViewModel(physicalAccount, transactions));
                 }
             }
 
-            AccountItems = new ObservableCollection<IAccountTreeItemViewModel>(physicalAccountVMs);
+            AccountItems = new ObservableCollection<IAccountTreeItemViewModel>(
+                physicalAccountVMs.OrderBy(a => a.Name)
+            );
         }
     }
 }
