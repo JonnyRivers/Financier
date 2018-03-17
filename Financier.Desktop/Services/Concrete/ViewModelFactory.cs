@@ -65,7 +65,12 @@ namespace Financier.Desktop.Services
 
         public IAccountTreeItemViewModel CreateAccountTreeItemViewModel(Account account)
         {
-            return m_serviceProvider.CreateInstance<AccountTreeItemViewModel>(account);
+            return m_serviceProvider.CreateInstance<AccountTreeItemViewModel>(account, new IAccountTreeItemViewModel[0]);
+        }
+
+        public IAccountTreeItemViewModel CreateAccountTreeItemViewModel(Account account, IEnumerable<IAccountTreeItemViewModel> childAccountVMs)
+        {
+            return m_serviceProvider.CreateInstance<AccountTreeItemViewModel>(account, childAccountVMs);
         }
 
         public IAccountRelationshipDetailsViewModel CreateAccountRelationshipCreateViewModel(AccountRelationship hint)

@@ -1,5 +1,7 @@
 ﻿using Financier.Services;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace Financier.Desktop.ViewModels
 {
@@ -14,7 +16,8 @@ namespace Financier.Desktop.ViewModels
 
         public AccountTreeItemViewModel(
             ILogger<AccountItemViewModel> logger,
-            Account account)
+            Account account,
+            IEnumerable<IAccountTreeItemViewModel> childAccountVMs)
         {
             m_logger = logger;
 
@@ -23,9 +26,18 @@ namespace Financier.Desktop.ViewModels
             m_type = account.Type;
             m_subType = account.SubType;
             m_currencyName = account.Currency.Name;
+
+            Balance = 0;
+            CurrencySymbol = string.Empty;
+            ChildAccountItems = new ObservableCollection<IAccountTreeItemViewModel>(childAccountVMs);
         }
 
         public int AccountId { get; private set; }
+
+        public decimal Balance { get; }
+        public string CurrencySymbol { get; }
+        public ObservableCollection<IAccountTreeItemViewModel> ChildAccountItems { get; }
+
         public string Name
         {
             get { return m_name; }

@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 
 namespace Financier.Desktop.ViewModels
 {
     public interface IAccountTreeItemViewModel
     {
+        decimal Balance { get; }
+        string CurrencySymbol { get; }
+        ObservableCollection<IAccountTreeItemViewModel> ChildAccountItems { get; }
         string Name { get; }
     }
 }

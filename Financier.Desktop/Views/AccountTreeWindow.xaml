@@ -7,9 +7,9 @@
         mc:Ignorable="d"
         Title="Financier for Windows™ - Accounts" Height="600" Width="500">
     <Grid>
-        <TreeView ItemsSource="{Binding AccountTreeItems}">
+        <TreeView ItemsSource="{Binding AccountItems}">
             <TreeView.ItemTemplate>
-                <HierarchicalDataTemplate>
+                <HierarchicalDataTemplate ItemsSource="{Binding ChildAccountItems}">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding Name}"/>
                     </StackPanel>
