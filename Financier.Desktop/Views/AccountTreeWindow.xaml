@@ -1,0 +1,51 @@
+﻿<Window x:Class="Financier.Desktop.Views.AccountTreeWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        mc:Ignorable="d"
+        Title="Financier for Windows™ - Accounts" 
+        MinHeight="300" MinWidth="500"
+        Height="600" Width="500">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Margin="5" Grid.Row="0" Orientation="Horizontal">
+            <TextBlock Margin="5">Actions:</TextBlock>
+            <Button Margin="5" Command="{Binding CreateCommand}">Create</Button>
+            <Button Margin="5" Command="{Binding EditCommand}">Edit</Button>
+            <Button Margin="5" Command="{Binding EditTransactionsCommand}">Edit Transactions</Button>
+            <Button Margin="5" Command="{Binding PayCreditCardCommand}">Pay Credit Card</Button>
+        </StackPanel>
+
+        <StackPanel Margin="5" Grid.Row="1" Orientation="Horizontal">
+            <TextBlock Margin="5">Types Visible:</TextBlock>
+            <CheckBox Margin="5" IsChecked="{Binding ShowAssets}">Assets</CheckBox>
+            <CheckBox Margin="5" IsChecked="{Binding ShowLiabilities}">Liabilities</CheckBox>
+            <CheckBox Margin="5" IsChecked="{Binding ShowIncome}">Income</CheckBox>
+            <CheckBox Margin="5" IsChecked="{Binding ShowExpenses}">Expenses</CheckBox>
+            <CheckBox Margin="5" IsChecked="{Binding ShowCapital}">Capital</CheckBox>
+        </StackPanel>
+
+        <TreeView Grid.Row="2" ItemsSource="{Binding AccountItems}" SelectedItemChanged="TreeView_SelectedItemChanged">
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate ItemsSource="{Binding ChildAccountItems}">
+                    <Grid Margin="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="300"/>
+                            <ColumnDefinition Width="100"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0" Margin="3" Text="{Binding Name}"/>
+                        <TextBlock Grid.Column="1" Margin="3" Text="{Binding Balance}"/>
+                    </Grid>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
+    </Grid>
+</Window>

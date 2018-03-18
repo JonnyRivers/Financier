@@ -190,6 +190,8 @@
     <Compile Include="ViewModels\Abstract\IAccountRelationshipItemViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IAccountRelationshipListViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IAccountRelationshipTypeViewModel.cs" />
+    <Compile Include="ViewModels\Abstract\IAccountTreeItemViewModel.cs" />
+    <Compile Include="ViewModels\Abstract\IAccountTreeViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IBudgetDetailsViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IBudgetItemViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IBudgetListViewModel.cs" />
@@ -221,6 +223,8 @@
     <Compile Include="ViewModels\Concrete\AccountRelationshipItemViewModel.cs" />
     <Compile Include="ViewModels\Concrete\AccountRelationshipListViewModel.cs" />
     <Compile Include="ViewModels\Concrete\AccountRelationshipTypeViewModel.cs" />
+    <Compile Include="ViewModels\Concrete\AccountTreeItemViewModel.cs" />
+    <Compile Include="ViewModels\Concrete\AccountTreeViewModel.cs" />
     <Compile Include="ViewModels\Concrete\BudgetCreateViewModel.cs" />
     <Compile Include="ViewModels\Concrete\BudgetDetailsBaseViewModel.cs" />
     <Compile Include="ViewModels\Concrete\BudgetEditViewModel.cs" />
@@ -255,6 +259,9 @@
     </Compile>
     <Compile Include="Views\AccountTransactionListWindow.xaml.cs">
       <DependentUpon>AccountTransactionListWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\AccountTreeWindow.xaml.cs">
+      <DependentUpon>AccountTreeWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\BudgetDetailsWindow.xaml.cs">
       <DependentUpon>BudgetDetailsWindow.xaml</DependentUpon>
@@ -307,6 +314,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\AccountTransactionListWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\AccountTreeWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

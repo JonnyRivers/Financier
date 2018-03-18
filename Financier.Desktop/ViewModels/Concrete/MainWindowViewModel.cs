@@ -36,7 +36,7 @@ namespace Financier.Desktop.ViewModels
 
         private void AccountsViewExecute(object obj)
         {
-            m_viewService.OpenAccountListView();
+            m_viewService.OpenAccountTreeView();
         }
 
         private void AccountRelationshipsViewExecute(object obj)

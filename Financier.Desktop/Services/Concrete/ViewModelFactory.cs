@@ -58,6 +58,21 @@ namespace Financier.Desktop.Services
             return m_serviceProvider.CreateInstance<AccountTransactionItemViewModel>(transaction);
         }
 
+        public IAccountTreeViewModel CreateAccountTreeViewModel()
+        {
+            return m_serviceProvider.CreateInstance<AccountTreeViewModel>();
+        }
+
+        public IAccountTreeItemViewModel CreateAccountTreeItemViewModel(Account account, IEnumerable<Transaction> transactions)
+        {
+            return m_serviceProvider.CreateInstance<AccountTreeItemViewModel>(account, transactions, new IAccountTreeItemViewModel[0]);
+        }
+
+        public IAccountTreeItemViewModel CreateAccountTreeItemViewModel(Account account, IEnumerable<Transaction> transactions, IEnumerable<IAccountTreeItemViewModel> childAccountVMs)
+        {
+            return m_serviceProvider.CreateInstance<AccountTreeItemViewModel>(account, transactions, childAccountVMs);
+        }
+
         public IAccountRelationshipDetailsViewModel CreateAccountRelationshipCreateViewModel(AccountRelationship hint)
         {
             return m_serviceProvider.CreateInstance<AccountRelationshipCreateViewModel>(hint);
