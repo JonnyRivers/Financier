@@ -8,13 +8,31 @@
         Title="Financier for Windows™ - Accounts" 
         Height="600" Width="500">
     <Grid>
-        <TreeView ItemsSource="{Binding AccountItems}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Margin="5" Grid.Row="0" Orientation="Horizontal">
+            <TextBlock Margin="5">Actions:</TextBlock>
+            <Button Margin="5" Command="{Binding CreateCommand}">Create</Button>
+            <Button Margin="5" Command="{Binding EditCommand}">Edit</Button>
+            <Button Margin="5" Command="{Binding EditTransactionsCommand}">Edit Transactions</Button>
+            <Button Margin="5" Command="{Binding PayCreditCardCommand}">Pay Credit Card</Button>
+        </StackPanel>
+
+        <TreeView Grid.Row="1" ItemsSource="{Binding AccountItems}" SelectedItemChanged="TreeView_SelectedItemChanged">
             <TreeView.ItemTemplate>
                 <HierarchicalDataTemplate ItemsSource="{Binding ChildAccountItems}">
-                    <StackPanel Margin="2" Orientation="Horizontal">
-                        <TextBlock Margin="3" Text="{Binding Name}"/>
-                        <TextBlock Margin="3" Text="{Binding Balance}"/>
-                    </StackPanel>
+                    <Grid Margin="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="300"/>
+                            <ColumnDefinition Width="100"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0" Margin="3" Text="{Binding Name}"/>
+                        <TextBlock Grid.Column="1" Margin="3" Text="{Binding Balance}"/>
+                    </Grid>
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
         </TreeView>

@@ -14,5 +14,11 @@ namespace Financier.Desktop.Views
 
             DataContext = viewModel;
         }
+
+        private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            IAccountTreeViewModel viewModel = (IAccountTreeViewModel)DataContext;
+            viewModel.SelectedItem = (IAccountTreeItemViewModel)e.NewValue;
+        }
     }
 }

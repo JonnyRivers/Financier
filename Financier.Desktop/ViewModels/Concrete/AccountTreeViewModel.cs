@@ -40,6 +40,7 @@ namespace Financier.Desktop.ViewModels
         }
 
         private ObservableCollection<IAccountTreeItemViewModel> m_accountItems;
+        private IAccountTreeItemViewModel m_selectedItem;
 
         public ObservableCollection<IAccountTreeItemViewModel> AccountItems
         {
@@ -53,6 +54,100 @@ namespace Financier.Desktop.ViewModels
                     OnPropertyChanged();
                 }
             }
+        }
+
+        public IAccountTreeItemViewModel SelectedItem
+        {
+            get { return m_selectedItem; }
+            set
+            {
+                if (m_selectedItem != value)
+                {
+                    m_selectedItem = value;
+
+                    OnPropertyChanged();
+                    CommandManager.InvalidateRequerySuggested();
+                }
+            }
+        }
+
+        public ICommand CreateCommand => new RelayCommand(CreateExecute);
+        public ICommand EditCommand => new RelayCommand(EditExecute, EditCanExecute);
+        public ICommand EditTransactionsCommand => new RelayCommand(EditTransactionsExecute, EditTransactionsCanExecute);
+        public ICommand PayCreditCardCommand => new RelayCommand(PayCreditCardExecute, PayCreditCardCanExecute);
+
+        private void CreateExecute(object obj)
+        {
+            Account newAccount;
+            if (m_viewService.OpenAccountCreateView(out newAccount))
+            {
+                PopulateAccountTreeItems();
+            }
+        }
+
+        private void EditExecute(object obj)
+        {
+            Account updatedAccount;
+            if (m_viewService.OpenAccountEditView(SelectedItem.AccountId, out updatedAccount))
+            {
+                PopulateAccountTreeItems();
+            }
+        }
+
+        private bool EditCanExecute(object obj)
+        {
+            return (SelectedItem != null);
+        }
+
+        private void EditTransactionsExecute(object obj)
+        {
+            m_viewService.OpenAccountTransactionsEditView(SelectedItem.AccountId);
+
+            PopulateAccountTreeItems();
+        }
+
+        private bool EditTransactionsCanExecute(object obj)
+        {
+            return (SelectedItem != null);
+        }
+
+        private void PayCreditCardExecute(object obj)
+        {
+            IEnumerable<Payment> pendingCreditCardPayments =
+                m_transactionService.GetPendingCreditCardPayments(SelectedItem.AccountId);
+
+            if (pendingCreditCardPayments.Any())
+            {
+                IEnumerable<Transaction> paymentTransactions = pendingCreditCardPayments.Select(p => p.PaymentTransaction);
+                if (m_viewService.OpenTransactionBatchCreateConfirmView(paymentTransactions))
+                {
+                    m_transactionService.CreateMany(paymentTransactions);
+
+                    var newTransactionRelationships = new List<TransactionRelationship>();
+                    foreach (Payment pendingCreditCardPayment in pendingCreditCardPayments)
+                    {
+                        var transactionRelationship = new TransactionRelationship
+                        {
+                            SourceTransaction = pendingCreditCardPayment.OriginalTransaction,
+                            DestinationTransaction = pendingCreditCardPayment.PaymentTransaction,
+                            Type = TransactionRelationshipType.CreditCardPayment
+                        };
+
+                        newTransactionRelationships.Add(transactionRelationship);
+                    }
+
+                    m_transactionRelationshipService.CreateMany(newTransactionRelationships);
+                }
+            }
+            else
+            {
+                m_viewService.OpenNoPendingCreditCardTransactionsView(SelectedItem.Name);
+            }
+        }
+
+        private bool PayCreditCardCanExecute(object obj)
+        {
+            return (SelectedItem != null && SelectedItem.SubType == AccountSubType.CreditCard);
         }
 
         private void PopulateAccountTreeItems()
