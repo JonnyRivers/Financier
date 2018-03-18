@@ -6,9 +6,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         mc:Ignorable="d"
         Title="Financier for Windows™ - Accounts" 
+        MinHeight="300" MinWidth="500"
         Height="600" Width="500">
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
@@ -21,7 +23,16 @@
             <Button Margin="5" Command="{Binding PayCreditCardCommand}">Pay Credit Card</Button>
         </StackPanel>
 
-        <TreeView Grid.Row="1" ItemsSource="{Binding AccountItems}" SelectedItemChanged="TreeView_SelectedItemChanged">
+        <StackPanel Margin="5" Grid.Row="1" Orientation="Horizontal">
+            <TextBlock Margin="5">Types Visible:</TextBlock>
+            <CheckBox Margin="5" IsChecked="{Binding ShowAssets}">Assets</CheckBox>
+            <CheckBox Margin="5" IsChecked="{Binding ShowLiabilities}">Liabilities</CheckBox>
+            <CheckBox Margin="5" IsChecked="{Binding ShowIncome}">Income</CheckBox>
+            <CheckBox Margin="5" IsChecked="{Binding ShowExpenses}">Expenses</CheckBox>
+            <CheckBox Margin="5" IsChecked="{Binding ShowCapital}">Capital</CheckBox>
+        </StackPanel>
+
+        <TreeView Grid.Row="2" ItemsSource="{Binding AccountItems}" SelectedItemChanged="TreeView_SelectedItemChanged">
             <TreeView.ItemTemplate>
                 <HierarchicalDataTemplate ItemsSource="{Binding ChildAccountItems}">
                     <Grid Margin="2">

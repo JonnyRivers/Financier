@@ -12,5 +12,11 @@ namespace Financier.Desktop.ViewModels
         ICommand EditCommand { get; }
         ICommand EditTransactionsCommand { get; }
         ICommand PayCreditCardCommand { get; }
+
+        bool ShowAssets { get; set; }
+        bool ShowLiabilities { get; set; }
+        bool ShowIncome { get; set; }
+        bool ShowExpenses { get; set; }
+        bool ShowCapital { get; set; }
     }
 }

@@ -19,6 +19,12 @@ namespace Financier.Desktop.ViewModels
         private IViewModelFactory m_viewModelFactory;
         private IViewService m_viewService;
 
+        private bool m_showAssets;
+        private bool m_showLiabilities;
+        private bool m_showIncome;
+        private bool m_showExpenses;
+        private bool m_showCapital;
+
         public AccountTreeViewModel(
             ILogger<AccountTreeViewModel> logger,
             IAccountService accountService,
@@ -36,9 +42,16 @@ namespace Financier.Desktop.ViewModels
             m_viewModelFactory = viewModelFactory;
             m_viewService = viewService;
 
+            m_showAssets = true;
+            m_showLiabilities = true;
+            m_showIncome = false;
+            m_showExpenses = false;
+            m_showCapital = false;
+
             PopulateAccountTreeItems();
         }
 
+        private List<IAccountTreeItemViewModel> m_unfilteredAccountsItems;
         private ObservableCollection<IAccountTreeItemViewModel> m_accountItems;
         private IAccountTreeItemViewModel m_selectedItem;
 
@@ -75,6 +88,72 @@ namespace Financier.Desktop.ViewModels
         public ICommand EditCommand => new RelayCommand(EditExecute, EditCanExecute);
         public ICommand EditTransactionsCommand => new RelayCommand(EditTransactionsExecute, EditTransactionsCanExecute);
         public ICommand PayCreditCardCommand => new RelayCommand(PayCreditCardExecute, PayCreditCardCanExecute);
+
+        public bool ShowAssets
+        {
+            get { return m_showAssets; }
+            set
+            {
+                if (m_showAssets != value)
+                {
+                    m_showAssets = value;
+
+                    FilterAccounts();
+                }
+            }
+        }
+        public bool ShowLiabilities
+        {
+            get { return m_showLiabilities; }
+            set
+            {
+                if (m_showLiabilities != value)
+                {
+                    m_showLiabilities = value;
+
+                    FilterAccounts();
+                }
+            }
+        }
+        public bool ShowIncome
+        {
+            get { return m_showIncome; }
+            set
+            {
+                if (m_showIncome != value)
+                {
+                    m_showIncome = value;
+
+                    FilterAccounts();
+                }
+            }
+        }
+        public bool ShowExpenses
+        {
+            get { return m_showExpenses; }
+            set
+            {
+                if (m_showExpenses != value)
+                {
+                    m_showExpenses = value;
+
+                    FilterAccounts();
+                }
+            }
+        }
+        public bool ShowCapital
+        {
+            get { return m_showCapital; }
+            set
+            {
+                if (m_showCapital != value)
+                {
+                    m_showCapital = value;
+
+                    FilterAccounts();
+                }
+            }
+        }
 
         private void CreateExecute(object obj)
         {
@@ -194,8 +273,27 @@ namespace Financier.Desktop.ViewModels
                 }
             }
 
+            m_unfilteredAccountsItems = physicalAccountVMs.OrderBy(a => a.Name).ToList();
+
+            FilterAccounts();
+        }
+
+        private void FilterAccounts()
+        {
+            var visibleAccountTypes = new HashSet<AccountType>();
+            if (ShowAssets)
+                visibleAccountTypes.Add(AccountType.Asset);
+            if (ShowLiabilities)
+                visibleAccountTypes.Add(AccountType.Liability);
+            if (ShowIncome)
+                visibleAccountTypes.Add(AccountType.Income);
+            if (ShowExpenses)
+                visibleAccountTypes.Add(AccountType.Expense);
+            if (ShowCapital)
+                visibleAccountTypes.Add(AccountType.Capital);
+
             AccountItems = new ObservableCollection<IAccountTreeItemViewModel>(
-                physicalAccountVMs.OrderBy(a => a.Name)
+                m_unfilteredAccountsItems.Where(a => visibleAccountTypes.Contains(a.Type))
             );
         }
     }

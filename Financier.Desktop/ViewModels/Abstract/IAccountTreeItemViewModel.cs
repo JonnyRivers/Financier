@@ -10,5 +10,6 @@ namespace Financier.Desktop.ViewModels
         ObservableCollection<IAccountTreeItemViewModel> ChildAccountItems { get; }
         string Name { get; }
         AccountSubType SubType { get; }
+        AccountType Type { get; }
     }
 }
