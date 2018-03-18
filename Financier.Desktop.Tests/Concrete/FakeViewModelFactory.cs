@@ -147,5 +147,20 @@ namespace Financier.Desktop.Tests.Concrete
         {
             throw new NotImplementedException();
         }
+
+        public IAccountTreeViewModel CreateAccountTreeViewModel()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IAccountTreeItemViewModel CreateAccountTreeItemViewModel(Account account, IEnumerable<Transaction> transactions)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IAccountTreeItemViewModel CreateAccountTreeItemViewModel(Account account, IEnumerable<Transaction> transactions, IEnumerable<IAccountTreeItemViewModel> childAccountVMs)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

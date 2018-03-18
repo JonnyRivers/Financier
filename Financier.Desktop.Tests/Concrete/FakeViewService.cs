@@ -53,6 +53,11 @@ namespace Financier.Desktop.Tests.Concrete
             return false;
         }
 
+        public void OpenAccountTreeView()
+        {
+            
+        }
+
         public bool OpenBudgetCreateView(out Budget budget)
         {
             budget = null;
