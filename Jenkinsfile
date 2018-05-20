@@ -2,19 +2,27 @@ pipeline {
     agent any
 
     stages {
+	    stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
         stage('Build') {
             steps {
-                echo 'Building..'
+				bat 'dotnet restore Financier.CLI'
+				bat 'dotnet build --configuration Release Financier.CLI'
+				
             }
         }
         stage('Test') {
             steps {
-                echo 'Testing..'
+                bat 'dotnet test Financier.Core.Tests'
             }
         }
         stage('Deploy') {
             steps {
-                echo 'Deploying....'
+                bat 'if exist D:\\Development\\Financier\\Deploy\\CLI rmdir /s /q D:\\Development\\Financier\\Deploy\\CLI'
+				bat 'xcopy /E /I /Y Financier.CLI\\bin\\Release\\netcoreapp2.0 D:\\Development\\Financier\\Deploy\\CLI'
             }
         }
     }
