@@ -10,7 +10,7 @@ pipeline {
         stage('Build') {
             steps {
 				bat 'dotnet restore Financier.CLI'
-				bat 'dotnet build Financier.CLI'
+				bat 'dotnet build --configuration Release Financier.CLI'
 				
             }
         }
