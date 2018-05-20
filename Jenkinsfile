@@ -9,13 +9,14 @@ pipeline {
         }
         stage('Build') {
             steps {
-                bat "\"C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\MSBuild\\15.0\\Bin\\MSBuild.exe\" /t:restore Financier.sln"
-                bat "\"C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\MSBuild\\15.0\\Bin\\MSBuild.exe\" /p:Configuration=Release Financier.sln"
+				bat 'dotnet restore Financier.CLI'
+				bat 'dotnet build Financier.CLI'
+				
             }
         }
         stage('Test') {
             steps {
-                echo 'Testing..'
+                bat 'dotnet test Financier.Core.Tests'
             }
         }
         stage('Deploy') {
