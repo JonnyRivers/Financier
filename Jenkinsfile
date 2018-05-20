@@ -21,7 +21,7 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                bat 'rmdir /s /q D:\\Development\\Financier\\Deploy\\CLI'
+                bat 'if exist D:\\Development\\Financier\\Deploy\\CLI rmdir /s /q D:\\Development\\Financier\\Deploy\\CLI'
 				bat 'xcopy /E /I /Y Financier.CLI\\bin\\Release\\netcoreapp2.0 D:\\Development\\Financier\\Deploy\\CLI'
             }
         }
