@@ -9,8 +9,8 @@ pipeline {
         }
         stage('Build') {
             steps {
-                bat 'nuget restore Financier.sln'
-				bat "\"${tool 'MSBuild-2017'}\" Financier.sln /p:Configuration=Release /p:Platform=\"Any CPU\" /p:ProductVersion=1.0.0.${env.BUILD_NUMBER}"
+                bat "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin\MSBuild.exe" /t:restore
+                bat "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin\MSBuild.exe" /p:Configuration=Release Financier.sln
             }
         }
         stage('Test') {
