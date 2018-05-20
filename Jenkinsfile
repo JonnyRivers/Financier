@@ -21,7 +21,8 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                echo 'Deploying....'
+                bat 'rmdir /s /q D:\\Development\\Financier\\Deploy\\CLI'
+				bat 'xcopy /E /I /Y Financier.CLI\\bin\\Release\\netcoreapp2.0 D:\\Development\\Financier\\Deploy\\CLI'
             }
         }
     }
