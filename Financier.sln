@@ -14,9 +14,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Financier.Desktop", "Financ
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Financier.Desktop.Tests", "Financier.Desktop.Tests\Financier.Desktop.Tests.csproj", "{0FA20B4F-94A2-4CF1-A313-60DA7C09A576}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Financier.UnitTesting.Core", "Financier.UnitTesting.Core\Financier.UnitTesting.Core.csproj", "{60FF2503-1FA6-4A63-AB71-7FCA6DFC2CD1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Financier.UnitTesting.Core", "Financier.UnitTesting.Core\Financier.UnitTesting.Core.csproj", "{60FF2503-1FA6-4A63-AB71-7FCA6DFC2CD1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Financier.Core.Tests", "Financier.Core.Tests\Financier.Core.Tests.csproj", "{6F238BE8-7EC3-4305-A9E3-30B80A2ABC09}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ContinuousDelivery", "ContinuousDelivery", "{8CB54ABF-774B-4D8F-B8B4-205D37A86C17}"
+	ProjectSection(SolutionItems) = preProject
+		Jenkinsfile = Jenkinsfile
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
