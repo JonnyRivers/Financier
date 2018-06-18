@@ -163,7 +163,7 @@ namespace Financier.Desktop.ViewModels
 
         private void DeleteExecute(object obj)
         {
-            if (m_viewService.OpenBudgetDeleteConfirmationView())
+            if (m_viewService.OpenBudgetTransactionDeleteConfirmationView())
             {
                 Transactions.Remove(SelectedTransaction);
                 SelectedTransaction = null;// is this necessary?
