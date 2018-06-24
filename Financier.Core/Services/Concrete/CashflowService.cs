@@ -65,7 +65,7 @@ namespace Financier.Services
                         t.DebitAccount.AccountId == prepaymentToExpenseRelationship.SourceAccount.AccountId);
                 IEnumerable<Transaction> outflowTransactions =
                     relevantTransactions.Where(t =>
-                        t.CreditAccount.AccountId == prepaymentToExpenseRelationship.SourceAccount.AccountId);
+                        t.DebitAccount.AccountId == prepaymentToExpenseRelationship.DestinationAccount.AccountId);
 
                 var item = new CashflowStatementItem(
                     name,
