@@ -6,6 +6,7 @@ pipeline {
             steps {
                 bat 'dotnet restore Financier.CLI'
                 bat 'dotnet build --configuration Release Financier.CLI'
+                bat '\"C:\\Program Files (x86)\\NuGet\\nuget.exe\" restore Financier.sln'
                 bat '\"C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\MSBuild\\15.0\\Bin\\msbuild.exe\" Financier.Desktop\\Financier.Desktop.csproj /p:Configuration=Release'
                 bat '\"C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\MSBuild\\15.0\\Bin\\msbuild.exe\" Financier.Desktop.Tests\\Financier.Desktop.Tests.csproj /p:Configuration=Release'
             }
