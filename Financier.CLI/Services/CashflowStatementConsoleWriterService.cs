@@ -24,18 +24,27 @@ namespace Financier.CLI.Services
             Console.WriteLine();
             Console.WriteLine($"Cashflow Statement from {cashflowStatement.StartAt} to {cashflowStatement.EndAt}");
             Console.WriteLine();
-            Console.WriteLine("Name                                     Inflow     Outflow    Cashflow");
-            Console.WriteLine("---------------------------------------- ---------- ---------- ----------");
-            foreach (CashflowStatementItem item in cashflowStatement.Items.OrderBy(i => i.Name))
+            foreach(CashflowAccount account in cashflowStatement.Accounts.OrderBy(a => a.Name))
             {
-                Console.WriteLine("{0,-40} {1,10} {2,10} {3,10}", 
-                    item.Name, item.Inflow, item.Outflow, item.Cashflow);
+                Console.WriteLine($"{account.Name}");
+                Console.WriteLine();
+                Console.WriteLine("Period           Inflow     Outflow    Cashflow");
+                Console.WriteLine("---------------- ---------- ---------- ----------");
+                foreach (CashflowAccountPeriod period in account.Periods.OrderBy(i => i.Range.Start))
+                {
+                    Console.WriteLine("{0,-16} {1,10} {2,10} {3,10}",
+                        period.Range.Start.ToShortDateString(), period.Inflow, period.Outflow, period.Cashflow);
+                }
+
+                Console.WriteLine("---------------- ---------- ---------- ==========");
+                Console.WriteLine("Total            {0,10} {1,10} {2,10}",
+                    account.Inflow, account.Outflow, account.Cashflow);
+                Console.WriteLine("---------------- ---------- ---------- ==========");
+                Console.WriteLine();
+                Console.WriteLine();
             }
 
-            Console.WriteLine("---------------------------------------- ---------- ---------- ==========");
-            Console.WriteLine("Total                                    {0,10} {1,10} {2,10}",
-                cashflowStatement.TotalInflow, cashflowStatement.TotalOutflow, cashflowStatement.NetCashflow);
-            Console.WriteLine("---------------------------------------- ---------- ---------- ==========");
+            // TODO: statement totals
         }
     }
 }

@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Financier.Services
 {
@@ -28,8 +27,40 @@ namespace Financier.Services
             m_transactionService = transactionService;
         }
 
-        public CashflowStatement Generate(DateTime startAt, DateTime endAt)
+        private static TimeSpan PeriodToTimeSpan(CashflowPeriod period)
         {
+            if(period == CashflowPeriod.Fortnightly)
+                return TimeSpan.FromDays(14);
+
+            throw new ArgumentException($"Unrecognized CashflowPeriod {period}", nameof(period));
+        }
+
+        private static IEnumerable<DateTimeRange> CreateDateTimeRanges(CashflowPeriod period, DateTime startAt, DateTime endAt)
+        {
+            if (endAt <= startAt)
+                throw new ArgumentException("Start must be earlier than end", nameof(endAt));
+
+            TimeSpan periodSpan = PeriodToTimeSpan(period);
+
+            var ranges = new List<DateTimeRange>();
+            DateTime cursor = startAt;
+            while(cursor < endAt)
+            {
+                ranges.Add(new DateTimeRange(cursor, cursor + periodSpan));
+
+                cursor += periodSpan;
+            }
+
+            return ranges;
+        }
+
+        public CashflowStatement Generate(CashflowPeriod period, DateTime startAt, DateTime endAt)
+        {
+            if (endAt < startAt)
+                throw new ArgumentException("End cannnot be earlier than start", nameof(endAt));
+
+            IEnumerable<DateTimeRange> ranges = CreateDateTimeRanges(CashflowPeriod.Fortnightly, startAt, endAt);
+
             Currency primaryCurrency = m_currencyService.GetPrimary();
 
             List<AccountRelationship> prepaymentToExpenseRelationships = 
@@ -52,35 +83,50 @@ namespace Financier.Services
                 startAt,
                 endAt).ToList();
 
-            var cashflowStatementItems = new List<CashflowStatementItem>();
+            var cashflowAccounts = new List<CashflowAccount>();
             foreach (AccountRelationship prepaymentToExpenseRelationship in prepaymentToExpenseRelationships)
             {
-                string name = 
+                string name =
                     prepaymentToExpenseRelationship.DestinationAccount.Name
                         .Replace("Expense", "")
                         .Trim();
 
-                IEnumerable<Transaction> inflowTransactions =
-                    relevantTransactions.Where(t =>
-                        t.DebitAccount.AccountId == prepaymentToExpenseRelationship.SourceAccount.AccountId);
-                IEnumerable<Transaction> outflowTransactions =
-                    relevantTransactions.Where(t =>
-                        t.DebitAccount.AccountId == prepaymentToExpenseRelationship.DestinationAccount.AccountId);
+                var accountPeriods = new List<CashflowAccountPeriod>();
+                foreach(DateTimeRange range in ranges.OrderBy(r => r.Start))
+                {
+                    IEnumerable<Transaction> periodTransactions = relevantTransactions
+                        .Where(t => t.At >= range.Start && t.At < range.End);
 
-                var item = new CashflowStatementItem(
+                    IEnumerable<Transaction> inflowTransactions =
+                        periodTransactions.Where(t =>
+                            t.DebitAccount.AccountId == prepaymentToExpenseRelationship.SourceAccount.AccountId);
+                    IEnumerable<Transaction> outflowTransactions =
+                        periodTransactions.Where(t =>
+                            t.DebitAccount.AccountId == prepaymentToExpenseRelationship.DestinationAccount.AccountId);
+
+                    var accountPeriod = new CashflowAccountPeriod(
+                        range,
+                        inflowTransactions.Sum(t => t.Amount),
+                        outflowTransactions.Sum(t => t.Amount));
+
+                    accountPeriods.Add(accountPeriod);
+                }
+
+                var account = new CashflowAccount(
                     name,
-                    inflowTransactions.Sum(t => t.Amount),
-                    outflowTransactions.Sum(t => t.Amount)
+                    primaryCurrency.Symbol,
+                    accountPeriods
                 );
 
-                cashflowStatementItems.Add(item);
+                cashflowAccounts.Add(account);
             }
-
+            
             return new CashflowStatement(
+                period,
                 startAt, 
                 endAt, 
-                primaryCurrency.Symbol, 
-                cashflowStatementItems
+                primaryCurrency.Symbol,
+                cashflowAccounts
             );
         }
     }
