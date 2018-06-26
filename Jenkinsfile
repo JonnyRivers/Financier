@@ -14,7 +14,7 @@ pipeline {
         stage('Test') {
             steps {
                 bat 'dotnet test Financier.Core.Tests'
-                // need to run the Financier.Desktop.Tests
+                bat '\"C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe" "Financier.Desktop.Tests\\bin\\Release\\Financier.Desktop.Tests.dll"'
             }
         }
         stage('Deploy') {
