@@ -42,7 +42,7 @@ namespace Financier.CLI.Commands
                 ICashflowService cashflowService = serviceProvider.GetRequiredService<ICashflowService>();
                 DateTime startAt = DateTime.Parse(startAtOption.Value());
                 DateTime endAt = DateTime.Parse(endAtOption.Value());
-                CashflowStatement cashflowStatement = cashflowService.Generate(startAt, endAt);
+                CashflowStatement cashflowStatement = cashflowService.Generate(CashflowPeriod.Fortnightly, startAt, endAt);
 
                 ICashflowStatementWriterService cashflowStatementWriterService = 
                     serviceProvider.GetRequiredService<ICashflowStatementWriterService>();
