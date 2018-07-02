@@ -18,9 +18,20 @@ namespace Financier.Desktop
         {
             base.OnStartup(e);
 
+            DispatcherUnhandledException += App_DispatcherUnhandledException;
+
             IServiceProvider serviceProvider = Build();
             IViewService viewService = serviceProvider.GetRequiredService<IViewService>();
             viewService.OpenMainView();
+        }
+
+        private void App_DispatcherUnhandledException(
+            object sender, 
+            System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        {
+            MessageBox.Show(e.Exception.ToString(), "Unhandled exception");
+
+            e.Handled = true;
         }
 
         private IServiceProvider Build()
