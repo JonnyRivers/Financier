@@ -4,19 +4,21 @@ namespace Financier.Services
 {
     public class EnvironmentService : IEnvironmentService
     {
-        private const string databaseConnectionStringEnvironmentVariableName = "FINANCIER_DBCS";
+        private const string DatabaseConnectionStringEnvironmentVariableName = "FINANCIER_DBCS";
+        private const string FixerApiKeyEnvironmentVariableName = "FIXER_API";
+
         private const string DefaultStringValue = "???";
         private const string ServerKey = "Server";
         private const string DatabaseKey = "Database";
 
         public string GetConnectionString()
         {
-            string connectionString = Environment.GetEnvironmentVariable(databaseConnectionStringEnvironmentVariableName);
+            string connectionString = Environment.GetEnvironmentVariable(DatabaseConnectionStringEnvironmentVariableName);
 
             if (string.IsNullOrEmpty(connectionString))
                 throw new ApplicationException(
                     "Unable to get database connection from environement variable " + 
-                    $"'{databaseConnectionStringEnvironmentVariableName}'");
+                    $"'{DatabaseConnectionStringEnvironmentVariableName}'");
 
             return connectionString;
         }
@@ -41,6 +43,18 @@ namespace Financier.Services
             }
 
             return $"{databaseName} at {serverName}";
+        }
+
+        public string GetFixerKey()
+        {
+            string connectionString = Environment.GetEnvironmentVariable(FixerApiKeyEnvironmentVariableName);
+
+            if (string.IsNullOrEmpty(connectionString))
+                throw new ApplicationException(
+                    "Unable to get fixer API key from environement variable " +
+                    $"'{FixerApiKeyEnvironmentVariableName}'");
+
+            return connectionString;
         }
     }
 }

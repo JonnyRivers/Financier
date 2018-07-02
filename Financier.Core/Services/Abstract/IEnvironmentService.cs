@@ -4,5 +4,6 @@
     {
         string GetConnectionString();
         string GetConnectionSummary();
+        string GetFixerKey();
     }
 }

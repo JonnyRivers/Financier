@@ -2,6 +2,7 @@
 using Financier.UnitTesting.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -16,16 +17,26 @@ namespace Financier.Core.Tests
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
 
+            var environmentServiceMock = new Mock<IEnvironmentService>();
+            string fakeKey = "abcd";
+            environmentServiceMock
+                .Setup(es => es.GetFixerKey())
+                .Returns(fakeKey);
+
+            string date = "2018-01-01";
+            decimal GbpPerEur = 0.889131m;
+            decimal UsdPerEur = 1.201496m;
+            decimal UsdPerGbp = UsdPerEur / GbpPerEur;
             var mockedResponsesByRequestUri = new Dictionary<string, HttpResponseMessage>()
             {
                 {
-                    "https://api.fixer.io/latest?base=GBP&date=2018-1-1",
+                    $"http://data.fixer.io/{date}?access_key={fakeKey}",
                     new HttpResponseMessage
                     {
                         StatusCode = System.Net.HttpStatusCode.OK,
                         Content = new StringContent
                         (
-                            "{ base: \"GBP\", date: \"2017-12-29\", rates: { USD: 1.3517 } }"
+                            $"{{ base: \"EUR\", date: \"{date}\", rates: {{ GBP: {GbpPerEur}, USD: {UsdPerEur} }} }}"
                         )
                     }
                 }
@@ -35,12 +46,13 @@ namespace Financier.Core.Tests
 
             var service = new FixerIOCurrencyExchangeService(
                 loggerFactory.CreateLogger<FixerIOCurrencyExchangeService>(),
+                environmentServiceMock.Object,
                 httpClientFactory
             );
 
             decimal gbpUsdRate = service.GetExchangeRate("GBP", "USD", new DateTime(2018, 1, 1));
 
-            Assert.AreEqual(1.3517m, gbpUsdRate);
+            Assert.AreEqual(UsdPerGbp, gbpUsdRate);
         }
     }
 }
