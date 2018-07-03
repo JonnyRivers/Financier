@@ -174,5 +174,10 @@ namespace Financier.Desktop.Services
         {
             return m_serviceProvider.CreateInstance<TransactionListViewModel>();
         }
+
+        public IUnhandledExceptionViewModel CreateUnhandledExceptionViewModel(Exception ex)
+        {
+            return m_serviceProvider.CreateInstance<UnhandledExceptionViewModel>(ex);
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Financier.Desktop.Services;
 using Financier.Services;
+using System;
 using System.Collections.Generic;
 
 namespace Financier.Desktop.Tests.Concrete
@@ -140,6 +141,11 @@ namespace Financier.Desktop.Tests.Concrete
         public void OpenTransactionListView()
         {
             
+        }
+
+        public void OpenUnhandledExceptionView(Exception ex)
+        {
+            throw new NotImplementedException();
         }
     }
 }

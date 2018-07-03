@@ -1,5 +1,6 @@
 ﻿using Financier.Desktop.ViewModels;
 using Financier.Services;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -54,5 +55,7 @@ namespace Financier.Desktop.Services
         ITransactionDetailsViewModel CreateTransactionEditViewModel(int transactionId);
         ITransactionItemViewModel CreateTransactionItemViewModel(Transaction transaction);
         ITransactionListViewModel CreateTransactionListViewModel();
+
+        IUnhandledExceptionViewModel CreateUnhandledExceptionViewModel(Exception ex);
     }
 }

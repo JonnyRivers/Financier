@@ -222,6 +222,7 @@
     <Compile Include="ViewModels\Abstract\ITransactionBatchCreateConfirmViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IAccountTransactionListViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IAccountTransactionItemViewModel.cs" />
+    <Compile Include="ViewModels\Abstract\IUnhandledExceptionViewModel.cs" />
     <Compile Include="ViewModels\Concrete\AccountCreateViewModel.cs" />
     <Compile Include="ViewModels\Concrete\AccountDetailsBaseViewModel.cs" />
     <Compile Include="ViewModels\Concrete\AccountEditViewModel.cs" />
@@ -253,6 +254,7 @@
     <Compile Include="ViewModels\Concrete\BudgetTransactionListViewModel.cs" />
     <Compile Include="ViewModels\Concrete\ForeignAmountViewModel.cs" />
     <Compile Include="ViewModels\Concrete\MainWindowViewModel.cs" />
+    <Compile Include="ViewModels\Concrete\UnhandledExceptionViewModel.cs" />
     <Compile Include="ViewModels\Concrete\PaydayEventStartViewModel.cs" />
     <Compile Include="ViewModels\Concrete\ReconcileBalanceViewModel.cs" />
     <Compile Include="ViewModels\Concrete\TransactionBatchCreateConfirmViewModel.cs" />
@@ -264,6 +266,9 @@
     <Compile Include="ViewModels\Concrete\TransactionListViewModel.cs" />
     <Compile Include="ViewModels\Concrete\TransactionItemViewModel.cs" />
     <Compile Include="ViewModels\Model\BudgetTransactionType.cs" />
+    <Compile Include="Views\UnhandledExceptionWindow.xaml.cs">
+      <DependentUpon>UnhandledExceptionWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\AccountDetailsWindow.xaml.cs">
       <DependentUpon>AccountDetailsWindow.xaml</DependentUpon>
     </Compile>
@@ -316,6 +321,10 @@
     <Compile Include="Views\TransactionDetailsWindow.xaml.cs">
       <DependentUpon>TransactionDetailsWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="Views\UnhandledExceptionWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\AccountDetailsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

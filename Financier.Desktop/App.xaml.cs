@@ -14,14 +14,16 @@ namespace Financier.Desktop
     /// </summary>
     public partial class App : Application
     {
+        private IServiceProvider m_serviceProvider;
+
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
 
             DispatcherUnhandledException += App_DispatcherUnhandledException;
 
-            IServiceProvider serviceProvider = Build();
-            IViewService viewService = serviceProvider.GetRequiredService<IViewService>();
+            m_serviceProvider = Build();
+            IViewService viewService = m_serviceProvider.GetRequiredService<IViewService>();
             viewService.OpenMainView();
         }
 
@@ -29,7 +31,16 @@ namespace Financier.Desktop
             object sender, 
             System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
-            MessageBox.Show(e.Exception.ToString(), "Unhandled exception");
+            if(m_serviceProvider != null)
+            {
+                IViewService viewService = m_serviceProvider.GetRequiredService<IViewService>();
+
+                viewService.OpenUnhandledExceptionView(e.Exception);
+            }
+            else
+            {
+                MessageBox.Show(e.Exception.ToString(), "Unhandled exception");
+            }
 
             e.Handled = true;
         }

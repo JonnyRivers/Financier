@@ -1,8 +1,8 @@
 ﻿using Financier.Desktop.ViewModels;
 using Financier.Desktop.Views;
 using Financier.Services;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Windows;
 
@@ -309,6 +309,13 @@ namespace Financier.Desktop.Services
         {
             ITransactionListViewModel viewModel = m_viewModelFactory.CreateTransactionListViewModel();
             var window = new TransactionListWindow(viewModel);
+            window.ShowDialog();
+        }
+
+        public void OpenUnhandledExceptionView(Exception ex)
+        {
+            IUnhandledExceptionViewModel viewModel = m_viewModelFactory.CreateUnhandledExceptionViewModel(ex);
+            var window = new UnhandledExceptionWindow(viewModel);
             window.ShowDialog();
         }
 

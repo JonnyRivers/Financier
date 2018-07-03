@@ -1,4 +1,5 @@
 ﻿using Financier.Services;
+using System;
 using System.Collections.Generic;
 
 namespace Financier.Desktop.Services
@@ -40,5 +41,7 @@ namespace Financier.Desktop.Services
         bool OpenTransactionDeleteConfirmationView();
         bool OpenTransactionEditView(int transactionId, out Transaction updatedTransaction);
         void OpenTransactionListView();
+
+        void OpenUnhandledExceptionView(Exception ex);
     }
 }

@@ -1,0 +1,47 @@
+﻿<Window x:Class="Financier.Desktop.Views.UnhandledExceptionWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Financier.Desktop.Views"
+        mc:Ignorable="d"
+        Title="Unhandled Exception"
+        MinHeight="205" MinWidth="300"
+        Height="600" Width="700" 
+        Icon="/Financier.Desktop;component/Resources/favicon.ico">
+    <Grid Margin="5">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Column="0" Grid.Row="0" Margin="5">Message</TextBlock>
+        <TextBox Grid.Column="1" Grid.Row="0" Margin="5" 
+                 IsReadOnly="True" 
+                 Text="{Binding Message, Mode=OneWay}"/>
+        <TextBlock Grid.Column="0" Grid.Row="1" Margin="5">Details</TextBlock>
+        <TextBox Grid.Column="1" Grid.Row="1" Margin="5" 
+                 IsReadOnly="True" 
+                 Text="{Binding Details, Mode=OneWay}"
+                 ScrollViewer.CanContentScroll="True"
+                 ScrollViewer.VerticalScrollBarVisibility="Auto"
+                 TextWrapping="Wrap"/>
+        <Grid Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="3" 
+                    Margin="5" 
+                    IsDefault="True" 
+                    Click="OnOK" 
+                    Command="{Binding OKCommand}">OK</Button>
+        </Grid>
+    </Grid>
+</Window>

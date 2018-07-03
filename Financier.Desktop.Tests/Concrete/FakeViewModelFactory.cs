@@ -162,5 +162,10 @@ namespace Financier.Desktop.Tests.Concrete
         {
             throw new NotImplementedException();
         }
+
+        public IUnhandledExceptionViewModel CreateUnhandledExceptionViewModel(Exception ex)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
