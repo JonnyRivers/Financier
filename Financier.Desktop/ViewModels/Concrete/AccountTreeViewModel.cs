@@ -217,6 +217,8 @@ namespace Financier.Desktop.ViewModels
 
                     m_transactionRelationshipService.CreateMany(newTransactionRelationships);
                 }
+
+                PopulateAccountTreeItems();
             }
             else
             {
