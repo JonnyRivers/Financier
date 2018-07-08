@@ -8,7 +8,12 @@
         mc:Ignorable="d"
         Title="Account Relationship" Height="220" Width="300">
     <Window.Resources>
-        <CollectionViewSource x:Key="AccountsByName" Source="{Binding Accounts}">
+        <CollectionViewSource x:Key="SourceAccountsByName" Source="{Binding Accounts}">
+            <CollectionViewSource.SortDescriptions>
+                <scm:SortDescription PropertyName="Name"/>
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
+        <CollectionViewSource x:Key="DestinationAccountsByName" Source="{Binding Accounts}">
             <CollectionViewSource.SortDescriptions>
                 <scm:SortDescription PropertyName="Name"/>
             </CollectionViewSource.SortDescriptions>
@@ -30,13 +35,13 @@
         <ComboBox Grid.Column="1" Grid.Row="0" 
                   Margin="5" 
                   DisplayMemberPath="Name"
-                  ItemsSource="{Binding Source={StaticResource AccountsByName}}"
+                  ItemsSource="{Binding Source={StaticResource SourceAccountsByName}}"
                   SelectedItem="{Binding SourceAccount}"/>
         <TextBlock Grid.Column="0" Grid.Row="1" Margin="5">Destination Account</TextBlock>
         <ComboBox Grid.Column="1" Grid.Row="1" 
                   Margin="5" 
                   DisplayMemberPath="Name"
-                  ItemsSource="{Binding Source={StaticResource AccountsByName}}" 
+                  ItemsSource="{Binding Source={StaticResource DestinationAccountsByName}}" 
                   SelectedItem="{Binding DestinationAccount}"/>
         <TextBlock Grid.Column="0" Grid.Row="2" Margin="5">Type</TextBlock>
         <ComboBox Grid.Column="1" Grid.Row="2" 
