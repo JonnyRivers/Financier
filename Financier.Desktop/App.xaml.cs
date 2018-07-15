@@ -59,24 +59,28 @@ namespace Financier.Desktop
             serviceCollection.AddSingleton(loggerFactory);
             serviceCollection.AddLogging();
 
-            // TODO: how can we use a service that is required for DbContext creation?
-            IEnvironmentService environmentService = new EnvironmentService();
+            // We have to build a temporary service provider to get the connection string for the DbContext.
+            // Perhaps there is a better way.
+            serviceCollection.AddSingleton<IEnvironmentService, EnvironmentService>();
+            IEnvironmentService environmentService = 
+                serviceCollection.BuildServiceProvider().GetRequiredService<IEnvironmentService>();
             string connectionString = environmentService.GetConnectionString();
 
             serviceCollection.AddDbContext<FinancierDbContext>(
                 options => options.UseSqlServer(connectionString),
                 ServiceLifetime.Transient);
 
+            // Financier.Core services
             serviceCollection.AddSingleton<IAccountService, AccountService>();
             serviceCollection.AddSingleton<IAccountRelationshipService, AccountRelationshipService>();
             serviceCollection.AddSingleton<IBudgetService, BudgetService>();
             serviceCollection.AddSingleton<ICurrencyService, CurrencyService>();
             serviceCollection.AddSingleton<ICurrencyExchangeService, FixerIOCurrencyExchangeService>();
-            serviceCollection.AddSingleton<IEnvironmentService, EnvironmentService>();
             serviceCollection.AddSingleton<IHttpClientFactory, HttpClientFactory>();
             serviceCollection.AddSingleton<ITransactionService, TransactionService>();
             serviceCollection.AddSingleton<ITransactionRelationshipService, TransactionRelationshipService>();
             
+            // Financier.Desktop services
             serviceCollection.AddSingleton<IMessageService, MessageService>();
             serviceCollection.AddSingleton<IViewModelFactory, ViewModelFactory>();
             serviceCollection.AddSingleton<IViewService, ViewService>();

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 
 namespace Financier.Services
 {
@@ -11,14 +12,25 @@ namespace Financier.Services
         private const string ServerKey = "Server";
         private const string DatabaseKey = "Database";
 
+        private ILogger<EnvironmentService> m_logger;
+
+        public EnvironmentService(ILogger<EnvironmentService> logger)
+        {
+            m_logger = logger;
+        }
+
         public string GetConnectionString()
         {
+            m_logger.LogTrace("IN EnvironmentService.GetConnectionString()");
+
             string connectionString = Environment.GetEnvironmentVariable(DatabaseConnectionStringEnvironmentVariableName);
 
             if (string.IsNullOrEmpty(connectionString))
+            {
                 throw new ApplicationException(
-                    "Unable to get database connection from environement variable " + 
+                    "Unable to get database connection from environement variable " +
                     $"'{DatabaseConnectionStringEnvironmentVariableName}'");
+            }
 
             return connectionString;
         }
@@ -47,6 +59,8 @@ namespace Financier.Services
 
         public string GetFixerKey()
         {
+            m_logger.LogTrace("IN EnvironmentService.GetFixerKey()");
+
             string connectionString = Environment.GetEnvironmentVariable(FixerApiKeyEnvironmentVariableName);
 
             if (string.IsNullOrEmpty(connectionString))
