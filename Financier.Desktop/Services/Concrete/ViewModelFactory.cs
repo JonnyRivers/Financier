@@ -98,6 +98,16 @@ namespace Financier.Desktop.Services
             return new AccountRelationshipTypeFilterViewModel(type);
         }
 
+        public IBalanceSheetViewModel CreateBalanceSheetViewModel()
+        {
+            return m_serviceProvider.CreateInstance<BalanceSheetViewModel>();
+        }
+
+        public IBalanceSheetItemViewModel CreateBalanceSheetItemViewModel(BalanceSheetItem item)
+        {
+            return m_serviceProvider.CreateInstance<BalanceSheetItemViewModel>(item);
+        }
+
         public IBudgetDetailsViewModel CreateBudgetCreateViewModel()
         {
             return m_serviceProvider.CreateInstance<BudgetCreateViewModel>();

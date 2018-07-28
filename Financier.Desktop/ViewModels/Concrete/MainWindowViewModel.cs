@@ -12,8 +12,6 @@ namespace Financier.Desktop.ViewModels
         private IEnvironmentService m_environmentService;
         private IViewService m_viewService;
 
-        private string m_databaseConnectionSummary;
-
         public MainWindowViewModel(
             ILogger<MainWindowViewModel> logger,
             IEnvironmentService environmentService,
@@ -24,13 +22,14 @@ namespace Financier.Desktop.ViewModels
             m_environmentService = environmentService;
             m_viewService = viewService;
 
-            m_databaseConnectionSummary = environmentService.GetConnectionSummary();
+            DatabaseConnectionSummary = environmentService.GetConnectionSummary();
         }
 
-        public string DatabaseConnectionSummary => m_databaseConnectionSummary;
+        public string DatabaseConnectionSummary { get; }
 
         public ICommand AccountsViewCommand => new RelayCommand(AccountsViewExecute);
         public ICommand AccountRelationshipsViewCommand => new RelayCommand(AccountRelationshipsViewExecute);
+        public ICommand BalanceSheetViewCommand => new RelayCommand(BalanceSheetViewExecute);
         public ICommand BudgetsViewCommand => new RelayCommand(BudgetsViewExecute);
         public ICommand TransactionsViewCommand => new RelayCommand(TransactionsViewExecute);
 
@@ -42,6 +41,11 @@ namespace Financier.Desktop.ViewModels
         private void AccountRelationshipsViewExecute(object obj)
         {
             m_viewService.OpenAccountRelationshipListView();
+        }
+
+        private void BalanceSheetViewExecute(object obj)
+        {
+            m_viewService.OpenBalanceSheetView();
         }
 
         private void BudgetsViewExecute(object obj)

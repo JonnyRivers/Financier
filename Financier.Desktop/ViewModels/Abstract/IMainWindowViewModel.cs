@@ -8,7 +8,9 @@ namespace Financier.Desktop.ViewModels
 
         ICommand AccountsViewCommand { get; }
         ICommand AccountRelationshipsViewCommand { get; }
+        ICommand BalanceSheetViewCommand { get; }
         ICommand BudgetsViewCommand { get; }
         ICommand TransactionsViewCommand { get; }
+        
     }
 }

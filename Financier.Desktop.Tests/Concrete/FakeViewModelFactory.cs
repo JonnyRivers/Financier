@@ -167,5 +167,15 @@ namespace Financier.Desktop.Tests.Concrete
         {
             throw new NotImplementedException();
         }
+
+        public IBalanceSheetViewModel CreateBalanceSheetViewModel()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IBalanceSheetItemViewModel CreateBalanceSheetItemViewModel(BalanceSheetItem balanceSheetItem)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
