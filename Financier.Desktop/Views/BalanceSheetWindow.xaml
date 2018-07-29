@@ -48,6 +48,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="20"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -56,11 +57,19 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <TextBlock FontWeight="DemiBold" Padding="5" Grid.Row="0">Assets</TextBlock>
-        <ItemsControl Grid.Row="1" 
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <DatePicker FontWeight="DemiBold" Padding="5" Grid.Column="1" SelectedDate="{Binding At, FallbackValue=2018-01-01}"/>
+        </Grid>
+        <TextBlock Grid.Row="1" FontWeight="DemiBold" Padding="5">Assets</TextBlock>
+        <ItemsControl Grid.Row="2" 
                       ItemsSource="{Binding Source={StaticResource AssetsByName}}" 
                       ItemTemplate="{StaticResource ItemDataTemplate}"/>
-        <Grid Grid.Row="2">
+        <Grid Grid.Row="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
@@ -70,11 +79,11 @@
             <TextBlock FontWeight="DemiBold" Padding="5" Grid.Column="2" TextAlignment="Right" Text="{Binding TotalAssets, StringFormat=N2, FallbackValue='135,000.00'}"/>
         </Grid>
 
-        <TextBlock FontWeight="DemiBold" Padding="5" Grid.Row="4">Liabilities</TextBlock>
-        <ItemsControl Grid.Row="5" 
+        <TextBlock Grid.Row="5" FontWeight="DemiBold" Padding="5" >Liabilities</TextBlock>
+        <ItemsControl Grid.Row="6" 
                       ItemsSource="{Binding Source={StaticResource LiabilitiesByName}}" 
                       ItemTemplate="{StaticResource ItemDataTemplate}"/>
-        <Grid Grid.Row="6">
+        <Grid Grid.Row="7">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
@@ -84,7 +93,7 @@
             <TextBlock FontWeight="DemiBold" Padding="5" Grid.Column="2" TextAlignment="Right" Text="{Binding TotalLiabilities, StringFormat=N2, FallbackValue='45,000.00'}"/>
         </Grid>
 
-        <Grid Grid.Row="8">
+        <Grid Grid.Row="9">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
