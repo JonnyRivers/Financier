@@ -6,8 +6,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         mc:Ignorable="d"
         Title="Financier for Windows™ - Balance Sheet" 
-        MinHeight="300" MinWidth="400"
-        Height="900" Width="400">
+        SizeToContent="Height"
+        MinHeight="200" MinWidth="400"
+        MaxHeight="1000" 
+        Width="400">
     <Window.Resources>
         <ResourceDictionary>
             <CollectionViewSource x:Key="AssetsByName" Source="{Binding Assets}">
@@ -29,7 +31,7 @@
                 </DataTemplate.Resources>
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="12"/>
+                        <ColumnDefinition Width="20"/>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
@@ -40,7 +42,7 @@
             </DataTemplate>
         </ResourceDictionary>
     </Window.Resources>
-    <Grid>
+    <Grid Margin="10">
         <Grid.Resources>
             <Style TargetType="TextBlock" BasedOn="{StaticResource TextBlockStyle}"/>
         </Grid.Resources>
@@ -49,27 +51,19 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="20"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="20"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <DatePicker FontWeight="DemiBold" Padding="5" Grid.Column="1" SelectedDate="{Binding At, FallbackValue=2018-01-01}"/>
-        </Grid>
+        <DatePicker Grid.Row="0" HorizontalAlignment="Center" Margin="0,0,0,5" SelectedDate="{Binding At, FallbackValue=2018-01-01}"/>
+        
         <TextBlock Grid.Row="1" FontWeight="DemiBold" Padding="5">Assets</TextBlock>
         <ItemsControl Grid.Row="2" 
                       ItemsSource="{Binding Source={StaticResource AssetsByName}}" 
                       ItemTemplate="{StaticResource ItemDataTemplate}"/>
-        <Grid Grid.Row="3">
+        <Grid Grid.Row="3" Margin="0,0,0,10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
@@ -79,11 +73,11 @@
             <TextBlock FontWeight="DemiBold" Padding="5" Grid.Column="2" TextAlignment="Right" Text="{Binding TotalAssets, StringFormat=N2, FallbackValue='135,000.00'}"/>
         </Grid>
 
-        <TextBlock Grid.Row="5" FontWeight="DemiBold" Padding="5" >Liabilities</TextBlock>
-        <ItemsControl Grid.Row="6" 
+        <TextBlock Grid.Row="4" FontWeight="DemiBold" Padding="5">Liabilities</TextBlock>
+        <ItemsControl Grid.Row="5" 
                       ItemsSource="{Binding Source={StaticResource LiabilitiesByName}}" 
                       ItemTemplate="{StaticResource ItemDataTemplate}"/>
-        <Grid Grid.Row="7">
+        <Grid Grid.Row="6" Margin="0,0,0,10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
@@ -93,7 +87,7 @@
             <TextBlock FontWeight="DemiBold" Padding="5" Grid.Column="2" TextAlignment="Right" Text="{Binding TotalLiabilities, StringFormat=N2, FallbackValue='45,000.00'}"/>
         </Grid>
 
-        <Grid Grid.Row="9">
+        <Grid Grid.Row="7">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>

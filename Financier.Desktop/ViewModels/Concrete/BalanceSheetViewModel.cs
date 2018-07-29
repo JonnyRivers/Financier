@@ -34,6 +34,7 @@ namespace Financier.Desktop.ViewModels
             Load();
         }
 
+        // This should be async
         private void Load()
         {
             BalanceSheet balanceSheet = m_balanceSheetService.Generate(m_at);
