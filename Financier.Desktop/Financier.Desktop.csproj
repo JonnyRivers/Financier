@@ -211,6 +211,8 @@
     <Compile Include="ViewModels\Abstract\IAccountRelationshipTypeViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IAccountTreeItemViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IAccountTreeViewModel.cs" />
+    <Compile Include="ViewModels\Abstract\IBalanceSheetItemViewModel.cs" />
+    <Compile Include="ViewModels\Abstract\IBalanceSheetViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IBudgetDetailsViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IBudgetItemViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IBudgetListViewModel.cs" />
@@ -244,6 +246,8 @@
     <Compile Include="ViewModels\Concrete\AccountRelationshipListViewModel.cs" />
     <Compile Include="ViewModels\Concrete\AccountRelationshipTypeViewModel.cs" />
     <Compile Include="ViewModels\Concrete\AccountTreeItemViewModel.cs" />
+    <Compile Include="ViewModels\Concrete\BalanceSheetItemViewModel.cs" />
+    <Compile Include="ViewModels\Concrete\BalanceSheetViewModel.cs" />
     <Compile Include="ViewModels\Concrete\AccountTreeViewModel.cs" />
     <Compile Include="ViewModels\Concrete\BudgetCreateViewModel.cs" />
     <Compile Include="ViewModels\Concrete\BudgetDetailsBaseViewModel.cs" />
@@ -266,6 +270,9 @@
     <Compile Include="ViewModels\Concrete\TransactionListViewModel.cs" />
     <Compile Include="ViewModels\Concrete\TransactionItemViewModel.cs" />
     <Compile Include="ViewModels\Model\BudgetTransactionType.cs" />
+    <Compile Include="Views\BalanceSheetWindow.xaml.cs">
+      <DependentUpon>BalanceSheetWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\UnhandledExceptionWindow.xaml.cs">
       <DependentUpon>UnhandledExceptionWindow.xaml</DependentUpon>
     </Compile>
@@ -321,6 +328,10 @@
     <Compile Include="Views\TransactionDetailsWindow.xaml.cs">
       <DependentUpon>TransactionDetailsWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="Views\BalanceSheetWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\UnhandledExceptionWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

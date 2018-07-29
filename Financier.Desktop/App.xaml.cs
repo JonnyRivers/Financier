@@ -73,6 +73,7 @@ namespace Financier.Desktop
             // Financier.Core services
             serviceCollection.AddSingleton<IAccountService, AccountService>();
             serviceCollection.AddSingleton<IAccountRelationshipService, AccountRelationshipService>();
+            serviceCollection.AddSingleton<IBalanceSheetService, BalanceSheetService>();
             serviceCollection.AddSingleton<IBudgetService, BudgetService>();
             serviceCollection.AddSingleton<ICurrencyService, CurrencyService>();
             serviceCollection.AddSingleton<ICurrencyExchangeService, FixerIOCurrencyExchangeService>();

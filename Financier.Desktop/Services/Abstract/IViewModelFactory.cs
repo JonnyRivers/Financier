@@ -32,6 +32,9 @@ namespace Financier.Desktop.Services
         IAccountRelationshipListViewModel CreateAccountRelationshipListViewModel();
         IAccountRelationshipTypeFilterViewModel CreateAccountRelationshipTypeFilterViewModel(AccountRelationshipType? type);
 
+        IBalanceSheetViewModel CreateBalanceSheetViewModel();
+        IBalanceSheetItemViewModel CreateBalanceSheetItemViewModel(BalanceSheetItem balanceSheetItem);
+
         IForeignAmountViewModel CreateForeignAmountViewModel(
             decimal nativeAmount,
             string nativeCurrencyCode,

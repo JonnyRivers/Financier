@@ -4,10 +4,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         Title="Financier for Windows™" 
-        MinHeight="200" MinWidth="500"
-        Height="200" Width="500">
+        MinHeight="230" MinWidth="500"
+        Height="230" Width="500">
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -19,11 +20,12 @@
         
         <Button Margin="5" Grid.Row="0" Command="{Binding AccountsViewCommand}">Accounts</Button>
         <Button Margin="5" Grid.Row="1" Command="{Binding AccountRelationshipsViewCommand}">Account Relationships</Button>
-        <Button Margin="5" Grid.Row="2" Command="{Binding BudgetsViewCommand}">Budgets</Button>
-        <Button Margin="5" Grid.Row="3" Command="{Binding TransactionsViewCommand}">Transactions</Button>
-        <StackPanel Grid.Row="5" Orientation="Horizontal">
-            <TextBlock Margin="5">Connected to:</TextBlock>
-            <TextBlock Margin="5" Text="{Binding Path=DatabaseConnectionSummary, FallbackValue='Some Database'}"/>
+        <Button Margin="5" Grid.Row="2" Command="{Binding BalanceSheetViewCommand}">Balance Sheet</Button>
+        <Button Margin="5" Grid.Row="3" Command="{Binding BudgetsViewCommand}">Budgets</Button>
+        <Button Margin="5" Grid.Row="4" Command="{Binding TransactionsViewCommand}">Transactions</Button>
+        <StackPanel Grid.Row="6" Orientation="Horizontal">
+            <TextBlock Margin="6">Connected to:</TextBlock>
+            <TextBlock Margin="6" Text="{Binding Path=DatabaseConnectionSummary, FallbackValue='Some Database'}"/>
         </StackPanel>
     </Grid>
 </Window>

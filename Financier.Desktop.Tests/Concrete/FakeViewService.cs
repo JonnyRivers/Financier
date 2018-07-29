@@ -59,6 +59,11 @@ namespace Financier.Desktop.Tests.Concrete
             
         }
 
+        public void OpenBalanceSheetView()
+        {
+            throw new NotImplementedException();
+        }
+
         public bool OpenBudgetCreateView(out Budget budget)
         {
             budget = null;

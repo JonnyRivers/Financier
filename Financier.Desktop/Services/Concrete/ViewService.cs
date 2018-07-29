@@ -134,6 +134,13 @@ namespace Financier.Desktop.Services
             window.ShowDialog();
         }
 
+        public void OpenBalanceSheetView()
+        {
+            IBalanceSheetViewModel viewModel = m_viewModelFactory.CreateBalanceSheetViewModel();
+            var window = new BalanceSheetWindow(viewModel);
+            window.ShowDialog();
+        }
+
         public bool OpenBudgetCreateView(out Budget budget)
         {
             budget = null;
