@@ -197,11 +197,18 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Commands\RelayCommand.cs" />
+    <Compile Include="Services\Abstract\IConnection.cs" />
     <Compile Include="Services\Abstract\IMessageService.cs" />
+    <Compile Include="Services\Abstract\IConnectionViewModelFactory.cs" />
     <Compile Include="Services\Abstract\IViewModelFactory.cs" />
+    <Compile Include="Services\Abstract\IConnectionViewService.cs" />
     <Compile Include="Services\Abstract\IViewService.cs" />
+    <Compile Include="Services\Concrete\Connection.cs" />
+    <Compile Include="Services\Concrete\DatabaseType.cs" />
     <Compile Include="Services\Concrete\MessageService.cs" />
+    <Compile Include="Services\Concrete\ConnectionViewModelFactory.cs" />
     <Compile Include="Services\Concrete\ViewModelFactory.cs" />
+    <Compile Include="Services\Concrete\ConnectionViewService.cs" />
     <Compile Include="Services\Concrete\ViewService.cs" />
     <Compile Include="Tasks\NotifyTaskCompletion.cs" />
     <Compile Include="ViewModels\Abstract\IAccountLinkViewModel.cs" />
@@ -219,6 +226,7 @@
     <Compile Include="ViewModels\Abstract\IBudgetTransactionItemViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IBudgetTransactionListViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IForeignAmountViewModel.cs" />
+    <Compile Include="ViewModels\Abstract\IConnectionWindowViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IPaydayEventStartViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IReconcileBalanceViewModel.cs" />
     <Compile Include="ViewModels\Abstract\ITransactionBatchCreateConfirmViewModel.cs" />
@@ -257,6 +265,7 @@
     <Compile Include="ViewModels\Concrete\BudgetTransactionItemViewModel.cs" />
     <Compile Include="ViewModels\Concrete\BudgetTransactionListViewModel.cs" />
     <Compile Include="ViewModels\Concrete\ForeignAmountViewModel.cs" />
+    <Compile Include="ViewModels\Concrete\ConnectionWindowViewModel.cs" />
     <Compile Include="ViewModels\Concrete\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\Concrete\UnhandledExceptionViewModel.cs" />
     <Compile Include="ViewModels\Concrete\PaydayEventStartViewModel.cs" />

@@ -22,7 +22,11 @@ namespace Financier.Desktop
 
             DispatcherUnhandledException += App_DispatcherUnhandledException;
 
-            m_serviceProvider = Build();
+            ServiceCollection serviceCollection = BuildConnectionServiceProvider();
+            IConnectionViewService connectionViewService = m_serviceProvider.GetRequiredService<IConnectionViewService>();
+            IConnection connection = connectionViewService.OpenConnectionView();
+
+            BuildFullServiceProvider(serviceCollection, connection);
             IViewService viewService = m_serviceProvider.GetRequiredService<IViewService>();
             viewService.OpenMainView();
         }
@@ -45,7 +49,7 @@ namespace Financier.Desktop
             e.Handled = true;
         }
 
-        private IServiceProvider Build()
+        private ServiceCollection BuildConnectionServiceProvider()
         {
             var serviceCollection = new ServiceCollection();
 
@@ -59,16 +63,35 @@ namespace Financier.Desktop
             serviceCollection.AddSingleton(loggerFactory);
             serviceCollection.AddLogging();
 
-            // We have to build a temporary service provider to get the connection string for the DbContext.
-            // Perhaps there is a better way.
-            serviceCollection.AddSingleton<IEnvironmentService, EnvironmentService>();
-            IEnvironmentService environmentService = 
-                serviceCollection.BuildServiceProvider().GetRequiredService<IEnvironmentService>();
-            string connectionString = environmentService.GetConnectionString();
+            // Financier.Desktop services
+            serviceCollection.AddSingleton<IMessageService, MessageService>();
+            serviceCollection.AddSingleton<IConnectionViewModelFactory, ConnectionViewModelFactory>();
+            serviceCollection.AddSingleton<IConnectionViewService, ConnectionViewService>();
 
-            serviceCollection.AddDbContext<FinancierDbContext>(
-                options => options.UseSqlServer(connectionString),
+            // This exposes a major flaw.  We need IViewService tobe registered for exception handling, 
+            // but as the ViewModelFactory takes an IServiceProvider, there will be missing depedencies
+            // at this point.  Also, any missing dependencies are encountered very late.
+            serviceCollection.AddSingleton<IViewModelFactory, ViewModelFactory>();
+            serviceCollection.AddSingleton<IViewService, ViewService>();
+
+            m_serviceProvider = serviceCollection.BuildServiceProvider();
+
+            return serviceCollection;
+        }
+
+        private void BuildFullServiceProvider(ServiceCollection serviceCollection, IConnection connection)
+        {
+            // TODO - we are assuming SqlServer
+            if(connection.Type == DatabaseType.SqlServer)
+            {
+                serviceCollection.AddDbContext<FinancierDbContext>(
+                options => options.UseSqlServer(connection.ConnectionString),
                 ServiceLifetime.Transient);
+            }
+            else if (connection.Type == DatabaseType.SqliteFile)
+            {
+                throw new NotImplementedException();
+            }
 
             // Financier.Core services
             serviceCollection.AddSingleton<IAccountService, AccountService>();
@@ -77,18 +100,12 @@ namespace Financier.Desktop
             serviceCollection.AddSingleton<IBudgetService, BudgetService>();
             serviceCollection.AddSingleton<ICurrencyService, CurrencyService>();
             serviceCollection.AddSingleton<ICurrencyExchangeService, FixerIOCurrencyExchangeService>();
+            serviceCollection.AddSingleton<IEnvironmentService, EnvironmentService>();
             serviceCollection.AddSingleton<IHttpClientFactory, HttpClientFactory>();
             serviceCollection.AddSingleton<ITransactionService, TransactionService>();
             serviceCollection.AddSingleton<ITransactionRelationshipService, TransactionRelationshipService>();
-            
-            // Financier.Desktop services
-            serviceCollection.AddSingleton<IMessageService, MessageService>();
-            serviceCollection.AddSingleton<IViewModelFactory, ViewModelFactory>();
-            serviceCollection.AddSingleton<IViewService, ViewService>();
 
-            IServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
-
-            return serviceProvider;
+            m_serviceProvider = serviceCollection.BuildServiceProvider();
         }
     }
 }
