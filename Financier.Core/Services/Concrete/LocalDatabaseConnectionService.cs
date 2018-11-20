@@ -5,27 +5,34 @@ namespace Financier.Services
 {
     public class LocalDatabaseConnectionService : IDatabaseConnectionService
     {
-        public void Create(DatabaseConnection connection)
+        private List<DatabaseConnection> m_databaseConnetions;
+
+        public LocalDatabaseConnectionService()
+        {
+            m_databaseConnetions = new List<DatabaseConnection>();
+        }
+
+        public void Create(DatabaseConnection databaseConnection)
         {
             throw new NotImplementedException();
         }
 
-        public void Delete(int budgetId)
+        public void Delete(int databaseConnectionId)
         {
             throw new NotImplementedException();
         }
 
-        public DatabaseConnection Get(int connectionId)
+        public DatabaseConnection Get(int databaseConnectionId)
         {
             throw new NotImplementedException();
         }
 
         public IEnumerable<DatabaseConnection> GetAll()
         {
-            throw new NotImplementedException();
+            return m_databaseConnetions;
         }
 
-        public void Update(DatabaseConnection connection)
+        public void Update(DatabaseConnection databaseConnection)
         {
             throw new NotImplementedException();
         }

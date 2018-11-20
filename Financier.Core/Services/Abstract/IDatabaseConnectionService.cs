@@ -4,10 +4,10 @@ namespace Financier.Services
 {
     public interface IDatabaseConnectionService
     {
-        void Create(DatabaseConnection connection);
-        void Delete(int budgetId);
-        DatabaseConnection Get(int connectionId);
+        void Create(DatabaseConnection databaseConnection);
+        void Delete(int databaseConnectionId);
+        DatabaseConnection Get(int databaseConnectionId);
         IEnumerable<DatabaseConnection> GetAll();
-        void Update(DatabaseConnection connection);
+        void Update(DatabaseConnection databaseConnection);
     }
 }

@@ -24,11 +24,13 @@ namespace Financier.Desktop
 
             ServiceCollection serviceCollection = BuildConnectionServiceProvider();
             IDatabaseConnectionViewService connectionViewService = m_serviceProvider.GetRequiredService<IDatabaseConnectionViewService>();
-            DatabaseConnection databaseConnection = connectionViewService.OpenDatabaseConnectionListView();
-
-            BuildFullServiceProvider(serviceCollection, databaseConnection);
-            IViewService viewService = m_serviceProvider.GetRequiredService<IViewService>();
-            viewService.OpenMainView();
+            DatabaseConnection databaseConnection;
+            if(connectionViewService.OpenDatabaseConnectionListView(out databaseConnection))
+            {
+                BuildFullServiceProvider(serviceCollection, databaseConnection);
+                IViewService viewService = m_serviceProvider.GetRequiredService<IViewService>();
+                viewService.OpenMainView();
+            }
         }
 
         private void App_DispatcherUnhandledException(

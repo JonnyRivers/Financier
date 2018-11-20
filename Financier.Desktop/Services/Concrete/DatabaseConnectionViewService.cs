@@ -1,4 +1,5 @@
-﻿using Financier.Services;
+﻿using Financier.Desktop.Views;
+using Financier.Services;
 using Microsoft.Extensions.Logging;
 
 namespace Financier.Desktop.Services
@@ -24,13 +25,21 @@ namespace Financier.Desktop.Services
             throw new System.NotImplementedException();
         }
 
-        public DatabaseConnection OpenDatabaseConnectionListView()
+        public bool OpenDatabaseConnectionListView(out DatabaseConnection databaseConnection)
         {
+            databaseConnection = null;
+
             var viewModel = m_viewModelFactory.CreateDatabaseConnectionListViewModel();
             var connectionWindow = new DatabaseConnectionListWindow(viewModel);
-            connectionWindow.ShowDialog();
+            bool? result = connectionWindow.ShowDialog();
 
-            return viewModel.SelectedDatabaseConnection;
+            if (result.HasValue && result.Value)
+            {
+                databaseConnection = viewModel.SelectedDatabaseConnection.ToDatabaseConnection();
+                return true;
+            }
+
+            return false;
         }
     }
 }

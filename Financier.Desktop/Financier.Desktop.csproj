@@ -204,7 +204,7 @@
     <Compile Include="Services\Abstract\IViewService.cs" />
     <Compile Include="Services\Concrete\DatabaseType.cs" />
     <Compile Include="Services\Concrete\MessageService.cs" />
-    <Compile Include="Services\Concrete\ConnectionViewModelFactory.cs" />
+    <Compile Include="Services\Concrete\DatabaseConnectionViewModelFactory.cs" />
     <Compile Include="Services\Concrete\ViewModelFactory.cs" />
     <Compile Include="Services\Concrete\DatabaseConnectionViewService.cs" />
     <Compile Include="Services\Concrete\ViewService.cs" />
@@ -219,6 +219,7 @@
     <Compile Include="ViewModels\Abstract\IBalanceSheetItemViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IBalanceSheetViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IBudgetDetailsViewModel.cs" />
+    <Compile Include="ViewModels\Abstract\IDatabaseConectionItemViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IBudgetItemViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IBudgetListViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IBudgetTransactionItemViewModel.cs" />
@@ -258,6 +259,7 @@
     <Compile Include="ViewModels\Concrete\BudgetCreateViewModel.cs" />
     <Compile Include="ViewModels\Concrete\BudgetDetailsBaseViewModel.cs" />
     <Compile Include="ViewModels\Concrete\BudgetEditViewModel.cs" />
+    <Compile Include="ViewModels\Concrete\DatabaseConnectionItemViewModel.cs" />
     <Compile Include="ViewModels\Concrete\BudgetItemViewModel.cs" />
     <Compile Include="ViewModels\Concrete\BudgetListViewModel.cs" />
     <Compile Include="ViewModels\Concrete\BudgetTransactionItemViewModel.cs" />
@@ -279,6 +281,9 @@
     <Compile Include="ViewModels\Model\BudgetTransactionType.cs" />
     <Compile Include="Views\BalanceSheetWindow.xaml.cs">
       <DependentUpon>BalanceSheetWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DatabaseConnectionListWindow.xaml.cs">
+      <DependentUpon>DatabaseConnectionListWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\UnhandledExceptionWindow.xaml.cs">
       <DependentUpon>UnhandledExceptionWindow.xaml</DependentUpon>
@@ -336,6 +341,10 @@
       <DependentUpon>TransactionDetailsWindow.xaml</DependentUpon>
     </Compile>
     <Page Include="Views\BalanceSheetWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\DatabaseConnectionListWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

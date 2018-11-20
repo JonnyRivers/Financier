@@ -1,5 +1,6 @@
 ﻿using System;
 using Financier.Desktop.ViewModels;
+using Financier.Services;
 using Microsoft.Extensions.Logging;
 
 namespace Financier.Desktop.Services
@@ -13,6 +14,11 @@ namespace Financier.Desktop.Services
         {
             m_logger = logger;
             m_serviceProvider = serviceProvider;
+        }
+
+        public IDatabaseConnectionItemViewModel CreateDatabaseConnectionItemViewModel(DatabaseConnection databaseConnection)
+        {
+            return m_serviceProvider.CreateInstance<DatabaseConnectionItemViewModel>(databaseConnection);
         }
 
         public IDatabaseConnectionListViewModel CreateDatabaseConnectionListViewModel()
