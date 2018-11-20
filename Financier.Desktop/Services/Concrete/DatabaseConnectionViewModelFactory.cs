@@ -16,6 +16,16 @@ namespace Financier.Desktop.Services
             m_serviceProvider = serviceProvider;
         }
 
+        public IDatabaseConnectionDetailsViewModel CreateDatabaseConnectionCreateViewModel()
+        {
+            return m_serviceProvider.CreateInstance<DatabaseConnectionCreateViewModel>();
+        }
+
+        public IDatabaseConnectionDetailsViewModel CreateDatabaseConnectionEditViewModel(int databaseConnectionId)
+        {
+            return m_serviceProvider.CreateInstance<DatabaseConnectionEditViewModel>(databaseConnectionId);
+        }
+
         public IDatabaseConnectionItemViewModel CreateDatabaseConnectionItemViewModel(DatabaseConnection databaseConnection)
         {
             return m_serviceProvider.CreateInstance<DatabaseConnectionItemViewModel>(databaseConnection);

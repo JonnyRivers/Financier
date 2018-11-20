@@ -77,27 +77,24 @@ namespace Financier.Desktop.ViewModels
 
         private void CreateExecute(object obj)
         {
-            //Budget newBudget;
-            //if (m_viewService.OpenBudgetCreateView(out newBudget))
-            //{
-            //    Currency primaryCurrency = m_currencyService.GetPrimary();
-            //    IBudgetItemViewModel newBudgetViewModel =
-            //        m_viewModelFactory.CreateBudgetItemViewModel(newBudget, primaryCurrency);
-            //    Budgets.Add(newBudgetViewModel);
-            //}
+            DatabaseConnection databaseConnection;
+            if(m_viewService.OpenDatabaseConnectionCreateView(out databaseConnection))
+            {
+                IDatabaseConnectionItemViewModel newDatabaseConnectionViewModel =
+                    m_viewModelFactory.CreateDatabaseConnectionItemViewModel(databaseConnection);
+                DatabaseConnections.Add(newDatabaseConnectionViewModel);
+            }
         }
 
         private void EditExecute(object obj)
         {
-            //Budget updatedBudget;
-            //if (m_viewService.OpenBudgetEditView(SelectedBudget.BudgetId, out updatedBudget))
-            //{
-            //    Currency primaryCurrency = m_currencyService.GetPrimary();
-
-            //    Budgets.Remove(SelectedBudget);
-            //    SelectedBudget = m_viewModelFactory.CreateBudgetItemViewModel(updatedBudget, primaryCurrency);
-            //    Budgets.Add(SelectedBudget);
-            //}
+            DatabaseConnection databaseConnection;
+            if (m_viewService.OpenDatabaseConnectionEditView(SelectedDatabaseConnection.DatabaseConnectionId, out databaseConnection))
+            {
+                DatabaseConnections.Remove(SelectedDatabaseConnection);
+                SelectedDatabaseConnection = m_viewModelFactory.CreateDatabaseConnectionItemViewModel(databaseConnection);
+                DatabaseConnections.Add(SelectedDatabaseConnection);
+            }
         }
 
         private bool EditCanExecute(object obj)
@@ -107,14 +104,14 @@ namespace Financier.Desktop.ViewModels
 
         private void DeleteExecute(object obj)
         {
-            //if (m_viewService.OpenBudgetDeleteConfirmationView())
-            //{
-            //    // Update model
-            //    m_budgetService.Delete(SelectedBudget.BudgetId);
+            if (m_viewService.OpenDatabaseConnectionDeleteConfirmationView())
+            {
+                // Update model
+                m_databaseConnectionService.Delete(SelectedDatabaseConnection.DatabaseConnectionId);
 
-            //    // Update view model
-            //    Budgets.Remove(SelectedBudget);
-            //}
+                // Update view model
+                DatabaseConnections.Remove(SelectedDatabaseConnection);
+            }
         }
 
         private bool DeleteCanExecute(object obj)

@@ -1,6 +1,8 @@
-﻿using Financier.Desktop.Views;
+﻿using Financier.Desktop.ViewModels;
+using Financier.Desktop.Views;
 using Financier.Services;
 using Microsoft.Extensions.Logging;
+using System.Windows;
 
 namespace Financier.Desktop.Services
 {
@@ -17,12 +19,41 @@ namespace Financier.Desktop.Services
 
         public bool OpenDatabaseConnectionCreateView(out DatabaseConnection newDatabaseConnection)
         {
-            throw new System.NotImplementedException();
+            newDatabaseConnection = null;
+
+            IDatabaseConnectionDetailsViewModel viewModel = m_viewModelFactory.CreateDatabaseConnectionCreateViewModel();
+            var window = new DatabaseConnectionDetailsWindow(viewModel);
+            bool? result = window.ShowDialog();
+
+            if (result.HasValue && result.Value)
+            {
+                newDatabaseConnection = viewModel.ToDatabaseConnection();
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool OpenDatabaseConnectionDeleteConfirmationView()
+        {
+            return OpenDeleteConfirmationView("database connection");
         }
 
         public bool OpenDatabaseConnectionEditView(int databaseConnectionId, out DatabaseConnection updatedDatabaseConnection)
         {
-            throw new System.NotImplementedException();
+            updatedDatabaseConnection = null;
+
+            IDatabaseConnectionDetailsViewModel viewModel = m_viewModelFactory.CreateDatabaseConnectionEditViewModel(databaseConnectionId);
+            var window = new DatabaseConnectionDetailsWindow(viewModel);
+            bool? result = window.ShowDialog();
+
+            if (result.HasValue && result.Value)
+            {
+                updatedDatabaseConnection = viewModel.ToDatabaseConnection();
+                return true;
+            }
+
+            return false;
         }
 
         public bool OpenDatabaseConnectionListView(out DatabaseConnection databaseConnection)
@@ -40,6 +71,18 @@ namespace Financier.Desktop.Services
             }
 
             return false;
+        }
+
+        // TODO - this is duplicated with ViewService
+        private bool OpenDeleteConfirmationView(string context)
+        {
+            MessageBoxResult confirmResult = MessageBox.Show(
+               $"Are you sure you want to delete this {context}?  This cannot be undone.",
+               $"Really delete {context}?",
+               MessageBoxButton.YesNo
+            );
+
+            return (confirmResult == MessageBoxResult.Yes);
         }
     }
 }

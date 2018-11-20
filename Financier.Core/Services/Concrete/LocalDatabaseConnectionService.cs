@@ -21,17 +21,27 @@ namespace Financier.Services
             m_path = Path.Combine(financierDataDirectory, "DatabaseConnections.json");
 
             Load();
-            Save();
         }
 
         public void Create(DatabaseConnection databaseConnection)
         {
-            throw new NotImplementedException();
+            databaseConnection.DatabaseConnectionId = 1;
+            if (m_databaseConnections.Any())
+            {
+                databaseConnection.DatabaseConnectionId = m_databaseConnections.Max(dbc => dbc.DatabaseConnectionId) + 1;
+            }
+
+            m_databaseConnections.Add(databaseConnection);
+
+            Save();
         }
 
         public void Delete(int databaseConnectionId)
         {
-            throw new NotImplementedException();
+            DatabaseConnection databaseConnection = Get(databaseConnectionId);
+            m_databaseConnections.Remove(databaseConnection);
+
+            Save();
         }
 
         public DatabaseConnection Get(int databaseConnectionId)
@@ -46,7 +56,18 @@ namespace Financier.Services
 
         public void Update(DatabaseConnection databaseConnection)
         {
-            throw new NotImplementedException();
+            DatabaseConnection existingDatabaseConnection = Get(databaseConnection.DatabaseConnectionId);
+
+            if(existingDatabaseConnection == null)
+                throw new InvalidOperationException($"Database connection with id {databaseConnection.DatabaseConnectionId} does not exist");
+
+            existingDatabaseConnection.Database = databaseConnection.Database;
+            existingDatabaseConnection.Name = databaseConnection.Name;
+            existingDatabaseConnection.Server = databaseConnection.Server;
+            existingDatabaseConnection.Type = databaseConnection.Type;
+            existingDatabaseConnection.UserId = databaseConnection.UserId;
+
+            Save();
         }
 
         private void Load()

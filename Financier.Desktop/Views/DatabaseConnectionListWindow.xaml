@@ -28,9 +28,11 @@
                   ItemsSource="{Binding Source={StaticResource DatabaseConnectionsByName}}">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Name" Width="220" DisplayMemberBinding="{Binding Name}"/>
+                    <GridViewColumn Header="Name" Width="140" DisplayMemberBinding="{Binding Name}"/>
                     <GridViewColumn Header="Type" Width="80" DisplayMemberBinding="{Binding Type}"/>
-                    <GridViewColumn Header="Id" Width="40" DisplayMemberBinding="{Binding Id}"/>
+                    <GridViewColumn Header="Server" Width="220" DisplayMemberBinding="{Binding Server}"/>
+                    <GridViewColumn Header="Database" Width="220" DisplayMemberBinding="{Binding Database}"/>
+                    <GridViewColumn Header="UserId" Width="120" DisplayMemberBinding="{Binding UserId}"/>
                 </GridView>
             </ListView.View>
         </ListView>

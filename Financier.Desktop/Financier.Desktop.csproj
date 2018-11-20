@@ -219,7 +219,8 @@
     <Compile Include="ViewModels\Abstract\IBalanceSheetItemViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IBalanceSheetViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IBudgetDetailsViewModel.cs" />
-    <Compile Include="ViewModels\Abstract\IDatabaseConectionItemViewModel.cs" />
+    <Compile Include="ViewModels\Abstract\IDatabaseConnectionItemViewModel.cs" />
+    <Compile Include="ViewModels\Abstract\IDatabaseConectionDetailsViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IBudgetItemViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IBudgetListViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IBudgetTransactionItemViewModel.cs" />
@@ -232,6 +233,8 @@
     <Compile Include="ViewModels\Abstract\IAccountTransactionListViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IAccountTransactionItemViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IUnhandledExceptionViewModel.cs" />
+    <Compile Include="ViewModels\Concrete\DatabaseConnectionEditViewModel.cs" />
+    <Compile Include="ViewModels\Concrete\DatabaseConnectionCreateViewModel.cs" />
     <Compile Include="ViewModels\Concrete\AccountCreateViewModel.cs" />
     <Compile Include="ViewModels\Concrete\AccountDetailsBaseViewModel.cs" />
     <Compile Include="ViewModels\Concrete\AccountEditViewModel.cs" />
@@ -260,6 +263,7 @@
     <Compile Include="ViewModels\Concrete\BudgetDetailsBaseViewModel.cs" />
     <Compile Include="ViewModels\Concrete\BudgetEditViewModel.cs" />
     <Compile Include="ViewModels\Concrete\DatabaseConnectionItemViewModel.cs" />
+    <Compile Include="ViewModels\Concrete\DatabaseConnectionDetailsBaseViewModel.cs" />
     <Compile Include="ViewModels\Concrete\BudgetItemViewModel.cs" />
     <Compile Include="ViewModels\Concrete\BudgetListViewModel.cs" />
     <Compile Include="ViewModels\Concrete\BudgetTransactionItemViewModel.cs" />
@@ -279,6 +283,9 @@
     <Compile Include="ViewModels\Concrete\TransactionListViewModel.cs" />
     <Compile Include="ViewModels\Concrete\TransactionItemViewModel.cs" />
     <Compile Include="ViewModels\Model\BudgetTransactionType.cs" />
+    <Compile Include="Views\DatabaseConnectionDetailsWindow.xaml.cs">
+      <DependentUpon>DatabaseConnectionDetailsWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\BalanceSheetWindow.xaml.cs">
       <DependentUpon>BalanceSheetWindow.xaml</DependentUpon>
     </Compile>
@@ -340,6 +347,10 @@
     <Compile Include="Views\TransactionDetailsWindow.xaml.cs">
       <DependentUpon>TransactionDetailsWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="Views\DatabaseConnectionDetailsWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\BalanceSheetWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
