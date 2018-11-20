@@ -71,9 +71,19 @@ namespace Financier.Desktop.ViewModels
             }
         }
 
+        public ICommand ConnectCommand => new RelayCommand(ConnectExecute, ConnectCanExecute);
         public ICommand CreateCommand => new RelayCommand(CreateExecute);
         public ICommand EditCommand => new RelayCommand(EditExecute, EditCanExecute);
         public ICommand DeleteCommand => new RelayCommand(DeleteExecute, DeleteCanExecute);
+
+        private void ConnectExecute(object obj)
+        {
+        }
+
+        private bool ConnectCanExecute(object obj)
+        {
+            return (SelectedDatabaseConnection != null);
+        }
 
         private void CreateExecute(object obj)
         {

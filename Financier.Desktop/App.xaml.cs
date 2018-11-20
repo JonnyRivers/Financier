@@ -86,17 +86,18 @@ namespace Financier.Desktop
 
         private void BuildFullServiceProvider(ServiceCollection serviceCollection, DatabaseConnection databaseConnection)
         {
-            // TODO - we are assuming SqlServer
             string connectionString = databaseConnection.BuildConnectionString();
             if (databaseConnection.Type == DatabaseConnectionType.SqlServer)
             {
                 serviceCollection.AddDbContext<FinancierDbContext>(
-                options => options.UseSqlServer(connectionString),
-                ServiceLifetime.Transient);
+                    options => options.UseSqlServer(connectionString),
+                    ServiceLifetime.Transient);
             }
             else if (databaseConnection.Type == DatabaseConnectionType.SqlLiteFile)
             {
-                throw new NotImplementedException();
+                serviceCollection.AddDbContext<FinancierDbContext>(
+                    options => options.UseSqlite(connectionString),
+                    ServiceLifetime.Transient);
             }
 
             // Financier.Core services

@@ -14,5 +14,10 @@ namespace Financier.Desktop.Views
 
             DataContext = databaseConnectionListViewModel;
         }
+
+        private void OnConnect(object sender, RoutedEventArgs e)
+        {
+            DialogResult = true;
+        }
     }
 }

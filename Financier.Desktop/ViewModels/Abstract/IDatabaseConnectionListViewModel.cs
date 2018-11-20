@@ -1,7 +1,14 @@
-﻿namespace Financier.Desktop.ViewModels
+﻿using System.Windows.Input;
+
+namespace Financier.Desktop.ViewModels
 {
     public interface IDatabaseConnectionListViewModel
     {
         IDatabaseConnectionItemViewModel SelectedDatabaseConnection { get; }
+
+        ICommand ConnectCommand { get; }
+        ICommand CreateCommand { get; }
+        ICommand EditCommand { get; }
+        ICommand DeleteCommand { get; }
     }
 }

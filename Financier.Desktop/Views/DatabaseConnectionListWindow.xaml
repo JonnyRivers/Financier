@@ -16,6 +16,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <StackPanel Margin="5" Grid.Row="0" Orientation="Horizontal">
             <TextBlock Margin="5">Actions:</TextBlock>
@@ -36,5 +37,6 @@
                 </GridView>
             </ListView.View>
         </ListView>
+        <Button Margin="5" Grid.Row="2" Click="OnConnect" Command="{Binding ConnectCommand}">Connect</Button>
     </Grid>
 </Window>
