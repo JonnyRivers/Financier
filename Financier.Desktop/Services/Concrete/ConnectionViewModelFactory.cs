@@ -4,20 +4,20 @@ using Microsoft.Extensions.Logging;
 
 namespace Financier.Desktop.Services
 {
-    public class ConnectionViewModelFactory : IConnectionViewModelFactory
+    public class DatabaseConnectionViewModelFactory : IDatabaseConnectionViewModelFactory
     {
-        private readonly ILogger<ConnectionViewModelFactory> m_logger;
-        private readonly IServiceProvider m_serviceProvider;
+        private readonly ILogger<DatabaseConnectionViewModelFactory> m_logger;
+        private readonly IServiceProvider m_serviceProvider;// this is dumb
 
-        public ConnectionViewModelFactory(ILogger<ConnectionViewModelFactory> logger, IServiceProvider serviceProvider)
+        public DatabaseConnectionViewModelFactory(ILogger<DatabaseConnectionViewModelFactory> logger, IServiceProvider serviceProvider)
         {
             m_logger = logger;
             m_serviceProvider = serviceProvider;
         }
 
-        public IConnectionWindowViewModel CreateConnectionWindowViewModel()
+        public IDatabaseConnectionListViewModel CreateDatabaseConnectionListViewModel()
         {
-            return m_serviceProvider.CreateInstance<ConnectionWindowViewModel>();
+            return m_serviceProvider.CreateInstance<DatabaseConnectionListViewModel>();
         }
     }
 }

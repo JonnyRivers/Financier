@@ -23,10 +23,10 @@ namespace Financier.Desktop
             DispatcherUnhandledException += App_DispatcherUnhandledException;
 
             ServiceCollection serviceCollection = BuildConnectionServiceProvider();
-            IConnectionViewService connectionViewService = m_serviceProvider.GetRequiredService<IConnectionViewService>();
-            IConnection connection = connectionViewService.OpenConnectionView();
+            IDatabaseConnectionViewService connectionViewService = m_serviceProvider.GetRequiredService<IDatabaseConnectionViewService>();
+            DatabaseConnection databaseConnection = connectionViewService.OpenDatabaseConnectionListView();
 
-            BuildFullServiceProvider(serviceCollection, connection);
+            BuildFullServiceProvider(serviceCollection, databaseConnection);
             IViewService viewService = m_serviceProvider.GetRequiredService<IViewService>();
             viewService.OpenMainView();
         }
@@ -63,10 +63,13 @@ namespace Financier.Desktop
             serviceCollection.AddSingleton(loggerFactory);
             serviceCollection.AddLogging();
 
+            // Financier.Core services
+            serviceCollection.AddSingleton<IDatabaseConnectionService, LocalDatabaseConnectionService>();
+
             // Financier.Desktop services
-            serviceCollection.AddSingleton<IMessageService, MessageService>();
-            serviceCollection.AddSingleton<IConnectionViewModelFactory, ConnectionViewModelFactory>();
-            serviceCollection.AddSingleton<IConnectionViewService, ConnectionViewService>();
+            serviceCollection.AddSingleton<IMessageService, MessageService>();// unused
+            serviceCollection.AddSingleton<IDatabaseConnectionViewModelFactory, DatabaseConnectionViewModelFactory>();
+            serviceCollection.AddSingleton<IDatabaseConnectionViewService, DatabaseConnectionViewService>();
 
             // This exposes a major flaw.  We need IViewService tobe registered for exception handling, 
             // but as the ViewModelFactory takes an IServiceProvider, there will be missing depedencies
@@ -79,16 +82,17 @@ namespace Financier.Desktop
             return serviceCollection;
         }
 
-        private void BuildFullServiceProvider(ServiceCollection serviceCollection, IConnection connection)
+        private void BuildFullServiceProvider(ServiceCollection serviceCollection, DatabaseConnection databaseConnection)
         {
             // TODO - we are assuming SqlServer
-            if(connection.Type == DatabaseType.SqlServer)
+            string connectionString = databaseConnection.BuildConnectionString();
+            if (databaseConnection.Type == DatabaseConnectionType.SqlServer)
             {
                 serviceCollection.AddDbContext<FinancierDbContext>(
-                options => options.UseSqlServer(connection.ConnectionString),
+                options => options.UseSqlServer(connectionString),
                 ServiceLifetime.Transient);
             }
-            else if (connection.Type == DatabaseType.SqliteFile)
+            else if (databaseConnection.Type == DatabaseConnectionType.SqlLiteFile)
             {
                 throw new NotImplementedException();
             }
