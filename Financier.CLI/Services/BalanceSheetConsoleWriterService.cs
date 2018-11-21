@@ -20,8 +20,6 @@ namespace Financier.CLI.Services
 
         public void Write(BalanceSheet balanceSheet, DateTime at)
         {
-            Console.WriteLine($"Connnected to {m_environmentService.GetConnectionSummary()}");
-            Console.WriteLine();
             Console.WriteLine($"Balance sheet at {at}");
             Console.WriteLine();
 

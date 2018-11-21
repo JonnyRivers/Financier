@@ -5,56 +5,13 @@ namespace Financier.Services
 {
     public class EnvironmentService : IEnvironmentService
     {
-        private const string DatabaseConnectionStringEnvironmentVariableName = "FINANCIER_DBCS";
         private const string FixerApiKeyEnvironmentVariableName = "FIXER_API";
-
-        private const string DefaultStringValue = "???";
-        private const string ServerKey = "Server";
-        private const string DatabaseKey = "Database";
 
         private ILogger<EnvironmentService> m_logger;
 
         public EnvironmentService(ILogger<EnvironmentService> logger)
         {
             m_logger = logger;
-        }
-
-        public string GetConnectionString()
-        {
-            m_logger.LogTrace("IN EnvironmentService.GetConnectionString()");
-
-            string connectionString = Environment.GetEnvironmentVariable(DatabaseConnectionStringEnvironmentVariableName);
-
-            if (string.IsNullOrEmpty(connectionString))
-            {
-                throw new ApplicationException(
-                    "Unable to get database connection from environement variable " +
-                    $"'{DatabaseConnectionStringEnvironmentVariableName}'");
-            }
-
-            return connectionString;
-        }
-
-        public string GetConnectionSummary()
-        {
-            string connectionString = GetConnectionString();
-            
-            string serverName = DefaultStringValue;
-            string databaseName = DefaultStringValue;
-            string[] connectionStringTokens = connectionString.Split(';');
-            foreach (string connectionStringToken in connectionStringTokens)
-            {
-                string[] tokenPair = connectionStringToken.Split('=');
-                if (tokenPair.Length != 2)
-                    continue;
-
-                if (tokenPair[0] == ServerKey)
-                    serverName = tokenPair[1];
-                else if (tokenPair[0] == DatabaseKey)
-                    databaseName = tokenPair[1];
-            }
-
-            return $"{databaseName} at {serverName}";
         }
 
         public string GetFixerKey()

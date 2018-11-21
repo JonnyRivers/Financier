@@ -17,16 +17,20 @@ namespace Financier.CLI.Commands
             serviceCollection.AddSingleton(loggerFactory);
             serviceCollection.AddLogging();
 
+            // **********************************************************************
+            // This is broken and probably needs to be replaced by command line login
+            // **********************************************************************
+
             // We have to build a temporary service provider to get the connection string for the DbContext.
             // Perhaps there is a better way.
-            serviceCollection.AddSingleton<IEnvironmentService, EnvironmentService>();
-            IEnvironmentService environmentService =
-                serviceCollection.BuildServiceProvider().GetRequiredService<IEnvironmentService>();
-            string connectionString = environmentService.GetConnectionString();
+            //serviceCollection.AddSingleton<IEnvironmentService, EnvironmentService>();
+            //IEnvironmentService environmentService =
+            //    serviceCollection.BuildServiceProvider().GetRequiredService<IEnvironmentService>();
+            //string connectionString = environmentService.GetConnectionString();
 
-            serviceCollection.AddDbContext<FinancierDbContext>(
-                options => options.UseSqlServer(connectionString),
-                ServiceLifetime.Transient);
+            //serviceCollection.AddDbContext<FinancierDbContext>(
+            //    options => options.UseSqlServer(connectionString),
+            //    ServiceLifetime.Transient);
 
             return serviceCollection;
         }

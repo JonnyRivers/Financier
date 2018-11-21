@@ -20,8 +20,6 @@ namespace Financier.CLI.Services
 
         public void Write(CashflowStatement cashflowStatement)
         {
-            Console.WriteLine($"Connnected to {m_environmentService.GetConnectionSummary()}");
-            Console.WriteLine();
             Console.WriteLine($"Cashflow Statement from {cashflowStatement.StartAt} to {cashflowStatement.EndAt}");
             Console.WriteLine();
             foreach(CashflowAccount account in cashflowStatement.Accounts.OrderBy(a => a.Name))

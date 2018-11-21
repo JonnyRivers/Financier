@@ -73,7 +73,7 @@ namespace Financier.Desktop
             serviceCollection.AddSingleton<IDatabaseConnectionViewModelFactory, DatabaseConnectionViewModelFactory>();
             serviceCollection.AddSingleton<IDatabaseConnectionViewService, DatabaseConnectionViewService>();
 
-            // This exposes a major flaw.  We need IViewService tobe registered for exception handling, 
+            // This exposes a major flaw.  We need IViewService to be registered for exception handling, 
             // but as the ViewModelFactory takes an IServiceProvider, there will be missing depedencies
             // at this point.  Also, any missing dependencies are encountered very late.
             serviceCollection.AddSingleton<IViewModelFactory, ViewModelFactory>();
