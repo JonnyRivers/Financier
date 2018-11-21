@@ -15,7 +15,7 @@ namespace Financier.Desktop.ViewModels
             m_logger = logger;
 
             Name = "New Connection";
-            SelectedType = DatabaseConnectionType.SqlLiteFile;
+            SelectedType = DatabaseConnectionType.SqlServerFile;
             Server = String.Empty;
             Database = String.Empty;
             UserId = String.Empty;

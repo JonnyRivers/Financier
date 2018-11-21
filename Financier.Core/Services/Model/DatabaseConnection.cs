@@ -19,7 +19,7 @@ namespace Financier.Services
                 return $"Server={Server};Database={Database};Persist Security Info=False;User ID={UserId};" + 
                     "MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
             }
-            else if (Type == DatabaseConnectionType.SqlLiteFile)
+            else if (Type == DatabaseConnectionType.SqlServerFile)
             {
                 return $"Server=(localdb)\\mssqllocaldb;Database={Database};Trusted_Connection=True;";
             }

@@ -22,6 +22,8 @@ namespace Financier.Desktop
 
             DispatcherUnhandledException += App_DispatcherUnhandledException;
 
+            this.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+
             ServiceCollection serviceCollection = BuildConnectionServiceProvider();
             IDatabaseConnectionViewService connectionViewService = m_serviceProvider.GetRequiredService<IDatabaseConnectionViewService>();
             DatabaseConnection databaseConnection;
@@ -29,6 +31,7 @@ namespace Financier.Desktop
             {
                 BuildFullServiceProvider(serviceCollection, databaseConnection);
                 IViewService viewService = m_serviceProvider.GetRequiredService<IViewService>();
+                this.ShutdownMode = ShutdownMode.OnLastWindowClose;
                 viewService.OpenMainView();
             }
         }
@@ -93,11 +96,15 @@ namespace Financier.Desktop
                     options => options.UseSqlServer(connectionString),
                     ServiceLifetime.Transient);
             }
-            else if (databaseConnection.Type == DatabaseConnectionType.SqlLiteFile)
+            else if (databaseConnection.Type == DatabaseConnectionType.SqlServerFile)
             {
                 serviceCollection.AddDbContext<FinancierDbContext>(
-                    options => options.UseSqlite(connectionString),
+                    options => options.UseSqlServer(connectionString),
                     ServiceLifetime.Transient);
+            }
+            else
+            {
+                throw new NotImplementedException();
             }
 
             // Financier.Core services

@@ -3,6 +3,7 @@
     public enum DatabaseConnectionType
     {
         SqlLiteFile,
+        SqlServerFile,
         SqlServer
     }
 }
