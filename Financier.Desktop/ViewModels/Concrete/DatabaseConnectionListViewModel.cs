@@ -2,6 +2,7 @@
 using Financier.Desktop.Services;
 using Financier.Services;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -18,6 +19,7 @@ namespace Financier.Desktop.ViewModels
 
         private ObservableCollection<IDatabaseConnectionItemViewModel> m_databaseConnections;
         private IDatabaseConnectionItemViewModel m_selectedDatabaseConnection;
+        private string m_password;
 
         public DatabaseConnectionListViewModel(
             ILogger<DatabaseConnectionListViewModel> logger,
@@ -29,6 +31,8 @@ namespace Financier.Desktop.ViewModels
             m_databaseConnectionService = databaseConnectionService;
             m_viewModelFactory = viewModelFactory;
             m_viewService = viewService;
+
+            m_password = String.Empty;
 
             PopulateDatabaseConnections();
         }
@@ -71,6 +75,11 @@ namespace Financier.Desktop.ViewModels
             }
         }
 
+        public string Password
+        {
+            get { return m_password; }
+        }
+
         public ICommand ConnectCommand => new RelayCommand(ConnectExecute, ConnectCanExecute);
         public ICommand CreateCommand => new RelayCommand(CreateExecute);
         public ICommand EditCommand => new RelayCommand(EditExecute, EditCanExecute);
@@ -78,6 +87,10 @@ namespace Financier.Desktop.ViewModels
 
         private void ConnectExecute(object obj)
         {
+            if (!String.IsNullOrWhiteSpace(SelectedDatabaseConnection.UserId))
+            {
+                m_viewService.OpenDatabaseConnectionPasswordView(SelectedDatabaseConnection.UserId, out m_password);
+            }
         }
 
         private bool ConnectCanExecute(object obj)

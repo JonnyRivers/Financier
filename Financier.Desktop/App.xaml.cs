@@ -28,14 +28,10 @@ namespace Financier.Desktop
             ServiceCollection serviceCollection = BuildConnectionServiceProvider();
             IDatabaseConnectionViewService connectionViewService = m_serviceProvider.GetRequiredService<IDatabaseConnectionViewService>();
             DatabaseConnection databaseConnection;
-            if(connectionViewService.OpenDatabaseConnectionListView(out databaseConnection))
+            string password;
+            if(connectionViewService.OpenDatabaseConnectionListView(out databaseConnection, out password))
             {
-                if(!String.IsNullOrWhiteSpace(databaseConnection.UserId))
-                {
-                    // TODO - Show the password screen & verify credentials
-                }
-
-                BuildFullServiceProvider(serviceCollection, databaseConnection);
+                BuildFullServiceProvider(serviceCollection, databaseConnection, password);
                 IViewService viewService = m_serviceProvider.GetRequiredService<IViewService>();
                 this.ShutdownMode = ShutdownMode.OnLastWindowClose;
                 viewService.OpenMainView();
@@ -93,9 +89,13 @@ namespace Financier.Desktop
             return serviceCollection;
         }
 
-        private void BuildFullServiceProvider(ServiceCollection serviceCollection, DatabaseConnection databaseConnection)
+        private void BuildFullServiceProvider(
+            ServiceCollection serviceCollection, 
+            DatabaseConnection databaseConnection,
+            string password)
         {
-            string connectionString = databaseConnection.BuildConnectionString();
+            string connectionString = databaseConnection.BuildConnectionString(password);
+            // TODO - verify connection
             if (databaseConnection.Type == DatabaseConnectionType.SqlServerAzure ||
                 databaseConnection.Type == DatabaseConnectionType.SqlServerLocalDB)
             {

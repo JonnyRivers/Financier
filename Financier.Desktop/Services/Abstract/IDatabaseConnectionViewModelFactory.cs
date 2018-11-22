@@ -9,5 +9,6 @@ namespace Financier.Desktop.Services
         IDatabaseConnectionDetailsViewModel CreateDatabaseConnectionEditViewModel(int databaseConnectionId);
         IDatabaseConnectionItemViewModel CreateDatabaseConnectionItemViewModel(DatabaseConnection databaseConnection);
         IDatabaseConnectionListViewModel CreateDatabaseConnectionListViewModel();
+        IDatabaseConnectionPasswordViewModel CreateDatabaseConnectionPasswordViewModel(string userId);
     }
 }

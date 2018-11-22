@@ -56,9 +56,10 @@ namespace Financier.Desktop.Services
             return false;
         }
 
-        public bool OpenDatabaseConnectionListView(out DatabaseConnection databaseConnection)
+        public bool OpenDatabaseConnectionListView(out DatabaseConnection databaseConnection, out string password)
         {
             databaseConnection = null;
+            password = string.Empty;
 
             var viewModel = m_viewModelFactory.CreateDatabaseConnectionListViewModel();
             var connectionWindow = new DatabaseConnectionListWindow(viewModel);
@@ -67,6 +68,24 @@ namespace Financier.Desktop.Services
             if (result.HasValue && result.Value)
             {
                 databaseConnection = viewModel.SelectedDatabaseConnection.ToDatabaseConnection();
+                password = viewModel.Password;
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool OpenDatabaseConnectionPasswordView(string userId, out string password)
+        {
+            password = null;
+
+            var viewModel = m_viewModelFactory.CreateDatabaseConnectionPasswordViewModel(userId);
+            var passwordWindow = new DatabaseConnectionPasswordWindow(viewModel);
+            bool? result = passwordWindow.ShowDialog();
+
+            if (result.HasValue && result.Value)
+            {
+                password = viewModel.Password;
                 return true;
             }
 

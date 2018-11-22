@@ -35,5 +35,10 @@ namespace Financier.Desktop.Services
         {
             return m_serviceProvider.CreateInstance<DatabaseConnectionListViewModel>();
         }
+
+        public IDatabaseConnectionPasswordViewModel CreateDatabaseConnectionPasswordViewModel(string userId)
+        {
+            return m_serviceProvider.CreateInstance<DatabaseConnectionPasswordViewModel>(userId);
+        }
     }
 }
