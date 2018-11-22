@@ -1,9 +1,12 @@
-﻿namespace Financier.Services
+﻿using System.ComponentModel;
+
+namespace Financier.Services
 {
     public enum DatabaseConnectionType
     {
-        SqlLiteFile,
-        SqlServerFile,
-        SqlServer
+        [Description("SQL Server Express LocalDB")]
+        SqlServerLocalDB,
+        [Description("Azure Hosted SQL Server Instance")]
+        SqlServerAzure
     }
 }

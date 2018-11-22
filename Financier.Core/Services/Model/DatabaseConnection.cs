@@ -14,14 +14,14 @@ namespace Financier.Services
 
         public string BuildConnectionString()
         {
-            if(Type == DatabaseConnectionType.SqlServer)
+            if(Type == DatabaseConnectionType.SqlServerAzure)
             {
                 return $"Server={Server};Database={Database};Persist Security Info=False;User ID={UserId};" + 
                     "MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
             }
-            else if (Type == DatabaseConnectionType.SqlServerFile)
+            else if (Type == DatabaseConnectionType.SqlServerLocalDB)
             {
-                return $"Server=(localdb)\\mssqllocaldb;Database={Database};Trusted_Connection=True;";
+                return $"Server={Server};Database={Database};Trusted_Connection=True;";
             }
 
             throw new NotImplementedException();

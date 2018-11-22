@@ -22,6 +22,7 @@ namespace Financier.Desktop
 
             DispatcherUnhandledException += App_DispatcherUnhandledException;
 
+            // TODO - this is a bit goofy
             this.ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
             ServiceCollection serviceCollection = BuildConnectionServiceProvider();
@@ -29,6 +30,11 @@ namespace Financier.Desktop
             DatabaseConnection databaseConnection;
             if(connectionViewService.OpenDatabaseConnectionListView(out databaseConnection))
             {
+                if(!String.IsNullOrWhiteSpace(databaseConnection.UserId))
+                {
+                    // TODO - Show the password screen & verify credentials
+                }
+
                 BuildFullServiceProvider(serviceCollection, databaseConnection);
                 IViewService viewService = m_serviceProvider.GetRequiredService<IViewService>();
                 this.ShutdownMode = ShutdownMode.OnLastWindowClose;
@@ -90,13 +96,8 @@ namespace Financier.Desktop
         private void BuildFullServiceProvider(ServiceCollection serviceCollection, DatabaseConnection databaseConnection)
         {
             string connectionString = databaseConnection.BuildConnectionString();
-            if (databaseConnection.Type == DatabaseConnectionType.SqlServer)
-            {
-                serviceCollection.AddDbContext<FinancierDbContext>(
-                    options => options.UseSqlServer(connectionString),
-                    ServiceLifetime.Transient);
-            }
-            else if (databaseConnection.Type == DatabaseConnectionType.SqlServerFile)
+            if (databaseConnection.Type == DatabaseConnectionType.SqlServerAzure ||
+                databaseConnection.Type == DatabaseConnectionType.SqlServerLocalDB)
             {
                 serviceCollection.AddDbContext<FinancierDbContext>(
                     options => options.UseSqlServer(connectionString),
