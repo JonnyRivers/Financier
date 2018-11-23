@@ -29,6 +29,8 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -53,23 +55,23 @@
     <ApplicationIcon>Resources\favicon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.EntityFrameworkCore, Version=2.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.EntityFrameworkCore.2.1.1\lib\netstandard2.0\Microsoft.EntityFrameworkCore.dll</HintPath>
+    <Reference Include="Microsoft.EntityFrameworkCore, Version=2.1.4.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.EntityFrameworkCore.2.1.4\lib\netstandard2.0\Microsoft.EntityFrameworkCore.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.EntityFrameworkCore.Abstractions, Version=2.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.EntityFrameworkCore.Abstractions.2.1.1\lib\netstandard2.0\Microsoft.EntityFrameworkCore.Abstractions.dll</HintPath>
+    <Reference Include="Microsoft.EntityFrameworkCore.Abstractions, Version=2.1.4.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.EntityFrameworkCore.Abstractions.2.1.4\lib\netstandard2.0\Microsoft.EntityFrameworkCore.Abstractions.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.EntityFrameworkCore.Relational, Version=2.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.EntityFrameworkCore.Relational.2.1.1\lib\netstandard2.0\Microsoft.EntityFrameworkCore.Relational.dll</HintPath>
+    <Reference Include="Microsoft.EntityFrameworkCore.Relational, Version=2.1.4.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.EntityFrameworkCore.Relational.2.1.4\lib\netstandard2.0\Microsoft.EntityFrameworkCore.Relational.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.EntityFrameworkCore.SqlServer, Version=2.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.EntityFrameworkCore.SqlServer.2.1.1\lib\netstandard2.0\Microsoft.EntityFrameworkCore.SqlServer.dll</HintPath>
+    <Reference Include="Microsoft.EntityFrameworkCore.SqlServer, Version=2.1.4.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.EntityFrameworkCore.SqlServer.2.1.4\lib\netstandard2.0\Microsoft.EntityFrameworkCore.SqlServer.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Extensions.Caching.Abstractions, Version=2.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Extensions.Caching.Abstractions.2.1.1\lib\netstandard2.0\Microsoft.Extensions.Caching.Abstractions.dll</HintPath>
+    <Reference Include="Microsoft.Extensions.Caching.Abstractions, Version=2.1.2.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Caching.Abstractions.2.1.2\lib\netstandard2.0\Microsoft.Extensions.Caching.Abstractions.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Extensions.Caching.Memory, Version=2.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Extensions.Caching.Memory.2.1.1\lib\netstandard2.0\Microsoft.Extensions.Caching.Memory.dll</HintPath>
+    <Reference Include="Microsoft.Extensions.Caching.Memory, Version=2.1.2.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Caching.Memory.2.1.2\lib\netstandard2.0\Microsoft.Extensions.Caching.Memory.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Extensions.Configuration, Version=2.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Extensions.Configuration.2.1.1\lib\netstandard2.0\Microsoft.Extensions.Configuration.dll</HintPath>
@@ -98,8 +100,8 @@
     <Reference Include="Microsoft.Extensions.Options, Version=2.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Extensions.Options.2.1.1\lib\netstandard2.0\Microsoft.Extensions.Options.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Extensions.Primitives, Version=2.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Extensions.Primitives.2.1.1\lib\netstandard2.0\Microsoft.Extensions.Primitives.dll</HintPath>
+    <Reference Include="Microsoft.Extensions.Primitives, Version=2.1.6.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Primitives.2.1.6\lib\netstandard2.0\Microsoft.Extensions.Primitives.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -144,11 +146,11 @@
     <Reference Include="System.Data.SqlClient, Version=4.4.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Data.SqlClient.4.5.1\lib\net461\System.Data.SqlClient.dll</HintPath>
     </Reference>
-    <Reference Include="System.Diagnostics.DiagnosticSource, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Diagnostics.DiagnosticSource.4.5.0\lib\net46\System.Diagnostics.DiagnosticSource.dll</HintPath>
+    <Reference Include="System.Diagnostics.DiagnosticSource, Version=4.0.3.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Diagnostics.DiagnosticSource.4.5.1\lib\net46\System.Diagnostics.DiagnosticSource.dll</HintPath>
     </Reference>
-    <Reference Include="System.Interactive.Async, Version=3.0.3000.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Interactive.Async.3.1.1\lib\net46\System.Interactive.Async.dll</HintPath>
+    <Reference Include="System.Interactive.Async, Version=3.2.0.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Interactive.Async.3.2.0\lib\net46\System.Interactive.Async.dll</HintPath>
     </Reference>
     <Reference Include="System.Memory, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Memory.4.5.1\lib\netstandard2.0\System.Memory.dll</HintPath>
@@ -165,8 +167,8 @@
       <HintPath>..\packages\System.Runtime.4.3.0\lib\net462\System.Runtime.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.1\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.2\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.Extensions, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Runtime.Extensions.4.3.0\lib\net462\System.Runtime.Extensions.dll</HintPath>
@@ -175,8 +177,8 @@
     <Reference Include="System.Security.AccessControl, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Security.AccessControl.4.5.0\lib\net461\System.Security.AccessControl.dll</HintPath>
     </Reference>
-    <Reference Include="System.Security.Principal.Windows, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.Principal.Windows.4.5.0\lib\net461\System.Security.Principal.Windows.dll</HintPath>
+    <Reference Include="System.Security.Principal.Windows, Version=4.1.1.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Principal.Windows.4.5.1\lib\net461\System.Security.Principal.Windows.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -198,10 +200,14 @@
     </ApplicationDefinition>
     <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="Services\Abstract\IMessageService.cs" />
+    <Compile Include="Services\Abstract\IDatabaseConnectionViewModelFactory.cs" />
     <Compile Include="Services\Abstract\IViewModelFactory.cs" />
+    <Compile Include="Services\Abstract\IDatabaseConnectionViewService.cs" />
     <Compile Include="Services\Abstract\IViewService.cs" />
     <Compile Include="Services\Concrete\MessageService.cs" />
+    <Compile Include="Services\Concrete\DatabaseConnectionViewModelFactory.cs" />
     <Compile Include="Services\Concrete\ViewModelFactory.cs" />
+    <Compile Include="Services\Concrete\DatabaseConnectionViewService.cs" />
     <Compile Include="Services\Concrete\ViewService.cs" />
     <Compile Include="Tasks\NotifyTaskCompletion.cs" />
     <Compile Include="ViewModels\Abstract\IAccountLinkViewModel.cs" />
@@ -214,17 +220,23 @@
     <Compile Include="ViewModels\Abstract\IBalanceSheetItemViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IBalanceSheetViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IBudgetDetailsViewModel.cs" />
+    <Compile Include="ViewModels\Abstract\IDatabaseConnectionPasswordViewModel.cs" />
+    <Compile Include="ViewModels\Abstract\IDatabaseConnectionItemViewModel.cs" />
+    <Compile Include="ViewModels\Abstract\IDatabaseConectionDetailsViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IBudgetItemViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IBudgetListViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IBudgetTransactionItemViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IBudgetTransactionListViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IForeignAmountViewModel.cs" />
+    <Compile Include="ViewModels\Abstract\IDatabaseConnectionListViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IPaydayEventStartViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IReconcileBalanceViewModel.cs" />
     <Compile Include="ViewModels\Abstract\ITransactionBatchCreateConfirmViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IAccountTransactionListViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IAccountTransactionItemViewModel.cs" />
     <Compile Include="ViewModels\Abstract\IUnhandledExceptionViewModel.cs" />
+    <Compile Include="ViewModels\Concrete\DatabaseConnectionEditViewModel.cs" />
+    <Compile Include="ViewModels\Concrete\DatabaseConnectionCreateViewModel.cs" />
     <Compile Include="ViewModels\Concrete\AccountCreateViewModel.cs" />
     <Compile Include="ViewModels\Concrete\AccountDetailsBaseViewModel.cs" />
     <Compile Include="ViewModels\Concrete\AccountEditViewModel.cs" />
@@ -252,11 +264,15 @@
     <Compile Include="ViewModels\Concrete\BudgetCreateViewModel.cs" />
     <Compile Include="ViewModels\Concrete\BudgetDetailsBaseViewModel.cs" />
     <Compile Include="ViewModels\Concrete\BudgetEditViewModel.cs" />
+    <Compile Include="ViewModels\Concrete\DatabaseConnectionPasswordViewModel.cs" />
+    <Compile Include="ViewModels\Concrete\DatabaseConnectionItemViewModel.cs" />
+    <Compile Include="ViewModels\Concrete\DatabaseConnectionDetailsBaseViewModel.cs" />
     <Compile Include="ViewModels\Concrete\BudgetItemViewModel.cs" />
     <Compile Include="ViewModels\Concrete\BudgetListViewModel.cs" />
     <Compile Include="ViewModels\Concrete\BudgetTransactionItemViewModel.cs" />
     <Compile Include="ViewModels\Concrete\BudgetTransactionListViewModel.cs" />
     <Compile Include="ViewModels\Concrete\ForeignAmountViewModel.cs" />
+    <Compile Include="ViewModels\Concrete\DatabaseConnectionListViewModel.cs" />
     <Compile Include="ViewModels\Concrete\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\Concrete\UnhandledExceptionViewModel.cs" />
     <Compile Include="ViewModels\Concrete\PaydayEventStartViewModel.cs" />
@@ -270,8 +286,17 @@
     <Compile Include="ViewModels\Concrete\TransactionListViewModel.cs" />
     <Compile Include="ViewModels\Concrete\TransactionItemViewModel.cs" />
     <Compile Include="ViewModels\Model\BudgetTransactionType.cs" />
+    <Compile Include="Views\DatabaseConnectionDetailsWindow.xaml.cs">
+      <DependentUpon>DatabaseConnectionDetailsWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\BalanceSheetWindow.xaml.cs">
       <DependentUpon>BalanceSheetWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DatabaseConnectionListWindow.xaml.cs">
+      <DependentUpon>DatabaseConnectionListWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DatabaseConnectionPasswordWindow.xaml.cs">
+      <DependentUpon>DatabaseConnectionPasswordWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\UnhandledExceptionWindow.xaml.cs">
       <DependentUpon>UnhandledExceptionWindow.xaml</DependentUpon>
@@ -328,7 +353,19 @@
     <Compile Include="Views\TransactionDetailsWindow.xaml.cs">
       <DependentUpon>TransactionDetailsWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="Views\DatabaseConnectionDetailsWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\BalanceSheetWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\DatabaseConnectionListWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\DatabaseConnectionPasswordWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

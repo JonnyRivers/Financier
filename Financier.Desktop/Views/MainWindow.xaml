@@ -4,16 +4,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         Title="Financier for Windows™" 
-        MinHeight="230" MinWidth="500"
-        Height="230" Width="500">
+        MinHeight="190" MinWidth="500"
+        Height="190" Width="500">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
@@ -23,9 +21,5 @@
         <Button Margin="5" Grid.Row="2" Command="{Binding BalanceSheetViewCommand}">Balance Sheet</Button>
         <Button Margin="5" Grid.Row="3" Command="{Binding BudgetsViewCommand}">Budgets</Button>
         <Button Margin="5" Grid.Row="4" Command="{Binding TransactionsViewCommand}">Transactions</Button>
-        <StackPanel Grid.Row="6" Orientation="Horizontal">
-            <TextBlock Margin="6">Connected to:</TextBlock>
-            <TextBlock Margin="6" Text="{Binding Path=DatabaseConnectionSummary, FallbackValue='Some Database'}"/>
-        </StackPanel>
     </Grid>
 </Window>

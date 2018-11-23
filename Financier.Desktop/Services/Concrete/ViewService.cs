@@ -326,6 +326,7 @@ namespace Financier.Desktop.Services
             window.ShowDialog();
         }
 
+        // TODO - this is duplicated with IDatabaseConnectionViewService
         private bool OpenDeleteConfirmationView(string context)
         {
             MessageBoxResult confirmResult = MessageBox.Show(

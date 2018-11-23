@@ -8,7 +8,7 @@ namespace Financier.CLI.Commands
 {
     public class ServiceCollectionSetup
     {
-        public static ServiceCollection SetupCoreServices()
+        public static ServiceCollection SetupCoreServices(string databaseConnectionName, string password)
         {
             var serviceCollection = new ServiceCollection();
 
@@ -17,12 +17,11 @@ namespace Financier.CLI.Commands
             serviceCollection.AddSingleton(loggerFactory);
             serviceCollection.AddLogging();
 
-            // We have to build a temporary service provider to get the connection string for the DbContext.
-            // Perhaps there is a better way.
-            serviceCollection.AddSingleton<IEnvironmentService, EnvironmentService>();
-            IEnvironmentService environmentService =
-                serviceCollection.BuildServiceProvider().GetRequiredService<IEnvironmentService>();
-            string connectionString = environmentService.GetConnectionString();
+            serviceCollection.AddSingleton<IDatabaseConnectionService, LocalDatabaseConnectionService>();
+            IDatabaseConnectionService databaseConnectionService =
+                serviceCollection.BuildServiceProvider().GetRequiredService<IDatabaseConnectionService>();
+            DatabaseConnection databaseConnection = databaseConnectionService.Get(databaseConnectionName);
+            string connectionString = databaseConnection.BuildConnectionString(password);
 
             serviceCollection.AddDbContext<FinancierDbContext>(
                 options => options.UseSqlServer(connectionString),

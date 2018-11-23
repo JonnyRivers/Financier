@@ -22,9 +22,20 @@ namespace Financier.Desktop
 
             DispatcherUnhandledException += App_DispatcherUnhandledException;
 
-            m_serviceProvider = Build();
-            IViewService viewService = m_serviceProvider.GetRequiredService<IViewService>();
-            viewService.OpenMainView();
+            // TODO - this is a bit goofy
+            this.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+
+            ServiceCollection serviceCollection = BuildConnectionServiceProvider();
+            IDatabaseConnectionViewService connectionViewService = m_serviceProvider.GetRequiredService<IDatabaseConnectionViewService>();
+            DatabaseConnection databaseConnection;
+            string password;
+            if(connectionViewService.OpenDatabaseConnectionListView(out databaseConnection, out password))
+            {
+                BuildFullServiceProvider(serviceCollection, databaseConnection, password);
+                IViewService viewService = m_serviceProvider.GetRequiredService<IViewService>();
+                this.ShutdownMode = ShutdownMode.OnLastWindowClose;
+                viewService.OpenMainView();
+            }
         }
 
         private void App_DispatcherUnhandledException(
@@ -45,7 +56,7 @@ namespace Financier.Desktop
             e.Handled = true;
         }
 
-        private IServiceProvider Build()
+        private ServiceCollection BuildConnectionServiceProvider()
         {
             var serviceCollection = new ServiceCollection();
 
@@ -59,16 +70,43 @@ namespace Financier.Desktop
             serviceCollection.AddSingleton(loggerFactory);
             serviceCollection.AddLogging();
 
-            // We have to build a temporary service provider to get the connection string for the DbContext.
-            // Perhaps there is a better way.
-            serviceCollection.AddSingleton<IEnvironmentService, EnvironmentService>();
-            IEnvironmentService environmentService = 
-                serviceCollection.BuildServiceProvider().GetRequiredService<IEnvironmentService>();
-            string connectionString = environmentService.GetConnectionString();
+            // Financier.Core services
+            serviceCollection.AddSingleton<IDatabaseConnectionService, LocalDatabaseConnectionService>();
 
-            serviceCollection.AddDbContext<FinancierDbContext>(
-                options => options.UseSqlServer(connectionString),
-                ServiceLifetime.Transient);
+            // Financier.Desktop services
+            serviceCollection.AddSingleton<IMessageService, MessageService>();// unused
+            serviceCollection.AddSingleton<IDatabaseConnectionViewModelFactory, DatabaseConnectionViewModelFactory>();
+            serviceCollection.AddSingleton<IDatabaseConnectionViewService, DatabaseConnectionViewService>();
+
+            // This exposes a major flaw.  We need IViewService to be registered for exception handling, 
+            // but as the ViewModelFactory takes an IServiceProvider, there will be missing depedencies
+            // at this point.  Also, any missing dependencies are encountered very late.
+            serviceCollection.AddSingleton<IViewModelFactory, ViewModelFactory>();
+            serviceCollection.AddSingleton<IViewService, ViewService>();
+
+            m_serviceProvider = serviceCollection.BuildServiceProvider();
+
+            return serviceCollection;
+        }
+
+        private void BuildFullServiceProvider(
+            ServiceCollection serviceCollection, 
+            DatabaseConnection databaseConnection,
+            string password)
+        {
+            string connectionString = databaseConnection.BuildConnectionString(password);
+            // TODO - verify connection
+            if (databaseConnection.Type == DatabaseConnectionType.SqlServerAzure ||
+                databaseConnection.Type == DatabaseConnectionType.SqlServerLocalDB)
+            {
+                serviceCollection.AddDbContext<FinancierDbContext>(
+                    options => options.UseSqlServer(connectionString),
+                    ServiceLifetime.Transient);
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
 
             // Financier.Core services
             serviceCollection.AddSingleton<IAccountService, AccountService>();
@@ -77,18 +115,12 @@ namespace Financier.Desktop
             serviceCollection.AddSingleton<IBudgetService, BudgetService>();
             serviceCollection.AddSingleton<ICurrencyService, CurrencyService>();
             serviceCollection.AddSingleton<ICurrencyExchangeService, FixerIOCurrencyExchangeService>();
+            serviceCollection.AddSingleton<IEnvironmentService, EnvironmentService>();
             serviceCollection.AddSingleton<IHttpClientFactory, HttpClientFactory>();
             serviceCollection.AddSingleton<ITransactionService, TransactionService>();
             serviceCollection.AddSingleton<ITransactionRelationshipService, TransactionRelationshipService>();
-            
-            // Financier.Desktop services
-            serviceCollection.AddSingleton<IMessageService, MessageService>();
-            serviceCollection.AddSingleton<IViewModelFactory, ViewModelFactory>();
-            serviceCollection.AddSingleton<IViewService, ViewService>();
 
-            IServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
-
-            return serviceProvider;
+            m_serviceProvider = serviceCollection.BuildServiceProvider();
         }
     }
 }

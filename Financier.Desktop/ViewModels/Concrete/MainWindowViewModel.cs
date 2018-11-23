@@ -21,11 +21,7 @@ namespace Financier.Desktop.ViewModels
             m_logger = logger;
             m_environmentService = environmentService;
             m_viewService = viewService;
-
-            DatabaseConnectionSummary = environmentService.GetConnectionSummary();
         }
-
-        public string DatabaseConnectionSummary { get; }
 
         public ICommand AccountsViewCommand => new RelayCommand(AccountsViewExecute);
         public ICommand AccountRelationshipsViewCommand => new RelayCommand(AccountRelationshipsViewExecute);

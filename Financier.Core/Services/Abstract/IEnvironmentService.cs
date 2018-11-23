@@ -2,8 +2,6 @@
 {
     public interface IEnvironmentService
     {
-        string GetConnectionString();
-        string GetConnectionSummary();
         string GetFixerKey();
     }
 }
