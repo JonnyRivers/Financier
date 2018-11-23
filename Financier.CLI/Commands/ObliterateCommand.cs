@@ -11,9 +11,24 @@ namespace Financier.CLI.Commands
         {
             command.Description = "Ensure the database is obliterated";
 
+            CommandOption databaseConnectionOption = command.Option(
+                "-d|--database",
+                "The database connection to connect to",
+                CommandOptionType.SingleValue);
+
+            CommandOption passwordOption = command.Option(
+                "-p|--password",
+                "The password to connect with",
+                CommandOptionType.SingleValue);
+
             command.OnExecute(() =>
             {
-                var serviceCollection = ServiceCollectionSetup.SetupCoreServices();                
+                string databaseConnectionName = databaseConnectionOption.Value();
+                string password = passwordOption.HasValue() ? passwordOption.Value() : String.Empty;
+                ServiceCollection serviceCollection = ServiceCollectionSetup.SetupCoreServices(
+                    databaseConnectionName,
+                    password
+                );
 
                 // Application services
                 serviceCollection.AddTransient<IDatabaseCreationService, DatabaseCreationService>();

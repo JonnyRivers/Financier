@@ -12,6 +12,16 @@ namespace Financier.CLI.Commands
         {
             command.Description = "Generate a balance sheet from the database at a given time";
 
+            CommandOption databaseConnectionOption = command.Option(
+                "-d|--database",
+                "The database connection to connect to",
+                CommandOptionType.SingleValue);
+
+            CommandOption passwordOption = command.Option(
+                "-p|--password",
+                "The password to connect with",
+                CommandOptionType.SingleValue);
+
             CommandOption startAtOption = command.Option(
                 "-s|--startAt",
                 "The start of the cashflow period",
@@ -24,7 +34,12 @@ namespace Financier.CLI.Commands
 
             command.OnExecute(() =>
             {
-                var serviceCollection = ServiceCollectionSetup.SetupCoreServices();
+                string databaseConnectionName = databaseConnectionOption.Value();
+                string password = passwordOption.HasValue() ? passwordOption.Value() : String.Empty;
+                ServiceCollection serviceCollection = ServiceCollectionSetup.SetupCoreServices(
+                    databaseConnectionName,
+                    password
+                );
 
                 // Financier.Core services
                 serviceCollection.AddSingleton<IAccountRelationshipService, AccountRelationshipService>();

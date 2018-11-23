@@ -46,7 +46,12 @@ namespace Financier.Services
 
         public DatabaseConnection Get(int databaseConnectionId)
         {
-            return m_databaseConnections.SingleOrDefault(dbc => dbc.DatabaseConnectionId == databaseConnectionId);
+            return m_databaseConnections.Single(dbc => dbc.DatabaseConnectionId == databaseConnectionId);
+        }
+
+        public DatabaseConnection Get(string databaseConnectionName)
+        {
+            return m_databaseConnections.Single(dbc => dbc.Name == databaseConnectionName);
         }
 
         public IEnumerable<DatabaseConnection> GetAll()
