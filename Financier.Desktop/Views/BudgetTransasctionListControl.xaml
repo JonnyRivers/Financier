@@ -56,7 +56,7 @@
                     <GridViewColumn Header="Amount" Width="100" >
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBox Width="85" Text="{Binding Amount}"/>
+                                <TextBox Width="85" IsReadOnly="{Binding AmountIsReadOnly}" Text="{Binding Amount}"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>

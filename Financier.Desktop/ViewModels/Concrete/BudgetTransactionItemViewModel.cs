@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Financier.Services;
 using Microsoft.Extensions.Logging;
@@ -9,6 +10,8 @@ namespace Financier.Desktop.ViewModels
     {
         private ILogger<BudgetTransactionItemViewModel> m_logger;
 
+        private decimal m_amount;
+
         public BudgetTransactionItemViewModel(
             ILogger<BudgetTransactionItemViewModel> logger,
             ObservableCollection<IAccountLinkViewModel> accountLinks,
@@ -18,7 +21,7 @@ namespace Financier.Desktop.ViewModels
             m_logger = logger;
 
             AccountLinks = accountLinks;
-            Amount = budgetTransaction.Amount;
+            m_amount = budgetTransaction.Amount;
             BudgetTransactionId = budgetTransaction.BudgetTransactionId;
             SelectedCreditAccount = AccountLinks.Single(al => al.AccountId == budgetTransaction.CreditAccount.AccountId);
             SelectedDebitAccount = AccountLinks.Single(al => al.AccountId == budgetTransaction.DebitAccount.AccountId);
@@ -32,7 +35,7 @@ namespace Financier.Desktop.ViewModels
                 BudgetTransactionId = BudgetTransactionId,
                 CreditAccount = SelectedCreditAccount.ToAccountLink(),
                 DebitAccount = SelectedDebitAccount.ToAccountLink(),
-                Amount = Amount
+                Amount = m_amount
             };
 
             return budgetTransaction;
@@ -42,8 +45,23 @@ namespace Financier.Desktop.ViewModels
         public BudgetTransactionType Type { get; set; }
         public IAccountLinkViewModel SelectedCreditAccount { get; set; }
         public IAccountLinkViewModel SelectedDebitAccount { get; set; }
-        public decimal Amount { get; set; }
+        public decimal Amount
+        {
+            get { return m_amount; }
+            set
+            {
+                if (value != m_amount)
+                {
+                    m_amount = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
 
         public ObservableCollection<IAccountLinkViewModel> AccountLinks { get; private set; }
+        public bool AmountIsReadOnly
+        {
+            get => Type == BudgetTransactionType.Surplus;
+        }
     }
 }
