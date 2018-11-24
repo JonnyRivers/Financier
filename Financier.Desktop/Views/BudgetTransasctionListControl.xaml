@@ -1,11 +1,20 @@
 ﻿<UserControl x:Class="Financier.Desktop.Views.BudgetTransasctionListControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Financier.Desktop.Views"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="700">
+    <UserControl.Resources>
+        <CollectionViewSource x:Key="TransactionsByAmountDescending" Source="{Binding Transactions}">
+            <CollectionViewSource.SortDescriptions>
+                <scm:SortDescription PropertyName="Type" Direction="Ascending"/>
+                <scm:SortDescription PropertyName="Amount" Direction="Descending"/>
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -15,7 +24,10 @@
             <Button Margin="5" Command="{Binding CreateCommand}">Create New Transaction</Button>
             <Button Margin="5" Command="{Binding DeleteCommand}">Delete Selected Transaction</Button>
         </StackPanel>
-        <ListView Grid.Row="1" SelectedItem="{Binding SelectedTransaction}" ItemsSource="{Binding Transactions}">
+        <ListView 
+            Grid.Row="1" 
+            SelectedItem="{Binding SelectedTransaction}" 
+            ItemsSource="{Binding Source={StaticResource TransactionsByAmountDescending}}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Type" Width="80" DisplayMemberBinding="{Binding Type}"/>
