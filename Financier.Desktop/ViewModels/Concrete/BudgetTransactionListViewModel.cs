@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows.Input;
 
@@ -97,6 +98,8 @@ namespace Financier.Desktop.ViewModels
 
                 Transactions = new ObservableCollection<IBudgetTransactionItemViewModel>(transactions);
             }
+
+            CalculateSurplusAmount();
         }
 
         public ObservableCollection<IBudgetTransactionItemViewModel> Transactions { get; set; }
@@ -189,7 +192,40 @@ namespace Financier.Desktop.ViewModels
                     type
             );
 
+            if(type != BudgetTransactionType.Surplus)
+            {
+                ((BaseViewModel)transactionViewModel).PropertyChanged += OnItemPropertyChanged;
+            }
+
             return transactionViewModel;
+        }
+
+        private void OnItemPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if(e.PropertyName == "Amount")
+            {
+                CalculateSurplusAmount();
+            }
+        }
+
+        private void CalculateSurplusAmount()
+        {
+            IBudgetTransactionItemViewModel initialTransaction =
+                Transactions.Single(t => t.Type == BudgetTransactionType.Initial);
+
+            decimal surplusAmount = initialTransaction.Amount;
+
+            IEnumerable<IBudgetTransactionItemViewModel> regularTransactions =
+                Transactions.Where(t => t.Type == BudgetTransactionType.Regular);
+            foreach (IBudgetTransactionItemViewModel regularTransaction in regularTransactions)
+            {
+                if (regularTransaction.SelectedCreditAccount == initialTransaction.SelectedDebitAccount)
+                    surplusAmount -= regularTransaction.Amount;
+            }
+
+            IBudgetTransactionItemViewModel surplusTransaction =
+                Transactions.Single(t => t.Type == BudgetTransactionType.Surplus);
+            surplusTransaction.Amount = surplusAmount;
         }
     }
 }

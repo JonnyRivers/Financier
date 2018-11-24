@@ -17,5 +17,7 @@ namespace Financier.Desktop.ViewModels
         // Despite this not being required in other situations, the use of a <GridViewColumn.CellTemplate>
         // in the view makes this necessary.  Otherwise the SelectedItem is not shown on form load.
         ObservableCollection<IAccountLinkViewModel> AccountLinks { get; }
+
+        bool AmountIsReadOnly { get; }
     }
 }
