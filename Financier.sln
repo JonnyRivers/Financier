@@ -23,6 +23,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ContinuousDelivery", "Conti
 		Jenkinsfile = Jenkinsfile
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Financier.WebAPI", "Financier.WebAPI\Financier.WebAPI.csproj", "{D9C40B8B-DF4B-4BD7-A9FD-E16F296B0261}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -105,6 +107,18 @@ Global
 		{6F238BE8-7EC3-4305-A9E3-30B80A2ABC09}.Release|x64.Build.0 = Release|Any CPU
 		{6F238BE8-7EC3-4305-A9E3-30B80A2ABC09}.Release|x86.ActiveCfg = Release|Any CPU
 		{6F238BE8-7EC3-4305-A9E3-30B80A2ABC09}.Release|x86.Build.0 = Release|Any CPU
+		{D9C40B8B-DF4B-4BD7-A9FD-E16F296B0261}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9C40B8B-DF4B-4BD7-A9FD-E16F296B0261}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9C40B8B-DF4B-4BD7-A9FD-E16F296B0261}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D9C40B8B-DF4B-4BD7-A9FD-E16F296B0261}.Debug|x64.Build.0 = Debug|Any CPU
+		{D9C40B8B-DF4B-4BD7-A9FD-E16F296B0261}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D9C40B8B-DF4B-4BD7-A9FD-E16F296B0261}.Debug|x86.Build.0 = Debug|Any CPU
+		{D9C40B8B-DF4B-4BD7-A9FD-E16F296B0261}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9C40B8B-DF4B-4BD7-A9FD-E16F296B0261}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D9C40B8B-DF4B-4BD7-A9FD-E16F296B0261}.Release|x64.ActiveCfg = Release|Any CPU
+		{D9C40B8B-DF4B-4BD7-A9FD-E16F296B0261}.Release|x64.Build.0 = Release|Any CPU
+		{D9C40B8B-DF4B-4BD7-A9FD-E16F296B0261}.Release|x86.ActiveCfg = Release|Any CPU
+		{D9C40B8B-DF4B-4BD7-A9FD-E16F296B0261}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
