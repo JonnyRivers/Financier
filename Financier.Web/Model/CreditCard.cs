@@ -1,4 +1,4 @@
-﻿namespace Financier.WebAPI.Model
+﻿namespace Financier.Web.Model
 {
     public class CreditCard
     {

@@ -1,8 +1,10 @@
+using Financier.Entities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -20,6 +22,13 @@ namespace Financier.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // In production this comes from application settings in Azure
+            // In development this comes from appsettings.Development.json
+            string connectionString = Configuration.GetConnectionString("FinancierDatabaseConnectionString");
+            services.AddDbContext<FinancierDbContext>(opt =>
+                opt.UseSqlServer(connectionString)
+            );
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             // In production, the Angular files will be served from this directory
