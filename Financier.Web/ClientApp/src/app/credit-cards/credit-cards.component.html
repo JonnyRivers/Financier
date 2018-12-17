@@ -1,0 +1,18 @@
+<h1>Credit cards</h1>
+
+<p *ngIf="!creditCards"><em>Loading...</em></p>
+
+<table class='table' *ngIf="creditCards">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Name</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let creditCard of creditCards">
+      <td>{{ creditCard.id }}</td>
+      <td>{{ creditCard.name }}</td>
+    </tr>
+  </tbody>
+</table>
