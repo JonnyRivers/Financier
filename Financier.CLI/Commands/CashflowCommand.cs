@@ -10,7 +10,7 @@ namespace Financier.CLI.Commands
     {
         public static void Configure(CommandLineApplication command)
         {
-            command.Description = "Generate a balance sheet from the database at a given time";
+            command.Description = "Generate a cashflow statement from the database for a given period";
 
             CommandOption databaseConnectionOption = command.Option(
                 "-d|--database",

@@ -63,10 +63,10 @@ namespace Financier.Desktop
             // Framework services
             string localApplicationDataDirectory =
                 Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            serviceCollection.AddLogging(logging =>
+            serviceCollection.AddLogging(loggingBuilder =>
             {
-                logging.AddDebug();
-                // TODO - .loggingAddFile($"{localApplicationDataDirectory}/Financier.Desktop/{{Date}}.txt", LogLevel.Trace);
+                loggingBuilder.AddDebug();
+                // TODO - .loggingBuilder.AddFile($"{localApplicationDataDirectory}/Financier.Desktop/{{Date}}.txt", LogLevel.Trace);
             });
 
             // Financier.Core services

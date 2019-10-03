@@ -13,9 +13,10 @@ namespace Financier.CLI.Commands
             var serviceCollection = new ServiceCollection();
 
             // .NET Services
-            ILoggerFactory loggerFactory = new LoggerFactory().AddDebug();
-            serviceCollection.AddSingleton(loggerFactory);
-            serviceCollection.AddLogging();
+            serviceCollection.AddLogging(loggingBuilder =>
+            {
+                loggingBuilder.AddDebug();
+            });
 
             serviceCollection.AddSingleton<IDatabaseConnectionService, LocalDatabaseConnectionService>();
             IDatabaseConnectionService databaseConnectionService =
