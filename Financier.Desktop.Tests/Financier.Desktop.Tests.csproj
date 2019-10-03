@@ -209,7 +209,7 @@
       <Name>Financier.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\Financier.Desktop\Financier.Desktop.csproj">
-      <Project>{547d5383-961e-4312-95ff-9d9bcd319a69}</Project>
+      <Project>{cef239c6-31c1-4929-a7c7-093875abf6ee}</Project>
       <Name>Financier.Desktop</Name>
     </ProjectReference>
     <ProjectReference Include="..\Financier.UnitTesting.Core\Financier.UnitTesting.Core.csproj">

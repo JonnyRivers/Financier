@@ -29,7 +29,7 @@ namespace Financier.Desktop
             IDatabaseConnectionViewService connectionViewService = m_serviceProvider.GetRequiredService<IDatabaseConnectionViewService>();
             DatabaseConnection databaseConnection;
             string password;
-            if(connectionViewService.OpenDatabaseConnectionListView(out databaseConnection, out password))
+            if (connectionViewService.OpenDatabaseConnectionListView(out databaseConnection, out password))
             {
                 BuildFullServiceProvider(serviceCollection, databaseConnection, password);
                 IViewService viewService = m_serviceProvider.GetRequiredService<IViewService>();
@@ -39,10 +39,10 @@ namespace Financier.Desktop
         }
 
         private void App_DispatcherUnhandledException(
-            object sender, 
+            object sender,
             System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
-            if(m_serviceProvider != null)
+            if (m_serviceProvider != null)
             {
                 IViewService viewService = m_serviceProvider.GetRequiredService<IViewService>();
 
@@ -63,12 +63,11 @@ namespace Financier.Desktop
             // Framework services
             string localApplicationDataDirectory =
                 Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            ILoggerFactory loggerFactory =
-                new LoggerFactory()
-                    .AddDebug()
-                    .AddFile($"{localApplicationDataDirectory}/Financier.Desktop/{{Date}}.txt", LogLevel.Trace);
-            serviceCollection.AddSingleton(loggerFactory);
-            serviceCollection.AddLogging();
+            serviceCollection.AddLogging(logging =>
+            {
+                logging.AddDebug();
+                // TODO - .loggingAddFile($"{localApplicationDataDirectory}/Financier.Desktop/{{Date}}.txt", LogLevel.Trace);
+            });
 
             // Financier.Core services
             serviceCollection.AddSingleton<IDatabaseConnectionService, LocalDatabaseConnectionService>();
@@ -90,7 +89,7 @@ namespace Financier.Desktop
         }
 
         private void BuildFullServiceProvider(
-            ServiceCollection serviceCollection, 
+            ServiceCollection serviceCollection,
             DatabaseConnection databaseConnection,
             string password)
         {
