@@ -149,7 +149,7 @@ namespace Financier.Services
             // add new transactions
             var transactionEntityIds = new HashSet<int>(transactionEntities.Select(t => t.BudgetTransactionId));
             IEnumerable<BudgetTransaction> transactionsWithNoEntity = 
-                budget.Transactions.Where(t => !transactionEntityIds.Contains(t.BudgetTransactionId));
+                budget.Transactions.Where(t => !transactionEntityIds.ToList().Contains(t.BudgetTransactionId));
             foreach (BudgetTransaction transactionWithNoEntity in transactionsWithNoEntity)
             {
                 budgetEntity.Transactions.Add(ToEntity(budgetEntity, transactionWithNoEntity));
