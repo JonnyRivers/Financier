@@ -81,7 +81,7 @@ namespace Financier.Services
             return m_dbContext.Accounts
                 .Include(a => a.Currency)
                 .Where(a => a.Type == AccountType.Asset || a.Type == AccountType.Liability)
-                .Where(a => !logicalAccountIds.Contains(a.AccountId))
+                .Where(a => !logicalAccountIds.ToList().Contains(a.AccountId))
                 .Select(FromEntity)
                 .ToList();
         }
@@ -131,11 +131,11 @@ namespace Financier.Services
 
             IEnumerable<Entities.Transaction> creditTransactions =
                 m_dbContext.Transactions
-                    .Where(t => allAccountIds.Contains(t.CreditAccountId) &&
+                    .Where(t => allAccountIds.ToList().Contains(t.CreditAccountId) &&
                                 t.At <= at);
             IEnumerable<Entities.Transaction> debitTransactions =
                 m_dbContext.Transactions
-                    .Where(t => allAccountIds.Contains(t.DebitAccountId) &&
+                    .Where(t => allAccountIds.ToList().Contains(t.DebitAccountId) &&
                                 t.At <= at);
 
             decimal creditBalance = creditTransactions.Sum(t => t.Amount);

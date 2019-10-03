@@ -7,8 +7,7 @@
         mc:Ignorable="d"
         Title="Unhandled Exception"
         MinHeight="205" MinWidth="300"
-        Height="600" Width="700" 
-        Icon="/Financier.Desktop;component/Resources/favicon.ico">
+        Height="600" Width="700">
     <Grid Margin="5">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>

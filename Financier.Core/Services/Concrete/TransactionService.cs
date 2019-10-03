@@ -108,8 +108,8 @@ namespace Financier.Services
             var accountIdSet = new HashSet<int>(accountIds);
 
             return m_dbContext.Transactions
-                .Where(t => accountIdSet.Contains(t.CreditAccountId) || 
-                            accountIdSet.Contains(t.DebitAccountId))
+                .Where(t => accountIdSet.ToList().Contains(t.CreditAccountId) || 
+                            accountIdSet.ToList().Contains(t.DebitAccountId))
                 .Include(t => t.CreditAccount)
                 .Include(t => t.DebitAccount)
                 .Select(FromEntity)
@@ -122,8 +122,8 @@ namespace Financier.Services
 
             return m_dbContext.Transactions
                 .Where(t => t.At >= startAt && t.At <= endAt)
-                .Where(t => accountIdSet.Contains(t.CreditAccountId) ||
-                            accountIdSet.Contains(t.DebitAccountId))
+                .Where(t => accountIdSet.ToList().Contains(t.CreditAccountId) ||
+                            accountIdSet.ToList().Contains(t.DebitAccountId))
                 .Include(t => t.CreditAccount)
                 .Include(t => t.DebitAccount)
                 .Select(FromEntity)
@@ -139,7 +139,7 @@ namespace Financier.Services
             );
 
             List<int> linkedOutgoingTransactionsIds = m_dbContext.Transactions
-                .Where(t => t.CreditAccountId == accountId && linkedExpenseAccountIds.Contains(t.DebitAccountId))
+                .Where(t => t.CreditAccountId == accountId && linkedExpenseAccountIds.ToList().Contains(t.DebitAccountId))
                 .Select(t => t.TransactionId)
                 .ToList();
 
@@ -162,12 +162,12 @@ namespace Financier.Services
                 m_dbContext.AccountRelationships
                     .Include(ar => ar.SourceAccount)
                     .Where(ar => ar.Type == AccountRelationshipType.PrepaymentToExpense &&
-                                 linkedExpenseAccountIds.Contains(ar.DestinationAccountId))
+                                 linkedExpenseAccountIds.ToList().Contains(ar.DestinationAccountId))
                     .ToDictionary(ar => ar.DestinationAccountId, ar => FromEntity(ar.SourceAccount));
 
             List<Transaction> pendingTransactions = 
                 m_dbContext.Transactions
-                    .Where(t => pendingTransactionIds.Contains(t.TransactionId))
+                    .Where(t => pendingTransactionIds.ToList().Contains(t.TransactionId))
                     .Include(t => t.CreditAccount)
                     .Include(t => t.DebitAccount)
                     .Select(FromEntity)

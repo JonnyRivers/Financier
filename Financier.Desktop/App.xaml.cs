@@ -4,6 +4,7 @@ using Financier.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Serilog;
 using System;
 using System.Windows;
 
@@ -29,7 +30,7 @@ namespace Financier.Desktop
             IDatabaseConnectionViewService connectionViewService = m_serviceProvider.GetRequiredService<IDatabaseConnectionViewService>();
             DatabaseConnection databaseConnection;
             string password;
-            if(connectionViewService.OpenDatabaseConnectionListView(out databaseConnection, out password))
+            if (connectionViewService.OpenDatabaseConnectionListView(out databaseConnection, out password))
             {
                 BuildFullServiceProvider(serviceCollection, databaseConnection, password);
                 IViewService viewService = m_serviceProvider.GetRequiredService<IViewService>();
@@ -39,10 +40,10 @@ namespace Financier.Desktop
         }
 
         private void App_DispatcherUnhandledException(
-            object sender, 
+            object sender,
             System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
-            if(m_serviceProvider != null)
+            if (m_serviceProvider != null)
             {
                 IViewService viewService = m_serviceProvider.GetRequiredService<IViewService>();
 
@@ -61,14 +62,20 @@ namespace Financier.Desktop
             var serviceCollection = new ServiceCollection();
 
             // Framework services
-            string localApplicationDataDirectory =
-                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            ILoggerFactory loggerFactory =
-                new LoggerFactory()
-                    .AddDebug()
-                    .AddFile($"{localApplicationDataDirectory}/Financier.Desktop/{{Date}}.txt", LogLevel.Trace);
-            serviceCollection.AddSingleton(loggerFactory);
-            serviceCollection.AddLogging();
+            serviceCollection.AddLogging(loggingBuilder =>
+            {
+                loggingBuilder.AddDebug();
+
+                string localApplicationDataDirectory =
+                    Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+                var serilogFileLogger = new Serilog.LoggerConfiguration()
+                    .WriteTo
+                    .File(
+                        $"{localApplicationDataDirectory}/Financier.Desktop/Financier.Desktop-.txt",
+                        rollingInterval: RollingInterval.Day)
+                    .CreateLogger();
+                loggingBuilder.AddSerilog(serilogFileLogger);
+            });
 
             // Financier.Core services
             serviceCollection.AddSingleton<IDatabaseConnectionService, LocalDatabaseConnectionService>();
@@ -90,7 +97,7 @@ namespace Financier.Desktop
         }
 
         private void BuildFullServiceProvider(
-            ServiceCollection serviceCollection, 
+            ServiceCollection serviceCollection,
             DatabaseConnection databaseConnection,
             string password)
         {
