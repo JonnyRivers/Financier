@@ -4,6 +4,7 @@ using Financier.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Serilog;
 using System;
 using System.Windows;
 
@@ -61,12 +62,19 @@ namespace Financier.Desktop
             var serviceCollection = new ServiceCollection();
 
             // Framework services
-            string localApplicationDataDirectory =
-                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             serviceCollection.AddLogging(loggingBuilder =>
             {
                 loggingBuilder.AddDebug();
-                // TODO - .loggingBuilder.AddFile($"{localApplicationDataDirectory}/Financier.Desktop/{{Date}}.txt", LogLevel.Trace);
+
+                string localApplicationDataDirectory =
+                    Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+                var serilogFileLogger = new Serilog.LoggerConfiguration()
+                    .WriteTo
+                    .File(
+                        $"{localApplicationDataDirectory}/Financier.Desktop/Financier.Desktop-.txt",
+                        rollingInterval: RollingInterval.Day)
+                    .CreateLogger();
+                loggingBuilder.AddSerilog(serilogFileLogger);
             });
 
             // Financier.Core services
