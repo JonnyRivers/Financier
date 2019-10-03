@@ -288,31 +288,6 @@ namespace Financier.Core.Tests
                 Assert.AreEqual(budget.Name, budgets[0].Name);
                 Assert.AreEqual(budget.Period, budgets[0].Period);
                 Assert.AreEqual(budgetTransactions.Count, budgets[0].Transactions.Count);
-
-                Assert.AreEqual(budget.BudgetId, budgetTransactions[0].BudgetId);
-                Assert.AreEqual(initialTransaction.CreditAccountId, budgetTransactions[0].CreditAccountId);
-                Assert.AreEqual(initialTransaction.DebitAccountId, budgetTransactions[0].DebitAccountId);
-                Assert.AreEqual(initialTransaction.Amount, budgetTransactions[0].Amount);
-                Assert.AreEqual(true, budgetTransactions[0].IsInitial);
-                Assert.AreEqual(false, budgetTransactions[0].IsSurplus);
-                Assert.AreEqual(budget.BudgetId, budgetTransactions[1].BudgetId);
-                Assert.AreEqual(rentTransaction.CreditAccountId, budgetTransactions[1].CreditAccountId);
-                Assert.AreEqual(rentTransaction.DebitAccountId, budgetTransactions[1].DebitAccountId);
-                Assert.AreEqual(rentTransaction.Amount, budgetTransactions[1].Amount);
-                Assert.AreEqual(false, budgetTransactions[1].IsInitial);
-                Assert.AreEqual(false, budgetTransactions[1].IsSurplus);
-                Assert.AreEqual(budget.BudgetId, budgetTransactions[2].BudgetId);
-                Assert.AreEqual(groceriesTransaction.CreditAccountId, budgetTransactions[2].CreditAccountId);
-                Assert.AreEqual(groceriesTransaction.DebitAccountId, budgetTransactions[2].DebitAccountId);
-                Assert.AreEqual(groceriesTransaction.Amount, budgetTransactions[2].Amount);
-                Assert.AreEqual(false, budgetTransactions[2].IsInitial);
-                Assert.AreEqual(false, budgetTransactions[2].IsSurplus);
-                Assert.AreEqual(budget.BudgetId, budgetTransactions[3].BudgetId);
-                Assert.AreEqual(surplusTransaction.CreditAccountId, budgetTransactions[3].CreditAccountId);
-                Assert.AreEqual(surplusTransaction.DebitAccountId, budgetTransactions[3].DebitAccountId);
-                Assert.AreEqual(surplusTransaction.Amount, budgetTransactions[3].Amount);
-                Assert.AreEqual(false, budgetTransactions[3].IsInitial);
-                Assert.AreEqual(true, budgetTransactions[3].IsSurplus);
             }
         }
 

@@ -232,14 +232,16 @@ namespace Financier.Core.Tests
                     sqliteMemoryWrapper.DbContext.TransactionRelationships.ToList();
 
                 Assert.AreEqual(2, transactionRelationshipEntities.Count);
-                Assert.AreEqual(newTransactionRelationships[0].TransactionRelationshipId, transactionRelationshipEntities[0].TransactionRelationshipId);
-                Assert.AreEqual(newTransactionRelationships[0].SourceTransaction.TransactionId, transactionRelationshipEntities[0].SourceTransaction.TransactionId);
-                Assert.AreEqual(newTransactionRelationships[0].DestinationTransaction.TransactionId, transactionRelationshipEntities[0].DestinationTransaction.TransactionId);
-                Assert.AreEqual(newTransactionRelationships[0].Type, transactionRelationshipEntities[0].Type);
-                Assert.AreEqual(newTransactionRelationships[1].TransactionRelationshipId, transactionRelationshipEntities[1].TransactionRelationshipId);
-                Assert.AreEqual(newTransactionRelationships[1].SourceTransaction.TransactionId, transactionRelationshipEntities[1].SourceTransaction.TransactionId);
-                Assert.AreEqual(newTransactionRelationships[1].DestinationTransaction.TransactionId, transactionRelationshipEntities[1].DestinationTransaction.TransactionId);
-                Assert.AreEqual(newTransactionRelationships[1].Type, transactionRelationshipEntities[1].Type);
+                Entities.TransactionRelationship firstAddedEntity = transactionRelationshipEntities.FirstOrDefault(tr =>
+                    tr.SourceTransactionId == newTransactionRelationships[0].SourceTransaction.TransactionId &&
+                    tr.DestinationTransactionId == newTransactionRelationships[0].DestinationTransaction.TransactionId &&
+                    tr.Type == newTransactionRelationships[0].Type);
+                Assert.IsNotNull(firstAddedEntity);
+                Entities.TransactionRelationship secondAddedEntity = transactionRelationshipEntities.FirstOrDefault(tr =>
+                    tr.SourceTransactionId == newTransactionRelationships[1].SourceTransaction.TransactionId &&
+                    tr.DestinationTransactionId == newTransactionRelationships[1].DestinationTransaction.TransactionId &&
+                    tr.Type == newTransactionRelationships[1].Type);
+                Assert.IsNotNull(secondAddedEntity);
             }
         }
     }
