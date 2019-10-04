@@ -1,4 +1,5 @@
 ﻿using Financier.Desktop.Services;
+using Financier.Desktop.ViewModels;
 using Financier.Entities;
 using Financier.Services;
 using Microsoft.EntityFrameworkCore;
@@ -116,9 +117,8 @@ namespace Financier.Desktop
             }
 
             // Financier.Desktop services
-            serviceCollection.AddSingleton<IMessageService, MessageService>();// unused
-            serviceCollection.AddSingleton<IMainViewModelFactory, MainViewModelFactory>();
-            serviceCollection.AddSingleton<IMainViewService, MainViewService>();
+            serviceCollection.AddTransient<IMainViewModel, MainViewModel>();
+            serviceCollection.AddTransient<IMainViewService, MainViewService>();
 
             // Financier.Core services
             serviceCollection.AddSingleton<IAccountService, AccountService>();

@@ -7,18 +7,17 @@ namespace Financier.Desktop.Services
     public class MainViewService : IMainViewService
     {
         private readonly ILogger<MainViewService> m_logger;
-        private readonly IMainViewModelFactory m_mainViewModelFactory;
+        private readonly IMainViewModel m_mainViewModel;
 
-        public MainViewService(ILogger<MainViewService> logger, IMainViewModelFactory mainViewModelFactory)
+        public MainViewService(ILogger<MainViewService> logger, IMainViewModel mainViewModel)
         {
             m_logger = logger;
-            m_mainViewModelFactory = mainViewModelFactory;
+            m_mainViewModel = mainViewModel;
         }
 
         public void Show()
         {
-            IMainViewModel viewModel = m_mainViewModelFactory.Create();
-            var mainWindow = new MainWindow(viewModel);
+            var mainWindow = new MainWindow(m_mainViewModel);
             mainWindow.Show();
         }
     }
