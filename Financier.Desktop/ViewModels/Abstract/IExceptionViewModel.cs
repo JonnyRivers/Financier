@@ -3,7 +3,12 @@ using System.Windows.Input;
 
 namespace Financier.Desktop.ViewModels
 {
-    public interface IUnhandledExceptionViewModel
+    public interface IExceptionViewModelFactory
+    {
+        IExceptionViewModel Create(Exception ex);
+    }
+
+    public interface IExceptionViewModel
     {
         string Message { get; }
         string Details { get; }

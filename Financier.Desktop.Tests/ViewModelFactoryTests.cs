@@ -19,17 +19,6 @@ namespace Financier.Desktop.Tests
     public class ViewModelFactoryTests
     {
         [TestMethod]
-        public void TestMainViewModelCreation()
-        {
-            IServiceProvider serviceProvider = BuildServiceProvider();
-            IViewModelFactory viewModelFactory = serviceProvider.GetRequiredService<IViewModelFactory>();
-
-            IMainWindowViewModel mainWindowViewModel = viewModelFactory.CreateMainWindowViewModel();
-
-            Assert.IsNotNull(mainWindowViewModel);
-        }
-
-        [TestMethod]
         public void TestAccountViewModelCreation()
         {
             IServiceProvider serviceProvider = BuildServiceProvider();

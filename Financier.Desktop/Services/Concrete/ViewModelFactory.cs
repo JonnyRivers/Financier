@@ -18,11 +18,6 @@ namespace Financier.Desktop.Services
             m_serviceProvider = serviceProvider;
         }
 
-        public IMainWindowViewModel CreateMainWindowViewModel()
-        {
-            return m_serviceProvider.CreateInstance<MainWindowViewModel>();
-        }
-
         public IAccountDetailsViewModel CreateAccountCreateViewModel()
         {
             return m_serviceProvider.CreateInstance<AccountCreateViewModel>();
@@ -183,11 +178,6 @@ namespace Financier.Desktop.Services
         public ITransactionListViewModel CreateTransactionListViewModel()
         {
             return m_serviceProvider.CreateInstance<TransactionListViewModel>();
-        }
-
-        public IUnhandledExceptionViewModel CreateUnhandledExceptionViewModel(Exception ex)
-        {
-            return m_serviceProvider.CreateInstance<UnhandledExceptionViewModel>(ex);
         }
     }
 }

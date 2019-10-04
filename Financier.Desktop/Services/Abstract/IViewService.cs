@@ -6,8 +6,6 @@ namespace Financier.Desktop.Services
 {
     public interface IViewService
     {
-        void OpenMainView();
-
         bool OpenAccountCreateView(out Account newAccount);
         bool OpenAccountEditView(int accountId, out Account updatedAccount);
         void OpenAccountListView();
@@ -43,7 +41,5 @@ namespace Financier.Desktop.Services
         bool OpenTransactionDeleteConfirmationView();
         bool OpenTransactionEditView(int transactionId, out Transaction updatedTransaction);
         void OpenTransactionListView();
-
-        void OpenUnhandledExceptionView(Exception ex);
     }
 }

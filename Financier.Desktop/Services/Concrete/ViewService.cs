@@ -19,13 +19,6 @@ namespace Financier.Desktop.Services
             m_viewModelFactory = viewModelFactory;
         }
 
-        public void OpenMainView()
-        {
-            var viewModel = m_viewModelFactory.CreateMainWindowViewModel();
-            var mainWindow = new MainWindow(viewModel);
-            mainWindow.Show();
-        }
-
         public bool OpenAccountCreateView(out Account account)
         {
             account = null;
@@ -316,13 +309,6 @@ namespace Financier.Desktop.Services
         {
             ITransactionListViewModel viewModel = m_viewModelFactory.CreateTransactionListViewModel();
             var window = new TransactionListWindow(viewModel);
-            window.ShowDialog();
-        }
-
-        public void OpenUnhandledExceptionView(Exception ex)
-        {
-            IUnhandledExceptionViewModel viewModel = m_viewModelFactory.CreateUnhandledExceptionViewModel(ex);
-            var window = new UnhandledExceptionWindow(viewModel);
             window.ShowDialog();
         }
 
