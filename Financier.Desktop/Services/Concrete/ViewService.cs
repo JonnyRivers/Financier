@@ -19,13 +19,6 @@ namespace Financier.Desktop.Services
             m_viewModelFactory = viewModelFactory;
         }
 
-        public void OpenMainView()
-        {
-            var viewModel = m_viewModelFactory.CreateMainWindowViewModel();
-            var mainWindow = new MainWindow(viewModel);
-            mainWindow.Show();
-        }
-
         public bool OpenAccountCreateView(out Account account)
         {
             account = null;

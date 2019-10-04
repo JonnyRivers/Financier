@@ -33,9 +33,9 @@ namespace Financier.Desktop
             if (connectionViewService.OpenDatabaseConnectionListView(out databaseConnection, out password))
             {
                 BuildFullServiceProvider(serviceCollection, databaseConnection, password);
-                IViewService viewService = m_serviceProvider.GetRequiredService<IViewService>();
+                IMainViewService mainViewService = m_serviceProvider.GetRequiredService<IMainViewService>();
                 this.ShutdownMode = ShutdownMode.OnLastWindowClose;
-                viewService.OpenMainView();
+                mainViewService.Show();
             }
         }
 
@@ -114,6 +114,11 @@ namespace Financier.Desktop
             {
                 throw new NotImplementedException();
             }
+
+            // Financier.Desktop services
+            serviceCollection.AddSingleton<IMessageService, MessageService>();// unused
+            serviceCollection.AddSingleton<IMainViewModelFactory, MainViewModelFactory>();
+            serviceCollection.AddSingleton<IMainViewService, MainViewService>();
 
             // Financier.Core services
             serviceCollection.AddSingleton<IAccountService, AccountService>();

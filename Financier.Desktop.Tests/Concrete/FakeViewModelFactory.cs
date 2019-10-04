@@ -100,7 +100,7 @@ namespace Financier.Desktop.Tests.Concrete
             throw new NotImplementedException();
         }
 
-        public IMainWindowViewModel CreateMainWindowViewModel()
+        public IMainViewModel CreateMainWindowViewModel()
         {
             throw new NotImplementedException();
         }

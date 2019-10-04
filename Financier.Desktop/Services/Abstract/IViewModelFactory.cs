@@ -8,8 +8,6 @@ namespace Financier.Desktop.Services
 {
     public interface IViewModelFactory
     {
-        IMainWindowViewModel CreateMainWindowViewModel();
-
         IAccountDetailsViewModel CreateAccountCreateViewModel();
         IAccountDetailsViewModel CreateAccountEditViewModel(int accountId);
         IAccountItemViewModel CreateAccountItemViewModel(Account account);

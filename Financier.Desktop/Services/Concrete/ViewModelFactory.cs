@@ -18,11 +18,6 @@ namespace Financier.Desktop.Services
             m_serviceProvider = serviceProvider;
         }
 
-        public IMainWindowViewModel CreateMainWindowViewModel()
-        {
-            return m_serviceProvider.CreateInstance<MainWindowViewModel>();
-        }
-
         public IAccountDetailsViewModel CreateAccountCreateViewModel()
         {
             return m_serviceProvider.CreateInstance<AccountCreateViewModel>();

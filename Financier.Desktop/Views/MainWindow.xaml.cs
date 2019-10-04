@@ -8,7 +8,7 @@ namespace Financier.Desktop.Views
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow(IMainWindowViewModel viewModel)
+        public MainWindow(IMainViewModel viewModel)
         {
             InitializeComponent();
 

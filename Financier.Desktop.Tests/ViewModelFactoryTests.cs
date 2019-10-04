@@ -24,7 +24,7 @@ namespace Financier.Desktop.Tests
             IServiceProvider serviceProvider = BuildServiceProvider();
             IViewModelFactory viewModelFactory = serviceProvider.GetRequiredService<IViewModelFactory>();
 
-            IMainWindowViewModel mainWindowViewModel = viewModelFactory.CreateMainWindowViewModel();
+            IMainViewModel mainWindowViewModel = viewModelFactory.CreateMainWindowViewModel();
 
             Assert.IsNotNull(mainWindowViewModel);
         }
