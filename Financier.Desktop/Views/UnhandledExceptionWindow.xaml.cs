@@ -8,7 +8,7 @@ namespace Financier.Desktop.Views
     /// </summary>
     public partial class UnhandledExceptionWindow : Window
     {
-        public UnhandledExceptionWindow(IUnhandledExceptionViewModel viewModel)
+        public UnhandledExceptionWindow(IExceptionViewModel viewModel)
         {
             InitializeComponent();
 

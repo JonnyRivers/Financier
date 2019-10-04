@@ -56,7 +56,5 @@ namespace Financier.Desktop.Services
         ITransactionDetailsViewModel CreateTransactionEditViewModel(int transactionId);
         ITransactionItemViewModel CreateTransactionItemViewModel(Transaction transaction);
         ITransactionListViewModel CreateTransactionListViewModel();
-
-        IUnhandledExceptionViewModel CreateUnhandledExceptionViewModel(Exception ex);
     }
 }

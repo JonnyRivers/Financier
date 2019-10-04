@@ -46,9 +46,9 @@ namespace Financier.Desktop
         {
             if (m_serviceProvider != null)
             {
-                IViewService viewService = m_serviceProvider.GetRequiredService<IViewService>();
+                IExceptionViewService exceptionViewService = m_serviceProvider.GetRequiredService<IExceptionViewService>();
 
-                viewService.OpenUnhandledExceptionView(e.Exception);
+                exceptionViewService.Show(e.Exception);
             }
             else
             {
@@ -82,15 +82,11 @@ namespace Financier.Desktop
             serviceCollection.AddSingleton<IDatabaseConnectionService, LocalDatabaseConnectionService>();
 
             // Financier.Desktop services
-            serviceCollection.AddSingleton<IMessageService, MessageService>();// unused
+            serviceCollection.AddSingleton<IMessageService, MessageService>();
             serviceCollection.AddSingleton<IDatabaseConnectionViewModelFactory, DatabaseConnectionViewModelFactory>();
             serviceCollection.AddSingleton<IDatabaseConnectionViewService, DatabaseConnectionViewService>();
-
-            // This exposes a major flaw.  We need IViewService to be registered for exception handling, 
-            // but as the ViewModelFactory takes an IServiceProvider, there will be missing depedencies
-            // at this point.  Also, any missing dependencies are encountered very late.
-            serviceCollection.AddSingleton<IViewModelFactory, ViewModelFactory>();
-            serviceCollection.AddSingleton<IViewService, ViewService>();
+            serviceCollection.AddSingleton<IExceptionViewModelFactory, ExceptionViewModelFactory>();
+            serviceCollection.AddSingleton<IExceptionViewService, ExceptionViewService>();
 
             m_serviceProvider = serviceCollection.BuildServiceProvider();
 
@@ -119,6 +115,10 @@ namespace Financier.Desktop
             // Financier.Desktop services
             serviceCollection.AddTransient<IMainViewModel, MainViewModel>();
             serviceCollection.AddTransient<IMainViewService, MainViewService>();
+
+            // TODO - break this up
+            serviceCollection.AddSingleton<IViewModelFactory, ViewModelFactory>();
+            serviceCollection.AddSingleton<IViewService, ViewService>();
 
             // Financier.Core services
             serviceCollection.AddSingleton<IAccountService, AccountService>();

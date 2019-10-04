@@ -312,13 +312,6 @@ namespace Financier.Desktop.Services
             window.ShowDialog();
         }
 
-        public void OpenUnhandledExceptionView(Exception ex)
-        {
-            IUnhandledExceptionViewModel viewModel = m_viewModelFactory.CreateUnhandledExceptionViewModel(ex);
-            var window = new UnhandledExceptionWindow(viewModel);
-            window.ShowDialog();
-        }
-
         // TODO - this is duplicated with IDatabaseConnectionViewService
         private bool OpenDeleteConfirmationView(string context)
         {
