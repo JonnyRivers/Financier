@@ -2,6 +2,7 @@
 using Financier.Desktop.Services;
 using Financier.Services;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -9,6 +10,23 @@ using System.Windows.Input;
 
 namespace Financier.Desktop.ViewModels
 {
+    public class BudgetListViewModelFactory : IBudgetListViewModelFactory
+    {
+        private readonly ILogger<BudgetListViewModelFactory> m_logger;
+        private readonly IServiceProvider m_serviceProvider;
+
+        public BudgetListViewModelFactory(ILogger<BudgetListViewModelFactory> logger, IServiceProvider serviceProvider)
+        {
+            m_logger = logger;
+            m_serviceProvider = serviceProvider;
+        }
+
+        public IBudgetListViewModel Create()
+        {
+            return m_serviceProvider.CreateInstance<BudgetListViewModel>();
+        }
+    }
+
     public class BudgetListViewModel : BaseViewModel, IBudgetListViewModel
     {
         private ILogger<BudgetListViewModel> m_logger;

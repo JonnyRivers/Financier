@@ -7,6 +7,23 @@ using System.Linq;
 
 namespace Financier.Desktop.ViewModels
 {
+    public class BalanceSheetViewModelFactory : IBalanceSheetViewModelFactory
+    {
+        private readonly ILogger<BalanceSheetViewModelFactory> m_logger;
+        private readonly IServiceProvider m_serviceProvider;
+
+        public BalanceSheetViewModelFactory(ILogger<BalanceSheetViewModelFactory> logger, IServiceProvider serviceProvider)
+        {
+            m_logger = logger;
+            m_serviceProvider = serviceProvider;
+        }
+
+        public IBalanceSheetViewModel Create()
+        {
+            return m_serviceProvider.CreateInstance<BalanceSheetViewModel>();
+        }
+    }
+
     public class BalanceSheetViewModel : BaseViewModel, IBalanceSheetViewModel
     {
         private ILogger<BalanceSheetViewModel> m_logger;

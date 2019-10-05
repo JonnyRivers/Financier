@@ -10,6 +10,23 @@ using System.Windows.Input;
 
 namespace Financier.Desktop.ViewModels
 {
+    public class AccountRelationshipListViewModelFactory : IAccountRelationshipListViewModelFactory
+    {
+        private readonly ILogger<AccountRelationshipListViewModelFactory> m_logger;
+        private readonly IServiceProvider m_serviceProvider;
+
+        public AccountRelationshipListViewModelFactory(ILogger<AccountRelationshipListViewModelFactory> logger, IServiceProvider serviceProvider)
+        {
+            m_logger = logger;
+            m_serviceProvider = serviceProvider;
+        }
+
+        public IAccountRelationshipListViewModel Create()
+        {
+            return m_serviceProvider.CreateInstance<AccountRelationshipListViewModel>();
+        }
+    }
+
     public class AccountRelationshipListViewModel : BaseViewModel, IAccountRelationshipListViewModel
     {
         private const int AllAccountsId = -1;

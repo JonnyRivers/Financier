@@ -10,6 +10,23 @@ using System.Windows.Input;
 
 namespace Financier.Desktop.ViewModels
 {
+    public class TransactionListViewModelFactory : ITransactionListViewModelFactory
+    {
+        private readonly ILogger<TransactionListViewModelFactory> m_logger;
+        private readonly IServiceProvider m_serviceProvider;
+
+        public TransactionListViewModelFactory(ILogger<TransactionListViewModelFactory> logger, IServiceProvider serviceProvider)
+        {
+            m_logger = logger;
+            m_serviceProvider = serviceProvider;
+        }
+
+        public ITransactionListViewModel Create()
+        {
+            return m_serviceProvider.CreateInstance<TransactionListViewModel>();
+        }
+    }
+
     public class TransactionListViewModel : BaseViewModel, ITransactionListViewModel
     {
         // Dependencies
@@ -24,7 +41,6 @@ namespace Financier.Desktop.ViewModels
 
         public TransactionListViewModel(
             ILogger<TransactionListViewModel> logger,
-            IAccountService accountService,
             ITransactionService transactionService,
             IViewModelFactory viewModelFactory,
             IViewService viewService)

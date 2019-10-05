@@ -53,11 +53,6 @@ namespace Financier.Desktop.Services
             return m_serviceProvider.CreateInstance<AccountTransactionItemViewModel>(transaction);
         }
 
-        public IAccountTreeViewModel CreateAccountTreeViewModel()
-        {
-            return m_serviceProvider.CreateInstance<AccountTreeViewModel>();
-        }
-
         public IAccountTreeItemViewModel CreateAccountTreeItemViewModel(Account account, IEnumerable<Transaction> transactions)
         {
             return m_serviceProvider.CreateInstance<AccountTreeItemViewModel>(account, transactions, new IAccountTreeItemViewModel[0]);
@@ -83,19 +78,9 @@ namespace Financier.Desktop.Services
             return m_serviceProvider.CreateInstance<AccountRelationshipItemViewModel>(accountRelationship);
         }
 
-        public IAccountRelationshipListViewModel CreateAccountRelationshipListViewModel()
-        {
-            return m_serviceProvider.CreateInstance<AccountRelationshipListViewModel>();
-        }
-
         public IAccountRelationshipTypeFilterViewModel CreateAccountRelationshipTypeFilterViewModel(AccountRelationshipType? type)
         {
             return new AccountRelationshipTypeFilterViewModel(type);
-        }
-
-        public IBalanceSheetViewModel CreateBalanceSheetViewModel()
-        {
-            return m_serviceProvider.CreateInstance<BalanceSheetViewModel>();
         }
 
         public IBalanceSheetItemViewModel CreateBalanceSheetItemViewModel(BalanceSheetItem item)
@@ -116,11 +101,6 @@ namespace Financier.Desktop.Services
         public IBudgetItemViewModel CreateBudgetItemViewModel(Budget budget, Currency primaryCurrency)
         {
             return m_serviceProvider.CreateInstance<BudgetItemViewModel>(budget, primaryCurrency);
-        }
-
-        public IBudgetListViewModel CreateBudgetListViewModel()
-        {
-            return m_serviceProvider.CreateInstance<BudgetListViewModel>();
         }
 
         public IBudgetTransactionListViewModel CreateBudgetTransactionListViewModel(int budgetId)
@@ -173,11 +153,6 @@ namespace Financier.Desktop.Services
         public ITransactionItemViewModel CreateTransactionItemViewModel(Transaction transaction)
         {
             return m_serviceProvider.CreateInstance<TransactionItemViewModel>(transaction);
-        }
-
-        public ITransactionListViewModel CreateTransactionListViewModel()
-        {
-            return m_serviceProvider.CreateInstance<TransactionListViewModel>();
         }
     }
 }

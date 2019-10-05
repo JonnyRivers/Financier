@@ -1,5 +1,4 @@
 ﻿using Financier.Services;
-using System;
 using System.Collections.Generic;
 
 namespace Financier.Desktop.Services
@@ -10,19 +9,14 @@ namespace Financier.Desktop.Services
         bool OpenAccountEditView(int accountId, out Account updatedAccount);
         void OpenAccountListView();
         bool OpenAccountTransactionsEditView(int accountId);
-        void OpenAccountTreeView();
 
         bool OpenAccountRelationshipCreateView(AccountRelationship hint, out AccountRelationship newAccountRelationship);
         bool OpenAccountRelationshipDeleteConfirmationView();
         bool OpenAccountRelationshipEditView(int accountRelationshipId, out AccountRelationship updatedAccountRelationship);
-        void OpenAccountRelationshipListView();
-
-        void OpenBalanceSheetView();
 
         bool OpenBudgetCreateView(out Budget newBudget);
         bool OpenBudgetDeleteConfirmationView();
         bool OpenBudgetEditView(int budgetId, out Budget updatedBudget);
-        void OpenBudgetListView();
 
         bool OpenBudgetTransactionDeleteConfirmationView();
 
@@ -40,6 +34,5 @@ namespace Financier.Desktop.Services
         bool OpenReconcileBalanceView(int accountId, out Transaction newTransaction);
         bool OpenTransactionDeleteConfirmationView();
         bool OpenTransactionEditView(int transactionId, out Transaction updatedTransaction);
-        void OpenTransactionListView();
     }
 }

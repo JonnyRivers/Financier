@@ -15,7 +15,6 @@ namespace Financier.Desktop.Services
         IAccountListViewModel CreateAccountListViewModel();
         IAccountTransactionListViewModel CreateAccountTransactionListViewModel(int accountId);
         IAccountTransactionItemViewModel CreateAccountTransactionItemViewModel(Transaction transaction);
-        IAccountTreeViewModel CreateAccountTreeViewModel();
         IAccountTreeItemViewModel CreateAccountTreeItemViewModel(
             Account account, 
             IEnumerable<Transaction> transactions);
@@ -27,10 +26,8 @@ namespace Financier.Desktop.Services
         IAccountRelationshipDetailsViewModel CreateAccountRelationshipCreateViewModel(AccountRelationship hint);
         IAccountRelationshipDetailsViewModel CreateAccountRelationshipEditViewModel(int accountRelationshipId);
         IAccountRelationshipItemViewModel CreateAccountRelationshipItemViewModel(AccountRelationship accountRelationship);
-        IAccountRelationshipListViewModel CreateAccountRelationshipListViewModel();
         IAccountRelationshipTypeFilterViewModel CreateAccountRelationshipTypeFilterViewModel(AccountRelationshipType? type);
 
-        IBalanceSheetViewModel CreateBalanceSheetViewModel();
         IBalanceSheetItemViewModel CreateBalanceSheetItemViewModel(BalanceSheetItem balanceSheetItem);
 
         IForeignAmountViewModel CreateForeignAmountViewModel(
@@ -41,7 +38,6 @@ namespace Financier.Desktop.Services
         IBudgetDetailsViewModel CreateBudgetCreateViewModel();
         IBudgetDetailsViewModel CreateBudgetEditViewModel(int budgetId);
         IBudgetItemViewModel CreateBudgetItemViewModel(Budget budget, Currency primaryCurrency);
-        IBudgetListViewModel CreateBudgetListViewModel();
         IBudgetTransactionListViewModel CreateBudgetTransactionListViewModel(int budgetId);
         IBudgetTransactionItemViewModel CreateBudgetTransactionItemViewModel(
             ObservableCollection<IAccountLinkViewModel> accountLinks,
@@ -55,6 +51,5 @@ namespace Financier.Desktop.Services
         IReconcileBalanceViewModel CreateReconcileBalanceViewModel(int accountId);
         ITransactionDetailsViewModel CreateTransactionEditViewModel(int transactionId);
         ITransactionItemViewModel CreateTransactionItemViewModel(Transaction transaction);
-        ITransactionListViewModel CreateTransactionListViewModel();
     }
 }

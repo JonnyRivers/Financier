@@ -2,6 +2,7 @@
 using Financier.Desktop.Services;
 using Financier.Services;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -9,6 +10,23 @@ using System.Windows.Input;
 
 namespace Financier.Desktop.ViewModels
 {
+    public class AccountTreeViewModelFactory : IAccountTreeViewModelFactory
+    {
+        private readonly ILogger<AccountRelationshipListViewModelFactory> m_logger;
+        private readonly IServiceProvider m_serviceProvider;
+
+        public AccountTreeViewModelFactory(ILogger<AccountRelationshipListViewModelFactory> logger, IServiceProvider serviceProvider)
+        {
+            m_logger = logger;
+            m_serviceProvider = serviceProvider;
+        }
+
+        public IAccountTreeViewModel Create()
+        {
+            return m_serviceProvider.CreateInstance<AccountTreeViewModel>();
+        }
+    }
+
     public class AccountTreeViewModel : BaseViewModel, IAccountTreeViewModel
     {
         private ILogger<AccountTreeViewModel> m_logger;

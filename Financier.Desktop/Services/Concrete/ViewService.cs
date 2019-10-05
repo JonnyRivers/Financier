@@ -2,7 +2,6 @@
 using Financier.Desktop.Views;
 using Financier.Services;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Generic;
 using System.Windows;
 
@@ -72,13 +71,6 @@ namespace Financier.Desktop.Services
             return false;
         }
 
-        public void OpenAccountTreeView()
-        {
-            IAccountTreeViewModel viewModel = m_viewModelFactory.CreateAccountTreeViewModel();
-            var window = new AccountTreeWindow(viewModel);
-            window.ShowDialog();
-        }
-
         public bool OpenAccountRelationshipCreateView(AccountRelationship hint, out AccountRelationship accountRelationship)
         {
             accountRelationship = null;
@@ -120,20 +112,6 @@ namespace Financier.Desktop.Services
             return false;
         }
 
-        public void OpenAccountRelationshipListView()
-        {
-            IAccountRelationshipListViewModel viewModel = m_viewModelFactory.CreateAccountRelationshipListViewModel();
-            var window = new AccountRelationshipListWindow(viewModel);
-            window.ShowDialog();
-        }
-
-        public void OpenBalanceSheetView()
-        {
-            IBalanceSheetViewModel viewModel = m_viewModelFactory.CreateBalanceSheetViewModel();
-            var window = new BalanceSheetWindow(viewModel);
-            window.ShowDialog();
-        }
-
         public bool OpenBudgetCreateView(out Budget budget)
         {
             budget = null;
@@ -171,13 +149,6 @@ namespace Financier.Desktop.Services
             }
 
             return false;
-        }
-
-        public void OpenBudgetListView()
-        {
-            IBudgetListViewModel viewModel = m_viewModelFactory.CreateBudgetListViewModel();
-            var window = new BudgetListWindow(viewModel);
-            window.ShowDialog();
         }
 
         public bool OpenBudgetTransactionDeleteConfirmationView()
@@ -303,13 +274,6 @@ namespace Financier.Desktop.Services
             }
 
             return false;
-        }
-
-        public void OpenTransactionListView()
-        {
-            ITransactionListViewModel viewModel = m_viewModelFactory.CreateTransactionListViewModel();
-            var window = new TransactionListWindow(viewModel);
-            window.ShowDialog();
         }
 
         // TODO - this is duplicated with IDatabaseConnectionViewService
