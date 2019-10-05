@@ -8,17 +8,17 @@ namespace Financier.Desktop.Services
     public class ExceptionViewService : IExceptionViewService
     {
         private readonly ILogger<MainViewService> m_logger;
-        private readonly IExceptionViewModelFactory m_exceptionViewModel;
+        private readonly IExceptionViewModelFactory m_exceptionViewModelFactory;
 
-        public ExceptionViewService(ILogger<MainViewService> logger, IExceptionViewModelFactory exceptionViewModel)
+        public ExceptionViewService(ILogger<MainViewService> logger, IExceptionViewModelFactory exceptionViewModelFactory)
         {
             m_logger = logger;
-            m_exceptionViewModel = exceptionViewModel;
+            m_exceptionViewModelFactory = exceptionViewModelFactory;
         }
 
         public void Show(Exception ex)
         {
-            IExceptionViewModel viewModel = m_exceptionViewModel.Create(ex);
+            IExceptionViewModel viewModel = m_exceptionViewModelFactory.Create(ex);
             var window = new UnhandledExceptionWindow(viewModel);
             window.Show();
         }

@@ -113,8 +113,8 @@ namespace Financier.Desktop
             }
 
             // Financier.Desktop services
-            serviceCollection.AddTransient<IMainViewModel, MainViewModel>();
-            serviceCollection.AddTransient<IMainViewService, MainViewService>();
+            serviceCollection.AddSingleton<IMainViewModelFactory, MainViewModelFactory>();
+            serviceCollection.AddSingleton<IMainViewService, MainViewService>();
 
             // TODO - break this up
             serviceCollection.AddSingleton<IViewModelFactory, ViewModelFactory>();
