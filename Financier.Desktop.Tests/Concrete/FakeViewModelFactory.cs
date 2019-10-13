@@ -30,11 +30,6 @@ namespace Financier.Desktop.Tests.Concrete
             return new StubAccountLinkViewModel(accountLink);
         }
 
-        public IAccountListViewModel CreateAccountListViewModel()
-        {
-            throw new NotImplementedException();
-        }
-
         public IAccountTransactionItemViewModel CreateAccountTransactionItemViewModel(Transaction transaction)
         {
             return new StubAccountTransactionItemViewModel(this, transaction);

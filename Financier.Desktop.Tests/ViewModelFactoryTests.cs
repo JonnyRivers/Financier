@@ -49,9 +49,6 @@ namespace Financier.Desktop.Tests
             IAccountLinkViewModel accountLinkViewModel =
                 viewModelFactory.CreateAccountLinkViewModel(checkingAccountLink);
 
-            IAccountListViewModel accountListViewModel =
-                viewModelFactory.CreateAccountListViewModel();
-
             Assert.IsNotNull(accountDetailsViewModel);
             Assert.AreEqual(checkingAccountEntity.AccountId, accountDetailsViewModel.ToAccount().AccountId);
 
@@ -60,9 +57,6 @@ namespace Financier.Desktop.Tests
 
             Assert.IsNotNull(accountLinkViewModel);
             Assert.AreEqual(checkingAccountEntity.AccountId, accountLinkViewModel.AccountId);
-
-            Assert.IsNotNull(accountListViewModel);
-            Assert.AreEqual(dbContext.Accounts.Count(), accountListViewModel.Accounts.Count);
         }
 
         [TestMethod]
@@ -70,6 +64,7 @@ namespace Financier.Desktop.Tests
         {
             IServiceProvider serviceProvider = BuildServiceProvider();
             IViewModelFactory viewModelFactory = serviceProvider.GetRequiredService<IViewModelFactory>();
+            IBudgetListViewModelFactory budgetListViewModelFactory = serviceProvider.GetRequiredService<IBudgetListViewModelFactory>();
 
             Entities.FinancierDbContext dbContext =
                 serviceProvider.GetRequiredService<Entities.FinancierDbContext>();
@@ -142,8 +137,8 @@ namespace Financier.Desktop.Tests
             IBudgetItemViewModel budgetItemViewModel = 
                 viewModelFactory.CreateBudgetItemViewModel(budget, primaryCurrency);
 
-            IBudgetListViewModel budgetListViewModel = 
-                viewModelFactory.CreateBudgetListViewModel();
+            IBudgetListViewModel budgetListViewModel =
+                budgetListViewModelFactory.Create();
 
             IBudgetTransactionItemViewModel budgetTransactionItemViewModel = 
                 viewModelFactory.CreateBudgetTransactionItemViewModel(
@@ -176,6 +171,7 @@ namespace Financier.Desktop.Tests
         {
             IServiceProvider serviceProvider = BuildServiceProvider();
             IViewModelFactory viewModelFactory = serviceProvider.GetRequiredService<IViewModelFactory>();
+            ITransactionListViewModelFactory transactionListViewModelFactory = serviceProvider.GetRequiredService<ITransactionListViewModelFactory>();
 
             Entities.FinancierDbContext dbContext =
                 serviceProvider.GetRequiredService<Entities.FinancierDbContext>();
@@ -240,8 +236,8 @@ namespace Financier.Desktop.Tests
             ITransactionItemViewModel transactionItemViewModel = 
                 viewModelFactory.CreateTransactionItemViewModel(transaction);
 
-            ITransactionListViewModel transactionListViewModel = 
-                viewModelFactory.CreateTransactionListViewModel();
+            ITransactionListViewModel transactionListViewModel =
+                transactionListViewModelFactory.Create();
 
             IAccountTransactionListViewModel accountTransactionListViewModel =
                 viewModelFactory.CreateAccountTransactionListViewModel(checkingAccountEntity.AccountId);
@@ -280,6 +276,9 @@ namespace Financier.Desktop.Tests
             serviceCollection.AddDbContext<Entities.FinancierDbContext>(
                 options => options.UseSqlite(dbConnection),
                 ServiceLifetime.Transient);
+
+            serviceCollection.AddSingleton<IBudgetListViewModelFactory, BudgetListViewModelFactory>();
+            serviceCollection.AddSingleton<ITransactionListViewModelFactory, TransactionListViewModelFactory>();
 
             serviceCollection.AddSingleton<IAccountService, AccountService>();
             serviceCollection.AddSingleton<IAccountRelationshipService, AccountRelationshipService>();

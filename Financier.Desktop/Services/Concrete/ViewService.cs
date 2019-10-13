@@ -52,13 +52,6 @@ namespace Financier.Desktop.Services
             return false;
         }
 
-        public void OpenAccountListView()
-        {
-            IAccountListViewModel viewModel = m_viewModelFactory.CreateAccountListViewModel();
-            var window = new AccountListWindow(viewModel);
-            window.ShowDialog();
-        }
-
         public bool OpenAccountTransactionsEditView(int accountId)
         {
             IAccountTransactionListViewModel viewModel = m_viewModelFactory.CreateAccountTransactionListViewModel(accountId);
