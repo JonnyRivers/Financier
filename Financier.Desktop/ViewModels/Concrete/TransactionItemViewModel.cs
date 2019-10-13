@@ -8,19 +8,19 @@ namespace Financier.Desktop.ViewModels
     public class TransactionItemViewModel : BaseViewModel, ITransactionItemViewModel
     {
         private ILogger<TransactionItemViewModel> m_logger;
-        private IViewModelFactory m_viewModelFactory;
+        private IAccountLinkViewModelFactory m_acountLinkViewModelFactory;
 
         public TransactionItemViewModel(
             ILogger<TransactionItemViewModel> logger,
-            IViewModelFactory viewModelFactory,
+            IAccountLinkViewModelFactory acountLinkViewModelFactory,
             Transaction transaction)
         {
             m_logger = logger;
-            m_viewModelFactory = viewModelFactory;
+            m_acountLinkViewModelFactory = acountLinkViewModelFactory;
 
             TransactionId = transaction.TransactionId;
-            CreditAccount = m_viewModelFactory.CreateAccountLinkViewModel(transaction.CreditAccount);
-            DebitAccount = m_viewModelFactory.CreateAccountLinkViewModel(transaction.DebitAccount);
+            CreditAccount = m_acountLinkViewModelFactory.Create(transaction.CreditAccount);
+            DebitAccount = m_acountLinkViewModelFactory.Create(transaction.DebitAccount);
             At = transaction.At;
             Amount = transaction.Amount;
         }

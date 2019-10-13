@@ -94,8 +94,9 @@ namespace Financier.Desktop.Tests
                             budgetTransaction,
                             type);
                     });
-                mockTransactionItemViewModelFactory
-                    .Setup(f => f.CreateAccountLinkViewModel(It.IsAny<AccountLink>()))
+                var mockAccountLinkViewModelFactory = new Mock<IAccountLinkViewModelFactory>();
+                mockAccountLinkViewModelFactory
+                    .Setup(f => f.Create(It.IsAny<AccountLink>()))
                     .Returns((AccountLink accountLink) =>
                     {
                         return new AccountLinkViewModel(
@@ -112,6 +113,7 @@ namespace Financier.Desktop.Tests
                             loggerFactory.CreateLogger<BudgetTransactionListViewModel>(),
                             accountService,
                             budgetService,
+                            mockAccountLinkViewModelFactory.Object,
                             mockTransactionItemViewModelFactory.Object,
                             new Mock<Services.IViewService>().Object,
                             budgetId

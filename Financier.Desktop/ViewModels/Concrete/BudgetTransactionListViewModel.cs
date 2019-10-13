@@ -16,6 +16,7 @@ namespace Financier.Desktop.ViewModels
         private ILogger<BudgetTransactionListViewModel> m_logger;
         private IAccountService m_accountService;
         private IBudgetService m_budgetService;
+        private IAccountLinkViewModelFactory m_accountLinkViewModelFactory;
         private IViewModelFactory m_viewModelFactory;
         private IViewService m_viewService;
 
@@ -28,6 +29,7 @@ namespace Financier.Desktop.ViewModels
             ILogger<BudgetTransactionListViewModel> logger,
             IAccountService accountService,
             IBudgetService budgetService,
+            IAccountLinkViewModelFactory accountLinkViewModelFactory,
             IViewModelFactory viewModelFactory,
             IViewService viewService,
             int budgetId)
@@ -35,6 +37,8 @@ namespace Financier.Desktop.ViewModels
             m_logger = logger;
             m_accountService = accountService;
             m_budgetService = budgetService;
+            m_accountLinkViewModelFactory = accountLinkViewModelFactory;
+
             m_viewModelFactory = viewModelFactory;
             m_viewService = viewService;
 
@@ -42,7 +46,7 @@ namespace Financier.Desktop.ViewModels
                 m_accountService
                     .GetAllAsLinks()
                     .OrderBy(al => al.Name)
-                    .Select(al => m_viewModelFactory.CreateAccountLinkViewModel(al)));
+                    .Select(al => m_accountLinkViewModelFactory.Create(al)));
 
             m_budgetId = budgetId;
 

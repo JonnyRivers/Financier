@@ -14,8 +14,8 @@ namespace Financier.Desktop.ViewModels
             ILogger<TransactionCreateViewModel> logger,
             IAccountService accountService,
             ITransactionService transactionService,
-            IViewModelFactory viewModelFactory,
-            Transaction hint) : base(accountService, transactionService, viewModelFactory, 0)
+            IAccountLinkViewModelFactory accountLinkViewModelFactory,
+            Transaction hint) : base(accountService, transactionService, accountLinkViewModelFactory, 0)
         {
             m_logger = logger;
 

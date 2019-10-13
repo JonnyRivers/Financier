@@ -13,8 +13,8 @@ namespace Financier.Desktop.ViewModels
             ILogger<TransactionEditViewModel> logger,
             IAccountService accountService,
             ITransactionService transactionService,
-            IViewModelFactory viewModelFactory,
-            int transactionId) : base(accountService, transactionService, viewModelFactory, transactionId)
+            IAccountLinkViewModelFactory accountLinkViewModelFactory,
+            int transactionId) : base(accountService, transactionService, accountLinkViewModelFactory, transactionId)
         {
             m_logger = logger;
 

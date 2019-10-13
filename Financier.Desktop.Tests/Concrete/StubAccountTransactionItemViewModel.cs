@@ -13,14 +13,14 @@ namespace Financier.Desktop.Tests.Concrete
         IAccountLinkViewModel m_debitAccount;
 
         internal StubAccountTransactionItemViewModel(
-            IViewModelFactory viewModelFactory,
+            IAccountLinkViewModelFactory viewModelFactory,
             Transaction transaction)
         {
             m_transaction = transaction;
             m_balance = 0;
 
-            m_creditAccount = viewModelFactory.CreateAccountLinkViewModel(m_transaction.CreditAccount);
-            m_debitAccount = viewModelFactory.CreateAccountLinkViewModel(m_transaction.DebitAccount);
+            m_creditAccount = viewModelFactory.Create(m_transaction.CreditAccount);
+            m_debitAccount = viewModelFactory.Create(m_transaction.DebitAccount);
         }
 
         public int TransactionId => m_transaction.TransactionId;

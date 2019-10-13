@@ -1,5 +1,4 @@
-﻿using Financier.Desktop.Services;
-using Financier.Services;
+﻿using Financier.Services;
 using Microsoft.Extensions.Logging;
 
 namespace Financier.Desktop.ViewModels
@@ -7,19 +6,19 @@ namespace Financier.Desktop.ViewModels
     public class AccountRelationshipItemViewModel : BaseViewModel, IAccountRelationshipItemViewModel
     {
         private ILogger<AccountRelationshipItemViewModel> m_logger;
-        private IViewModelFactory m_viewModelFactory;
+        private IAccountLinkViewModelFactory m_accountLinkViewModelFactory;
 
         public AccountRelationshipItemViewModel(
             ILogger<AccountRelationshipItemViewModel> logger,
-            IViewModelFactory viewModelFactory,
+            IAccountLinkViewModelFactory accountlinkViewModelFactory,
             AccountRelationship accountRelationship)
         {
             m_logger = logger;
-            m_viewModelFactory = viewModelFactory;
+            m_accountLinkViewModelFactory = accountlinkViewModelFactory;
 
             AccountRelationshipId = accountRelationship.AccountRelationshipId;
-            SourceAccount = m_viewModelFactory.CreateAccountLinkViewModel(accountRelationship.SourceAccount);
-            DestinationAccount = m_viewModelFactory.CreateAccountLinkViewModel(accountRelationship.DestinationAccount);
+            SourceAccount = m_accountLinkViewModelFactory.Create(accountRelationship.SourceAccount);
+            DestinationAccount = m_accountLinkViewModelFactory.Create(accountRelationship.DestinationAccount);
             Type = accountRelationship.Type;
         }
 

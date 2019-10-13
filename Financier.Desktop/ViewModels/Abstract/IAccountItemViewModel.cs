@@ -2,6 +2,11 @@
 
 namespace Financier.Desktop.ViewModels
 {
+    public interface IAccountItemViewModelFactory
+    {
+        IAccountItemViewModel Create(Account account);
+    }
+
     public interface IAccountItemViewModel
     {
         int AccountId { get; }

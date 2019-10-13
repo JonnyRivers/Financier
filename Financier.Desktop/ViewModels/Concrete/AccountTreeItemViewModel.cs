@@ -1,11 +1,34 @@
 ﻿using Financier.Services;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace Financier.Desktop.ViewModels
 {
+    public class AccountTreeItemViewModelFactory : IAccountTreeItemViewModelFactory
+    {
+        private readonly ILogger<AccountTreeItemViewModelFactory> m_logger;
+        private readonly IServiceProvider m_serviceProvider;
+
+        public AccountTreeItemViewModelFactory(ILogger<AccountTreeItemViewModelFactory> logger, IServiceProvider serviceProvider)
+        {
+            m_logger = logger;
+            m_serviceProvider = serviceProvider;
+        }
+
+        public IAccountTreeItemViewModel Create(Account account, IEnumerable<Transaction> transactions)
+        {
+            return m_serviceProvider.CreateInstance<AccountTreeItemViewModel>(account, transactions, new IAccountTreeItemViewModel[0]);
+        }
+
+        public IAccountTreeItemViewModel Create(Account account, IEnumerable<Transaction> transactions, IEnumerable<IAccountTreeItemViewModel> childAccountVMs)
+        {
+            return m_serviceProvider.CreateInstance<AccountTreeItemViewModel>(account, transactions, childAccountVMs);
+        }
+    }
+
     public class AccountTreeItemViewModel : BaseViewModel, IAccountTreeItemViewModel
     {
         private ILogger<AccountItemViewModel> m_logger;

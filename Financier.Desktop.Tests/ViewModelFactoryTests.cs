@@ -19,47 +19,6 @@ namespace Financier.Desktop.Tests
     public class ViewModelFactoryTests
     {
         [TestMethod]
-        public void TestAccountViewModelCreation()
-        {
-            IServiceProvider serviceProvider = BuildServiceProvider();
-            IViewModelFactory viewModelFactory = serviceProvider.GetRequiredService<IViewModelFactory>();
-
-            Entities.FinancierDbContext dbContext =
-                serviceProvider.GetRequiredService<Entities.FinancierDbContext>();
-            dbContext.Database.EnsureCreated();
-
-            var currencyFactory = new CurrencyFactory();
-            Entities.Currency currencyEntity = currencyFactory.Create(CurrencyPrefab.Usd, true);
-            currencyFactory.Add(dbContext, currencyEntity);
-
-            var accountFactory = new AccountFactory();
-            Entities.Account checkingAccountEntity = accountFactory.Create(AccountPrefab.Checking, currencyEntity);
-            accountFactory.Add(dbContext, checkingAccountEntity);
-
-            IAccountService accountService = serviceProvider.GetRequiredService<IAccountService>();
-            Account checkingAccount = accountService.Get(checkingAccountEntity.AccountId);
-            AccountLink checkingAccountLink = accountService.GetAsLink(checkingAccountEntity.AccountId);
-
-            IAccountDetailsViewModel accountDetailsViewModel = 
-                viewModelFactory.CreateAccountEditViewModel(checkingAccountEntity.AccountId);
-
-            IAccountItemViewModel accountItemViewModel =
-                viewModelFactory.CreateAccountItemViewModel(checkingAccount);
-
-            IAccountLinkViewModel accountLinkViewModel =
-                viewModelFactory.CreateAccountLinkViewModel(checkingAccountLink);
-
-            Assert.IsNotNull(accountDetailsViewModel);
-            Assert.AreEqual(checkingAccountEntity.AccountId, accountDetailsViewModel.ToAccount().AccountId);
-
-            Assert.IsNotNull(accountItemViewModel);
-            Assert.AreEqual(checkingAccountEntity.AccountId, accountItemViewModel.AccountId);
-
-            Assert.IsNotNull(accountLinkViewModel);
-            Assert.AreEqual(checkingAccountEntity.AccountId, accountLinkViewModel.AccountId);
-        }
-
-        [TestMethod]
         public void TestBudgetViewModelCreation()
         {
             IServiceProvider serviceProvider = BuildServiceProvider();

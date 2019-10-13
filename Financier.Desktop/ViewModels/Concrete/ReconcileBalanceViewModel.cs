@@ -16,6 +16,7 @@ namespace Financier.Desktop.ViewModels
         private IAccountService m_accountService;
         private ICurrencyService m_currencyService;
         private ITransactionService m_transactionService;
+        private IAccountLinkViewModelFactory m_accountLinkViewModelFactory;
         private IViewModelFactory m_viewModelFactory;
         private IViewService m_viewService;
 
@@ -34,6 +35,7 @@ namespace Financier.Desktop.ViewModels
             IAccountService accountService,
             ICurrencyService currencyService,
             ITransactionService transactionService,
+            IAccountLinkViewModelFactory accountLinkViewModelFactory,
             IViewModelFactory viewModelFactory,
             IViewService viewService,
             int accountId)
@@ -42,6 +44,7 @@ namespace Financier.Desktop.ViewModels
             m_accountService = accountService;
             m_currencyService = currencyService;
             m_transactionService = transactionService;
+            m_accountLinkViewModelFactory = accountLinkViewModelFactory;
             m_viewModelFactory = viewModelFactory;
             m_viewService = viewService;
 
@@ -54,7 +57,7 @@ namespace Financier.Desktop.ViewModels
 
             IEnumerable<AccountLink> accountLinks = m_accountService.GetAllAsLinks().Where(al => al.Type == AccountType.Income);
             IEnumerable<IAccountLinkViewModel> accountLinkViewModels =
-                accountLinks.Select(al => m_viewModelFactory.CreateAccountLinkViewModel(al));
+                accountLinks.Select(al => m_accountLinkViewModelFactory.Create(al));
             
             Accounts = new ObservableCollection<IAccountLinkViewModel>(accountLinkViewModels.OrderBy(alvm => alvm.Name));
             m_selectedCreditAccount = Accounts.FirstOrDefault();

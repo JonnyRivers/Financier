@@ -3,6 +3,11 @@ using System.Windows.Input;
 
 namespace Financier.Desktop.ViewModels
 {
+    public interface IAccountTransactionListViewModelFactory
+    {
+        IAccountTransactionListViewModel Create(int accountId);
+    }
+
     public interface IAccountTransactionListViewModel
     {
         bool HasLogicalAcounts { get; }

@@ -1,30 +1,48 @@
-﻿using Financier.Desktop.Services;
-using Financier.Services;
+﻿using Financier.Services;
 using Microsoft.Extensions.Logging;
 using System;
 
 namespace Financier.Desktop.ViewModels
 {
+    public class AccountTransactionItemViewModelFactory : IAccountTransactionItemViewModelFactory
+    {
+        private readonly ILogger<AccountTransactionItemViewModelFactory> m_logger;
+        private readonly IServiceProvider m_serviceProvider;
+
+        public AccountTransactionItemViewModelFactory(
+            ILogger<AccountTransactionItemViewModelFactory> logger, 
+            IServiceProvider serviceProvider)
+        {
+            m_logger = logger;
+            m_serviceProvider = serviceProvider;
+        }
+
+        public IAccountTransactionItemViewModel Create(Transaction transaction)
+        {
+            return m_serviceProvider.CreateInstance<AccountTransactionItemViewModel>(transaction);
+        }
+    }
+
     public class AccountTransactionItemViewModel : BaseViewModel, IAccountTransactionItemViewModel
     {
         private ILogger<AccountTransactionItemViewModel> m_logger;
-        private IViewModelFactory m_viewModelFactory;
+        private IAccountLinkViewModelFactory m_accountLinkViewModelFactory;
 
         private decimal m_balance;
 
         public AccountTransactionItemViewModel(
             ILogger<AccountTransactionItemViewModel> logger,
-            IViewModelFactory viewModelFactory,
+            IAccountLinkViewModelFactory accountLinkViewModelFactory,
             Transaction transaction)
         {
             m_logger = logger;
-            m_viewModelFactory = viewModelFactory;
+            m_accountLinkViewModelFactory = accountLinkViewModelFactory;
 
             m_balance = 0;
 
             TransactionId = transaction.TransactionId;
-            CreditAccount = m_viewModelFactory.CreateAccountLinkViewModel(transaction.CreditAccount);
-            DebitAccount = m_viewModelFactory.CreateAccountLinkViewModel(transaction.DebitAccount);
+            CreditAccount = m_accountLinkViewModelFactory.Create(transaction.CreditAccount);
+            DebitAccount = m_accountLinkViewModelFactory.Create(transaction.DebitAccount);
             At = transaction.At;
             Amount = transaction.Amount;
         }

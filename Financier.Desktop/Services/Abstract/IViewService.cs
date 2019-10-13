@@ -5,10 +5,6 @@ namespace Financier.Desktop.Services
 {
     public interface IViewService
     {
-        bool OpenAccountCreateView(out Account newAccount);
-        bool OpenAccountEditView(int accountId, out Account updatedAccount);
-        bool OpenAccountTransactionsEditView(int accountId);
-
         bool OpenAccountRelationshipCreateView(AccountRelationship hint, out AccountRelationship newAccountRelationship);
         bool OpenAccountRelationshipDeleteConfirmationView();
         bool OpenAccountRelationshipEditView(int accountRelationshipId, out AccountRelationship updatedAccountRelationship);

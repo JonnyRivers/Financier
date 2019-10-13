@@ -18,52 +18,6 @@ namespace Financier.Desktop.Services
             m_viewModelFactory = viewModelFactory;
         }
 
-        public bool OpenAccountCreateView(out Account account)
-        {
-            account = null;
-
-            IAccountDetailsViewModel viewModel = m_viewModelFactory.CreateAccountCreateViewModel();
-            var window = new AccountDetailsWindow(viewModel);
-            bool? result = window.ShowDialog();
-
-            if (result.HasValue && result.Value)
-            {
-                account = viewModel.ToAccount();
-                return true;
-            }
-
-            return false;
-        }
-
-        public bool OpenAccountEditView(int accountId, out Account account)
-        {
-            account = null;
-
-            IAccountDetailsViewModel viewModel = m_viewModelFactory.CreateAccountEditViewModel(accountId);
-            var window = new AccountDetailsWindow(viewModel);
-            bool? result = window.ShowDialog();
-
-            if (result.HasValue && result.Value)
-            {
-                account = viewModel.ToAccount();
-                return true;
-            }
-
-            return false;
-        }
-
-        public bool OpenAccountTransactionsEditView(int accountId)
-        {
-            IAccountTransactionListViewModel viewModel = m_viewModelFactory.CreateAccountTransactionListViewModel(accountId);
-            var window = new AccountTransactionListWindow(viewModel);
-            bool? result = window.ShowDialog();
-
-            if (result.HasValue)
-                return result.Value;
-
-            return false;
-        }
-
         public bool OpenAccountRelationshipCreateView(AccountRelationship hint, out AccountRelationship accountRelationship)
         {
             accountRelationship = null;

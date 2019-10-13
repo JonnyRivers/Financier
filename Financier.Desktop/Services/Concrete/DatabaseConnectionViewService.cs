@@ -9,19 +9,21 @@ namespace Financier.Desktop.Services
     public class DatabaseConnectionViewService : IDatabaseConnectionViewService
     {
         private readonly ILogger<DatabaseConnectionViewService> m_logger;
-        private readonly IDatabaseConnectionViewModelFactory m_viewModelFactory;
+        private readonly IDatabaseConnectionViewModelFactory m_databaseConnectionViewModelFactory;
 
-        public DatabaseConnectionViewService(ILogger<DatabaseConnectionViewService> logger, IDatabaseConnectionViewModelFactory viewModelFactory)
+        public DatabaseConnectionViewService(
+            ILogger<DatabaseConnectionViewService> logger, 
+            IDatabaseConnectionViewModelFactory databaseConnectionViewModelFactory)
         {
             m_logger = logger;
-            m_viewModelFactory = viewModelFactory;
+            m_databaseConnectionViewModelFactory = databaseConnectionViewModelFactory;
         }
 
         public bool OpenDatabaseConnectionCreateView(out DatabaseConnection newDatabaseConnection)
         {
             newDatabaseConnection = null;
 
-            IDatabaseConnectionDetailsViewModel viewModel = m_viewModelFactory.CreateDatabaseConnectionCreateViewModel();
+            IDatabaseConnectionDetailsViewModel viewModel = m_databaseConnectionViewModelFactory.CreateDatabaseConnectionCreateViewModel();
             var window = new DatabaseConnectionDetailsWindow(viewModel);
             bool? result = window.ShowDialog();
 
@@ -43,7 +45,7 @@ namespace Financier.Desktop.Services
         {
             updatedDatabaseConnection = null;
 
-            IDatabaseConnectionDetailsViewModel viewModel = m_viewModelFactory.CreateDatabaseConnectionEditViewModel(databaseConnectionId);
+            IDatabaseConnectionDetailsViewModel viewModel = m_databaseConnectionViewModelFactory.CreateDatabaseConnectionEditViewModel(databaseConnectionId);
             var window = new DatabaseConnectionDetailsWindow(viewModel);
             bool? result = window.ShowDialog();
 
@@ -61,7 +63,7 @@ namespace Financier.Desktop.Services
             databaseConnection = null;
             password = string.Empty;
 
-            var viewModel = m_viewModelFactory.CreateDatabaseConnectionListViewModel();
+            var viewModel = m_databaseConnectionViewModelFactory.CreateDatabaseConnectionListViewModel();
             var connectionWindow = new DatabaseConnectionListWindow(viewModel);
             bool? result = connectionWindow.ShowDialog();
 
@@ -79,7 +81,7 @@ namespace Financier.Desktop.Services
         {
             password = null;
 
-            var viewModel = m_viewModelFactory.CreateDatabaseConnectionPasswordViewModel(userId);
+            var viewModel = m_databaseConnectionViewModelFactory.CreateDatabaseConnectionPasswordViewModel(userId);
             var passwordWindow = new DatabaseConnectionPasswordWindow(viewModel);
             bool? result = passwordWindow.ShowDialog();
 

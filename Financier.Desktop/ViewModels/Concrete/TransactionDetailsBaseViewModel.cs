@@ -13,25 +13,25 @@ namespace Financier.Desktop.ViewModels
     {
         protected IAccountService m_accountService;
         protected ITransactionService m_transactionService;
-        protected IViewModelFactory m_viewModelFactory;
+        protected IAccountLinkViewModelFactory m_accountLinkViewModelFactory;
 
         protected int m_transactionId;
 
         protected TransactionDetailsBaseViewModel(
             IAccountService accountService,
             ITransactionService transactionService,
-            IViewModelFactory viewModelFactory,
+            IAccountLinkViewModelFactory accountLinkViewModelFactory,
             int transactionId)
         {
             m_accountService = accountService;
             m_transactionService = transactionService;
-            m_viewModelFactory = viewModelFactory;
+            m_accountLinkViewModelFactory = accountLinkViewModelFactory;
 
             m_transactionId = transactionId;
 
             IEnumerable<AccountLink> accountLinks = m_accountService.GetAllAsLinks();
             IEnumerable<IAccountLinkViewModel> accountLinkViewModels =
-                accountLinks.Select(al => m_viewModelFactory.CreateAccountLinkViewModel(al));
+                accountLinks.Select(al => m_accountLinkViewModelFactory.Create(al));
 
             Accounts = new ObservableCollection<IAccountLinkViewModel>(accountLinkViewModels.OrderBy(alvm => alvm.Name));
         }

@@ -8,20 +8,6 @@ namespace Financier.Desktop.Services
 {
     public interface IViewModelFactory
     {
-        IAccountDetailsViewModel CreateAccountCreateViewModel();
-        IAccountDetailsViewModel CreateAccountEditViewModel(int accountId);
-        IAccountItemViewModel CreateAccountItemViewModel(Account account);
-        IAccountLinkViewModel CreateAccountLinkViewModel(AccountLink accountLink);
-        IAccountTransactionListViewModel CreateAccountTransactionListViewModel(int accountId);
-        IAccountTransactionItemViewModel CreateAccountTransactionItemViewModel(Transaction transaction);
-        IAccountTreeItemViewModel CreateAccountTreeItemViewModel(
-            Account account, 
-            IEnumerable<Transaction> transactions);
-        IAccountTreeItemViewModel CreateAccountTreeItemViewModel(
-            Account account, 
-            IEnumerable<Transaction> transactions, 
-            IEnumerable<IAccountTreeItemViewModel> childAccountVMs);
-
         IAccountRelationshipDetailsViewModel CreateAccountRelationshipCreateViewModel(AccountRelationship hint);
         IAccountRelationshipDetailsViewModel CreateAccountRelationshipEditViewModel(int accountRelationshipId);
         IAccountRelationshipItemViewModel CreateAccountRelationshipItemViewModel(AccountRelationship accountRelationship);

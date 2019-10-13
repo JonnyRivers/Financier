@@ -114,14 +114,23 @@ namespace Financier.Desktop
 
             // Financier.Desktop services
             serviceCollection.AddSingleton<IMainViewService, MainViewService>();
+            serviceCollection.AddSingleton<IAccountCreateViewService, AccountCreateViewService>();
+            serviceCollection.AddSingleton<IAccountEditViewService, AccountEditViewService>();
             serviceCollection.AddSingleton<IAccountRelationshipListViewService, AccountRelationshipListViewService>();
+            serviceCollection.AddSingleton<IAccountTransactionsEditViewService, AccountTransactionsEditViewService>();
             serviceCollection.AddSingleton<IAccountTreeViewService, AccountTreeViewService>();
             serviceCollection.AddSingleton<IBalanceSheetViewService, BalanceSheetViewService>();
             serviceCollection.AddSingleton<IBudgetListViewService, BudgetListViewService>();
             serviceCollection.AddSingleton<ITransactionListViewService, TransactionListViewService>();
 
             serviceCollection.AddSingleton<IMainViewModelFactory, MainViewModelFactory>();
+            serviceCollection.AddSingleton<IAccountDetailsViewModelFactory, AccountDetailsViewModelFactory>();
+            serviceCollection.AddSingleton<IAccountItemViewModelFactory, AccountItemViewModelFactory>();
+            serviceCollection.AddSingleton<IAccountLinkViewModelFactory, AccountLinkViewModelFactory>();
             serviceCollection.AddSingleton<IAccountRelationshipListViewModelFactory, AccountRelationshipListViewModelFactory>();
+            serviceCollection.AddSingleton<IAccountTransactionItemViewModelFactory, AccountTransactionItemViewModelFactory>();
+            serviceCollection.AddSingleton<IAccountTransactionListViewModelFactory, AccountTransactionListViewModelFactory>();
+            serviceCollection.AddSingleton<IAccountTreeItemViewModelFactory, AccountTreeItemViewModelFactory>();
             serviceCollection.AddSingleton<IAccountTreeViewModelFactory, AccountTreeViewModelFactory>();
             serviceCollection.AddSingleton<IBalanceSheetViewModelFactory, BalanceSheetViewModelFactory>();
             serviceCollection.AddSingleton<IBudgetListViewModelFactory, BudgetListViewModelFactory>();

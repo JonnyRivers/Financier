@@ -18,46 +18,6 @@ namespace Financier.Desktop.Services
             m_serviceProvider = serviceProvider;
         }
 
-        public IAccountDetailsViewModel CreateAccountCreateViewModel()
-        {
-            return m_serviceProvider.CreateInstance<AccountCreateViewModel>();
-        }
-
-        public IAccountDetailsViewModel CreateAccountEditViewModel(int accountId)
-        {
-            return m_serviceProvider.CreateInstance<AccountEditViewModel>(accountId);
-        }
-
-        public IAccountItemViewModel CreateAccountItemViewModel(Account account)
-        {
-            return m_serviceProvider.CreateInstance<AccountItemViewModel>(account);
-        }
-
-        public IAccountLinkViewModel CreateAccountLinkViewModel(AccountLink accountLink)
-        {
-            return m_serviceProvider.CreateInstance<AccountLinkViewModel>(accountLink);
-        }
-
-        public IAccountTransactionListViewModel CreateAccountTransactionListViewModel(int accountId)
-        {
-            return m_serviceProvider.CreateInstance<AccountTransactionListViewModel>(accountId);
-        }
-
-        public IAccountTransactionItemViewModel CreateAccountTransactionItemViewModel(Transaction transaction)
-        {
-            return m_serviceProvider.CreateInstance<AccountTransactionItemViewModel>(transaction);
-        }
-
-        public IAccountTreeItemViewModel CreateAccountTreeItemViewModel(Account account, IEnumerable<Transaction> transactions)
-        {
-            return m_serviceProvider.CreateInstance<AccountTreeItemViewModel>(account, transactions, new IAccountTreeItemViewModel[0]);
-        }
-
-        public IAccountTreeItemViewModel CreateAccountTreeItemViewModel(Account account, IEnumerable<Transaction> transactions, IEnumerable<IAccountTreeItemViewModel> childAccountVMs)
-        {
-            return m_serviceProvider.CreateInstance<AccountTreeItemViewModel>(account, transactions, childAccountVMs);
-        }
-
         public IAccountRelationshipDetailsViewModel CreateAccountRelationshipCreateViewModel(AccountRelationship hint)
         {
             return m_serviceProvider.CreateInstance<AccountRelationshipCreateViewModel>(hint);
