@@ -43,10 +43,8 @@ namespace Financier.Desktop.Tests
                     loggerFactory.CreateLogger<TransactionService>(),
                     sqliteMemoryWrapper.DbContext);
 
-                IAccountTransactionItemViewModelFactory accountTransactionViewModelFactory = new AccountTransactionItemViewModelFactory(
-                    loggerFactory.CreateLogger<AccountTransactionItemViewModelFactory>(),
-                    null// eeeek - IServiceProvider is an unacceptable dependency
-                );
+                IAccountTransactionItemViewModelFactory accountTransactionViewModelFactory = 
+                    new Concrete.StubAccountTransactionItemViewModelFactory();
 
                 var viewService = new Concrete.FakeViewService();
 
@@ -142,7 +140,9 @@ namespace Financier.Desktop.Tests
                     loggerFactory.CreateLogger<TransactionService>(),
                     sqliteMemoryWrapper.DbContext);
 
-                var viewModelFactory = new Concrete.FakeViewModelFactory();
+
+                IAccountTransactionItemViewModelFactory accountTransactionViewModelFactory =
+                    new Concrete.StubAccountTransactionItemViewModelFactory();
 
                 var viewService = new Concrete.FakeViewService();
 
@@ -150,7 +150,7 @@ namespace Financier.Desktop.Tests
                     logger,
                     accountService,
                     transactionService,
-                    viewModelFactory,
+                    accountTransactionViewModelFactory,
                     viewService,
                     checkingAccountEntity.AccountId);
 
@@ -223,7 +223,8 @@ namespace Financier.Desktop.Tests
                     loggerFactory.CreateLogger<TransactionService>(),
                     sqliteMemoryWrapper.DbContext);
 
-                var viewModelFactory = new Concrete.FakeViewModelFactory();
+                IAccountTransactionItemViewModelFactory accountTransactionViewModelFactory =
+                    new Concrete.StubAccountTransactionItemViewModelFactory();
 
                 AccountLink checkingAccountLink = accountService.GetAsLink(checkingAccountEntity.AccountId);
                 AccountLink rentExpenseAccountLink = accountService.GetAsLink(rentExpenseAccountEntity.AccountId);
@@ -254,7 +255,7 @@ namespace Financier.Desktop.Tests
                     logger,
                     accountService,
                     transactionService,
-                    viewModelFactory,
+                    accountTransactionViewModelFactory,
                     mockViewService.Object,
                     checkingAccountEntity.AccountId
                 );
@@ -334,7 +335,8 @@ namespace Financier.Desktop.Tests
                     loggerFactory.CreateLogger<TransactionService>(),
                     sqliteMemoryWrapper.DbContext);
 
-                var viewModelFactory = new Concrete.FakeViewModelFactory();
+                IAccountTransactionItemViewModelFactory accountTransactionViewModelFactory =
+                    new Concrete.StubAccountTransactionItemViewModelFactory();
 
                 // Force transaction deletion to always confirm
                 var mockViewService = new Mock<IViewService>();
@@ -346,7 +348,7 @@ namespace Financier.Desktop.Tests
                     logger,
                     accountService,
                     transactionService,
-                    viewModelFactory,
+                    accountTransactionViewModelFactory,
                     mockViewService.Object,
                     checkingAccountEntity.AccountId
                 );

@@ -5,6 +5,17 @@ using Financier.Services;
 
 namespace Financier.Desktop.Tests.Concrete
 {
+    internal class StubAccountTransactionItemViewModelFactory : IAccountTransactionItemViewModelFactory
+    {
+        public IAccountTransactionItemViewModel Create(Transaction transaction)
+        {
+            return new StubAccountTransactionItemViewModel(
+                new StubAccountLinkViewModelFactory(),
+                transaction
+            );
+        }
+    }
+
     internal class StubAccountTransactionItemViewModel : IAccountTransactionItemViewModel
     {
         private Transaction m_transaction;

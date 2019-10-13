@@ -63,6 +63,7 @@ namespace Financier.Desktop.Tests
                     accountService,
                     currencyService,
                     transactionService,
+                    new Concrete.StubAccountLinkViewModelFactory(),
                     viewModelFactory,
                     viewService,
                     checkingAccountEntity.AccountId);

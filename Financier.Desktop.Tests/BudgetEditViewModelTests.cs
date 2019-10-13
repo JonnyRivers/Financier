@@ -148,14 +148,6 @@ namespace Financier.Desktop.Tests
                                 budgetTransaction,
                                 type);
                         });
-                mockTransactionItemViewModelFactory
-                    .Setup(f => f.CreateAccountLinkViewModel(It.IsAny<AccountLink>()))
-                    .Returns((AccountLink accountLink) =>
-                    {
-                        return new AccountLinkViewModel(
-                            loggerFactory.CreateLogger<AccountLinkViewModel>(),
-                            accountLink);
-                    });
 
                 var mockTransactionListViewModelFactory = new Mock<Services.IViewModelFactory>();
                 mockTransactionListViewModelFactory
@@ -166,6 +158,7 @@ namespace Financier.Desktop.Tests
                             loggerFactory.CreateLogger<BudgetTransactionListViewModel>(),
                             accountService,
                             budgetService,
+                            new Concrete.StubAccountLinkViewModelFactory(),
                             mockTransactionItemViewModelFactory.Object,
                             new Mock<Services.IViewService>().Object,
                             budgetId
@@ -331,14 +324,6 @@ namespace Financier.Desktop.Tests
                                 budgetTransaction,
                                 type);
                         });
-                mockTransactionItemViewModelFactory
-                    .Setup(f => f.CreateAccountLinkViewModel(It.IsAny<AccountLink>()))
-                    .Returns((AccountLink accountLink) =>
-                    {
-                        return new AccountLinkViewModel(
-                            loggerFactory.CreateLogger<AccountLinkViewModel>(),
-                            accountLink);
-                    });
 
                 var mockTransactionListViewModelFactory = new Mock<Services.IViewModelFactory>();
                 mockTransactionListViewModelFactory
@@ -349,6 +334,7 @@ namespace Financier.Desktop.Tests
                             loggerFactory.CreateLogger<BudgetTransactionListViewModel>(),
                             accountService,
                             budgetService,
+                            new Concrete.StubAccountLinkViewModelFactory(),
                             mockTransactionItemViewModelFactory.Object,
                             new Mock<Services.IViewService>().Object,
                             budgetId

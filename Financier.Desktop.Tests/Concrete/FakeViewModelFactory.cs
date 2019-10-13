@@ -10,36 +10,6 @@ namespace Financier.Desktop.Tests.Concrete
 {
     internal class FakeViewModelFactory : IViewModelFactory
     {
-        public IAccountDetailsViewModel CreateAccountCreateViewModel()
-        {
-            throw new NotImplementedException();
-        }
-
-        public IAccountDetailsViewModel CreateAccountEditViewModel(int accountId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IAccountItemViewModel CreateAccountItemViewModel(Account account)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IAccountLinkViewModel CreateAccountLinkViewModel(AccountLink accountLink)
-        {
-            return new StubAccountLinkViewModel(accountLink);
-        }
-
-        public IAccountTransactionItemViewModel CreateAccountTransactionItemViewModel(Transaction transaction)
-        {
-            return new StubAccountTransactionItemViewModel(this, transaction);
-        }
-
-        public IAccountTransactionListViewModel CreateAccountTransactionListViewModel(int accountId)
-        {
-            throw new NotImplementedException();
-        }
-
         public IAccountRelationshipDetailsViewModel CreateAccountRelationshipCreateViewModel(AccountRelationship hint)
         {
             throw new NotImplementedException();
@@ -52,12 +22,7 @@ namespace Financier.Desktop.Tests.Concrete
 
         public IAccountRelationshipItemViewModel CreateAccountRelationshipItemViewModel(AccountRelationship accountRelationship)
         {
-            return new StubAccountRelationshipItemViewModel(this, accountRelationship);
-        }
-
-        public IAccountRelationshipListViewModel CreateAccountRelationshipListViewModel()
-        {
-            throw new NotImplementedException();
+            return new StubAccountRelationshipItemViewModel(new StubAccountLinkViewModelFactory(), accountRelationship);
         }
 
         public IAccountRelationshipTypeFilterViewModel CreateAccountRelationshipTypeFilterViewModel(AccountRelationshipType? type)
@@ -80,22 +45,12 @@ namespace Financier.Desktop.Tests.Concrete
             throw new NotImplementedException();
         }
 
-        public IBudgetListViewModel CreateBudgetListViewModel()
-        {
-            throw new NotImplementedException();
-        }
-
         public IBudgetTransactionItemViewModel CreateBudgetTransactionItemViewModel(ObservableCollection<IAccountLinkViewModel> accountLinks, BudgetTransaction budgetTransaction, BudgetTransactionType type)
         {
             throw new NotImplementedException();
         }
 
         public IBudgetTransactionListViewModel CreateBudgetTransactionListViewModel(int budgetId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IMainViewModel CreateMainWindowViewModel()
         {
             throw new NotImplementedException();
         }
@@ -125,11 +80,6 @@ namespace Financier.Desktop.Tests.Concrete
             throw new NotImplementedException();
         }
 
-        public ITransactionListViewModel CreateTransactionListViewModel()
-        {
-            throw new NotImplementedException();
-        }
-
         public IReconcileBalanceViewModel CreateReconcileBalanceViewModel(int accountId)
         {
             throw new NotImplementedException();
@@ -139,31 +89,6 @@ namespace Financier.Desktop.Tests.Concrete
             decimal nativeAmount,
             string nativeCurrencyCode,
             string foreignCurrencyCode)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IAccountTreeViewModel CreateAccountTreeViewModel()
-        {
-            throw new NotImplementedException();
-        }
-
-        public IAccountTreeItemViewModel CreateAccountTreeItemViewModel(Account account, IEnumerable<Transaction> transactions)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IAccountTreeItemViewModel CreateAccountTreeItemViewModel(Account account, IEnumerable<Transaction> transactions, IEnumerable<IAccountTreeItemViewModel> childAccountVMs)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IExceptionViewModel CreateUnhandledExceptionViewModel(Exception ex)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IBalanceSheetViewModel CreateBalanceSheetViewModel()
         {
             throw new NotImplementedException();
         }
