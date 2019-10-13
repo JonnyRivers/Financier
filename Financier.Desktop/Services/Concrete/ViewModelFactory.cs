@@ -38,11 +38,6 @@ namespace Financier.Desktop.Services
             return m_serviceProvider.CreateInstance<AccountLinkViewModel>(accountLink);
         }
 
-        public IAccountListViewModel CreateAccountListViewModel()
-        {
-            return m_serviceProvider.CreateInstance<AccountListViewModel>();
-        }
-
         public IAccountTransactionListViewModel CreateAccountTransactionListViewModel(int accountId)
         {
             return m_serviceProvider.CreateInstance<AccountTransactionListViewModel>(accountId);
