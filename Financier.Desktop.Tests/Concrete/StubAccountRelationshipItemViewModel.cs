@@ -1,9 +1,19 @@
-﻿using Financier.Desktop.Services;
-using Financier.Desktop.ViewModels;
+﻿using Financier.Desktop.ViewModels;
 using Financier.Services;
 
 namespace Financier.Desktop.Tests.Concrete
 {
+    internal class StubAccountRelationshipItemViewModelFactory : IAccountRelationshipItemViewModelFactory
+    {
+        public IAccountRelationshipItemViewModel Create(AccountRelationship accountRelationship)
+        {
+            return new StubAccountRelationshipItemViewModel(
+                new StubAccountLinkViewModelFactory(),
+                accountRelationship
+            );
+        }
+    }
+
     internal class StubAccountRelationshipItemViewModel : IAccountRelationshipItemViewModel
     {
         private readonly AccountRelationship m_accountRelationship;

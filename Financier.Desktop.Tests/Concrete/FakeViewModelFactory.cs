@@ -10,26 +10,6 @@ namespace Financier.Desktop.Tests.Concrete
 {
     internal class FakeViewModelFactory : IViewModelFactory
     {
-        public IAccountRelationshipDetailsViewModel CreateAccountRelationshipCreateViewModel(AccountRelationship hint)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IAccountRelationshipDetailsViewModel CreateAccountRelationshipEditViewModel(int accountRelationshipId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IAccountRelationshipItemViewModel CreateAccountRelationshipItemViewModel(AccountRelationship accountRelationship)
-        {
-            return new StubAccountRelationshipItemViewModel(new StubAccountLinkViewModelFactory(), accountRelationship);
-        }
-
-        public IAccountRelationshipTypeFilterViewModel CreateAccountRelationshipTypeFilterViewModel(AccountRelationshipType? type)
-        {
-            return new StubAccountRelationshipTypeFilterViewModel(type);
-        }
-
         public IBudgetDetailsViewModel CreateBudgetCreateViewModel()
         {
             throw new NotImplementedException();

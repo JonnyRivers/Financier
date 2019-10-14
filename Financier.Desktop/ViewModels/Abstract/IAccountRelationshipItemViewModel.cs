@@ -1,5 +1,12 @@
-﻿namespace Financier.Desktop.ViewModels
+﻿using Financier.Services;
+
+namespace Financier.Desktop.ViewModels
 {
+    public interface IAccountRelationshipItemViewModelFactory
+    {
+        IAccountRelationshipItemViewModel Create(AccountRelationship accountRelationship);
+    }
+
     public interface IAccountRelationshipItemViewModel
     {
         int AccountRelationshipId { get; }

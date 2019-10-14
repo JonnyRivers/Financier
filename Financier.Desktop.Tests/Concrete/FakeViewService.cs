@@ -7,26 +7,6 @@ namespace Financier.Desktop.Tests.Concrete
 {
     internal class FakeViewService : IViewService
     {
-        public bool OpenAccountRelationshipCreateView(AccountRelationship hint, out AccountRelationship transaction)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public bool OpenAccountRelationshipDeleteConfirmationView()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public bool OpenAccountRelationshipEditView(int accountRelationshipId)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public bool OpenAccountRelationshipEditView(int accountRelationshipId, out AccountRelationship updatedAccountRelationship)
-        {
-            throw new System.NotImplementedException();
-        }
-
         public bool OpenBudgetCreateView(out Budget budget)
         {
             budget = null;

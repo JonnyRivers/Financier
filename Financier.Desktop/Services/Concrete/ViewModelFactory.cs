@@ -18,26 +18,6 @@ namespace Financier.Desktop.Services
             m_serviceProvider = serviceProvider;
         }
 
-        public IAccountRelationshipDetailsViewModel CreateAccountRelationshipCreateViewModel(AccountRelationship hint)
-        {
-            return m_serviceProvider.CreateInstance<AccountRelationshipCreateViewModel>(hint);
-        }
-
-        public IAccountRelationshipDetailsViewModel CreateAccountRelationshipEditViewModel(int accountRelationshipId)
-        {
-            return m_serviceProvider.CreateInstance<AccountRelationshipEditViewModel>(accountRelationshipId);
-        }
-
-        public IAccountRelationshipItemViewModel CreateAccountRelationshipItemViewModel(AccountRelationship accountRelationship)
-        {
-            return m_serviceProvider.CreateInstance<AccountRelationshipItemViewModel>(accountRelationship);
-        }
-
-        public IAccountRelationshipTypeFilterViewModel CreateAccountRelationshipTypeFilterViewModel(AccountRelationshipType? type)
-        {
-            return new AccountRelationshipTypeFilterViewModel(type);
-        }
-
         public IBalanceSheetItemViewModel CreateBalanceSheetItemViewModel(BalanceSheetItem item)
         {
             return m_serviceProvider.CreateInstance<BalanceSheetItemViewModel>(item);

@@ -94,7 +94,7 @@ namespace Financier.Desktop.Services
             return false;
         }
 
-        // TODO - this is duplicated with ViewService
+        // TODO - this is duplicated with DeleteConfirmationViewService
         private bool OpenDeleteConfirmationView(string context)
         {
             MessageBoxResult confirmResult = MessageBox.Show(

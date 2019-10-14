@@ -1,5 +1,4 @@
 ﻿using System;
-using Financier.Desktop.Services;
 using Financier.Desktop.ViewModels;
 using Financier.Services;
 

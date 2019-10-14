@@ -4,6 +4,12 @@ using System.Windows.Input;
 
 namespace Financier.Desktop.ViewModels
 {
+    public interface IAccountRelationshipDetailsViewModelFactory
+    {
+        IAccountRelationshipDetailsViewModel Create(AccountRelationship hint);
+        IAccountRelationshipDetailsViewModel Create(int accountRelationshipId);
+    }
+
     public interface IAccountRelationshipDetailsViewModel
     {
         AccountRelationship ToAccountRelationship();

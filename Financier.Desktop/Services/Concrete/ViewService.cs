@@ -18,47 +18,6 @@ namespace Financier.Desktop.Services
             m_viewModelFactory = viewModelFactory;
         }
 
-        public bool OpenAccountRelationshipCreateView(AccountRelationship hint, out AccountRelationship accountRelationship)
-        {
-            accountRelationship = null;
-
-            IAccountRelationshipDetailsViewModel viewModel = 
-                m_viewModelFactory.CreateAccountRelationshipCreateViewModel(hint);
-            var window = new AccountRelationshipDetailsWindow(viewModel);
-            bool? result = window.ShowDialog();
-
-            if (result.HasValue)
-            {
-                accountRelationship = viewModel.ToAccountRelationship();
-                return result.Value;
-            }
-
-            return false;
-        }
-
-        public bool OpenAccountRelationshipDeleteConfirmationView()
-        {
-            return OpenDeleteConfirmationView("account relationship");
-        }
-
-        public bool OpenAccountRelationshipEditView(int accountRelationshipId, out AccountRelationship updatedAccountRelationship)
-        {
-            updatedAccountRelationship = null;
-
-            IAccountRelationshipDetailsViewModel viewModel = 
-                m_viewModelFactory.CreateAccountRelationshipEditViewModel(accountRelationshipId);
-            var window = new AccountRelationshipDetailsWindow(viewModel);
-            bool? result = window.ShowDialog();
-
-            if (result.HasValue)
-            {
-                updatedAccountRelationship = viewModel.ToAccountRelationship();
-                return result.Value;
-            }
-
-            return false;
-        }
-
         public bool OpenBudgetCreateView(out Budget budget)
         {
             budget = null;
