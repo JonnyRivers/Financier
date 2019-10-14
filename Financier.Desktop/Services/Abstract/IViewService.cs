@@ -6,10 +6,7 @@ namespace Financier.Desktop.Services
     public interface IViewService
     {
         bool OpenBudgetCreateView(out Budget newBudget);
-        bool OpenBudgetDeleteConfirmationView();
         bool OpenBudgetEditView(int budgetId, out Budget updatedBudget);
-
-        bool OpenBudgetTransactionDeleteConfirmationView();
 
         bool OpenForeignAmountView(
             decimal nativeAmount,
@@ -23,7 +20,6 @@ namespace Financier.Desktop.Services
         bool OpenTransactionBatchCreateConfirmView(IEnumerable<Transaction> transactions);
         bool OpenTransactionCreateView(Transaction hint, out Transaction newTransaction);
         bool OpenReconcileBalanceView(int accountId, out Transaction newTransaction);
-        bool OpenTransactionDeleteConfirmationView();
         bool OpenTransactionEditView(int transactionId, out Transaction updatedTransaction);
     }
 }

@@ -35,11 +35,6 @@ namespace Financier.Desktop.Services
             return false;
         }
 
-        public bool OpenBudgetDeleteConfirmationView()
-        {
-            return OpenDeleteConfirmationView("budget");
-        }
-
         public bool OpenBudgetEditView(int budgetId, out Budget budget)
         {
             budget = null;
@@ -55,11 +50,6 @@ namespace Financier.Desktop.Services
             }
 
             return false;
-        }
-
-        public bool OpenBudgetTransactionDeleteConfirmationView()
-        {
-            return OpenDeleteConfirmationView("budget transaction");
         }
 
         public bool OpenForeignAmountView(
@@ -160,11 +150,6 @@ namespace Financier.Desktop.Services
             return false;
         }
 
-        public bool OpenTransactionDeleteConfirmationView()
-        {
-            return OpenDeleteConfirmationView("transaction");
-        }
-
         public bool OpenTransactionEditView(int transactionId, out Transaction updatedTransaction)
         {
             updatedTransaction = null;
@@ -180,18 +165,6 @@ namespace Financier.Desktop.Services
             }
 
             return false;
-        }
-
-        // TODO - this is duplicated with IDatabaseConnectionViewService
-        private bool OpenDeleteConfirmationView(string context)
-        {
-            MessageBoxResult confirmResult = MessageBox.Show(
-               $"Are you sure you want to delete this {context}?  This cannot be undone.",
-               $"Really delete {context}?",
-               MessageBoxButton.YesNo
-            );
-
-            return (confirmResult == MessageBoxResult.Yes);
         }
     }
 }

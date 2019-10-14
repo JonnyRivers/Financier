@@ -33,6 +33,7 @@ namespace Financier.Desktop.ViewModels
         private IBudgetService m_budgetService;
         private ICurrencyService m_currencyService;
         private ITransactionService m_transactionService;
+        private IDeleteConfirmationViewService m_deleteConfirmationViewService;
         private IViewModelFactory m_viewModelFactory;
         private IViewService m_viewService;
 
@@ -44,6 +45,7 @@ namespace Financier.Desktop.ViewModels
             IBudgetService budgetService,
             ICurrencyService currencyService,
             ITransactionService transactionService,
+            IDeleteConfirmationViewService deleteConfirmationViewService,
             IViewModelFactory viewModelFactory,
             IViewService viewService)
         {
@@ -51,6 +53,7 @@ namespace Financier.Desktop.ViewModels
             m_budgetService = budgetService;
             m_currencyService = currencyService;
             m_transactionService = transactionService;
+            m_deleteConfirmationViewService = deleteConfirmationViewService;
             m_viewModelFactory = viewModelFactory;
             m_viewService = viewService;
 
@@ -133,7 +136,7 @@ namespace Financier.Desktop.ViewModels
 
         private void DeleteExecute(object obj)
         {
-            if (m_viewService.OpenBudgetDeleteConfirmationView())
+            if (m_deleteConfirmationViewService.Show("budget"))
             {
                 // Update model
                 m_budgetService.Delete(SelectedBudget.BudgetId);

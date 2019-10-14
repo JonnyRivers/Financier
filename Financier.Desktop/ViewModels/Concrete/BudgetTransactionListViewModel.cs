@@ -17,6 +17,7 @@ namespace Financier.Desktop.ViewModels
         private IAccountService m_accountService;
         private IBudgetService m_budgetService;
         private IAccountLinkViewModelFactory m_accountLinkViewModelFactory;
+        private IDeleteConfirmationViewService m_deleteConfirmationViewService;
         private IViewModelFactory m_viewModelFactory;
         private IViewService m_viewService;
 
@@ -30,6 +31,7 @@ namespace Financier.Desktop.ViewModels
             IAccountService accountService,
             IBudgetService budgetService,
             IAccountLinkViewModelFactory accountLinkViewModelFactory,
+            IDeleteConfirmationViewService deleteConfirmationViewService,
             IViewModelFactory viewModelFactory,
             IViewService viewService,
             int budgetId)
@@ -38,6 +40,7 @@ namespace Financier.Desktop.ViewModels
             m_accountService = accountService;
             m_budgetService = budgetService;
             m_accountLinkViewModelFactory = accountLinkViewModelFactory;
+            m_deleteConfirmationViewService = deleteConfirmationViewService;
 
             m_viewModelFactory = viewModelFactory;
             m_viewService = viewService;
@@ -170,7 +173,7 @@ namespace Financier.Desktop.ViewModels
 
         private void DeleteExecute(object obj)
         {
-            if (m_viewService.OpenBudgetTransactionDeleteConfirmationView())
+            if (m_deleteConfirmationViewService.Show("budget transaction"))
             {
                 Transactions.Remove(SelectedTransaction);
                 SelectedTransaction = null;// is this necessary?

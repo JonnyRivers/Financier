@@ -32,6 +32,7 @@ namespace Financier.Desktop.ViewModels
         // Dependencies
         private ILogger<TransactionListViewModel> m_logger;
         private ITransactionService m_transactionService;
+        private IDeleteConfirmationViewService m_deleteConfirmationViewService;
         private IViewModelFactory m_viewModelFactory;
         private IViewService m_viewService;
 
@@ -42,11 +43,13 @@ namespace Financier.Desktop.ViewModels
         public TransactionListViewModel(
             ILogger<TransactionListViewModel> logger,
             ITransactionService transactionService,
+            IDeleteConfirmationViewService deleteConfirmationViewService,
             IViewModelFactory viewModelFactory,
             IViewService viewService)
         {
             m_logger = logger;
             m_transactionService = transactionService;
+            m_deleteConfirmationViewService = deleteConfirmationViewService;
             m_viewModelFactory = viewModelFactory;
             m_viewService = viewService;
 
@@ -149,7 +152,7 @@ namespace Financier.Desktop.ViewModels
 
         private void DeleteExecute(object obj)
         {
-            if(m_viewService.OpenTransactionDeleteConfirmationView())
+            if(m_deleteConfirmationViewService.Show("transaction"))
             {
                 // Update model
                 m_transactionService.Delete(SelectedTransaction.TransactionId);

@@ -36,6 +36,7 @@ namespace Financier.Desktop.ViewModels
         private IAccountService m_accountService;
         private ITransactionService m_transactionService;
         private IAccountTransactionItemViewModelFactory m_accountTransactionItemViewModelFactory;
+        private IDeleteConfirmationViewService m_deleteConfirmationViewService;
         private IViewService m_viewService;
 
         // Private data
@@ -51,6 +52,7 @@ namespace Financier.Desktop.ViewModels
             IAccountService accountService,
             ITransactionService transactionService,
             IAccountTransactionItemViewModelFactory accountTransactionItemViewModelFactory,
+            IDeleteConfirmationViewService deleteConfirmationViewService,
             IViewService viewService,
             int accountId)
         {
@@ -58,6 +60,7 @@ namespace Financier.Desktop.ViewModels
             m_accountService = accountService;
             m_transactionService = transactionService;
             m_accountTransactionItemViewModelFactory = accountTransactionItemViewModelFactory;
+            m_deleteConfirmationViewService = deleteConfirmationViewService;
             m_viewService = viewService;
 
             m_accountId = accountId;
@@ -222,7 +225,7 @@ namespace Financier.Desktop.ViewModels
 
         private void DeleteExecute(object obj)
         {
-            if(m_viewService.OpenTransactionDeleteConfirmationView())
+            if(m_deleteConfirmationViewService.Show("transaction"))
             {
                 // Update model
                 m_transactionService.Delete(SelectedTransaction.TransactionId);

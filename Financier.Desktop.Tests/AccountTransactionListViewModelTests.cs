@@ -53,6 +53,7 @@ namespace Financier.Desktop.Tests
                     accountService,
                     transactionService,
                     accountTransactionViewModelFactory,
+                    new Mock<IDeleteConfirmationViewService>().Object,
                     viewService,
                     checkingAccountEntity.AccountId);
 
@@ -151,6 +152,7 @@ namespace Financier.Desktop.Tests
                     accountService,
                     transactionService,
                     accountTransactionViewModelFactory,
+                    new Mock<IDeleteConfirmationViewService>().Object,
                     viewService,
                     checkingAccountEntity.AccountId);
 
@@ -256,6 +258,7 @@ namespace Financier.Desktop.Tests
                     accountService,
                     transactionService,
                     accountTransactionViewModelFactory,
+                    new Mock<IDeleteConfirmationViewService>().Object,
                     mockViewService.Object,
                     checkingAccountEntity.AccountId
                 );
@@ -339,9 +342,9 @@ namespace Financier.Desktop.Tests
                     new Concrete.StubAccountTransactionItemViewModelFactory();
 
                 // Force transaction deletion to always confirm
-                var mockViewService = new Mock<IViewService>();
-                mockViewService
-                    .Setup(viewService => viewService.OpenTransactionDeleteConfirmationView())
+                var mockDeleteConfirmationViewService = new Mock<IDeleteConfirmationViewService>();
+                mockDeleteConfirmationViewService
+                    .Setup(s => s.Show(It.IsAny<string>()))
                     .Returns(true);
 
                 var viewModel = new AccountTransactionListViewModel(
@@ -349,7 +352,8 @@ namespace Financier.Desktop.Tests
                     accountService,
                     transactionService,
                     accountTransactionViewModelFactory,
-                    mockViewService.Object,
+                    mockDeleteConfirmationViewService.Object,
+                    new Mock<IViewService>().Object,
                     checkingAccountEntity.AccountId
                 );
 

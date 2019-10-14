@@ -1,4 +1,5 @@
-﻿using Financier.Desktop.ViewModels;
+﻿using Financier.Desktop.Services;
+using Financier.Desktop.ViewModels;
 using Financier.Services;
 using Financier.UnitTesting;
 using Financier.UnitTesting.DbSetup;
@@ -159,6 +160,7 @@ namespace Financier.Desktop.Tests
                             accountService,
                             budgetService,
                             new Concrete.StubAccountLinkViewModelFactory(),
+                            new Mock<IDeleteConfirmationViewService>().Object,
                             mockTransactionItemViewModelFactory.Object,
                             new Mock<Services.IViewService>().Object,
                             budgetId
@@ -335,6 +337,7 @@ namespace Financier.Desktop.Tests
                             accountService,
                             budgetService,
                             new Concrete.StubAccountLinkViewModelFactory(),
+                            new Mock<IDeleteConfirmationViewService>().Object,
                             mockTransactionItemViewModelFactory.Object,
                             new Mock<Services.IViewService>().Object,
                             budgetId
