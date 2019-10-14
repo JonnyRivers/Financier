@@ -124,6 +124,8 @@ namespace Financier.Desktop
             serviceCollection.AddSingleton<IBalanceSheetViewService, BalanceSheetViewService>();
             serviceCollection.AddSingleton<IBudgetListViewService, BudgetListViewService>();
             serviceCollection.AddSingleton<IMainViewService, MainViewService>();
+            serviceCollection.AddSingleton<ITransactionCreateViewService, TransactionCreateViewService>();
+            serviceCollection.AddSingleton<ITransactionEditViewService, TransactionEditViewService>();
             serviceCollection.AddSingleton<ITransactionListViewService, TransactionListViewService>();
 
             serviceCollection.AddSingleton<IAccountDetailsViewModelFactory, AccountDetailsViewModelFactory>();
@@ -139,6 +141,8 @@ namespace Financier.Desktop
             serviceCollection.AddSingleton<IBalanceSheetViewModelFactory, BalanceSheetViewModelFactory>();
             serviceCollection.AddSingleton<IBudgetListViewModelFactory, BudgetListViewModelFactory>();
             serviceCollection.AddSingleton<IMainViewModelFactory, MainViewModelFactory>();
+            serviceCollection.AddSingleton<ITransactionDetailsViewModelFactory, TransactionDetailsViewModelFactory>();
+            serviceCollection.AddSingleton<ITransactionItemViewModelFactory, TransactionItemViewModelFactory>();
             serviceCollection.AddSingleton<ITransactionListViewModelFactory, TransactionListViewModelFactory>();
 
             // TODO - break this up
