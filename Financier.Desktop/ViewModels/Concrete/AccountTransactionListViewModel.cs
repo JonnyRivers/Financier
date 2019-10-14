@@ -37,6 +37,8 @@ namespace Financier.Desktop.ViewModels
         private ITransactionService m_transactionService;
         private IAccountTransactionItemViewModelFactory m_accountTransactionItemViewModelFactory;
         private IDeleteConfirmationViewService m_deleteConfirmationViewService;
+        private ITransactionCreateViewService m_transactionCreateViewService;
+        private ITransactionEditViewService m_transactionEditViewService;
         private IViewService m_viewService;
 
         // Private data
@@ -53,6 +55,8 @@ namespace Financier.Desktop.ViewModels
             ITransactionService transactionService,
             IAccountTransactionItemViewModelFactory accountTransactionItemViewModelFactory,
             IDeleteConfirmationViewService deleteConfirmationViewService,
+            ITransactionCreateViewService transactionCreateViewService,
+            ITransactionEditViewService transactionEditViewService,
             IViewService viewService,
             int accountId)
         {
@@ -61,6 +65,8 @@ namespace Financier.Desktop.ViewModels
             m_transactionService = transactionService;
             m_accountTransactionItemViewModelFactory = accountTransactionItemViewModelFactory;
             m_deleteConfirmationViewService = deleteConfirmationViewService;
+            m_transactionCreateViewService = transactionCreateViewService;
+            m_transactionEditViewService = transactionEditViewService;
             m_viewService = viewService;
 
             m_accountId = accountId;
@@ -187,7 +193,7 @@ namespace Financier.Desktop.ViewModels
             }
 
             Transaction newTransaction;
-            if (m_viewService.OpenTransactionCreateView(hint, out newTransaction))
+            if (m_transactionCreateViewService.Show(hint, out newTransaction))
             {
                 IAccountTransactionItemViewModel newTransactionViewModel
                     = m_accountTransactionItemViewModelFactory.Create(newTransaction);
@@ -209,7 +215,7 @@ namespace Financier.Desktop.ViewModels
         private void EditExecute(object obj)
         {
             Transaction updatedTransaction;
-            if (m_viewService.OpenTransactionEditView(SelectedTransaction.TransactionId, out updatedTransaction))
+            if (m_transactionEditViewService.Show(SelectedTransaction.TransactionId, out updatedTransaction))
             {
                 Transactions.Remove(SelectedTransaction);
                 SelectedTransaction = m_accountTransactionItemViewModelFactory.Create(updatedTransaction);

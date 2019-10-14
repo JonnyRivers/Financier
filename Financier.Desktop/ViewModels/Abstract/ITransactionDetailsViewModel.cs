@@ -5,6 +5,12 @@ using System.Windows.Input;
 
 namespace Financier.Desktop.ViewModels
 {
+    public interface ITransactionDetailsViewModelFactory
+    {
+        ITransactionDetailsViewModel Create(Transaction hint);
+        ITransactionDetailsViewModel Create(int transactionId);
+    }
+
     public interface ITransactionDetailsViewModel
     {
         Transaction ToTransaction();

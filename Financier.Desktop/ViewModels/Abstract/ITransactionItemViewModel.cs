@@ -3,6 +3,11 @@ using System;
 
 namespace Financier.Desktop.ViewModels
 {
+    public interface ITransactionItemViewModelFactory
+    {
+        ITransactionItemViewModel Create(Transaction transaction);
+    }
+
     public interface ITransactionItemViewModel
     {
         int TransactionId { get; }

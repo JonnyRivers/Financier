@@ -18,8 +18,6 @@ namespace Financier.Desktop.Services
 
         void OpenNoPendingCreditCardTransactionsView(string accountName);
         bool OpenTransactionBatchCreateConfirmView(IEnumerable<Transaction> transactions);
-        bool OpenTransactionCreateView(Transaction hint, out Transaction newTransaction);
         bool OpenReconcileBalanceView(int accountId, out Transaction newTransaction);
-        bool OpenTransactionEditView(int transactionId, out Transaction updatedTransaction);
     }
 }

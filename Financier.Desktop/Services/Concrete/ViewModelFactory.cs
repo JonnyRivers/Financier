@@ -70,24 +70,9 @@ namespace Financier.Desktop.Services
             return m_serviceProvider.CreateInstance<TransactionBatchCreateConfirmViewModel>(transactions);
         }
 
-        public ITransactionDetailsViewModel CreateTransactionCreateViewModel(Transaction hint)
-        {
-            return m_serviceProvider.CreateInstance<TransactionCreateViewModel>(hint);
-        }
-
-        public ITransactionDetailsViewModel CreateTransactionEditViewModel(int transactionId)
-        {
-            return m_serviceProvider.CreateInstance<TransactionEditViewModel>(transactionId);
-        }
-
         public IReconcileBalanceViewModel CreateReconcileBalanceViewModel(int accountId)
         {
             return m_serviceProvider.CreateInstance<ReconcileBalanceViewModel>(accountId);
-        }
-
-        public ITransactionItemViewModel CreateTransactionItemViewModel(Transaction transaction)
-        {
-            return m_serviceProvider.CreateInstance<TransactionItemViewModel>(transaction);
         }
     }
 }

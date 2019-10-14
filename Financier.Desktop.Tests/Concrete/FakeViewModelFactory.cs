@@ -4,7 +4,6 @@ using Financier.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
 
 namespace Financier.Desktop.Tests.Concrete
 {
@@ -41,21 +40,6 @@ namespace Financier.Desktop.Tests.Concrete
         }
 
         public ITransactionBatchCreateConfirmViewModel CreateTransactionBatchCreateConfirmViewModel(IEnumerable<Transaction> transactions)
-        {
-            throw new NotImplementedException();
-        }
-
-        public ITransactionDetailsViewModel CreateTransactionCreateViewModel(Transaction hint)
-        {
-            throw new NotImplementedException();
-        }
-
-        public ITransactionDetailsViewModel CreateTransactionEditViewModel(int transactionId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public ITransactionItemViewModel CreateTransactionItemViewModel(Transaction transaction)
         {
             throw new NotImplementedException();
         }

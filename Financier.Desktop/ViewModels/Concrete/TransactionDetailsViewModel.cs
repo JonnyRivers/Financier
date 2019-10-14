@@ -1,6 +1,6 @@
 ﻿using Financier.Desktop.Commands;
-using Financier.Desktop.Services;
 using Financier.Services;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -9,6 +9,30 @@ using System.Windows.Input;
 
 namespace Financier.Desktop.ViewModels
 {
+    public class TransactionDetailsViewModelFactory : ITransactionDetailsViewModelFactory
+    {
+        private readonly ILogger<TransactionDetailsViewModelFactory> m_logger;
+        private readonly IServiceProvider m_serviceProvider;
+
+        public TransactionDetailsViewModelFactory(
+            ILogger<TransactionDetailsViewModelFactory> logger,
+            IServiceProvider serviceProvider)
+        {
+            m_logger = logger;
+            m_serviceProvider = serviceProvider;
+        }
+
+        public ITransactionDetailsViewModel Create(Transaction hint)
+        {
+            return m_serviceProvider.CreateInstance<TransactionCreateViewModel>(hint);
+        }
+
+        public ITransactionDetailsViewModel Create(int transactionId)
+        {
+            return m_serviceProvider.CreateInstance<TransactionEditViewModel>(transactionId);
+        }
+    }
+
     public abstract class TransactionDetailsBaseViewModel : BaseViewModel, ITransactionDetailsViewModel
     {
         protected IAccountService m_accountService;
@@ -128,6 +152,76 @@ namespace Financier.Desktop.ViewModels
         private void CancelExecute(object obj)
         {
 
+        }
+    }
+
+    public class TransactionCreateViewModel : TransactionDetailsBaseViewModel
+    {
+        private ILogger<TransactionCreateViewModel> m_logger;
+
+        public TransactionCreateViewModel(
+            ILogger<TransactionCreateViewModel> logger,
+            IAccountService accountService,
+            ITransactionService transactionService,
+            IAccountLinkViewModelFactory accountLinkViewModelFactory,
+            Transaction hint) : base(accountService, transactionService, accountLinkViewModelFactory, 0)
+        {
+            m_logger = logger;
+
+            if (hint != null)
+            {
+                m_selectedCreditAccount = Accounts.Single(a => a.AccountId == hint.CreditAccount.AccountId);
+                m_selectedDebitAccount = Accounts.Single(a => a.AccountId == hint.DebitAccount.AccountId);
+            }
+            else
+            {
+                m_selectedCreditAccount =
+                    Accounts
+                        .FirstOrDefault(a => a.Type == AccountType.Capital || a.Type == AccountType.Income);
+                m_selectedDebitAccount =
+                    Accounts
+                        .FirstOrDefault(a => a.Type == AccountType.Asset || a.Type == AccountType.Expense);
+            }
+
+            m_amount = 0m;
+            m_at = DateTime.Now;
+        }
+
+        protected override void OKExecute(object obj)
+        {
+            Transaction transaction = ToTransaction();
+
+            m_transactionService.Create(transaction);
+            m_transactionId = transaction.TransactionId;
+        }
+    }
+
+    public class TransactionEditViewModel : TransactionDetailsBaseViewModel
+    {
+        private ILogger<TransactionEditViewModel> m_logger;
+
+        public TransactionEditViewModel(
+            ILogger<TransactionEditViewModel> logger,
+            IAccountService accountService,
+            ITransactionService transactionService,
+            IAccountLinkViewModelFactory accountLinkViewModelFactory,
+            int transactionId) : base(accountService, transactionService, accountLinkViewModelFactory, transactionId)
+        {
+            m_logger = logger;
+
+            Transaction transaction = m_transactionService.Get(m_transactionId);
+
+            m_selectedCreditAccount = Accounts.Single(a => a.AccountId == transaction.CreditAccount.AccountId);
+            m_selectedDebitAccount = Accounts.Single(a => a.AccountId == transaction.DebitAccount.AccountId);
+            m_amount = transaction.Amount;
+            m_at = transaction.At;
+        }
+
+        protected override void OKExecute(object obj)
+        {
+            Transaction transaction = ToTransaction();
+
+            m_transactionService.Update(transaction);
         }
     }
 }

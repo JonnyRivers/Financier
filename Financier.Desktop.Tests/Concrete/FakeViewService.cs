@@ -1,6 +1,5 @@
 ﻿using Financier.Desktop.Services;
 using Financier.Services;
-using System;
 using System.Collections.Generic;
 
 namespace Financier.Desktop.Tests.Concrete
@@ -13,19 +12,9 @@ namespace Financier.Desktop.Tests.Concrete
             return false;
         }
 
-        public bool OpenBudgetDeleteConfirmationView()
-        {
-            return false;
-        }
-
         public bool OpenBudgetEditView(int budgetId, out Budget budget)
         {
             budget = null;
-            return false;
-        }
-
-        public bool OpenBudgetTransactionDeleteConfirmationView()
-        {
             return false;
         }
 
@@ -53,22 +42,6 @@ namespace Financier.Desktop.Tests.Concrete
         public bool OpenTransactionBatchCreateConfirmView(IEnumerable<Transaction> transactions)
         {
             return false;
-        }
-
-        public virtual bool OpenTransactionCreateView(Transaction hint, out Transaction transaction)
-        {
-            transaction = null;
-            return false;
-        }
-
-        public bool OpenTransactionDeleteConfirmationView()
-        {
-            return false;
-        }
-
-        public bool OpenTransactionEditView(int transactionId, out Transaction updatedTransaction)
-        {
-            throw new System.NotImplementedException();
         }
     }
 }

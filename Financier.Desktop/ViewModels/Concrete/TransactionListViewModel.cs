@@ -32,9 +32,10 @@ namespace Financier.Desktop.ViewModels
         // Dependencies
         private ILogger<TransactionListViewModel> m_logger;
         private ITransactionService m_transactionService;
+        private ITransactionItemViewModelFactory m_transactionItemViewModelFactory;
         private IDeleteConfirmationViewService m_deleteConfirmationViewService;
-        private IViewModelFactory m_viewModelFactory;
-        private IViewService m_viewService;
+        private ITransactionCreateViewService m_transactionCreateViewService;
+        private ITransactionEditViewService m_transactionEditViewService;
 
         // Private data
         private ObservableCollection<ITransactionItemViewModel> m_transactions;
@@ -43,15 +44,17 @@ namespace Financier.Desktop.ViewModels
         public TransactionListViewModel(
             ILogger<TransactionListViewModel> logger,
             ITransactionService transactionService,
+            ITransactionItemViewModelFactory transactionItemViewModelFactory,
             IDeleteConfirmationViewService deleteConfirmationViewService,
-            IViewModelFactory viewModelFactory,
-            IViewService viewService)
+            ITransactionCreateViewService transactionCreateViewService,
+            ITransactionEditViewService transactionEditViewService)
         {
             m_logger = logger;
             m_transactionService = transactionService;
+            m_transactionItemViewModelFactory = transactionItemViewModelFactory;
             m_deleteConfirmationViewService = deleteConfirmationViewService;
-            m_viewModelFactory = viewModelFactory;
-            m_viewService = viewService;
+            m_transactionCreateViewService = transactionCreateViewService;
+            m_transactionEditViewService = transactionEditViewService;
 
             PopulateTransactions();
         }
@@ -64,7 +67,7 @@ namespace Financier.Desktop.ViewModels
                 .Take(100);
             List<ITransactionItemViewModel> recentTransactionViewModels =
                 recentTransactions
-                    .Select(t => m_viewModelFactory.CreateTransactionItemViewModel(t))
+                    .Select(t => m_transactionItemViewModelFactory.Create(t))
                     .ToList();
 
             Transactions = new ObservableCollection<ITransactionItemViewModel>(recentTransactionViewModels);
@@ -126,10 +129,10 @@ namespace Financier.Desktop.ViewModels
             }
 
             Transaction newTransaction;
-            if (m_viewService.OpenTransactionCreateView(hint, out newTransaction))
+            if (m_transactionCreateViewService.Show(hint, out newTransaction))
             {
                 ITransactionItemViewModel newTransactionViewModel 
-                    = m_viewModelFactory.CreateTransactionItemViewModel(newTransaction);
+                    = m_transactionItemViewModelFactory.Create(newTransaction);
                 Transactions.Add(newTransactionViewModel);
             }
         }
@@ -137,10 +140,10 @@ namespace Financier.Desktop.ViewModels
         private void EditExecute(object obj)
         {
             Transaction updatedTransaction;
-            if (m_viewService.OpenTransactionEditView(SelectedTransaction.TransactionId, out updatedTransaction))
+            if (m_transactionEditViewService.Show(SelectedTransaction.TransactionId, out updatedTransaction))
             {
                 Transactions.Remove(SelectedTransaction);
-                SelectedTransaction = m_viewModelFactory.CreateTransactionItemViewModel(updatedTransaction);
+                SelectedTransaction = m_transactionItemViewModelFactory.Create(updatedTransaction);
                 Transactions.Add(SelectedTransaction);
             }
         }

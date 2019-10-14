@@ -115,23 +115,6 @@ namespace Financier.Desktop.Services
 
             return false;
         }
-        
-        public bool OpenTransactionCreateView(Transaction hint, out Transaction transaction)
-        {
-            transaction = null;
-
-            ITransactionDetailsViewModel viewModel = m_viewModelFactory.CreateTransactionCreateViewModel(hint);
-            var window = new TransactionDetailsWindow(viewModel);
-            bool? result = window.ShowDialog();
-
-            if (result.HasValue && result.Value)
-            {
-                transaction = viewModel.ToTransaction();
-                return true;
-            }
-
-            return false;
-        }
 
         public bool OpenReconcileBalanceView(int accountId, out Transaction transaction)
         {
@@ -145,23 +128,6 @@ namespace Financier.Desktop.Services
             {
                 transaction = viewModel.ToTransaction();
                 return true;
-            }
-
-            return false;
-        }
-
-        public bool OpenTransactionEditView(int transactionId, out Transaction updatedTransaction)
-        {
-            updatedTransaction = null;
-
-            ITransactionDetailsViewModel viewModel = m_viewModelFactory.CreateTransactionEditViewModel(transactionId);
-            var window = new TransactionDetailsWindow(viewModel);
-            bool? result = window.ShowDialog();
-
-            if (result.HasValue)
-            {
-                updatedTransaction = viewModel.ToTransaction();
-                return result.Value;
             }
 
             return false;

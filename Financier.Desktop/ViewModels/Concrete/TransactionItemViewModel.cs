@@ -1,10 +1,26 @@
-﻿using Financier.Desktop.Services;
-using Financier.Services;
+﻿using Financier.Services;
 using Microsoft.Extensions.Logging;
 using System;
 
 namespace Financier.Desktop.ViewModels
 {
+    public class TransactionItemViewModelFactory : ITransactionItemViewModelFactory
+    {
+        private readonly ILogger<TransactionItemViewModelFactory> m_logger;
+        private readonly IServiceProvider m_serviceProvider;
+
+        public TransactionItemViewModelFactory(ILogger<TransactionItemViewModelFactory> logger, IServiceProvider serviceProvider)
+        {
+            m_logger = logger;
+            m_serviceProvider = serviceProvider;
+        }
+
+        public ITransactionItemViewModel Create(Transaction transaction)
+        {
+            return m_serviceProvider.CreateInstance<TransactionItemViewModel>(transaction);
+        }
+    }
+
     public class TransactionItemViewModel : BaseViewModel, ITransactionItemViewModel
     {
         private ILogger<TransactionItemViewModel> m_logger;

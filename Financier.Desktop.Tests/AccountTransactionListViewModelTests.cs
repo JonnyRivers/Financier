@@ -54,6 +54,8 @@ namespace Financier.Desktop.Tests
                     transactionService,
                     accountTransactionViewModelFactory,
                     new Mock<IDeleteConfirmationViewService>().Object,
+                    new Mock<ITransactionCreateViewService>().Object,
+                    new Mock<ITransactionEditViewService>().Object,
                     viewService,
                     checkingAccountEntity.AccountId);
 
@@ -153,6 +155,8 @@ namespace Financier.Desktop.Tests
                     transactionService,
                     accountTransactionViewModelFactory,
                     new Mock<IDeleteConfirmationViewService>().Object,
+                    new Mock<ITransactionCreateViewService>().Object,
+                    new Mock<ITransactionEditViewService>().Object,
                     viewService,
                     checkingAccountEntity.AccountId);
 
@@ -161,120 +165,6 @@ namespace Financier.Desktop.Tests
                 Assert.AreEqual(100m, viewModel.Transactions[0].Balance);
                 Assert.AreEqual(100m, viewModel.Transactions[1].Balance);
                 Assert.AreEqual(100m, viewModel.Transactions[2].Balance);
-            }
-        }
-
-        [TestMethod]
-        [Ignore]// TODO: fix Moq out parameter issue
-        public void TestAccountTransactionListViewModelPostCreateBalanceRefresh()
-        {
-            ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<AccountTransactionListViewModel> logger = loggerFactory.CreateLogger<AccountTransactionListViewModel>();
-
-            using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
-            {
-                var currencyFactory = new CurrencyFactory();
-                var usdCurrencyEntity = currencyFactory.Create(CurrencyPrefab.Usd, true);
-                currencyFactory.Add(sqliteMemoryWrapper.DbContext, usdCurrencyEntity);
-
-                var accountFactory = new AccountFactory();
-                Entities.Account incomeAccountEntity =
-                    accountFactory.Create(AccountPrefab.Income, usdCurrencyEntity);
-                Entities.Account checkingAccountEntity =
-                    accountFactory.Create(AccountPrefab.Checking, usdCurrencyEntity);
-                Entities.Account rentExpenseAccountEntity =
-                    accountFactory.Create(AccountPrefab.RentExpense, usdCurrencyEntity);
-                
-                accountFactory.Add(sqliteMemoryWrapper.DbContext, incomeAccountEntity);
-                accountFactory.Add(sqliteMemoryWrapper.DbContext, checkingAccountEntity);
-                accountFactory.Add(sqliteMemoryWrapper.DbContext, rentExpenseAccountEntity);
-
-                var transactionEntities = new Entities.Transaction[]
-                {
-                    new Entities.Transaction
-                    {
-                        CreditAccount = incomeAccountEntity,
-                        DebitAccount = checkingAccountEntity,
-                        Amount = 100m,
-                        At = new DateTime(2018, 1, 1, 8, 30, 0)
-                    },
-                    new Entities.Transaction
-                    {
-                        CreditAccount = checkingAccountEntity,
-                        DebitAccount = rentExpenseAccountEntity,
-                        Amount = 60m,
-                        At = new DateTime(2018, 1, 1, 8, 31, 0)
-                    },
-                    new Entities.Transaction
-                    {
-                        CreditAccount = checkingAccountEntity,
-                        DebitAccount = rentExpenseAccountEntity,
-                        Amount = 10m,
-                        At = new DateTime(2018, 1, 1, 8, 32, 0)
-                    }
-                };
-
-                sqliteMemoryWrapper.DbContext.Transactions.AddRange(transactionEntities);
-                sqliteMemoryWrapper.DbContext.SaveChanges();
-
-                var accountService = new AccountService(
-                    loggerFactory.CreateLogger<AccountService>(),
-                    sqliteMemoryWrapper.DbContext);
-
-                var transactionService = new TransactionService(
-                    loggerFactory.CreateLogger<TransactionService>(),
-                    sqliteMemoryWrapper.DbContext);
-
-                IAccountTransactionItemViewModelFactory accountTransactionViewModelFactory =
-                    new Concrete.StubAccountTransactionItemViewModelFactory();
-
-                AccountLink checkingAccountLink = accountService.GetAsLink(checkingAccountEntity.AccountId);
-                AccountLink rentExpenseAccountLink = accountService.GetAsLink(rentExpenseAccountEntity.AccountId);
-                var newTransactionAmount = 18m;
-                var newTransactionAt = new DateTime(2018, 1, 1, 8, 33, 0);
-
-                var mockViewService = new Mock<IViewService>();
-                Transaction newTransaction;
-                mockViewService
-                    .Setup(viewService => viewService.OpenTransactionCreateView(
-                        It.IsAny<Transaction>(),
-                        out newTransaction))
-                    .OutCallback((Transaction hint, out Transaction t) => 
-                    {
-                        t = new Transaction
-                        {
-                            CreditAccount = checkingAccountLink,
-                            DebitAccount = rentExpenseAccountLink,
-                            Amount = newTransactionAmount,
-                            At = newTransactionAt
-                        };
-
-                        transactionService.Create(t);
-                    })
-                    .Returns(true);
-                
-                var viewModel = new AccountTransactionListViewModel(
-                    logger,
-                    accountService,
-                    transactionService,
-                    accountTransactionViewModelFactory,
-                    new Mock<IDeleteConfirmationViewService>().Object,
-                    mockViewService.Object,
-                    checkingAccountEntity.AccountId
-                );
-                viewModel.CreateCommand.Execute(this);
-
-                var transactionViewModels = new List<IAccountTransactionItemViewModel>(viewModel.Transactions.OrderBy(t => t.At));
-
-                Assert.AreEqual(4, transactionViewModels.Count);
-                Assert.AreEqual(100m, transactionViewModels[0].Balance);
-                Assert.AreEqual(40m, transactionViewModels[1].Balance);
-                Assert.AreEqual(30m, transactionViewModels[2].Balance);
-                Assert.AreEqual(checkingAccountLink.AccountId, transactionViewModels[3].CreditAccount.AccountId);
-                Assert.AreEqual(rentExpenseAccountLink.AccountId, transactionViewModels[3].DebitAccount.AccountId);
-                Assert.AreEqual(newTransactionAmount, transactionViewModels[3].Amount);
-                Assert.AreEqual(new DateTime(2018, 1, 1, 8, 33, 0), transactionViewModels[3].At);
-                Assert.AreEqual(12m, transactionViewModels[3].Balance);
             }
         }
 
@@ -353,6 +243,8 @@ namespace Financier.Desktop.Tests
                     transactionService,
                     accountTransactionViewModelFactory,
                     mockDeleteConfirmationViewService.Object,
+                    new Mock<ITransactionCreateViewService>().Object,
+                    new Mock<ITransactionEditViewService>().Object,
                     new Mock<IViewService>().Object,
                     checkingAccountEntity.AccountId
                 );
