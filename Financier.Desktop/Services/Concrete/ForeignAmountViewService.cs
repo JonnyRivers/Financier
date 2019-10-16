@@ -7,12 +7,12 @@ namespace Financier.Desktop.Services
     public class ForeignAmountViewService : IForeignAmountViewService
     {
         private readonly ILogger<ForeignAmountViewService> m_logger;
-        private readonly IViewModelFactory m_viewModelFactory;
+        private readonly IForeignAmountViewModelFactory m_foreignAmountViewModelFactory;
 
-        public ForeignAmountViewService(ILogger<ForeignAmountViewService> logger, IViewModelFactory viewModelFactory)
+        public ForeignAmountViewService(ILogger<ForeignAmountViewService> logger, IForeignAmountViewModelFactory foreignAmountViewModelFactory)
         {
             m_logger = logger;
-            m_viewModelFactory = viewModelFactory;
+            m_foreignAmountViewModelFactory = foreignAmountViewModelFactory;
         }
 
         public bool Show(
@@ -23,7 +23,7 @@ namespace Financier.Desktop.Services
         {
             exchangedAmount = 0m;
 
-            IForeignAmountViewModel viewModel = m_viewModelFactory.CreateForeignAmountViewModel(
+            IForeignAmountViewModel viewModel = m_foreignAmountViewModelFactory.Create(
                 nativeAmount,
                 nativeCurrencyCode,
                 foreignCurrencyCode

@@ -31,14 +31,6 @@ namespace Financier.Desktop.Services
             return m_serviceProvider.CreateInstance<BudgetTransactionItemViewModel>(accountLinks, budgetTransaction, type);
         }
 
-        public IForeignAmountViewModel CreateForeignAmountViewModel(
-            decimal nativeAmount,
-            string nativeCurrencyCode,
-            string foreignCurrencyCode)
-        {
-            return m_serviceProvider.CreateInstance<ForeignAmountViewModel>(nativeAmount, nativeCurrencyCode, foreignCurrencyCode);
-        }
-
         public IPaydayEventStartViewModel CreatePaydayEventStartViewModel(int budgetId)
         {
             return m_serviceProvider.CreateInstance<PaydayEventStartViewModel>(budgetId);

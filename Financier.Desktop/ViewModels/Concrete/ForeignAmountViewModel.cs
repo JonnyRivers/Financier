@@ -4,6 +4,26 @@ using System;
 
 namespace Financier.Desktop.ViewModels
 {
+    public class ForeignAmountViewModelFactory : IForeignAmountViewModelFactory
+    {
+        private readonly ILogger<ForeignAmountViewModelFactory> m_logger;
+        private readonly IServiceProvider m_serviceProvider;
+
+        public ForeignAmountViewModelFactory(ILogger<ForeignAmountViewModelFactory> logger, IServiceProvider serviceProvider)
+        {
+            m_logger = logger;
+            m_serviceProvider = serviceProvider;
+        }
+
+        public IForeignAmountViewModel Create(
+            decimal nativeAmount,
+            string nativeCurrencyCode,
+            string foreignCurrencyCode)
+        {
+            return m_serviceProvider.CreateInstance<ForeignAmountViewModel>(nativeAmount, nativeCurrencyCode, foreignCurrencyCode);
+        }
+    }
+
     public class ForeignAmountViewModel : BaseViewModel, IForeignAmountViewModel
     {
         private ILogger<ForeignAmountViewModel> m_logger;

@@ -56,15 +56,13 @@ namespace Financier.Desktop.Tests
                     loggerFactory.CreateLogger<TransactionService>(),
                     sqliteMemoryWrapper.DbContext);
 
-                var viewModelFactory = new Concrete.FakeViewModelFactory();
-
                 var viewModel = new ReconcileBalanceViewModel(
                     loggerFactory.CreateLogger<ReconcileBalanceViewModel>(),
                     accountService,
                     currencyService,
                     transactionService,
                     new Concrete.StubAccountLinkViewModelFactory(),
-                    viewModelFactory,
+                    new Mock<IViewModelFactory>().Object,
                     new Mock<IForeignAmountViewService>().Object,
                     checkingAccountEntity.AccountId);
                 viewModel.Balance = 140m;
