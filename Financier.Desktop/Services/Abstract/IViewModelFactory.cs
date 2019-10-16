@@ -7,14 +7,11 @@ namespace Financier.Desktop.Services
 {
     public interface IViewModelFactory
     {
-        IBalanceSheetItemViewModel CreateBalanceSheetItemViewModel(BalanceSheetItem balanceSheetItem);
-
         IForeignAmountViewModel CreateForeignAmountViewModel(
             decimal nativeAmount,
             string nativeCurrencyCode,
             string foreignCurrencyCode);
 
-        IBudgetItemViewModel CreateBudgetItemViewModel(Budget budget, Currency primaryCurrency);
         IBudgetTransactionListViewModel CreateBudgetTransactionListViewModel(int budgetId);
         IBudgetTransactionItemViewModel CreateBudgetTransactionItemViewModel(
             ObservableCollection<IAccountLinkViewModel> accountLinks,
