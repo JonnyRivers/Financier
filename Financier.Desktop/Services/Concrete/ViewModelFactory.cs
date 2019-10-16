@@ -23,16 +23,6 @@ namespace Financier.Desktop.Services
             return m_serviceProvider.CreateInstance<BalanceSheetItemViewModel>(item);
         }
 
-        public IBudgetDetailsViewModel CreateBudgetCreateViewModel()
-        {
-            return m_serviceProvider.CreateInstance<BudgetCreateViewModel>();
-        }
-
-        public IBudgetDetailsViewModel CreateBudgetEditViewModel(int budgetId)
-        {
-            return m_serviceProvider.CreateInstance<BudgetEditViewModel>(budgetId);
-        }
-
         public IBudgetItemViewModel CreateBudgetItemViewModel(Budget budget, Currency primaryCurrency)
         {
             return m_serviceProvider.CreateInstance<BudgetItemViewModel>(budget, primaryCurrency);

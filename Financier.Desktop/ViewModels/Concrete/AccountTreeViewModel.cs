@@ -35,10 +35,11 @@ namespace Financier.Desktop.ViewModels
         private ITransactionService m_transactionService;
         private ITransactionRelationshipService m_transactionRelationshipService;
         private IAccountTreeItemViewModelFactory m_accountTreeItemViewModelFactory;
-        private IViewService m_viewService;
         private IAccountCreateViewService m_accountCreateViewService;
         private IAccountEditViewService m_accountEditViewService;
         private IAccountTransactionsEditViewService m_accountTransactionsEditViewService;
+        private INoPendingCreditCardTransactionsViewService m_noPendingCreditCardTrasnactionsViewService;
+        private ITransactionBatchCreateConfirmViewService m_transactionBatchCreateConfirmViewService;
 
         private bool m_showAssets;
         private bool m_showLiabilities;
@@ -53,21 +54,23 @@ namespace Financier.Desktop.ViewModels
             ITransactionService transactionService,
             ITransactionRelationshipService transactionRelationshipService,
             IAccountTreeItemViewModelFactory accountTreeItemViewModelFactory,
-            IViewService viewService,
             IAccountCreateViewService accountCreateViewService,
             IAccountEditViewService accountEditViewService,
-            IAccountTransactionsEditViewService accountTransactionsEditViewService)
-        {
+            IAccountTransactionsEditViewService accountTransactionsEditViewService,
+            INoPendingCreditCardTransactionsViewService noPendingCreditCardTrasnactionsViewService,
+            ITransactionBatchCreateConfirmViewService transactionBatchCreateConfirmViewService)
+        {   
             m_logger = logger;
             m_accountService = accountService;
             m_accountRelationshipService = accountRelationshipService;
             m_transactionService = transactionService;
             m_transactionRelationshipService = transactionRelationshipService;
             m_accountTreeItemViewModelFactory = accountTreeItemViewModelFactory;
-            m_viewService = viewService;
             m_accountCreateViewService = accountCreateViewService;
             m_accountEditViewService = accountEditViewService;
             m_accountTransactionsEditViewService = accountTransactionsEditViewService;
+            m_noPendingCreditCardTrasnactionsViewService = noPendingCreditCardTrasnactionsViewService;
+            m_transactionBatchCreateConfirmViewService = transactionBatchCreateConfirmViewService;
 
             m_showAssets = true;
             m_showLiabilities = true;
@@ -225,7 +228,7 @@ namespace Financier.Desktop.ViewModels
             if (pendingCreditCardPayments.Any())
             {
                 IEnumerable<Transaction> paymentTransactions = pendingCreditCardPayments.Select(p => p.PaymentTransaction);
-                if (m_viewService.OpenTransactionBatchCreateConfirmView(paymentTransactions))
+                if (m_transactionBatchCreateConfirmViewService.Show(paymentTransactions))
                 {
                     m_transactionService.CreateMany(paymentTransactions);
 
@@ -249,7 +252,7 @@ namespace Financier.Desktop.ViewModels
             }
             else
             {
-                m_viewService.OpenNoPendingCreditCardTransactionsView(SelectedItem.Name);
+                m_noPendingCreditCardTrasnactionsViewService.Show(SelectedItem.Name);
             }
         }
 

@@ -34,8 +34,11 @@ namespace Financier.Desktop.ViewModels
         private ICurrencyService m_currencyService;
         private ITransactionService m_transactionService;
         private IDeleteConfirmationViewService m_deleteConfirmationViewService;
-        private IViewModelFactory m_viewModelFactory;
-        private IViewService m_viewService;
+        private IBudgetItemViewModelFactory m_budgetItemViewModelFactory;
+        private IBudgetCreateViewService m_budgetCreateViewService;
+        private IBudgetEditViewService m_budgetEditViewService;
+        private IPaydayEventViewService m_paydayEventViewService;
+        private ITransactionBatchCreateConfirmViewService m_transactionBatchCreateConfirmViewService;
 
         private ObservableCollection<IBudgetItemViewModel> m_budgets;
         private IBudgetItemViewModel m_selectedBudget;
@@ -46,16 +49,23 @@ namespace Financier.Desktop.ViewModels
             ICurrencyService currencyService,
             ITransactionService transactionService,
             IDeleteConfirmationViewService deleteConfirmationViewService,
-            IViewModelFactory viewModelFactory,
-            IViewService viewService)
+            IBudgetItemViewModelFactory budgetItemViewModelFactory,
+            IBudgetCreateViewService budgetCreateViewService,
+            IBudgetEditViewService budgetEditViewService,
+            IPaydayEventViewService paydayEventViewService,
+            ITransactionBatchCreateConfirmViewService transactionBatchCreateConfirmViewService
+            )
         {
             m_logger = logger;
             m_budgetService = budgetService;
             m_currencyService = currencyService;
             m_transactionService = transactionService;
             m_deleteConfirmationViewService = deleteConfirmationViewService;
-            m_viewModelFactory = viewModelFactory;
-            m_viewService = viewService;
+            m_budgetItemViewModelFactory = budgetItemViewModelFactory;
+            m_budgetCreateViewService = budgetCreateViewService;
+            m_budgetEditViewService = budgetEditViewService;
+            m_paydayEventViewService = paydayEventViewService;
+            m_transactionBatchCreateConfirmViewService = transactionBatchCreateConfirmViewService;
 
             PopulateBudgets();
         }
@@ -65,7 +75,7 @@ namespace Financier.Desktop.ViewModels
             Currency primaryCurrency = m_currencyService.GetPrimary();
             IEnumerable<Budget> budgets = m_budgetService.GetAll();
             IEnumerable<IBudgetItemViewModel> budgetViewModels =
-                budgets.Select(b => m_viewModelFactory.CreateBudgetItemViewModel(b, primaryCurrency));
+                budgets.Select(b => m_budgetItemViewModelFactory.Create(b, primaryCurrency));
 
             Budgets = new ObservableCollection<IBudgetItemViewModel>(budgetViewModels);
         }
@@ -107,11 +117,11 @@ namespace Financier.Desktop.ViewModels
         private void CreateExecute(object obj)
         {
             Budget newBudget;
-            if (m_viewService.OpenBudgetCreateView(out newBudget))
+            if (m_budgetCreateViewService.Show(out newBudget))
             {
                 Currency primaryCurrency = m_currencyService.GetPrimary();
-                IBudgetItemViewModel newBudgetViewModel = 
-                    m_viewModelFactory.CreateBudgetItemViewModel(newBudget, primaryCurrency);
+                IBudgetItemViewModel newBudgetViewModel =
+                    m_budgetItemViewModelFactory.Create(newBudget, primaryCurrency);
                 Budgets.Add(newBudgetViewModel);
             }
         }
@@ -119,12 +129,12 @@ namespace Financier.Desktop.ViewModels
         private void EditExecute(object obj)
         {
             Budget updatedBudget;
-            if (m_viewService.OpenBudgetEditView(SelectedBudget.BudgetId, out updatedBudget))
+            if (m_budgetEditViewService.Show(SelectedBudget.BudgetId, out updatedBudget))
             {
                 Currency primaryCurrency = m_currencyService.GetPrimary();
 
                 Budgets.Remove(SelectedBudget);
-                SelectedBudget = m_viewModelFactory.CreateBudgetItemViewModel(updatedBudget, primaryCurrency);
+                SelectedBudget = m_budgetItemViewModelFactory.Create(updatedBudget, primaryCurrency);
                 Budgets.Add(SelectedBudget);
             }
         }
@@ -154,12 +164,12 @@ namespace Financier.Desktop.ViewModels
         private void PaydayExecute(object obj)
         {
             PaydayStart paydayStart;
-            if (m_viewService.OpenPaydayEventStartView(SelectedBudget.BudgetId, out paydayStart))
+            if (m_paydayEventViewService.Show(SelectedBudget.BudgetId, out paydayStart))
             {
                 IEnumerable<Transaction> prospectiveTransasctions =
                     m_budgetService.MakePaydayTransactions(SelectedBudget.BudgetId, paydayStart);
 
-                if (m_viewService.OpenTransactionBatchCreateConfirmView(prospectiveTransasctions))
+                if (m_transactionBatchCreateConfirmViewService.Show(prospectiveTransasctions))
                 {
                     m_transactionService.CreateMany(prospectiveTransasctions);
                 }

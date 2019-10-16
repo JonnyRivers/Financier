@@ -1,10 +1,12 @@
 ﻿using System;
+using Financier.Desktop.Services;
 using Financier.Desktop.ViewModels;
 using Financier.Services;
 using Financier.UnitTesting;
 using Financier.UnitTesting.DbSetup;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 
 namespace Financier.Desktop.Tests
 {
@@ -56,8 +58,6 @@ namespace Financier.Desktop.Tests
 
                 var viewModelFactory = new Concrete.FakeViewModelFactory();
 
-                var viewService = new Concrete.FakeViewService();
-
                 var viewModel = new ReconcileBalanceViewModel(
                     loggerFactory.CreateLogger<ReconcileBalanceViewModel>(),
                     accountService,
@@ -65,7 +65,7 @@ namespace Financier.Desktop.Tests
                     transactionService,
                     new Concrete.StubAccountLinkViewModelFactory(),
                     viewModelFactory,
-                    viewService,
+                    new Mock<IForeignAmountViewService>().Object,
                     checkingAccountEntity.AccountId);
                 viewModel.Balance = 140m;
                 viewModel.At = new DateTime(2018, 1, 2, 7, 0, 0);

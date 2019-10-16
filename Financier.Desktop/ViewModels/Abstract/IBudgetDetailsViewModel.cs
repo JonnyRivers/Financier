@@ -4,6 +4,12 @@ using System.Windows.Input;
 
 namespace Financier.Desktop.ViewModels
 {
+    public interface IBudgetDetailsViewModelFactory
+    {
+        IBudgetDetailsViewModel Create();
+        IBudgetDetailsViewModel Create(int budgetId);
+    }
+
     public interface IBudgetDetailsViewModel
     {
         Budget ToBudget();

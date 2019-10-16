@@ -46,8 +46,6 @@ namespace Financier.Desktop.Tests
                 IAccountTransactionItemViewModelFactory accountTransactionViewModelFactory = 
                     new Concrete.StubAccountTransactionItemViewModelFactory();
 
-                var viewService = new Concrete.FakeViewService();
-
                 var viewModel = new AccountTransactionListViewModel(
                     logger,
                     accountService,
@@ -56,7 +54,7 @@ namespace Financier.Desktop.Tests
                     new Mock<IDeleteConfirmationViewService>().Object,
                     new Mock<ITransactionCreateViewService>().Object,
                     new Mock<ITransactionEditViewService>().Object,
-                    viewService,
+                    new Mock<IReconcileBalanceViewService>().Object,
                     checkingAccountEntity.AccountId);
 
                 Assert.AreEqual(false, viewModel.HasLogicalAcounts);
@@ -147,8 +145,6 @@ namespace Financier.Desktop.Tests
                 IAccountTransactionItemViewModelFactory accountTransactionViewModelFactory =
                     new Concrete.StubAccountTransactionItemViewModelFactory();
 
-                var viewService = new Concrete.FakeViewService();
-
                 var viewModel = new AccountTransactionListViewModel(
                     logger,
                     accountService,
@@ -157,7 +153,7 @@ namespace Financier.Desktop.Tests
                     new Mock<IDeleteConfirmationViewService>().Object,
                     new Mock<ITransactionCreateViewService>().Object,
                     new Mock<ITransactionEditViewService>().Object,
-                    viewService,
+                    new Mock<IReconcileBalanceViewService>().Object,
                     checkingAccountEntity.AccountId);
 
                 Assert.AreEqual(true, viewModel.HasLogicalAcounts);
@@ -245,7 +241,7 @@ namespace Financier.Desktop.Tests
                     mockDeleteConfirmationViewService.Object,
                     new Mock<ITransactionCreateViewService>().Object,
                     new Mock<ITransactionEditViewService>().Object,
-                    new Mock<IViewService>().Object,
+                    new Mock<IReconcileBalanceViewService>().Object,
                     checkingAccountEntity.AccountId
                 );
 

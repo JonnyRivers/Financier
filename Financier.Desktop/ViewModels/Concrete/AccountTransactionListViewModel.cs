@@ -39,7 +39,7 @@ namespace Financier.Desktop.ViewModels
         private IDeleteConfirmationViewService m_deleteConfirmationViewService;
         private ITransactionCreateViewService m_transactionCreateViewService;
         private ITransactionEditViewService m_transactionEditViewService;
-        private IViewService m_viewService;
+        private IReconcileBalanceViewService m_reconcileBalanceViewService;
 
         // Private data
         private int m_accountId;
@@ -57,7 +57,7 @@ namespace Financier.Desktop.ViewModels
             IDeleteConfirmationViewService deleteConfirmationViewService,
             ITransactionCreateViewService transactionCreateViewService,
             ITransactionEditViewService transactionEditViewService,
-            IViewService viewService,
+            IReconcileBalanceViewService reconcileBalanceViewService,
             int accountId)
         {
             m_logger = logger;
@@ -67,7 +67,7 @@ namespace Financier.Desktop.ViewModels
             m_deleteConfirmationViewService = deleteConfirmationViewService;
             m_transactionCreateViewService = transactionCreateViewService;
             m_transactionEditViewService = transactionEditViewService;
-            m_viewService = viewService;
+            m_reconcileBalanceViewService = reconcileBalanceViewService;
 
             m_accountId = accountId;
             m_logicalAccountIds = new List<int>(m_accountService.GetLogicalAccountIds(m_accountId));
@@ -205,7 +205,7 @@ namespace Financier.Desktop.ViewModels
         private void ReconcileBalanceExecute(object obj)
         {
             Transaction newTransaction;
-            if (m_viewService.OpenReconcileBalanceView(m_accountId, out newTransaction))
+            if (m_reconcileBalanceViewService.Show(m_accountId, out newTransaction))
             {
                 Transactions.Add(m_accountTransactionItemViewModelFactory.Create(newTransaction));
                 PopulateTransactionBalances();

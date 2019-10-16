@@ -18,7 +18,7 @@ namespace Financier.Desktop.ViewModels
         private ITransactionService m_transactionService;
         private IAccountLinkViewModelFactory m_accountLinkViewModelFactory;
         private IViewModelFactory m_viewModelFactory;
-        private IViewService m_viewService;
+        private IForeignAmountViewService m_foreignAmountViewService;
 
         private int m_accountId;
         private string m_primaryCurrencyCode;
@@ -37,7 +37,7 @@ namespace Financier.Desktop.ViewModels
             ITransactionService transactionService,
             IAccountLinkViewModelFactory accountLinkViewModelFactory,
             IViewModelFactory viewModelFactory,
-            IViewService viewService,
+            IForeignAmountViewService foreignAmountViewService,
             int accountId)
         {
             m_logger = logger;
@@ -46,7 +46,7 @@ namespace Financier.Desktop.ViewModels
             m_transactionService = transactionService;
             m_accountLinkViewModelFactory = accountLinkViewModelFactory;
             m_viewModelFactory = viewModelFactory;
-            m_viewService = viewService;
+            m_foreignAmountViewService = foreignAmountViewService;
 
             m_accountId = accountId;
             m_primaryCurrencyCode = m_currencyService.GetPrimary().ShortName;
@@ -114,7 +114,7 @@ namespace Financier.Desktop.ViewModels
         private void LookupForeignBalanceExecute(object obj)
         {
             decimal exchangedAmount;
-            if(m_viewService.OpenForeignAmountView(
+            if(m_foreignAmountViewService.Show(
                 Balance,
                 m_primaryCurrencyCode,
                 m_accountCurrencyCode,

@@ -162,7 +162,6 @@ namespace Financier.Desktop.Tests
                             new Concrete.StubAccountLinkViewModelFactory(),
                             new Mock<IDeleteConfirmationViewService>().Object,
                             mockTransactionItemViewModelFactory.Object,
-                            new Mock<Services.IViewService>().Object,
                             budgetId
                         );
                     });
@@ -339,7 +338,6 @@ namespace Financier.Desktop.Tests
                             new Concrete.StubAccountLinkViewModelFactory(),
                             new Mock<IDeleteConfirmationViewService>().Object,
                             mockTransactionItemViewModelFactory.Object,
-                            new Mock<Services.IViewService>().Object,
                             budgetId
                         );
                     });

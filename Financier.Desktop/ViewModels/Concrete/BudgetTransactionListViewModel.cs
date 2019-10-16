@@ -19,7 +19,6 @@ namespace Financier.Desktop.ViewModels
         private IAccountLinkViewModelFactory m_accountLinkViewModelFactory;
         private IDeleteConfirmationViewService m_deleteConfirmationViewService;
         private IViewModelFactory m_viewModelFactory;
-        private IViewService m_viewService;
 
         private ObservableCollection<IAccountLinkViewModel> m_accountLinks;
 
@@ -33,7 +32,6 @@ namespace Financier.Desktop.ViewModels
             IAccountLinkViewModelFactory accountLinkViewModelFactory,
             IDeleteConfirmationViewService deleteConfirmationViewService,
             IViewModelFactory viewModelFactory,
-            IViewService viewService,
             int budgetId)
         {
             m_logger = logger;
@@ -43,7 +41,6 @@ namespace Financier.Desktop.ViewModels
             m_deleteConfirmationViewService = deleteConfirmationViewService;
 
             m_viewModelFactory = viewModelFactory;
-            m_viewService = viewService;
 
             m_accountLinks = new ObservableCollection<IAccountLinkViewModel>(
                 m_accountService

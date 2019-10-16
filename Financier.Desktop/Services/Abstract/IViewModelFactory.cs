@@ -14,8 +14,6 @@ namespace Financier.Desktop.Services
             string nativeCurrencyCode,
             string foreignCurrencyCode);
 
-        IBudgetDetailsViewModel CreateBudgetCreateViewModel();
-        IBudgetDetailsViewModel CreateBudgetEditViewModel(int budgetId);
         IBudgetItemViewModel CreateBudgetItemViewModel(Budget budget, Currency primaryCurrency);
         IBudgetTransactionListViewModel CreateBudgetTransactionListViewModel(int budgetId);
         IBudgetTransactionItemViewModel CreateBudgetTransactionItemViewModel(
