@@ -147,6 +147,7 @@ namespace Financier.Desktop
             serviceCollection.AddSingleton<IAccountTransactionListViewModelFactory, AccountTransactionListViewModelFactory>();
             serviceCollection.AddSingleton<IAccountTreeItemViewModelFactory, AccountTreeItemViewModelFactory>();
             serviceCollection.AddSingleton<IAccountTreeViewModelFactory, AccountTreeViewModelFactory>();
+            serviceCollection.AddSingleton<IBalanceSheetItemViewModelFactory, BalanceSheetItemViewModelFactory>();
             serviceCollection.AddSingleton<IBalanceSheetViewModelFactory, BalanceSheetViewModelFactory>();
             serviceCollection.AddSingleton<IBudgetDetailsViewModelFactory, BudgetDetailsViewModelFactory>();
             serviceCollection.AddSingleton<IBudgetItemViewModelFactory, BudgetItemViewModelFactory>();
