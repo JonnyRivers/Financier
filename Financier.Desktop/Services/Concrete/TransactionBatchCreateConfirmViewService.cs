@@ -9,18 +9,20 @@ namespace Financier.Desktop.Services
     public class TransactionBatchCreateConfirmViewService : ITransactionBatchCreateConfirmViewService
     {
         private readonly ILogger<TransactionBatchCreateConfirmViewService> m_logger;
-        private readonly IViewModelFactory m_viewModelFactory;
+        private readonly ITransactionBatchCreateConfirmViewModelFactory m_transactionBatchCreateConfirmViewModelFactory;
 
-        public TransactionBatchCreateConfirmViewService(ILogger<TransactionBatchCreateConfirmViewService> logger, IViewModelFactory viewModelFactory)
+        public TransactionBatchCreateConfirmViewService(
+            ILogger<TransactionBatchCreateConfirmViewService> logger, 
+            ITransactionBatchCreateConfirmViewModelFactory transactionBatchCreateConfirmViewModelFactory)
         {
             m_logger = logger;
-            m_viewModelFactory = viewModelFactory;
+            m_transactionBatchCreateConfirmViewModelFactory = transactionBatchCreateConfirmViewModelFactory;
         }
 
         public bool Show(IEnumerable<Transaction> transactions)
         {
             ITransactionBatchCreateConfirmViewModel viewModel =
-                m_viewModelFactory.CreateTransactionBatchCreateConfirmViewModel(transactions);
+                m_transactionBatchCreateConfirmViewModelFactory.Create(transactions);
             var window = new TransactionBatchCreateConfirmWindow(viewModel);
             bool? result = window.ShowDialog();
 

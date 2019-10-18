@@ -10,6 +10,25 @@ using System.Windows.Input;
 
 namespace Financier.Desktop.ViewModels
 {
+    public class ReconcileBalanceViewModelFactory : IReconcileBalanceViewModelFactory
+    {
+        private readonly ILogger<ReconcileBalanceViewModelFactory> m_logger;
+        private readonly IServiceProvider m_serviceProvider;
+
+        public ReconcileBalanceViewModelFactory(
+            ILogger<ReconcileBalanceViewModelFactory> logger,
+            IServiceProvider serviceProvider)
+        {
+            m_logger = logger;
+            m_serviceProvider = serviceProvider;
+        }
+
+        public IReconcileBalanceViewModel Create(int accountId)
+        {
+            return m_serviceProvider.CreateInstance<ReconcileBalanceViewModel>(accountId);
+        }
+    }
+
     public class ReconcileBalanceViewModel : BaseViewModel, IReconcileBalanceViewModel
     {
         private ILogger<ReconcileBalanceViewModel> m_logger;
@@ -17,7 +36,6 @@ namespace Financier.Desktop.ViewModels
         private ICurrencyService m_currencyService;
         private ITransactionService m_transactionService;
         private IAccountLinkViewModelFactory m_accountLinkViewModelFactory;
-        private IViewModelFactory m_viewModelFactory;
         private IForeignAmountViewService m_foreignAmountViewService;
 
         private int m_accountId;
@@ -36,7 +54,6 @@ namespace Financier.Desktop.ViewModels
             ICurrencyService currencyService,
             ITransactionService transactionService,
             IAccountLinkViewModelFactory accountLinkViewModelFactory,
-            IViewModelFactory viewModelFactory,
             IForeignAmountViewService foreignAmountViewService,
             int accountId)
         {
@@ -45,7 +62,6 @@ namespace Financier.Desktop.ViewModels
             m_currencyService = currencyService;
             m_transactionService = transactionService;
             m_accountLinkViewModelFactory = accountLinkViewModelFactory;
-            m_viewModelFactory = viewModelFactory;
             m_foreignAmountViewService = foreignAmountViewService;
 
             m_accountId = accountId;

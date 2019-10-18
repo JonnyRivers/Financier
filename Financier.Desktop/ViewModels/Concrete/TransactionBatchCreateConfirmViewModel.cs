@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
@@ -8,6 +9,25 @@ using Microsoft.Extensions.Logging;
 
 namespace Financier.Desktop.ViewModels
 {
+    public class TransactionBatchCreateConfirmViewModelFactory : ITransactionBatchCreateConfirmViewModelFactory
+    {
+        private readonly ILogger<TransactionBatchCreateConfirmViewModelFactory> m_logger;
+        private readonly IServiceProvider m_serviceProvider;
+
+        public TransactionBatchCreateConfirmViewModelFactory(
+            ILogger<TransactionBatchCreateConfirmViewModelFactory> logger,
+            IServiceProvider serviceProvider)
+        {
+            m_logger = logger;
+            m_serviceProvider = serviceProvider;
+        }
+
+        public ITransactionBatchCreateConfirmViewModel Create(IEnumerable<Transaction> transactions)
+        {
+            return m_serviceProvider.CreateInstance<TransactionBatchCreateConfirmViewModel>(transactions);
+        }
+    }
+
     public class TransactionBatchCreateConfirmViewModel : BaseViewModel, ITransactionBatchCreateConfirmViewModel
     {
         private ILogger<TransactionBatchCreateConfirmViewModel> m_logger;

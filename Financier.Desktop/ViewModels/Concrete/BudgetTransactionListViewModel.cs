@@ -3,6 +3,7 @@ using Financier.Desktop.Services;
 using Financier.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -11,6 +12,23 @@ using System.Windows.Input;
 
 namespace Financier.Desktop.ViewModels
 {
+    public class BudgetTransactionListViewModelFactory : IBudgetTransactionListViewModelFactory
+    {
+        private readonly ILogger<BudgetTransactionListViewModelFactory> m_logger;
+        private readonly IServiceProvider m_serviceProvider;
+
+        public BudgetTransactionListViewModelFactory(ILogger<BudgetTransactionListViewModelFactory> logger, IServiceProvider serviceProvider)
+        {
+            m_logger = logger;
+            m_serviceProvider = serviceProvider;
+        }
+
+        public IBudgetTransactionListViewModel Create(int budgetId)
+        {
+            return m_serviceProvider.CreateInstance<BudgetTransactionListViewModel>(budgetId);
+        }
+    }
+
     public class BudgetTransactionListViewModel : BaseViewModel, IBudgetTransactionListViewModel
     {
         private ILogger<BudgetTransactionListViewModel> m_logger;
@@ -18,7 +36,7 @@ namespace Financier.Desktop.ViewModels
         private IBudgetService m_budgetService;
         private IAccountLinkViewModelFactory m_accountLinkViewModelFactory;
         private IDeleteConfirmationViewService m_deleteConfirmationViewService;
-        private IViewModelFactory m_viewModelFactory;
+        private IBudgetTransactionItemViewModelFactory m_budgetTransactionItemViewModelFactory;
 
         private ObservableCollection<IAccountLinkViewModel> m_accountLinks;
 
@@ -30,17 +48,16 @@ namespace Financier.Desktop.ViewModels
             IAccountService accountService,
             IBudgetService budgetService,
             IAccountLinkViewModelFactory accountLinkViewModelFactory,
+            IBudgetTransactionItemViewModelFactory budgetTransactionItemViewModelFactory,
             IDeleteConfirmationViewService deleteConfirmationViewService,
-            IViewModelFactory viewModelFactory,
             int budgetId)
         {
             m_logger = logger;
             m_accountService = accountService;
             m_budgetService = budgetService;
             m_accountLinkViewModelFactory = accountLinkViewModelFactory;
+            m_budgetTransactionItemViewModelFactory = budgetTransactionItemViewModelFactory;
             m_deleteConfirmationViewService = deleteConfirmationViewService;
-
-            m_viewModelFactory = viewModelFactory;
 
             m_accountLinks = new ObservableCollection<IAccountLinkViewModel>(
                 m_accountService
@@ -190,7 +207,7 @@ namespace Financier.Desktop.ViewModels
             BudgetTransactionType type)
         {
             IBudgetTransactionItemViewModel transactionViewModel =
-                m_viewModelFactory.CreateBudgetTransactionItemViewModel(
+                m_budgetTransactionItemViewModelFactory.Create(
                     m_accountLinks,
                     budgetTransaction,
                     type

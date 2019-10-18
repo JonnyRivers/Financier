@@ -62,7 +62,6 @@ namespace Financier.Desktop.Tests
                     currencyService,
                     transactionService,
                     new Concrete.StubAccountLinkViewModelFactory(),
-                    new Mock<IViewModelFactory>().Object,
                     new Mock<IForeignAmountViewService>().Object,
                     checkingAccountEntity.AccountId);
                 viewModel.Balance = 140m;

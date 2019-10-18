@@ -6,6 +6,31 @@ using Microsoft.Extensions.Logging;
 
 namespace Financier.Desktop.ViewModels
 {
+    public class BudgetTransactionItemViewModelFactory : IBudgetTransactionItemViewModelFactory
+    {
+        private readonly ILogger<BudgetTransactionItemViewModelFactory> m_logger;
+        private readonly IServiceProvider m_serviceProvider;
+
+        public BudgetTransactionItemViewModelFactory(ILogger<BudgetTransactionItemViewModelFactory> logger, IServiceProvider serviceProvider)
+        {
+            m_logger = logger;
+            m_serviceProvider = serviceProvider;
+        }
+
+        public IBudgetTransactionItemViewModel Create()
+        {
+            return m_serviceProvider.CreateInstance<BudgetTransactionItemViewModel>();
+        }
+
+        public IBudgetTransactionItemViewModel Create(
+            ObservableCollection<IAccountLinkViewModel> accountLinks, 
+            BudgetTransaction budgetTransaction, 
+            BudgetTransactionType type)
+        {
+            return m_serviceProvider.CreateInstance<BudgetTransactionItemViewModel>(accountLinks, budgetTransaction, type);
+        }
+    }
+
     public class BudgetTransactionItemViewModel : BaseViewModel, IBudgetTransactionItemViewModel
     {
         private ILogger<BudgetTransactionItemViewModel> m_logger;

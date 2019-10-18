@@ -132,9 +132,9 @@ namespace Financier.Desktop.Tests
                     loggerFactory.CreateLogger<BudgetService>(),
                     sqliteMemoryWrapper.DbContext);
 
-                var mockTransactionItemViewModelFactory = new Mock<Services.IViewModelFactory>();
+                var mockTransactionItemViewModelFactory = new Mock<IBudgetTransactionItemViewModelFactory>();
                 mockTransactionItemViewModelFactory
-                    .Setup(f => f.CreateBudgetTransactionItemViewModel(
+                    .Setup(f => f.Create(
                         It.IsAny<ObservableCollection<IAccountLinkViewModel>>(),
                         It.IsAny<BudgetTransaction>(),
                         It.IsAny<BudgetTransactionType>()))
@@ -150,9 +150,9 @@ namespace Financier.Desktop.Tests
                                 type);
                         });
 
-                var mockTransactionListViewModelFactory = new Mock<Services.IViewModelFactory>();
+                var mockTransactionListViewModelFactory = new Mock<IBudgetTransactionListViewModelFactory>();
                 mockTransactionListViewModelFactory
-                    .Setup(f => f.CreateBudgetTransactionListViewModel(It.IsAny<int>()))
+                    .Setup(f => f.Create(It.IsAny<int>()))
                     .Returns((int budgetId) =>
                     {
                         return new BudgetTransactionListViewModel(
@@ -160,8 +160,8 @@ namespace Financier.Desktop.Tests
                             accountService,
                             budgetService,
                             new Concrete.StubAccountLinkViewModelFactory(),
-                            new Mock<IDeleteConfirmationViewService>().Object,
                             mockTransactionItemViewModelFactory.Object,
+                            new Mock<IDeleteConfirmationViewService>().Object,
                             budgetId
                         );
                     });
@@ -308,9 +308,9 @@ namespace Financier.Desktop.Tests
                     loggerFactory.CreateLogger<BudgetService>(),
                     sqliteMemoryWrapper.DbContext);
 
-                var mockTransactionItemViewModelFactory = new Mock<Services.IViewModelFactory>();
+                var mockTransactionItemViewModelFactory = new Mock<IBudgetTransactionItemViewModelFactory>();
                 mockTransactionItemViewModelFactory
-                    .Setup(f => f.CreateBudgetTransactionItemViewModel(
+                    .Setup(f => f.Create(
                         It.IsAny<ObservableCollection<IAccountLinkViewModel>>(),
                         It.IsAny<BudgetTransaction>(),
                         It.IsAny<BudgetTransactionType>()))
@@ -326,9 +326,9 @@ namespace Financier.Desktop.Tests
                                 type);
                         });
 
-                var mockTransactionListViewModelFactory = new Mock<Services.IViewModelFactory>();
+                var mockTransactionListViewModelFactory = new Mock<IBudgetTransactionListViewModelFactory>();
                 mockTransactionListViewModelFactory
-                    .Setup(f => f.CreateBudgetTransactionListViewModel(It.IsAny<int>()))
+                    .Setup(f => f.Create(It.IsAny<int>()))
                     .Returns((int budgetId) =>
                     {
                         return new BudgetTransactionListViewModel(
@@ -336,8 +336,8 @@ namespace Financier.Desktop.Tests
                             accountService,
                             budgetService,
                             new Concrete.StubAccountLinkViewModelFactory(),
-                            new Mock<IDeleteConfirmationViewService>().Object,
                             mockTransactionItemViewModelFactory.Object,
+                            new Mock<IDeleteConfirmationViewService>().Object,
                             budgetId
                         );
                     });

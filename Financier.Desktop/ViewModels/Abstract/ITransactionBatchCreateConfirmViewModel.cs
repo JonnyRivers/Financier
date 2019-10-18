@@ -5,6 +5,11 @@ using System.Windows.Input;
 
 namespace Financier.Desktop.ViewModels
 {
+    public interface ITransactionBatchCreateConfirmViewModelFactory
+    {
+        ITransactionBatchCreateConfirmViewModel Create(IEnumerable<Transaction> transactions);
+    }
+
     public interface ITransactionBatchCreateConfirmViewModel
     {
         ObservableCollection<ITransactionItemViewModel> Transactions { get; }

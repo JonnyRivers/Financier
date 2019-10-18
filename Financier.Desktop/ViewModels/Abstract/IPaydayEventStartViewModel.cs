@@ -4,6 +4,11 @@ using System.Windows.Input;
 
 namespace Financier.Desktop.ViewModels
 {
+    public interface IPaydayEventStartViewModelFactory
+    {
+        IPaydayEventStartViewModel Create(int budgetId);
+    }
+
     public interface IPaydayEventStartViewModel
     {
         PaydayStart ToPaydayStart();

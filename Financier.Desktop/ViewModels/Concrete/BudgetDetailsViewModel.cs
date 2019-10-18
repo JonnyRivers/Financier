@@ -36,22 +36,22 @@ namespace Financier.Desktop.ViewModels
     public abstract class BudgetDetailsBaseViewModel : IBudgetDetailsViewModel
     {
         protected readonly IBudgetService m_budgetService;
-        protected readonly IViewModelFactory m_viewModelFactory;
+        protected readonly IBudgetTransactionListViewModelFactory m_budgetTransactionListViewModelFactory;
         protected int m_budgetId;
 
         public BudgetDetailsBaseViewModel(
             IBudgetService budgetService,
-            IViewModelFactory viewModelFactory,
+            IBudgetTransactionListViewModelFactory budgetTransactionListViewModelFactory,
             int budgetId)
         {
             m_budgetService = budgetService;
-            m_viewModelFactory = viewModelFactory;
+            m_budgetTransactionListViewModelFactory = budgetTransactionListViewModelFactory;
 
             m_budgetId = budgetId;
 
             Periods = Enum.GetValues(typeof(BudgetPeriod)).Cast<BudgetPeriod>();
 
-            TransactionListViewModel = m_viewModelFactory.CreateBudgetTransactionListViewModel(m_budgetId);
+            TransactionListViewModel = m_budgetTransactionListViewModelFactory.Create(m_budgetId);
         }
 
         public IEnumerable<BudgetPeriod> Periods { get; }
@@ -101,7 +101,7 @@ namespace Financier.Desktop.ViewModels
         public BudgetCreateViewModel(
             ILogger<BudgetCreateViewModel> logger,
             IBudgetService budgetService,
-            IViewModelFactory viewModelFactory) : base(budgetService, viewModelFactory, 0)
+            IBudgetTransactionListViewModelFactory budgetTransactionListViewModelFactory) : base(budgetService, budgetTransactionListViewModelFactory, 0)
         {
             m_logger = logger;
 
@@ -125,8 +125,8 @@ namespace Financier.Desktop.ViewModels
         public BudgetEditViewModel(
             ILogger<BudgetEditViewModel> logger,
             IBudgetService budgetService,
-            IViewModelFactory viewModelFactory,
-            int budgetId) : base(budgetService, viewModelFactory, budgetId)
+            IBudgetTransactionListViewModelFactory budgetTransactionListViewModelFactory,
+            int budgetId) : base(budgetService, budgetTransactionListViewModelFactory, budgetId)
         {
             m_logger = logger;
 

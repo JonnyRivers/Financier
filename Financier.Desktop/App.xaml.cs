@@ -135,8 +135,6 @@ namespace Financier.Desktop
             serviceCollection.AddSingleton<ITransactionEditViewService, TransactionEditViewService>();
             serviceCollection.AddSingleton<ITransactionListViewService, TransactionListViewService>();
 
-            
-
             serviceCollection.AddSingleton<IAccountDetailsViewModelFactory, AccountDetailsViewModelFactory>();
             serviceCollection.AddSingleton<IAccountItemViewModelFactory, AccountItemViewModelFactory>();
             serviceCollection.AddSingleton<IAccountLinkViewModelFactory, AccountLinkViewModelFactory>();
@@ -152,15 +150,16 @@ namespace Financier.Desktop
             serviceCollection.AddSingleton<IBudgetDetailsViewModelFactory, BudgetDetailsViewModelFactory>();
             serviceCollection.AddSingleton<IBudgetItemViewModelFactory, BudgetItemViewModelFactory>();
             serviceCollection.AddSingleton<IBudgetListViewModelFactory, BudgetListViewModelFactory>();
+            serviceCollection.AddSingleton<IBudgetTransactionListViewModelFactory, BudgetTransactionListViewModelFactory>();
+            serviceCollection.AddSingleton<IBudgetTransactionItemViewModelFactory, BudgetTransactionItemViewModelFactory>();
             serviceCollection.AddSingleton<IForeignAmountViewModelFactory, ForeignAmountViewModelFactory>();
             serviceCollection.AddSingleton<IMainViewModelFactory, MainViewModelFactory>();
+            serviceCollection.AddSingleton<IPaydayEventStartViewModelFactory, PaydayEventStartViewModelFactory>();
+            serviceCollection.AddSingleton<IReconcileBalanceViewModelFactory, ReconcileBalanceViewModelFactory>();
+            serviceCollection.AddSingleton<ITransactionBatchCreateConfirmViewModelFactory, TransactionBatchCreateConfirmViewModelFactory>();
             serviceCollection.AddSingleton<ITransactionDetailsViewModelFactory, TransactionDetailsViewModelFactory>();
             serviceCollection.AddSingleton<ITransactionItemViewModelFactory, TransactionItemViewModelFactory>();
-            serviceCollection.AddSingleton<ITransactionListViewModelFactory, TransactionListViewModelFactory>();
-
-            // TODO - break this up
-            serviceCollection.AddSingleton<IViewModelFactory, ViewModelFactory>();
-            
+            serviceCollection.AddSingleton<ITransactionListViewModelFactory, TransactionListViewModelFactory>();            
 
             // Financier.Core services
             serviceCollection.AddSingleton<IAccountService, AccountService>();

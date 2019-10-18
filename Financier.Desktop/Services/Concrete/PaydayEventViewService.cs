@@ -8,19 +8,21 @@ namespace Financier.Desktop.Services
     public class PaydayEventViewService : IPaydayEventViewService
     {
         private readonly ILogger<PaydayEventViewService> m_logger;
-        private readonly IViewModelFactory m_viewModelFactory;
+        private readonly IPaydayEventStartViewModelFactory m_paydayEventStartViewModelFactory;
 
-        public PaydayEventViewService(ILogger<PaydayEventViewService> logger, IViewModelFactory viewModelFactory)
+        public PaydayEventViewService(
+            ILogger<PaydayEventViewService> logger, 
+            IPaydayEventStartViewModelFactory paydayEventStartViewModelFactory)
         {
             m_logger = logger;
-            m_viewModelFactory = viewModelFactory;
+            m_paydayEventStartViewModelFactory = paydayEventStartViewModelFactory;
         }
 
         public bool Show(int budgetId, out PaydayStart paydayStart)
         {
             paydayStart = null;
 
-            IPaydayEventStartViewModel viewModel = m_viewModelFactory.CreatePaydayEventStartViewModel(budgetId);
+            IPaydayEventStartViewModel viewModel = m_paydayEventStartViewModelFactory.Create(budgetId);
             var window = new PaydayEventStartWindow(viewModel);
             bool? result = window.ShowDialog();
 

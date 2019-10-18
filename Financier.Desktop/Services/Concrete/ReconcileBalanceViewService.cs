@@ -8,19 +8,21 @@ namespace Financier.Desktop.Services
     public class ReconcileBalanceViewService : IReconcileBalanceViewService
     {
         private readonly ILogger<ReconcileBalanceViewService> m_logger;
-        private readonly IViewModelFactory m_viewModelFactory;
+        private readonly IReconcileBalanceViewModelFactory m_reconcileBalanceViewModelFactory;
 
-        public ReconcileBalanceViewService(ILogger<ReconcileBalanceViewService> logger, IViewModelFactory viewModelFactory)
+        public ReconcileBalanceViewService(
+            ILogger<ReconcileBalanceViewService> logger,
+            IReconcileBalanceViewModelFactory reconcileBalanceViewModelFactory)
         {
             m_logger = logger;
-            m_viewModelFactory = viewModelFactory;
+            m_reconcileBalanceViewModelFactory = reconcileBalanceViewModelFactory;
         }
 
         public bool Show(int accountId, out Transaction transaction)
         {
             transaction = null;
 
-            IReconcileBalanceViewModel viewModel = m_viewModelFactory.CreateReconcileBalanceViewModel(accountId);
+            IReconcileBalanceViewModel viewModel = m_reconcileBalanceViewModelFactory.Create(accountId);
             var window = new ReconcileBalanceWindow(viewModel);
             bool? result = window.ShowDialog();
 

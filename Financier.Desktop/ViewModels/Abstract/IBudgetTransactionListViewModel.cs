@@ -4,6 +4,11 @@ using System.Windows.Input;
 
 namespace Financier.Desktop.ViewModels
 {
+    public interface IBudgetTransactionListViewModelFactory
+    {
+        IBudgetTransactionListViewModel Create(int budgetId);
+    }
+
     public interface IBudgetTransactionListViewModel
     {
         ObservableCollection<IBudgetTransactionItemViewModel> Transactions { get; set; }
