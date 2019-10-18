@@ -28,10 +28,10 @@ namespace Financier.Desktop
             this.ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
             ServiceCollection serviceCollection = BuildConnectionServiceProvider();
-            IDatabaseConnectionViewService connectionViewService = m_serviceProvider.GetRequiredService<IDatabaseConnectionViewService>();
+            IDatabaseConnectionListViewService connectionViewService = m_serviceProvider.GetRequiredService<IDatabaseConnectionListViewService>();
             DatabaseConnection databaseConnection;
             string password;
-            if (connectionViewService.OpenDatabaseConnectionListView(out databaseConnection, out password))
+            if (connectionViewService.Show(out databaseConnection, out password))
             {
                 BuildFullServiceProvider(serviceCollection, databaseConnection, password);
                 IMainViewService mainViewService = m_serviceProvider.GetRequiredService<IMainViewService>();
@@ -83,9 +83,18 @@ namespace Financier.Desktop
 
             // Financier.Desktop services
             serviceCollection.AddSingleton<IMessageService, MessageService>();
-            serviceCollection.AddSingleton<IDatabaseConnectionViewModelFactory, DatabaseConnectionViewModelFactory>();
-            serviceCollection.AddSingleton<IDatabaseConnectionViewService, DatabaseConnectionViewService>();
+
+            serviceCollection.AddSingleton<IDatabaseConnectionDetailsViewModelFactory, DatabaseConnectionDetailsViewModelFactory>();
+            serviceCollection.AddSingleton<IDatabaseConnectionItemViewModelFactory, DatabaseConnectionItemViewModelFactory>();
+            serviceCollection.AddSingleton<IDatabaseConnectionListViewModelFactory, DatabaseConnectionListViewModelFactory>();
+            serviceCollection.AddSingleton<IDatabaseConnectionPasswordViewModelFactory, DatabaseConnectionPasswordViewModelFactory>();
             serviceCollection.AddSingleton<IExceptionViewModelFactory, ExceptionViewModelFactory>();
+
+            serviceCollection.AddSingleton<IDatabaseConnectionCreateViewService, DatabaseConnectionCreateViewService>();
+            serviceCollection.AddSingleton<IDatabaseConnectionEditViewService, DatabaseConnectionEditViewService>();
+            serviceCollection.AddSingleton<IDatabaseConnectionListViewService, DatabaseConnectionListViewService>();
+            serviceCollection.AddSingleton<IDatabaseConnectionPasswordViewService, DatabaseConnectionPasswordViewService>();
+            serviceCollection.AddSingleton<IDeleteConfirmationViewService, DeleteConfirmationViewService>();
             serviceCollection.AddSingleton<IExceptionViewService, ExceptionViewService>();
 
             m_serviceProvider = serviceCollection.BuildServiceProvider();
@@ -113,12 +122,52 @@ namespace Financier.Desktop
             }
 
             // Financier.Desktop services
-            serviceCollection.AddTransient<IMainViewModel, MainViewModel>();
-            serviceCollection.AddTransient<IMainViewService, MainViewService>();
+            serviceCollection.AddSingleton<IAccountCreateViewService, AccountCreateViewService>();
+            serviceCollection.AddSingleton<IAccountEditViewService, AccountEditViewService>();
+            serviceCollection.AddSingleton<IAccountRelationshipCreateViewService, AccountRelationshipCreateViewService>();
+            serviceCollection.AddSingleton<IAccountRelationshipEditViewService, AccountRelationshipEditViewService>();
+            serviceCollection.AddSingleton<IAccountRelationshipListViewService, AccountRelationshipListViewService>();
+            serviceCollection.AddSingleton<IAccountTransactionsEditViewService, AccountTransactionsEditViewService>();
+            serviceCollection.AddSingleton<IAccountTreeViewService, AccountTreeViewService>();
+            serviceCollection.AddSingleton<IBalanceSheetViewService, BalanceSheetViewService>();
+            serviceCollection.AddSingleton<IBudgetCreateViewService, BudgetCreateViewService>();
+            serviceCollection.AddSingleton<IBudgetEditViewService, BudgetEditViewService>();
+            serviceCollection.AddSingleton<IBudgetListViewService, BudgetListViewService>();
+            serviceCollection.AddSingleton<IForeignAmountViewService, ForeignAmountViewService>();
+            serviceCollection.AddSingleton<IMainViewService, MainViewService>();
+            serviceCollection.AddSingleton<INoPendingCreditCardTransactionsViewService, NoPendingCreditCardTransactionsViewService>();
+            serviceCollection.AddSingleton<IPaydayEventViewService, PaydayEventViewService>();
+            serviceCollection.AddSingleton<IReconcileBalanceViewService, ReconcileBalanceViewService>();
+            serviceCollection.AddSingleton<ITransactionBatchCreateConfirmViewService, TransactionBatchCreateConfirmViewService>();
+            serviceCollection.AddSingleton<ITransactionCreateViewService, TransactionCreateViewService>();
+            serviceCollection.AddSingleton<ITransactionEditViewService, TransactionEditViewService>();
+            serviceCollection.AddSingleton<ITransactionListViewService, TransactionListViewService>();
 
-            // TODO - break this up
-            serviceCollection.AddSingleton<IViewModelFactory, ViewModelFactory>();
-            serviceCollection.AddSingleton<IViewService, ViewService>();
+            serviceCollection.AddSingleton<IAccountDetailsViewModelFactory, AccountDetailsViewModelFactory>();
+            serviceCollection.AddSingleton<IAccountItemViewModelFactory, AccountItemViewModelFactory>();
+            serviceCollection.AddSingleton<IAccountLinkViewModelFactory, AccountLinkViewModelFactory>();
+            serviceCollection.AddSingleton<IAccountRelationshipDetailsViewModelFactory, AccountRelationshipDetailsViewModelFactory>();
+            serviceCollection.AddSingleton<IAccountRelationshipItemViewModelFactory, AccountRelationshipItemViewModelFactory>();
+            serviceCollection.AddSingleton<IAccountRelationshipListViewModelFactory, AccountRelationshipListViewModelFactory>();
+            serviceCollection.AddSingleton<IAccountTransactionItemViewModelFactory, AccountTransactionItemViewModelFactory>();
+            serviceCollection.AddSingleton<IAccountTransactionListViewModelFactory, AccountTransactionListViewModelFactory>();
+            serviceCollection.AddSingleton<IAccountTreeItemViewModelFactory, AccountTreeItemViewModelFactory>();
+            serviceCollection.AddSingleton<IAccountTreeViewModelFactory, AccountTreeViewModelFactory>();
+            serviceCollection.AddSingleton<IBalanceSheetItemViewModelFactory, BalanceSheetItemViewModelFactory>();
+            serviceCollection.AddSingleton<IBalanceSheetViewModelFactory, BalanceSheetViewModelFactory>();
+            serviceCollection.AddSingleton<IBudgetDetailsViewModelFactory, BudgetDetailsViewModelFactory>();
+            serviceCollection.AddSingleton<IBudgetItemViewModelFactory, BudgetItemViewModelFactory>();
+            serviceCollection.AddSingleton<IBudgetListViewModelFactory, BudgetListViewModelFactory>();
+            serviceCollection.AddSingleton<IBudgetTransactionListViewModelFactory, BudgetTransactionListViewModelFactory>();
+            serviceCollection.AddSingleton<IBudgetTransactionItemViewModelFactory, BudgetTransactionItemViewModelFactory>();
+            serviceCollection.AddSingleton<IForeignAmountViewModelFactory, ForeignAmountViewModelFactory>();
+            serviceCollection.AddSingleton<IMainViewModelFactory, MainViewModelFactory>();
+            serviceCollection.AddSingleton<IPaydayEventStartViewModelFactory, PaydayEventStartViewModelFactory>();
+            serviceCollection.AddSingleton<IReconcileBalanceViewModelFactory, ReconcileBalanceViewModelFactory>();
+            serviceCollection.AddSingleton<ITransactionBatchCreateConfirmViewModelFactory, TransactionBatchCreateConfirmViewModelFactory>();
+            serviceCollection.AddSingleton<ITransactionDetailsViewModelFactory, TransactionDetailsViewModelFactory>();
+            serviceCollection.AddSingleton<ITransactionItemViewModelFactory, TransactionItemViewModelFactory>();
+            serviceCollection.AddSingleton<ITransactionListViewModelFactory, TransactionListViewModelFactory>();            
 
             // Financier.Core services
             serviceCollection.AddSingleton<IAccountService, AccountService>();

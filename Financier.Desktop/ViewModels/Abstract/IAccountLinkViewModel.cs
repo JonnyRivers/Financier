@@ -2,6 +2,11 @@
 
 namespace Financier.Desktop.ViewModels
 {
+    public interface IAccountLinkViewModelFactory
+    {
+        IAccountLinkViewModel Create(AccountLink accountLink);
+    }
+
     public interface IAccountLinkViewModel
     {
         AccountLink ToAccountLink();

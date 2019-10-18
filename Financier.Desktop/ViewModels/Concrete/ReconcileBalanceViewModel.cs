@@ -10,14 +10,33 @@ using System.Windows.Input;
 
 namespace Financier.Desktop.ViewModels
 {
+    public class ReconcileBalanceViewModelFactory : IReconcileBalanceViewModelFactory
+    {
+        private readonly ILogger<ReconcileBalanceViewModelFactory> m_logger;
+        private readonly IServiceProvider m_serviceProvider;
+
+        public ReconcileBalanceViewModelFactory(
+            ILogger<ReconcileBalanceViewModelFactory> logger,
+            IServiceProvider serviceProvider)
+        {
+            m_logger = logger;
+            m_serviceProvider = serviceProvider;
+        }
+
+        public IReconcileBalanceViewModel Create(int accountId)
+        {
+            return m_serviceProvider.CreateInstance<ReconcileBalanceViewModel>(accountId);
+        }
+    }
+
     public class ReconcileBalanceViewModel : BaseViewModel, IReconcileBalanceViewModel
     {
         private ILogger<ReconcileBalanceViewModel> m_logger;
         private IAccountService m_accountService;
         private ICurrencyService m_currencyService;
         private ITransactionService m_transactionService;
-        private IViewModelFactory m_viewModelFactory;
-        private IViewService m_viewService;
+        private IAccountLinkViewModelFactory m_accountLinkViewModelFactory;
+        private IForeignAmountViewService m_foreignAmountViewService;
 
         private int m_accountId;
         private string m_primaryCurrencyCode;
@@ -34,16 +53,16 @@ namespace Financier.Desktop.ViewModels
             IAccountService accountService,
             ICurrencyService currencyService,
             ITransactionService transactionService,
-            IViewModelFactory viewModelFactory,
-            IViewService viewService,
+            IAccountLinkViewModelFactory accountLinkViewModelFactory,
+            IForeignAmountViewService foreignAmountViewService,
             int accountId)
         {
             m_logger = logger;
             m_accountService = accountService;
             m_currencyService = currencyService;
             m_transactionService = transactionService;
-            m_viewModelFactory = viewModelFactory;
-            m_viewService = viewService;
+            m_accountLinkViewModelFactory = accountLinkViewModelFactory;
+            m_foreignAmountViewService = foreignAmountViewService;
 
             m_accountId = accountId;
             m_primaryCurrencyCode = m_currencyService.GetPrimary().ShortName;
@@ -54,7 +73,7 @@ namespace Financier.Desktop.ViewModels
 
             IEnumerable<AccountLink> accountLinks = m_accountService.GetAllAsLinks().Where(al => al.Type == AccountType.Income);
             IEnumerable<IAccountLinkViewModel> accountLinkViewModels =
-                accountLinks.Select(al => m_viewModelFactory.CreateAccountLinkViewModel(al));
+                accountLinks.Select(al => m_accountLinkViewModelFactory.Create(al));
             
             Accounts = new ObservableCollection<IAccountLinkViewModel>(accountLinkViewModels.OrderBy(alvm => alvm.Name));
             m_selectedCreditAccount = Accounts.FirstOrDefault();
@@ -111,7 +130,7 @@ namespace Financier.Desktop.ViewModels
         private void LookupForeignBalanceExecute(object obj)
         {
             decimal exchangedAmount;
-            if(m_viewService.OpenForeignAmountView(
+            if(m_foreignAmountViewService.Show(
                 Balance,
                 m_primaryCurrencyCode,
                 m_accountCurrencyCode,

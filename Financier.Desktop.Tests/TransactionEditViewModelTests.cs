@@ -50,9 +50,9 @@ namespace Financier.Desktop.Tests
                     loggerFactory.CreateLogger<TransactionService>(),
                     sqliteMemoryWrapper.DbContext);
 
-                var mockViewModelFactory = new Mock<Services.IViewModelFactory>();
+                var mockViewModelFactory = new Mock<IAccountLinkViewModelFactory>();
                 mockViewModelFactory
-                    .Setup(f => f.CreateAccountLinkViewModel(It.IsAny<AccountLink>()))
+                    .Setup(f => f.Create(It.IsAny<AccountLink>()))
                     .Returns((AccountLink accountLink) =>
                     {
                         return new AccountLinkViewModel(
@@ -117,9 +117,9 @@ namespace Financier.Desktop.Tests
                     loggerFactory.CreateLogger<TransactionService>(),
                     sqliteMemoryWrapper.DbContext);
 
-                var mockViewModelFactory = new Mock<Services.IViewModelFactory>();
+                var mockViewModelFactory = new Mock<IAccountLinkViewModelFactory>();
                 mockViewModelFactory
-                    .Setup(f => f.CreateAccountLinkViewModel(It.IsAny<AccountLink>()))
+                    .Setup(f => f.Create(It.IsAny<AccountLink>()))
                     .Returns((AccountLink accountLink) =>
                     {
                         return new AccountLinkViewModel(

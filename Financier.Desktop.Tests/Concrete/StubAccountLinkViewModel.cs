@@ -3,6 +3,14 @@ using Financier.Services;
 
 namespace Financier.Desktop.Tests.Concrete
 {
+    internal class StubAccountLinkViewModelFactory : IAccountLinkViewModelFactory
+    {
+        public IAccountLinkViewModel Create(AccountLink accountLink)
+        {
+            return new StubAccountLinkViewModel(accountLink);
+        }
+    }
+
     internal class StubAccountLinkViewModel : IAccountLinkViewModel
     {
         private AccountLink m_accountLink;

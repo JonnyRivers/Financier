@@ -1,5 +1,13 @@
 ﻿namespace Financier.Desktop.ViewModels
 {
+    public interface IForeignAmountViewModelFactory
+    {
+        IForeignAmountViewModel Create(
+            decimal nativeAmount,
+            string nativeCurrencyCode,
+            string foreignCurrencyCode);
+    }
+
     public interface IForeignAmountViewModel
     {
         decimal ForeignAmount { get; set; }

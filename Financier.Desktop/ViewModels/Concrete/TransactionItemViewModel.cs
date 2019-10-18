@@ -1,26 +1,42 @@
-﻿using Financier.Desktop.Services;
-using Financier.Services;
+﻿using Financier.Services;
 using Microsoft.Extensions.Logging;
 using System;
 
 namespace Financier.Desktop.ViewModels
 {
+    public class TransactionItemViewModelFactory : ITransactionItemViewModelFactory
+    {
+        private readonly ILogger<TransactionItemViewModelFactory> m_logger;
+        private readonly IServiceProvider m_serviceProvider;
+
+        public TransactionItemViewModelFactory(ILogger<TransactionItemViewModelFactory> logger, IServiceProvider serviceProvider)
+        {
+            m_logger = logger;
+            m_serviceProvider = serviceProvider;
+        }
+
+        public ITransactionItemViewModel Create(Transaction transaction)
+        {
+            return m_serviceProvider.CreateInstance<TransactionItemViewModel>(transaction);
+        }
+    }
+
     public class TransactionItemViewModel : BaseViewModel, ITransactionItemViewModel
     {
         private ILogger<TransactionItemViewModel> m_logger;
-        private IViewModelFactory m_viewModelFactory;
+        private IAccountLinkViewModelFactory m_acountLinkViewModelFactory;
 
         public TransactionItemViewModel(
             ILogger<TransactionItemViewModel> logger,
-            IViewModelFactory viewModelFactory,
+            IAccountLinkViewModelFactory acountLinkViewModelFactory,
             Transaction transaction)
         {
             m_logger = logger;
-            m_viewModelFactory = viewModelFactory;
+            m_acountLinkViewModelFactory = acountLinkViewModelFactory;
 
             TransactionId = transaction.TransactionId;
-            CreditAccount = m_viewModelFactory.CreateAccountLinkViewModel(transaction.CreditAccount);
-            DebitAccount = m_viewModelFactory.CreateAccountLinkViewModel(transaction.DebitAccount);
+            CreditAccount = m_acountLinkViewModelFactory.Create(transaction.CreditAccount);
+            DebitAccount = m_acountLinkViewModelFactory.Create(transaction.DebitAccount);
             At = transaction.At;
             Amount = transaction.Amount;
         }

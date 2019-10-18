@@ -1,9 +1,19 @@
-﻿using Financier.Desktop.Services;
-using Financier.Desktop.ViewModels;
+﻿using Financier.Desktop.ViewModels;
 using Financier.Services;
 
 namespace Financier.Desktop.Tests.Concrete
 {
+    internal class StubAccountRelationshipItemViewModelFactory : IAccountRelationshipItemViewModelFactory
+    {
+        public IAccountRelationshipItemViewModel Create(AccountRelationship accountRelationship)
+        {
+            return new StubAccountRelationshipItemViewModel(
+                new StubAccountLinkViewModelFactory(),
+                accountRelationship
+            );
+        }
+    }
+
     internal class StubAccountRelationshipItemViewModel : IAccountRelationshipItemViewModel
     {
         private readonly AccountRelationship m_accountRelationship;
@@ -11,13 +21,13 @@ namespace Financier.Desktop.Tests.Concrete
         private readonly IAccountLinkViewModel m_destinationAccount;
 
         internal StubAccountRelationshipItemViewModel(
-            IViewModelFactory viewModelFactory,
+            IAccountLinkViewModelFactory accountLinkViewModelFactory,
             AccountRelationship accountRelationship)
         {
             m_accountRelationship = accountRelationship;
 
-            m_sourceAccount = viewModelFactory.CreateAccountLinkViewModel(m_accountRelationship.SourceAccount);
-            m_destinationAccount = viewModelFactory.CreateAccountLinkViewModel(m_accountRelationship.DestinationAccount);
+            m_sourceAccount = accountLinkViewModelFactory.Create(m_accountRelationship.SourceAccount);
+            m_destinationAccount = accountLinkViewModelFactory.Create(m_accountRelationship.DestinationAccount);
         }
 
         public int AccountRelationshipId => m_accountRelationship.AccountRelationshipId;

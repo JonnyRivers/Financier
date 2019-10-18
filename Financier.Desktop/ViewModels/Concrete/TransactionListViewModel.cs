@@ -10,13 +10,32 @@ using System.Windows.Input;
 
 namespace Financier.Desktop.ViewModels
 {
+    public class TransactionListViewModelFactory : ITransactionListViewModelFactory
+    {
+        private readonly ILogger<TransactionListViewModelFactory> m_logger;
+        private readonly IServiceProvider m_serviceProvider;
+
+        public TransactionListViewModelFactory(ILogger<TransactionListViewModelFactory> logger, IServiceProvider serviceProvider)
+        {
+            m_logger = logger;
+            m_serviceProvider = serviceProvider;
+        }
+
+        public ITransactionListViewModel Create()
+        {
+            return m_serviceProvider.CreateInstance<TransactionListViewModel>();
+        }
+    }
+
     public class TransactionListViewModel : BaseViewModel, ITransactionListViewModel
     {
         // Dependencies
         private ILogger<TransactionListViewModel> m_logger;
         private ITransactionService m_transactionService;
-        private IViewModelFactory m_viewModelFactory;
-        private IViewService m_viewService;
+        private ITransactionItemViewModelFactory m_transactionItemViewModelFactory;
+        private IDeleteConfirmationViewService m_deleteConfirmationViewService;
+        private ITransactionCreateViewService m_transactionCreateViewService;
+        private ITransactionEditViewService m_transactionEditViewService;
 
         // Private data
         private ObservableCollection<ITransactionItemViewModel> m_transactions;
@@ -24,15 +43,18 @@ namespace Financier.Desktop.ViewModels
 
         public TransactionListViewModel(
             ILogger<TransactionListViewModel> logger,
-            IAccountService accountService,
             ITransactionService transactionService,
-            IViewModelFactory viewModelFactory,
-            IViewService viewService)
+            ITransactionItemViewModelFactory transactionItemViewModelFactory,
+            IDeleteConfirmationViewService deleteConfirmationViewService,
+            ITransactionCreateViewService transactionCreateViewService,
+            ITransactionEditViewService transactionEditViewService)
         {
             m_logger = logger;
             m_transactionService = transactionService;
-            m_viewModelFactory = viewModelFactory;
-            m_viewService = viewService;
+            m_transactionItemViewModelFactory = transactionItemViewModelFactory;
+            m_deleteConfirmationViewService = deleteConfirmationViewService;
+            m_transactionCreateViewService = transactionCreateViewService;
+            m_transactionEditViewService = transactionEditViewService;
 
             PopulateTransactions();
         }
@@ -45,7 +67,7 @@ namespace Financier.Desktop.ViewModels
                 .Take(100);
             List<ITransactionItemViewModel> recentTransactionViewModels =
                 recentTransactions
-                    .Select(t => m_viewModelFactory.CreateTransactionItemViewModel(t))
+                    .Select(t => m_transactionItemViewModelFactory.Create(t))
                     .ToList();
 
             Transactions = new ObservableCollection<ITransactionItemViewModel>(recentTransactionViewModels);
@@ -107,10 +129,10 @@ namespace Financier.Desktop.ViewModels
             }
 
             Transaction newTransaction;
-            if (m_viewService.OpenTransactionCreateView(hint, out newTransaction))
+            if (m_transactionCreateViewService.Show(hint, out newTransaction))
             {
                 ITransactionItemViewModel newTransactionViewModel 
-                    = m_viewModelFactory.CreateTransactionItemViewModel(newTransaction);
+                    = m_transactionItemViewModelFactory.Create(newTransaction);
                 Transactions.Add(newTransactionViewModel);
             }
         }
@@ -118,10 +140,10 @@ namespace Financier.Desktop.ViewModels
         private void EditExecute(object obj)
         {
             Transaction updatedTransaction;
-            if (m_viewService.OpenTransactionEditView(SelectedTransaction.TransactionId, out updatedTransaction))
+            if (m_transactionEditViewService.Show(SelectedTransaction.TransactionId, out updatedTransaction))
             {
                 Transactions.Remove(SelectedTransaction);
-                SelectedTransaction = m_viewModelFactory.CreateTransactionItemViewModel(updatedTransaction);
+                SelectedTransaction = m_transactionItemViewModelFactory.Create(updatedTransaction);
                 Transactions.Add(SelectedTransaction);
             }
         }
@@ -133,7 +155,7 @@ namespace Financier.Desktop.ViewModels
 
         private void DeleteExecute(object obj)
         {
-            if(m_viewService.OpenTransactionDeleteConfirmationView())
+            if(m_deleteConfirmationViewService.Show("transaction"))
             {
                 // Update model
                 m_transactionService.Delete(SelectedTransaction.TransactionId);

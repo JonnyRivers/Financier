@@ -2,6 +2,7 @@
 using Financier.Desktop.Services;
 using Financier.Services;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -9,6 +10,23 @@ using System.Windows.Input;
 
 namespace Financier.Desktop.ViewModels
 {
+    public class AccountTreeViewModelFactory : IAccountTreeViewModelFactory
+    {
+        private readonly ILogger<AccountRelationshipListViewModelFactory> m_logger;
+        private readonly IServiceProvider m_serviceProvider;
+
+        public AccountTreeViewModelFactory(ILogger<AccountRelationshipListViewModelFactory> logger, IServiceProvider serviceProvider)
+        {
+            m_logger = logger;
+            m_serviceProvider = serviceProvider;
+        }
+
+        public IAccountTreeViewModel Create()
+        {
+            return m_serviceProvider.CreateInstance<AccountTreeViewModel>();
+        }
+    }
+
     public class AccountTreeViewModel : BaseViewModel, IAccountTreeViewModel
     {
         private ILogger<AccountTreeViewModel> m_logger;
@@ -16,8 +34,12 @@ namespace Financier.Desktop.ViewModels
         private IAccountRelationshipService m_accountRelationshipService;
         private ITransactionService m_transactionService;
         private ITransactionRelationshipService m_transactionRelationshipService;
-        private IViewModelFactory m_viewModelFactory;
-        private IViewService m_viewService;
+        private IAccountTreeItemViewModelFactory m_accountTreeItemViewModelFactory;
+        private IAccountCreateViewService m_accountCreateViewService;
+        private IAccountEditViewService m_accountEditViewService;
+        private IAccountTransactionsEditViewService m_accountTransactionsEditViewService;
+        private INoPendingCreditCardTransactionsViewService m_noPendingCreditCardTrasnactionsViewService;
+        private ITransactionBatchCreateConfirmViewService m_transactionBatchCreateConfirmViewService;
 
         private bool m_showAssets;
         private bool m_showLiabilities;
@@ -31,16 +53,24 @@ namespace Financier.Desktop.ViewModels
             IAccountRelationshipService accountRelationshipService,
             ITransactionService transactionService,
             ITransactionRelationshipService transactionRelationshipService,
-            IViewModelFactory viewModelFactory,
-            IViewService viewService)
-        {
+            IAccountTreeItemViewModelFactory accountTreeItemViewModelFactory,
+            IAccountCreateViewService accountCreateViewService,
+            IAccountEditViewService accountEditViewService,
+            IAccountTransactionsEditViewService accountTransactionsEditViewService,
+            INoPendingCreditCardTransactionsViewService noPendingCreditCardTrasnactionsViewService,
+            ITransactionBatchCreateConfirmViewService transactionBatchCreateConfirmViewService)
+        {   
             m_logger = logger;
             m_accountService = accountService;
             m_accountRelationshipService = accountRelationshipService;
             m_transactionService = transactionService;
             m_transactionRelationshipService = transactionRelationshipService;
-            m_viewModelFactory = viewModelFactory;
-            m_viewService = viewService;
+            m_accountTreeItemViewModelFactory = accountTreeItemViewModelFactory;
+            m_accountCreateViewService = accountCreateViewService;
+            m_accountEditViewService = accountEditViewService;
+            m_accountTransactionsEditViewService = accountTransactionsEditViewService;
+            m_noPendingCreditCardTrasnactionsViewService = noPendingCreditCardTrasnactionsViewService;
+            m_transactionBatchCreateConfirmViewService = transactionBatchCreateConfirmViewService;
 
             m_showAssets = true;
             m_showLiabilities = true;
@@ -158,7 +188,7 @@ namespace Financier.Desktop.ViewModels
         private void CreateExecute(object obj)
         {
             Account newAccount;
-            if (m_viewService.OpenAccountCreateView(out newAccount))
+            if (m_accountCreateViewService.Show(out newAccount))
             {
                 PopulateAccountTreeItems();
             }
@@ -167,7 +197,7 @@ namespace Financier.Desktop.ViewModels
         private void EditExecute(object obj)
         {
             Account updatedAccount;
-            if (m_viewService.OpenAccountEditView(SelectedItem.AccountId, out updatedAccount))
+            if (m_accountEditViewService.Show(SelectedItem.AccountId, out updatedAccount))
             {
                 PopulateAccountTreeItems();
             }
@@ -180,7 +210,7 @@ namespace Financier.Desktop.ViewModels
 
         private void EditTransactionsExecute(object obj)
         {
-            m_viewService.OpenAccountTransactionsEditView(SelectedItem.AccountId);
+            m_accountTransactionsEditViewService.Show(SelectedItem.AccountId);
 
             PopulateAccountTreeItems();
         }
@@ -198,7 +228,7 @@ namespace Financier.Desktop.ViewModels
             if (pendingCreditCardPayments.Any())
             {
                 IEnumerable<Transaction> paymentTransactions = pendingCreditCardPayments.Select(p => p.PaymentTransaction);
-                if (m_viewService.OpenTransactionBatchCreateConfirmView(paymentTransactions))
+                if (m_transactionBatchCreateConfirmViewService.Show(paymentTransactions))
                 {
                     m_transactionService.CreateMany(paymentTransactions);
 
@@ -222,7 +252,7 @@ namespace Financier.Desktop.ViewModels
             }
             else
             {
-                m_viewService.OpenNoPendingCreditCardTransactionsView(SelectedItem.Name);
+                m_noPendingCreditCardTrasnactionsViewService.Show(SelectedItem.Name);
             }
         }
 
@@ -255,7 +285,7 @@ namespace Financier.Desktop.ViewModels
                     .Where(a => logicalAccountIds.Contains(a.AccountId))
                     .ToDictionary(
                         a => a.AccountId,
-                        a => m_viewModelFactory.CreateAccountTreeItemViewModel(a, transactions));
+                        a => m_accountTreeItemViewModelFactory.Create(a, transactions));
 
             var physicalAccountVMs = new List<IAccountTreeItemViewModel>();
             foreach(Account physicalAccount in accounts.Where(a => !logicalAccountIds.Contains(a.AccountId)))
@@ -267,11 +297,11 @@ namespace Financier.Desktop.ViewModels
                         childAccountIds
                             .Select(id => logicalAccountVMsById[id])
                             .OrderBy(a => a.Name);
-                    physicalAccountVMs.Add(m_viewModelFactory.CreateAccountTreeItemViewModel(physicalAccount, transactions, childAccountVMs));
+                    physicalAccountVMs.Add(m_accountTreeItemViewModelFactory.Create(physicalAccount, transactions, childAccountVMs));
                 }
                 else
                 {
-                    physicalAccountVMs.Add(m_viewModelFactory.CreateAccountTreeItemViewModel(physicalAccount, transactions));
+                    physicalAccountVMs.Add(m_accountTreeItemViewModelFactory.Create(physicalAccount, transactions));
                 }
             }
 

@@ -3,6 +3,14 @@ using System.Collections.ObjectModel;
 
 namespace Financier.Desktop.ViewModels
 {
+    public interface IBudgetTransactionItemViewModelFactory
+    {
+        IBudgetTransactionItemViewModel Create(
+            ObservableCollection<IAccountLinkViewModel> accountLinks,
+            BudgetTransaction budgetTransaction,
+            BudgetTransactionType type);
+    }
+
     public interface IBudgetTransactionItemViewModel
     {
         BudgetTransaction ToBudgetTransaction();

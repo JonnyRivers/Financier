@@ -7,11 +7,28 @@ using System.Linq;
 
 namespace Financier.Desktop.ViewModels
 {
+    public class BalanceSheetViewModelFactory : IBalanceSheetViewModelFactory
+    {
+        private readonly ILogger<BalanceSheetViewModelFactory> m_logger;
+        private readonly IServiceProvider m_serviceProvider;
+
+        public BalanceSheetViewModelFactory(ILogger<BalanceSheetViewModelFactory> logger, IServiceProvider serviceProvider)
+        {
+            m_logger = logger;
+            m_serviceProvider = serviceProvider;
+        }
+
+        public IBalanceSheetViewModel Create()
+        {
+            return m_serviceProvider.CreateInstance<BalanceSheetViewModel>();
+        }
+    }
+
     public class BalanceSheetViewModel : BaseViewModel, IBalanceSheetViewModel
     {
         private ILogger<BalanceSheetViewModel> m_logger;
         private IBalanceSheetService m_balanceSheetService;
-        private IViewModelFactory m_viewModelFactory;
+        private IBalanceSheetItemViewModelFactory m_balanceSheetItemViewModelFactory;
 
         private DateTime m_at;
         private ObservableCollection<IBalanceSheetItemViewModel> m_assets;
@@ -23,11 +40,11 @@ namespace Financier.Desktop.ViewModels
         public BalanceSheetViewModel(
             ILogger<BalanceSheetViewModel> logger,
             IBalanceSheetService balanceSheetService,
-            IViewModelFactory viewModelFactory)
+            IBalanceSheetItemViewModelFactory balanceSheetItemViewModelFactory)
         {
             m_logger = logger;
             m_balanceSheetService = balanceSheetService;
-            m_viewModelFactory = viewModelFactory;
+            m_balanceSheetItemViewModelFactory = balanceSheetItemViewModelFactory;
 
             m_at = DateTime.Now;
 
@@ -40,10 +57,10 @@ namespace Financier.Desktop.ViewModels
             BalanceSheet balanceSheet = m_balanceSheetService.Generate(m_at);
 
             Assets = new ObservableCollection<IBalanceSheetItemViewModel>(
-                balanceSheet.Assets.Select(i => m_viewModelFactory.CreateBalanceSheetItemViewModel(i)));
+                balanceSheet.Assets.Select(i => m_balanceSheetItemViewModelFactory.Create(i)));
             TotalAssets = balanceSheet.TotalAssets;
             Liabilities = new ObservableCollection<IBalanceSheetItemViewModel>(
-                balanceSheet.Liabilities.Select(i => m_viewModelFactory.CreateBalanceSheetItemViewModel(i)));
+                balanceSheet.Liabilities.Select(i => m_balanceSheetItemViewModelFactory.Create(i)));
             TotalLiabilities = balanceSheet.TotalLiabilities;
             NetWorth = balanceSheet.NetWorth;
         }

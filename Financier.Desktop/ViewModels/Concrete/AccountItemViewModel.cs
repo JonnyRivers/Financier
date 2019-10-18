@@ -1,8 +1,26 @@
 ﻿using Financier.Services;
 using Microsoft.Extensions.Logging;
+using System;
 
 namespace Financier.Desktop.ViewModels
 {
+    public class AccountItemViewModelFactory : IAccountItemViewModelFactory
+    {
+        private readonly ILogger<AccountItemViewModelFactory> m_logger;
+        private readonly IServiceProvider m_serviceProvider;
+
+        public AccountItemViewModelFactory(ILogger<AccountItemViewModelFactory> logger, IServiceProvider serviceProvider)
+        {
+            m_logger = logger;
+            m_serviceProvider = serviceProvider;
+        }
+
+        public IAccountItemViewModel Create(Account account)
+        {
+            return m_serviceProvider.CreateInstance<AccountItemViewModel>(account);
+        }
+    }
+
     public class AccountItemViewModel : BaseViewModel, IAccountItemViewModel
     {
         private ILogger<AccountItemViewModel> m_logger;

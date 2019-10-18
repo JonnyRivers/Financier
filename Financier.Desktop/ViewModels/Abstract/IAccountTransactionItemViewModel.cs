@@ -1,7 +1,13 @@
-﻿using System;
+﻿using Financier.Services;
+using System;
 
 namespace Financier.Desktop.ViewModels
 {
+    public interface IAccountTransactionItemViewModelFactory
+    {
+        IAccountTransactionItemViewModel Create(Transaction transaction);
+    }
+
     public interface IAccountTransactionItemViewModel
     {
         int TransactionId { get; }

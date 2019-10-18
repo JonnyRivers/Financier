@@ -2,6 +2,11 @@
 
 namespace Financier.Desktop.ViewModels
 {
+    public interface IBudgetItemViewModelFactory
+    {
+        IBudgetItemViewModel Create(Budget budget, Currency currency);
+    }
+
     public interface IBudgetItemViewModel
     {
         int BudgetId { get; }

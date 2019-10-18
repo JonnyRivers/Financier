@@ -3,6 +3,11 @@ using System.Collections.ObjectModel;
 
 namespace Financier.Desktop.ViewModels
 {
+    public interface IBalanceSheetViewModelFactory
+    {
+        IBalanceSheetViewModel Create();
+    }
+
     public interface IBalanceSheetViewModel
     {
         DateTime At { get; set; }

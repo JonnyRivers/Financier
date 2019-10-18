@@ -1,4 +1,5 @@
-﻿using Financier.Desktop.ViewModels;
+﻿using Financier.Desktop.Services;
+using Financier.Desktop.ViewModels;
 using Financier.Services;
 using Financier.UnitTesting;
 using Financier.UnitTesting.DbSetup;
@@ -30,12 +31,10 @@ namespace Financier.Desktop.Tests
                     loggerFactory.CreateLogger<BudgetService>(),
                     sqliteMemoryWrapper.DbContext);
 
-                var mockViewModelFactory = new Mock<Services.IViewModelFactory>();
-
                 var viewModel = new BudgetCreateViewModel(
                     loggerFactory.CreateLogger<BudgetCreateViewModel>(),
                     budgetService,
-                    mockViewModelFactory.Object
+                    new Mock<IBudgetTransactionListViewModelFactory>().Object
                 );
 
                 viewModel.Name = "My First Budget";
@@ -77,9 +76,19 @@ namespace Financier.Desktop.Tests
                     loggerFactory.CreateLogger<BudgetService>(),
                     sqliteMemoryWrapper.DbContext);
 
-                var mockTransactionItemViewModelFactory = new Mock<Services.IViewModelFactory>();
-                mockTransactionItemViewModelFactory
-                    .Setup(f => f.CreateBudgetTransactionItemViewModel(
+                var mockAccountLinkViewModelFactory = new Mock<IAccountLinkViewModelFactory>();
+                mockAccountLinkViewModelFactory
+                    .Setup(f => f.Create(It.IsAny<AccountLink>()))
+                    .Returns((AccountLink accountLink) =>
+                    {
+                        return new AccountLinkViewModel(
+                            loggerFactory.CreateLogger<AccountLinkViewModel>(),
+                            accountLink);
+                    });
+
+                var mockBudgetTransactionItemViewModelFactory = new Mock<IBudgetTransactionItemViewModelFactory>();
+                mockBudgetTransactionItemViewModelFactory
+                    .Setup(f => f.Create(
                         It.IsAny<ObservableCollection<IAccountLinkViewModel>>(),
                         It.IsAny<BudgetTransaction>(),
                         It.IsAny<BudgetTransactionType>()))
@@ -94,26 +103,19 @@ namespace Financier.Desktop.Tests
                             budgetTransaction,
                             type);
                     });
-                mockTransactionItemViewModelFactory
-                    .Setup(f => f.CreateAccountLinkViewModel(It.IsAny<AccountLink>()))
-                    .Returns((AccountLink accountLink) =>
-                    {
-                        return new AccountLinkViewModel(
-                            loggerFactory.CreateLogger<AccountLinkViewModel>(),
-                            accountLink);
-                    });
 
-                var mockTransactionListViewModelFactory = new Mock<Services.IViewModelFactory>();
+                var mockTransactionListViewModelFactory = new Mock<IBudgetTransactionListViewModelFactory>();
                 mockTransactionListViewModelFactory
-                    .Setup(f => f.CreateBudgetTransactionListViewModel(It.IsAny<int>()))
+                    .Setup(f => f.Create(It.IsAny<int>()))
                     .Returns((int budgetId) =>
                     {
                         return new BudgetTransactionListViewModel(
                             loggerFactory.CreateLogger<BudgetTransactionListViewModel>(),
                             accountService,
                             budgetService,
-                            mockTransactionItemViewModelFactory.Object,
-                            new Mock<Services.IViewService>().Object,
+                            mockAccountLinkViewModelFactory.Object,
+                            mockBudgetTransactionItemViewModelFactory.Object,
+                            new Mock<IDeleteConfirmationViewService>().Object,
                             budgetId
                         );
                     });

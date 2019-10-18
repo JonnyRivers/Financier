@@ -1,9 +1,11 @@
-﻿using Financier.Desktop.ViewModels;
+﻿using Financier.Desktop.Services;
+using Financier.Desktop.ViewModels;
 using Financier.Services;
 using Financier.UnitTesting;
 using Financier.UnitTesting.DbSetup;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 
 namespace Financier.Desktop.Tests
 {
@@ -65,16 +67,15 @@ namespace Financier.Desktop.Tests
                     loggerFactory.CreateLogger<TransactionService>(),
                     sqliteMemoryWrapper.DbContext);
 
-                var viewModelFactory = new Concrete.FakeViewModelFactory();
-
-                var viewService = new Concrete.FakeViewService();
-
                 var viewModel = new AccountRelationshipListViewModel(
                     loggerFactory.CreateLogger<AccountRelationshipListViewModel>(),
                     accountService,
                     accountRelationshipService,
-                    viewModelFactory,
-                    viewService
+                    new Mock<IAccountRelationshipDetailsViewModelFactory>().Object,
+                    new Concrete.StubAccountRelationshipItemViewModelFactory(),
+                    new Mock<IAccountRelationshipCreateViewService>().Object,
+                    new Mock<IAccountRelationshipEditViewService>().Object,
+                    new Mock<IDeleteConfirmationViewService>().Object
                 );
 
                 Assert.AreEqual(2, viewModel.AccountRelationships.Count);

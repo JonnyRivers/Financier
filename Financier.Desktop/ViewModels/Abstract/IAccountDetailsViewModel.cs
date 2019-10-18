@@ -4,6 +4,12 @@ using System.Windows.Input;
 
 namespace Financier.Desktop.ViewModels
 {
+    public interface IAccountDetailsViewModelFactory
+    {
+        IAccountDetailsViewModel Create();
+        IAccountDetailsViewModel Create(int accountId);
+    }
+
     public interface IAccountDetailsViewModel
     {
         Account ToAccount();

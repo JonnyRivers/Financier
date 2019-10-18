@@ -1,25 +1,42 @@
-﻿using Financier.Desktop.Services;
-using Financier.Services;
+﻿using Financier.Services;
 using Microsoft.Extensions.Logging;
+using System;
 
 namespace Financier.Desktop.ViewModels
 {
+    public class AccountRelationshipItemViewModelFactory : IAccountRelationshipItemViewModelFactory
+    {
+        private readonly ILogger<AccountRelationshipItemViewModelFactory> m_logger;
+        private readonly IServiceProvider m_serviceProvider;
+
+        public AccountRelationshipItemViewModelFactory(ILogger<AccountRelationshipItemViewModelFactory> logger, IServiceProvider serviceProvider)
+        {
+            m_logger = logger;
+            m_serviceProvider = serviceProvider;
+        }
+
+        public IAccountRelationshipItemViewModel Create(AccountRelationship accountRelationship)
+        {
+            return m_serviceProvider.CreateInstance<AccountRelationshipItemViewModel>(accountRelationship);
+        }
+    }
+
     public class AccountRelationshipItemViewModel : BaseViewModel, IAccountRelationshipItemViewModel
     {
         private ILogger<AccountRelationshipItemViewModel> m_logger;
-        private IViewModelFactory m_viewModelFactory;
+        private IAccountLinkViewModelFactory m_accountLinkViewModelFactory;
 
         public AccountRelationshipItemViewModel(
             ILogger<AccountRelationshipItemViewModel> logger,
-            IViewModelFactory viewModelFactory,
+            IAccountLinkViewModelFactory accountlinkViewModelFactory,
             AccountRelationship accountRelationship)
         {
             m_logger = logger;
-            m_viewModelFactory = viewModelFactory;
+            m_accountLinkViewModelFactory = accountlinkViewModelFactory;
 
             AccountRelationshipId = accountRelationship.AccountRelationshipId;
-            SourceAccount = m_viewModelFactory.CreateAccountLinkViewModel(accountRelationship.SourceAccount);
-            DestinationAccount = m_viewModelFactory.CreateAccountLinkViewModel(accountRelationship.DestinationAccount);
+            SourceAccount = m_accountLinkViewModelFactory.Create(accountRelationship.SourceAccount);
+            DestinationAccount = m_accountLinkViewModelFactory.Create(accountRelationship.DestinationAccount);
             Type = accountRelationship.Type;
         }
 

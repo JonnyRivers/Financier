@@ -10,6 +10,23 @@ using System.Windows.Input;
 
 namespace Financier.Desktop.ViewModels
 {
+    public class AccountRelationshipListViewModelFactory : IAccountRelationshipListViewModelFactory
+    {
+        private readonly ILogger<AccountRelationshipListViewModelFactory> m_logger;
+        private readonly IServiceProvider m_serviceProvider;
+
+        public AccountRelationshipListViewModelFactory(ILogger<AccountRelationshipListViewModelFactory> logger, IServiceProvider serviceProvider)
+        {
+            m_logger = logger;
+            m_serviceProvider = serviceProvider;
+        }
+
+        public IAccountRelationshipListViewModel Create()
+        {
+            return m_serviceProvider.CreateInstance<AccountRelationshipListViewModel>();
+        }
+    }
+
     public class AccountRelationshipListViewModel : BaseViewModel, IAccountRelationshipListViewModel
     {
         private const int AllAccountsId = -1;
@@ -17,21 +34,30 @@ namespace Financier.Desktop.ViewModels
         private ILogger<AccountRelationshipListViewModel> m_logger;
         private IAccountService m_accountService;
         private IAccountRelationshipService m_accountRelationshipService;
-        private IViewModelFactory m_viewModelFactory;
-        private IViewService m_viewService;
+        private IAccountRelationshipDetailsViewModelFactory m_accountRelationshipDetailsViewModelFactory;
+        private IAccountRelationshipItemViewModelFactory m_accountRelationshipItemViewModelFactory;
+        private IAccountRelationshipCreateViewService m_accountRelationshipCreateViewService;
+        private IAccountRelationshipEditViewService m_accountRelationshipEditViewService;
+        private IDeleteConfirmationViewService m_deleteConfirmationViewService;
 
         public AccountRelationshipListViewModel(
             ILogger<AccountRelationshipListViewModel> logger,
             IAccountService accountService,
             IAccountRelationshipService accountRelationshipService,
-            IViewModelFactory viewModelFactory,
-            IViewService viewService)
+            IAccountRelationshipDetailsViewModelFactory accountRelationshipDetailsViewModelFactory,
+            IAccountRelationshipItemViewModelFactory accountRelationshipItemViewModelFactory,
+            IAccountRelationshipCreateViewService accountRelationshipCreateViewService,
+            IAccountRelationshipEditViewService accountRelationshipEditViewService,
+            IDeleteConfirmationViewService deleteConfirmationViewService)
         {
             m_logger = logger;
             m_accountService = accountService;
             m_accountRelationshipService = accountRelationshipService;
-            m_viewModelFactory = viewModelFactory;
-            m_viewService = viewService;
+            m_accountRelationshipDetailsViewModelFactory = accountRelationshipDetailsViewModelFactory;
+            m_accountRelationshipItemViewModelFactory = accountRelationshipItemViewModelFactory;
+            m_accountRelationshipCreateViewService = accountRelationshipCreateViewService;
+            m_accountRelationshipEditViewService = accountRelationshipEditViewService;
+            m_deleteConfirmationViewService = deleteConfirmationViewService;
 
             PopulateAccountRelationships();
         }
@@ -82,10 +108,10 @@ namespace Financier.Desktop.ViewModels
             }
 
             AccountRelationship newRelationship;
-            if (m_viewService.OpenAccountRelationshipCreateView(hint, out newRelationship))
+            if (m_accountRelationshipCreateViewService.Show(hint, out newRelationship))
             {
                 IAccountRelationshipItemViewModel viewModel = 
-                    m_viewModelFactory.CreateAccountRelationshipItemViewModel(newRelationship);
+                    m_accountRelationshipItemViewModelFactory.Create(newRelationship);
                 AccountRelationships.Add(viewModel);
             }
         }
@@ -93,12 +119,12 @@ namespace Financier.Desktop.ViewModels
         private void EditExecute(object obj)
         {
             AccountRelationship updatedRelationship;
-            if (m_viewService.OpenAccountRelationshipEditView(
+            if (m_accountRelationshipEditViewService.Show(
                 SelectedAccountRelationship.AccountRelationshipId, 
                 out updatedRelationship))
             {
                 AccountRelationships.Remove(SelectedAccountRelationship);
-                SelectedAccountRelationship = m_viewModelFactory.CreateAccountRelationshipItemViewModel(updatedRelationship);
+                SelectedAccountRelationship = m_accountRelationshipItemViewModelFactory.Create(updatedRelationship);
                 AccountRelationships.Add(SelectedAccountRelationship);
             }
         }
@@ -110,7 +136,7 @@ namespace Financier.Desktop.ViewModels
 
         private void DeleteExecute(object obj)
         {
-            if (m_viewService.OpenAccountRelationshipDeleteConfirmationView())
+            if (m_deleteConfirmationViewService.Show("account relationship"))
             {
                 // Update model
                 m_accountRelationshipService.Delete(SelectedAccountRelationship.AccountRelationshipId);
@@ -130,7 +156,7 @@ namespace Financier.Desktop.ViewModels
             IEnumerable<AccountRelationship> accountRelationships = m_accountRelationshipService.GetAll();
             IEnumerable<IAccountRelationshipItemViewModel> accountRelationshipVMs =
                 accountRelationships
-                    .Select(ar => m_viewModelFactory.CreateAccountRelationshipItemViewModel(ar));
+                    .Select(ar => m_accountRelationshipItemViewModelFactory.Create(ar));
             AccountRelationships = new ObservableCollection<IAccountRelationshipItemViewModel>(
                 accountRelationshipVMs);
             OnPropertyChanged(nameof(AccountRelationships));

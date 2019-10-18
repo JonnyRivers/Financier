@@ -2,6 +2,11 @@
 
 namespace Financier.Desktop.ViewModels
 {
+    public interface IDatabaseConnectionItemViewModelFactory
+    {
+        IDatabaseConnectionItemViewModel Create(DatabaseConnection databaseConnection);
+    }
+
     public interface IDatabaseConnectionItemViewModel
     {
         int DatabaseConnectionId { get; }

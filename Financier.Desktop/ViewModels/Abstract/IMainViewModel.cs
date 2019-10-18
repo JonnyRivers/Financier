@@ -2,6 +2,11 @@
 
 namespace Financier.Desktop.ViewModels
 {
+    public interface IMainViewModelFactory
+    {
+        IMainViewModel Create();
+    }
+
     public interface IMainViewModel
     {
         ICommand AccountsViewCommand { get; }

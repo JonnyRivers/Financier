@@ -3,6 +3,11 @@ using System.Windows.Input;
 
 namespace Financier.Desktop.ViewModels
 {
+    public interface ITransactionListViewModelFactory
+    {
+        ITransactionListViewModel Create();
+    }
+
     public interface ITransactionListViewModel
     {
         ObservableCollection<ITransactionItemViewModel> Transactions { get; }

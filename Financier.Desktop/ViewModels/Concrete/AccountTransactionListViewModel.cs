@@ -10,14 +10,36 @@ using System.Windows.Input;
 
 namespace Financier.Desktop.ViewModels
 {
+    public class AccountTransactionListViewModelFactory : IAccountTransactionListViewModelFactory
+    {
+        private readonly ILogger<AccountTransactionListViewModelFactory> m_logger;
+        private readonly IServiceProvider m_serviceProvider;
+
+        public AccountTransactionListViewModelFactory(
+            ILogger<AccountTransactionListViewModelFactory> logger, 
+            IServiceProvider serviceProvider)
+        {
+            m_logger = logger;
+            m_serviceProvider = serviceProvider;
+        }
+
+        public IAccountTransactionListViewModel Create(int accountId)
+        {
+            return m_serviceProvider.CreateInstance<AccountTransactionListViewModel>(accountId);
+        }
+    }
+
     public class AccountTransactionListViewModel : BaseViewModel, IAccountTransactionListViewModel
     {
         // Dependencies
         private ILogger<AccountTransactionListViewModel> m_logger;
         private IAccountService m_accountService;
         private ITransactionService m_transactionService;
-        private IViewModelFactory m_viewModelFactory;
-        private IViewService m_viewService;
+        private IAccountTransactionItemViewModelFactory m_accountTransactionItemViewModelFactory;
+        private IDeleteConfirmationViewService m_deleteConfirmationViewService;
+        private ITransactionCreateViewService m_transactionCreateViewService;
+        private ITransactionEditViewService m_transactionEditViewService;
+        private IReconcileBalanceViewService m_reconcileBalanceViewService;
 
         // Private data
         private int m_accountId;
@@ -31,15 +53,21 @@ namespace Financier.Desktop.ViewModels
             ILogger<AccountTransactionListViewModel> logger,
             IAccountService accountService,
             ITransactionService transactionService,
-            IViewModelFactory viewModelFactory,
-            IViewService viewService,
+            IAccountTransactionItemViewModelFactory accountTransactionItemViewModelFactory,
+            IDeleteConfirmationViewService deleteConfirmationViewService,
+            ITransactionCreateViewService transactionCreateViewService,
+            ITransactionEditViewService transactionEditViewService,
+            IReconcileBalanceViewService reconcileBalanceViewService,
             int accountId)
         {
             m_logger = logger;
             m_accountService = accountService;
             m_transactionService = transactionService;
-            m_viewModelFactory = viewModelFactory;
-            m_viewService = viewService;
+            m_accountTransactionItemViewModelFactory = accountTransactionItemViewModelFactory;
+            m_deleteConfirmationViewService = deleteConfirmationViewService;
+            m_transactionCreateViewService = transactionCreateViewService;
+            m_transactionEditViewService = transactionEditViewService;
+            m_reconcileBalanceViewService = reconcileBalanceViewService;
 
             m_accountId = accountId;
             m_logicalAccountIds = new List<int>(m_accountService.GetLogicalAccountIds(m_accountId));
@@ -61,7 +89,7 @@ namespace Financier.Desktop.ViewModels
             IEnumerable<Transaction> transactions = m_transactionService.GetAll(relevantAccountIds);
             List<IAccountTransactionItemViewModel> transactionViewModels =
                 transactions
-                    .Select(t => m_viewModelFactory.CreateAccountTransactionItemViewModel(t))
+                    .Select(t => m_accountTransactionItemViewModelFactory.Create(t))
                     .ToList();
             Transactions = new ObservableCollection<IAccountTransactionItemViewModel>(transactionViewModels);
 
@@ -165,10 +193,10 @@ namespace Financier.Desktop.ViewModels
             }
 
             Transaction newTransaction;
-            if (m_viewService.OpenTransactionCreateView(hint, out newTransaction))
+            if (m_transactionCreateViewService.Show(hint, out newTransaction))
             {
                 IAccountTransactionItemViewModel newTransactionViewModel
-                    = m_viewModelFactory.CreateAccountTransactionItemViewModel(newTransaction);
+                    = m_accountTransactionItemViewModelFactory.Create(newTransaction);
                 Transactions.Add(newTransactionViewModel);
                 PopulateTransactionBalances();
             }
@@ -177,9 +205,9 @@ namespace Financier.Desktop.ViewModels
         private void ReconcileBalanceExecute(object obj)
         {
             Transaction newTransaction;
-            if (m_viewService.OpenReconcileBalanceView(m_accountId, out newTransaction))
+            if (m_reconcileBalanceViewService.Show(m_accountId, out newTransaction))
             {
-                Transactions.Add(m_viewModelFactory.CreateAccountTransactionItemViewModel(newTransaction));
+                Transactions.Add(m_accountTransactionItemViewModelFactory.Create(newTransaction));
                 PopulateTransactionBalances();
             }
         }
@@ -187,10 +215,10 @@ namespace Financier.Desktop.ViewModels
         private void EditExecute(object obj)
         {
             Transaction updatedTransaction;
-            if (m_viewService.OpenTransactionEditView(SelectedTransaction.TransactionId, out updatedTransaction))
+            if (m_transactionEditViewService.Show(SelectedTransaction.TransactionId, out updatedTransaction))
             {
                 Transactions.Remove(SelectedTransaction);
-                SelectedTransaction = m_viewModelFactory.CreateAccountTransactionItemViewModel(updatedTransaction);
+                SelectedTransaction = m_accountTransactionItemViewModelFactory.Create(updatedTransaction);
                 Transactions.Add(SelectedTransaction);
                 PopulateTransactionBalances();
             }
@@ -203,7 +231,7 @@ namespace Financier.Desktop.ViewModels
 
         private void DeleteExecute(object obj)
         {
-            if(m_viewService.OpenTransactionDeleteConfirmationView())
+            if(m_deleteConfirmationViewService.Show("transaction"))
             {
                 // Update model
                 m_transactionService.Delete(SelectedTransaction.TransactionId);

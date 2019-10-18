@@ -5,6 +5,11 @@ using System.Windows.Input;
 
 namespace Financier.Desktop.ViewModels
 {
+    public interface IReconcileBalanceViewModelFactory
+    {
+        IReconcileBalanceViewModel Create(int accountId);
+    }
+
     public interface IReconcileBalanceViewModel
     {
         Transaction ToTransaction();
