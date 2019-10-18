@@ -3,6 +3,12 @@ using System.Collections.Generic;
 
 namespace Financier.Desktop.ViewModels
 {
+    public interface IDatabaseConnectionDetailsViewModelFactory
+    {
+        IDatabaseConnectionDetailsViewModel Create();
+        IDatabaseConnectionDetailsViewModel Create(int databaseConnectionId);
+    }
+
     public interface IDatabaseConnectionDetailsViewModel
     {
         IEnumerable<DatabaseConnectionType> DatabaseConnectionTypes { get; }

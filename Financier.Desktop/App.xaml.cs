@@ -28,10 +28,10 @@ namespace Financier.Desktop
             this.ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
             ServiceCollection serviceCollection = BuildConnectionServiceProvider();
-            IDatabaseConnectionViewService connectionViewService = m_serviceProvider.GetRequiredService<IDatabaseConnectionViewService>();
+            IDatabaseConnectionListViewService connectionViewService = m_serviceProvider.GetRequiredService<IDatabaseConnectionListViewService>();
             DatabaseConnection databaseConnection;
             string password;
-            if (connectionViewService.OpenDatabaseConnectionListView(out databaseConnection, out password))
+            if (connectionViewService.Show(out databaseConnection, out password))
             {
                 BuildFullServiceProvider(serviceCollection, databaseConnection, password);
                 IMainViewService mainViewService = m_serviceProvider.GetRequiredService<IMainViewService>();
@@ -82,12 +82,18 @@ namespace Financier.Desktop
             serviceCollection.AddSingleton<IDatabaseConnectionService, LocalDatabaseConnectionService>();
 
             // Financier.Desktop services
-            serviceCollection.AddSingleton<IMessageService, MessageService>();
-            serviceCollection.AddSingleton<IDatabaseConnectionViewModelFactory, DatabaseConnectionViewModelFactory>();
-            serviceCollection.AddSingleton<IDatabaseConnectionViewService, DatabaseConnectionViewService>();
+            serviceCollection.AddSingleton<IDatabaseConnectionDetailsViewModelFactory, DatabaseConnectionDetailsViewModelFactory>();
+            serviceCollection.AddSingleton<IDatabaseConnectionItemViewModelFactory, DatabaseConnectionItemViewModelFactory>();
+            serviceCollection.AddSingleton<IDatabaseConnectionListViewModelFactory, DatabaseConnectionListViewModelFactory>();
+            serviceCollection.AddSingleton<IDatabaseConnectionPasswordViewModelFactory, DatabaseConnectionPasswordViewModelFactory>();
+            serviceCollection.AddSingleton<IDatabaseConnectionCreateViewService, DatabaseConnectionCreateViewService>();
+            serviceCollection.AddSingleton<IDatabaseConnectionEditViewService, DatabaseConnectionEditViewService>();
+            serviceCollection.AddSingleton<IDatabaseConnectionListViewService, DatabaseConnectionListViewService>();
+            serviceCollection.AddSingleton<IDatabaseConnectionPasswordViewService, DatabaseConnectionPasswordViewService>();
             serviceCollection.AddSingleton<IDeleteConfirmationViewService, DeleteConfirmationViewService>();
             serviceCollection.AddSingleton<IExceptionViewModelFactory, ExceptionViewModelFactory>();
             serviceCollection.AddSingleton<IExceptionViewService, ExceptionViewService>();
+            serviceCollection.AddSingleton<IMessageService, MessageService>();
 
             m_serviceProvider = serviceCollection.BuildServiceProvider();
 
