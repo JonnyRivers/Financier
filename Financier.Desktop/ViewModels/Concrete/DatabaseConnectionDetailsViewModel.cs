@@ -26,7 +26,7 @@ namespace Financier.Desktop.ViewModels
 
         public IDatabaseConnectionDetailsViewModel Create(int databaseConnectionId)
         {
-            return m_serviceProvider.CreateInstance<DatabaseConnectionCreateViewModel>(databaseConnectionId);
+            return m_serviceProvider.CreateInstance<DatabaseConnectionEditViewModel>(databaseConnectionId);
         }
     }
 

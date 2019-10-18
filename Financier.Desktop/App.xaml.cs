@@ -82,18 +82,20 @@ namespace Financier.Desktop
             serviceCollection.AddSingleton<IDatabaseConnectionService, LocalDatabaseConnectionService>();
 
             // Financier.Desktop services
+            serviceCollection.AddSingleton<IMessageService, MessageService>();
+
             serviceCollection.AddSingleton<IDatabaseConnectionDetailsViewModelFactory, DatabaseConnectionDetailsViewModelFactory>();
             serviceCollection.AddSingleton<IDatabaseConnectionItemViewModelFactory, DatabaseConnectionItemViewModelFactory>();
             serviceCollection.AddSingleton<IDatabaseConnectionListViewModelFactory, DatabaseConnectionListViewModelFactory>();
             serviceCollection.AddSingleton<IDatabaseConnectionPasswordViewModelFactory, DatabaseConnectionPasswordViewModelFactory>();
+            serviceCollection.AddSingleton<IExceptionViewModelFactory, ExceptionViewModelFactory>();
+
             serviceCollection.AddSingleton<IDatabaseConnectionCreateViewService, DatabaseConnectionCreateViewService>();
             serviceCollection.AddSingleton<IDatabaseConnectionEditViewService, DatabaseConnectionEditViewService>();
             serviceCollection.AddSingleton<IDatabaseConnectionListViewService, DatabaseConnectionListViewService>();
             serviceCollection.AddSingleton<IDatabaseConnectionPasswordViewService, DatabaseConnectionPasswordViewService>();
             serviceCollection.AddSingleton<IDeleteConfirmationViewService, DeleteConfirmationViewService>();
-            serviceCollection.AddSingleton<IExceptionViewModelFactory, ExceptionViewModelFactory>();
             serviceCollection.AddSingleton<IExceptionViewService, ExceptionViewService>();
-            serviceCollection.AddSingleton<IMessageService, MessageService>();
 
             m_serviceProvider = serviceCollection.BuildServiceProvider();
 
