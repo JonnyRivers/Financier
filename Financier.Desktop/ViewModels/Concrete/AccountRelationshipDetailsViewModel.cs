@@ -10,25 +10,36 @@ namespace Financier.Desktop.ViewModels
 {
     public class AccountRelationshipDetailsViewModelFactory : IAccountRelationshipDetailsViewModelFactory
     {
-        private readonly ILogger<AccountRelationshipDetailsViewModelFactory> m_logger;
-        private readonly IServiceProvider m_serviceProvider;
+        private readonly ILoggerFactory m_loggerFactory;
+        private readonly IAccountService m_accountService;
+        private readonly IAccountRelationshipService m_accountRelationshipService;
 
         public AccountRelationshipDetailsViewModelFactory(
-            ILogger<AccountRelationshipDetailsViewModelFactory> logger, 
-            IServiceProvider serviceProvider)
+            ILoggerFactory loggerFactory, 
+            IAccountService accountService, 
+            IAccountRelationshipService accountRelationshipService)
         {
-            m_logger = logger;
-            m_serviceProvider = serviceProvider;
+            m_loggerFactory = loggerFactory;
+            m_accountService = accountService;
+            m_accountRelationshipService = accountRelationshipService;
         }
 
         public IAccountRelationshipDetailsViewModel Create(AccountRelationship hint)
         {
-            return m_serviceProvider.CreateInstance<AccountRelationshipCreateViewModel>(hint);
+            return new AccountRelationshipCreateViewModel(
+                m_loggerFactory,
+                m_accountService,
+                m_accountRelationshipService,
+                hint);
         }
 
-        IAccountRelationshipDetailsViewModel IAccountRelationshipDetailsViewModelFactory.Create(int accountRelationshipId)
+        public IAccountRelationshipDetailsViewModel Create(int accountId)
         {
-            return m_serviceProvider.CreateInstance<AccountRelationshipEditViewModel>(accountRelationshipId);
+            return new AccountRelationshipEditViewModel(
+                m_loggerFactory,
+                m_accountService,
+                m_accountRelationshipService,
+                accountId);
         }
     }
 
@@ -87,12 +98,12 @@ namespace Financier.Desktop.ViewModels
         private ILogger<AccountRelationshipCreateViewModel> m_logger;
 
         public AccountRelationshipCreateViewModel(
-            ILogger<AccountRelationshipCreateViewModel> logger,
+            ILoggerFactory loggerFactory,
             IAccountService accountService,
             IAccountRelationshipService accountRelationshipService,
             AccountRelationship hint) : base(accountService, accountRelationshipService, 0)
         {
-            m_logger = logger;
+            m_logger = loggerFactory.CreateLogger<AccountRelationshipCreateViewModel>();
 
             SourceAccount = Accounts.Single(a => a.AccountId == hint.SourceAccount.AccountId);
             DestinationAccount = Accounts.Single(a => a.AccountId == hint.DestinationAccount.AccountId);
@@ -113,12 +124,12 @@ namespace Financier.Desktop.ViewModels
         private ILogger<AccountRelationshipEditViewModel> m_logger;
 
         public AccountRelationshipEditViewModel(
-            ILogger<AccountRelationshipEditViewModel> logger,
+            ILoggerFactory loggerFactory,
             IAccountService accountService,
             IAccountRelationshipService accountRelationshipService,
             int accountRelationshipId) : base(accountService, accountRelationshipService, accountRelationshipId)
         {
-            m_logger = logger;
+            m_logger = loggerFactory.CreateLogger<AccountRelationshipEditViewModel>();
 
             AccountRelationship accountRelationship = m_accountRelationshipService.Get(accountRelationshipId);
 
