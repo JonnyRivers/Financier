@@ -28,7 +28,7 @@ namespace Financier.Desktop.Tests
                 currencyFactory.Add(sqliteMemoryWrapper.DbContext, usdCurrencyEntity);
 
                 var budgetService = new BudgetService(
-                    loggerFactory.CreateLogger<BudgetService>(),
+                    loggerFactory,
                     sqliteMemoryWrapper.DbContext);
 
                 var viewModel = new BudgetCreateViewModel(
@@ -69,11 +69,11 @@ namespace Financier.Desktop.Tests
                 accountFactory.Add(sqliteMemoryWrapper.DbContext, groceriesPrepaymentAccountEntity);
 
                 var accountService = new AccountService(
-                    loggerFactory.CreateLogger<AccountService>(),
+                    loggerFactory,
                     sqliteMemoryWrapper.DbContext);
 
                 var budgetService = new BudgetService(
-                    loggerFactory.CreateLogger<BudgetService>(),
+                    loggerFactory,
                     sqliteMemoryWrapper.DbContext);
 
                 var mockAccountLinkViewModelFactory = new Mock<IAccountLinkViewModelFactory>();

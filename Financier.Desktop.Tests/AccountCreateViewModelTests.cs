@@ -24,11 +24,11 @@ namespace Financier.Desktop.Tests
                 currencyFactory.Add(sqliteMemoryWrapper.DbContext, usdCurrencyEntity);
 
                 var accountService = new AccountService(
-                    loggerFactory.CreateLogger<AccountService>(),
+                    loggerFactory,
                     sqliteMemoryWrapper.DbContext);
 
                 var currencyService = new CurrencyService(
-                    loggerFactory.CreateLogger<CurrencyService>(),
+                    loggerFactory,
                     sqliteMemoryWrapper.DbContext);
 
                 var viewModel = new AccountCreateViewModel(
@@ -60,11 +60,11 @@ namespace Financier.Desktop.Tests
                 currencyFactory.Add(sqliteMemoryWrapper.DbContext, usdCurrencyEntity);
 
                 var accountService = new AccountService(
-                    loggerFactory.CreateLogger<AccountService>(),
+                    loggerFactory,
                     sqliteMemoryWrapper.DbContext);
 
                 var currencyService = new CurrencyService(
-                    loggerFactory.CreateLogger<CurrencyService>(),
+                    loggerFactory,
                     sqliteMemoryWrapper.DbContext);
 
                 var viewModel = new AccountCreateViewModel(

@@ -9,9 +9,9 @@ namespace Financier.Desktop.Services
         private readonly ILogger<MainViewService> m_logger;
         private readonly IMainViewModelFactory m_mainViewModelFactory;
 
-        public MainViewService(ILogger<MainViewService> logger, IMainViewModelFactory mainViewModelFactory)
+        public MainViewService(ILoggerFactory loggerFactory, IMainViewModelFactory mainViewModelFactory)
         {
-            m_logger = logger;
+            m_logger = loggerFactory.CreateLogger<MainViewService>();
             m_mainViewModelFactory = mainViewModelFactory;
         }
 

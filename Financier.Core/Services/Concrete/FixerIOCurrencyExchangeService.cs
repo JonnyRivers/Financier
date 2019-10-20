@@ -12,11 +12,11 @@ namespace Financier.Services
         private IHttpClientFactory m_httpClientFactory;
 
         public FixerIOCurrencyExchangeService(
-            ILogger<FixerIOCurrencyExchangeService> logger,
+            ILoggerFactory loggerFactory,
             IEnvironmentService environmentService,
             IHttpClientFactory httpClientFactory)
         {
-            m_logger = logger;
+            m_logger = loggerFactory.CreateLogger<FixerIOCurrencyExchangeService>();
             m_environmentService = environmentService;
             m_httpClientFactory = httpClientFactory;
         }

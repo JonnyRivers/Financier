@@ -10,10 +10,10 @@ namespace Financier.Desktop.Services
         private readonly IAccountTransactionListViewModelFactory m_accountTransactionListViewModelFactory;
 
         public AccountTransactionsEditViewService(
-            ILogger<AccountTransactionsEditViewService> logger, 
+            ILoggerFactory loggerFactory,
             IAccountTransactionListViewModelFactory accountTransactionListViewModelFactory)
         {
-            m_logger = logger;
+            m_logger = loggerFactory.CreateLogger<AccountTransactionsEditViewService>();
             m_accountTransactionListViewModelFactory = accountTransactionListViewModelFactory;
         }
 

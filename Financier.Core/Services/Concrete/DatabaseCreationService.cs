@@ -9,9 +9,9 @@ namespace Financier.Services
         ILogger<DatabaseCreationService> m_logger;
         FinancierDbContext m_dbContext;
 
-        public DatabaseCreationService(ILogger<DatabaseCreationService> logger, FinancierDbContext dbContext)
+        public DatabaseCreationService(ILoggerFactory loggerFactory, FinancierDbContext dbContext)
         {
-            m_logger = logger;
+            m_logger = loggerFactory.CreateLogger<DatabaseCreationService>();
             m_dbContext = dbContext;
         }
 

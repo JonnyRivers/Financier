@@ -16,11 +16,10 @@ namespace Financier.Core.Tests
         public void TestGetAllNoCurrencies()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<CurrencyService> logger = loggerFactory.CreateLogger<CurrencyService>();
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
-                var currencyService = new CurrencyService(logger, sqliteMemoryWrapper.DbContext);
+                var currencyService = new CurrencyService(loggerFactory, sqliteMemoryWrapper.DbContext);
                 IEnumerable<Currency> currencies = currencyService.GetAll();
 
                 Assert.AreEqual(0, currencies.Count());
@@ -31,7 +30,6 @@ namespace Financier.Core.Tests
         public void TestGetAllOneCurrencies()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<CurrencyService> logger = loggerFactory.CreateLogger<CurrencyService>();
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
@@ -39,7 +37,7 @@ namespace Financier.Core.Tests
                 var usdCurrencyEntity = currencyFactory.Create(CurrencyPrefab.Usd, true);
                 currencyFactory.Add(sqliteMemoryWrapper.DbContext, usdCurrencyEntity);
 
-                var currencyService = new CurrencyService(logger, sqliteMemoryWrapper.DbContext);
+                var currencyService = new CurrencyService(loggerFactory, sqliteMemoryWrapper.DbContext);
                 List<Currency> currencies = currencyService.GetAll().ToList();
 
                 Assert.AreEqual(1, currencies.Count);
@@ -54,7 +52,6 @@ namespace Financier.Core.Tests
         public void TestGetAllManyCurrencies()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<CurrencyService> logger = loggerFactory.CreateLogger<CurrencyService>();
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
@@ -64,7 +61,7 @@ namespace Financier.Core.Tests
                 currencyFactory.Add(sqliteMemoryWrapper.DbContext, usdCurrencyEntity);
                 currencyFactory.Add(sqliteMemoryWrapper.DbContext, gbpCurrencyEntity);
 
-                var currencyService = new CurrencyService(logger, sqliteMemoryWrapper.DbContext);
+                var currencyService = new CurrencyService(loggerFactory, sqliteMemoryWrapper.DbContext);
                 List<Currency> currencies = currencyService.GetAll().ToList();
 
                 Assert.AreEqual(2, currencies.Count);
@@ -83,7 +80,6 @@ namespace Financier.Core.Tests
         public void TestGetPrimaryValid()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<CurrencyService> logger = loggerFactory.CreateLogger<CurrencyService>();
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
@@ -93,7 +89,7 @@ namespace Financier.Core.Tests
                 currencyFactory.Add(sqliteMemoryWrapper.DbContext, usdCurrencyEntity);
                 currencyFactory.Add(sqliteMemoryWrapper.DbContext, gbpCurrencyEntity);
 
-                var currencyService = new CurrencyService(logger, sqliteMemoryWrapper.DbContext);
+                var currencyService = new CurrencyService(loggerFactory, sqliteMemoryWrapper.DbContext);
                 Currency primaryCurrency = currencyService.GetPrimary();
 
                 Assert.AreEqual(usdCurrencyEntity.Name, primaryCurrency.Name);
@@ -108,7 +104,6 @@ namespace Financier.Core.Tests
         public void TestGetPrimaryFailsWithNoPrimary()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<CurrencyService> logger = loggerFactory.CreateLogger<CurrencyService>();
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
@@ -118,7 +113,7 @@ namespace Financier.Core.Tests
                 currencyFactory.Add(sqliteMemoryWrapper.DbContext, usdCurrencyEntity);
                 currencyFactory.Add(sqliteMemoryWrapper.DbContext, gbpCurrencyEntity);
 
-                var currencyService = new CurrencyService(logger, sqliteMemoryWrapper.DbContext);
+                var currencyService = new CurrencyService(loggerFactory, sqliteMemoryWrapper.DbContext);
                 Currency primaryCurrency = currencyService.GetPrimary();
             }
         }
@@ -128,7 +123,6 @@ namespace Financier.Core.Tests
         public void TestGetPrimaryFailsWithMultiplePrimaries()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<CurrencyService> logger = loggerFactory.CreateLogger<CurrencyService>();
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
@@ -138,7 +132,7 @@ namespace Financier.Core.Tests
                 currencyFactory.Add(sqliteMemoryWrapper.DbContext, usdCurrencyEntity);
                 currencyFactory.Add(sqliteMemoryWrapper.DbContext, gbpCurrencyEntity);
 
-                var currencyService = new CurrencyService(logger, sqliteMemoryWrapper.DbContext);
+                var currencyService = new CurrencyService(loggerFactory, sqliteMemoryWrapper.DbContext);
                 Currency primaryCurrency = currencyService.GetPrimary();
             }
         }

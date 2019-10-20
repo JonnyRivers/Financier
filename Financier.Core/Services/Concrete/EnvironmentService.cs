@@ -9,9 +9,9 @@ namespace Financier.Services
 
         private ILogger<EnvironmentService> m_logger;
 
-        public EnvironmentService(ILogger<EnvironmentService> logger)
+        public EnvironmentService(ILoggerFactory loggerFactory)
         {
-            m_logger = logger;
+            m_logger = loggerFactory.CreateLogger<EnvironmentService>();
         }
 
         public string GetFixerKey()

@@ -11,10 +11,10 @@ namespace Financier.Desktop.Services
         private readonly IPaydayEventStartViewModelFactory m_paydayEventStartViewModelFactory;
 
         public PaydayEventViewService(
-            ILogger<PaydayEventViewService> logger, 
+            ILoggerFactory loggerFactory,
             IPaydayEventStartViewModelFactory paydayEventStartViewModelFactory)
         {
-            m_logger = logger;
+            m_logger = loggerFactory.CreateLogger<PaydayEventViewService>();
             m_paydayEventStartViewModelFactory = paydayEventStartViewModelFactory;
         }
 

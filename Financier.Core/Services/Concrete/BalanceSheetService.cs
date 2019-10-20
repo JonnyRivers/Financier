@@ -12,11 +12,11 @@ namespace Financier.Services
         ICurrencyService m_currencyService;
 
         public BalanceSheetService(
-            ILogger<BalanceSheetService> logger, 
+            ILoggerFactory loggerFactory,
             IAccountService accountService, 
             ICurrencyService currencyService)
         {
-            m_logger = logger;
+            m_logger = loggerFactory.CreateLogger<BalanceSheetService>();
             m_accountService = accountService;
             m_currencyService = currencyService;
         }

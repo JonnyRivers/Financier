@@ -9,9 +9,9 @@ namespace Financier.Desktop.Services
         private readonly ILogger<ForeignAmountViewService> m_logger;
         private readonly IForeignAmountViewModelFactory m_foreignAmountViewModelFactory;
 
-        public ForeignAmountViewService(ILogger<ForeignAmountViewService> logger, IForeignAmountViewModelFactory foreignAmountViewModelFactory)
+        public ForeignAmountViewService(ILoggerFactory loggerFactory, IForeignAmountViewModelFactory foreignAmountViewModelFactory)
         {
-            m_logger = logger;
+            m_logger = loggerFactory.CreateLogger<ForeignAmountViewService>();
             m_foreignAmountViewModelFactory = foreignAmountViewModelFactory;
         }
 

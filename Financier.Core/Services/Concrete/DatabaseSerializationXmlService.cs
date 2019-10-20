@@ -13,9 +13,9 @@ namespace Financier.Services
         ILogger<DatabaseSerializationXmlService> m_logger;
         FinancierDbContext m_dbContext;
 
-        public DatabaseSerializationXmlService(ILogger<DatabaseSerializationXmlService> logger, FinancierDbContext dbContext)
+        public DatabaseSerializationXmlService(ILoggerFactory loggerFactory, FinancierDbContext dbContext)
         {
-            m_logger = logger;
+            m_logger = loggerFactory.CreateLogger<DatabaseSerializationXmlService>();
             m_dbContext = dbContext;
         }
 

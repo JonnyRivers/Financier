@@ -32,11 +32,11 @@ namespace Financier.Core.Tests
                 accountFactory.Add(sqliteMemoryWrapper.DbContext, checkingAccountEntity);
 
                 var accountService = new AccountService(
-                    loggerFactory.CreateLogger<AccountService>(), 
+                    loggerFactory, 
                     sqliteMemoryWrapper.DbContext
                 );
                 var transactionService = new TransactionService(
-                    loggerFactory.CreateLogger<TransactionService>(),
+                    loggerFactory,
                     sqliteMemoryWrapper.DbContext
                 );
                 var newTransaction = new Transaction
@@ -79,11 +79,11 @@ namespace Financier.Core.Tests
                 accountFactory.Add(sqliteMemoryWrapper.DbContext, checkingAccountEntity);
 
                 var accountService = new AccountService(
-                    loggerFactory.CreateLogger<AccountService>(),
+                    loggerFactory,
                     sqliteMemoryWrapper.DbContext
                 );
                 var transactionService = new TransactionService(
-                    loggerFactory.CreateLogger<TransactionService>(),
+                    loggerFactory,
                     sqliteMemoryWrapper.DbContext
                 );
                 var newTransactions = new Transaction[]
@@ -123,7 +123,6 @@ namespace Financier.Core.Tests
         public void TestGetAllTransactions()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<TransactionService> logger = loggerFactory.CreateLogger<TransactionService>();
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
@@ -190,7 +189,7 @@ namespace Financier.Core.Tests
                 sqliteMemoryWrapper.DbContext.AccountRelationships.Add(checkingToGroceriesPrepaymentRelationship);
                 sqliteMemoryWrapper.DbContext.SaveChanges();
 
-                var transactionService = new TransactionService(logger, sqliteMemoryWrapper.DbContext);
+                var transactionService = new TransactionService(loggerFactory, sqliteMemoryWrapper.DbContext);
 
                 List<Transaction> transactions = transactionService.GetAll().ToList();
 
@@ -223,7 +222,6 @@ namespace Financier.Core.Tests
         public void TestGetAllTransactionsFilteredByAccount()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<TransactionService> logger = loggerFactory.CreateLogger<TransactionService>();
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
@@ -290,7 +288,7 @@ namespace Financier.Core.Tests
                 sqliteMemoryWrapper.DbContext.AccountRelationships.Add(checkingToGroceriesPrepaymentRelationship);
                 sqliteMemoryWrapper.DbContext.SaveChanges();
 
-                var transactionService = new TransactionService(logger, sqliteMemoryWrapper.DbContext);
+                var transactionService = new TransactionService(loggerFactory, sqliteMemoryWrapper.DbContext);
 
                 int[] accountIds = new int[1] { rentPrepaymentAccountEntity.AccountId };
                 List<Transaction> transactions = transactionService.GetAll(accountIds).ToList();
@@ -309,7 +307,6 @@ namespace Financier.Core.Tests
         public void TestGetAllTransactionsFilteredByAccountAndDateRange()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<TransactionService> logger = loggerFactory.CreateLogger<TransactionService>();
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
@@ -383,7 +380,7 @@ namespace Financier.Core.Tests
                 sqliteMemoryWrapper.DbContext.AccountRelationships.Add(checkingToGroceriesPrepaymentRelationship);
                 sqliteMemoryWrapper.DbContext.SaveChanges();
 
-                var transactionService = new TransactionService(logger, sqliteMemoryWrapper.DbContext);
+                var transactionService = new TransactionService(loggerFactory, sqliteMemoryWrapper.DbContext);
 
                 int[] accountIds = new int[1] { rentPrepaymentAccountEntity.AccountId };
                 List<Transaction> transactions = transactionService
@@ -413,11 +410,10 @@ namespace Financier.Core.Tests
         public void TestGetTransactionFailInvalidId()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<TransactionService> logger = loggerFactory.CreateLogger<TransactionService>();
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
-                var transactionService = new TransactionService(logger, sqliteMemoryWrapper.DbContext);
+                var transactionService = new TransactionService(loggerFactory, sqliteMemoryWrapper.DbContext);
 
                 Transaction transaction = transactionService.Get(666);
             }
@@ -428,11 +424,10 @@ namespace Financier.Core.Tests
         public void TestTransactionDeleteFailInvalidId()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<TransactionService> logger = loggerFactory.CreateLogger<TransactionService>();
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
-                var transactionService = new TransactionService(logger, sqliteMemoryWrapper.DbContext);
+                var transactionService = new TransactionService(loggerFactory, sqliteMemoryWrapper.DbContext);
 
                 transactionService.Delete(666);
             }
@@ -442,7 +437,6 @@ namespace Financier.Core.Tests
         public void TestTransactionDelete()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<TransactionService> logger = loggerFactory.CreateLogger<TransactionService>();
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
@@ -479,7 +473,7 @@ namespace Financier.Core.Tests
                 sqliteMemoryWrapper.DbContext.Transactions.AddRange(transactionEntities);
                 sqliteMemoryWrapper.DbContext.SaveChanges();
 
-                var transactionService = new TransactionService(logger, sqliteMemoryWrapper.DbContext);
+                var transactionService = new TransactionService(loggerFactory, sqliteMemoryWrapper.DbContext);
 
                 transactionService.Delete(transactionEntities[0].TransactionId);
 
@@ -583,8 +577,7 @@ namespace Financier.Core.Tests
                 sqliteMemoryWrapper.DbContext.SaveChanges();
 
                 ILoggerFactory loggerFactory = new LoggerFactory();
-                ILogger<TransactionService> logger = loggerFactory.CreateLogger<TransactionService>();
-                TransactionService transactionService = new TransactionService(logger, sqliteMemoryWrapper.DbContext);
+                TransactionService transactionService = new TransactionService(loggerFactory, sqliteMemoryWrapper.DbContext);
 
                 List<Payment> pendingPayments = 
                     transactionService.GetPendingCreditCardPayments(creditCardAccountEntity.AccountId).ToList();
@@ -672,8 +665,7 @@ namespace Financier.Core.Tests
                 sqliteMemoryWrapper.DbContext.SaveChanges();
 
                 ILoggerFactory loggerFactory = new LoggerFactory();
-                ILogger<TransactionService> logger = loggerFactory.CreateLogger<TransactionService>();
-                TransactionService transactionService = new TransactionService(logger, sqliteMemoryWrapper.DbContext);
+                TransactionService transactionService = new TransactionService(loggerFactory, sqliteMemoryWrapper.DbContext);
 
                 List<Payment> pendingPayments =
                     transactionService.GetPendingCreditCardPayments(creditCardAccountEntity.AccountId).ToList();

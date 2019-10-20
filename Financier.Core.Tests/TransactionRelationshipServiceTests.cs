@@ -84,11 +84,11 @@ namespace Financier.Core.Tests
                 sqliteMemoryWrapper.DbContext.SaveChanges();
 
                 var transactionService = new TransactionService(
-                    loggerFactory.CreateLogger<TransactionService>(),
+                    loggerFactory,
                     sqliteMemoryWrapper.DbContext
                 );
                 var transactionRelationshipService = new TransactionRelationshipService(
-                    loggerFactory.CreateLogger<TransactionRelationshipService>(),
+                    loggerFactory,
                     sqliteMemoryWrapper.DbContext
                 );
 
@@ -199,11 +199,11 @@ namespace Financier.Core.Tests
                 sqliteMemoryWrapper.DbContext.SaveChanges();
 
                 var transactionService = new TransactionService(
-                    loggerFactory.CreateLogger<TransactionService>(),
+                    loggerFactory,
                     sqliteMemoryWrapper.DbContext
                 );
                 var transactionRelationshipService = new TransactionRelationshipService(
-                    loggerFactory.CreateLogger<TransactionRelationshipService>(),
+                    loggerFactory,
                     sqliteMemoryWrapper.DbContext
                 );
 

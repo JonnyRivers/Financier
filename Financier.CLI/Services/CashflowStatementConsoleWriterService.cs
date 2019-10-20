@@ -11,10 +11,10 @@ namespace Financier.CLI.Services
         private IEnvironmentService m_environmentService;
 
         public CashflowStatementConsoleWriterService(
-            ILogger<CashflowStatementConsoleWriterService> logger,
+            ILoggerFactory loggerFactory,
             IEnvironmentService environmentService)
         {
-            m_logger = logger;
+            m_logger = loggerFactory.CreateLogger<CashflowStatementConsoleWriterService>();
             m_environmentService = environmentService;
         }
 

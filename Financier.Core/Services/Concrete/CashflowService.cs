@@ -14,13 +14,13 @@ namespace Financier.Services
         ITransactionService m_transactionService;
 
         public CashflowService(
-            ILogger<CashflowService> logger,
+            ILoggerFactory loggerFactory,
             IAccountRelationshipService accountRelationshipService,
             IAccountService accountService,
             ICurrencyService currencyService,
             ITransactionService transactionService)
         {
-            m_logger = logger;
+            m_logger = loggerFactory.CreateLogger<CashflowService>();
             m_accountService = accountService;
             m_accountRelationshipService = accountRelationshipService;
             m_currencyService = currencyService;

@@ -12,10 +12,10 @@ namespace Financier.Desktop.Services
         private readonly ITransactionBatchCreateConfirmViewModelFactory m_transactionBatchCreateConfirmViewModelFactory;
 
         public TransactionBatchCreateConfirmViewService(
-            ILogger<TransactionBatchCreateConfirmViewService> logger, 
+            ILoggerFactory loggerFactory,
             ITransactionBatchCreateConfirmViewModelFactory transactionBatchCreateConfirmViewModelFactory)
         {
-            m_logger = logger;
+            m_logger = loggerFactory.CreateLogger<TransactionBatchCreateConfirmViewService>();
             m_transactionBatchCreateConfirmViewModelFactory = transactionBatchCreateConfirmViewModelFactory;
         }
 

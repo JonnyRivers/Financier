@@ -43,11 +43,11 @@ namespace Financier.Desktop.Tests
                 sqliteMemoryWrapper.DbContext.SaveChanges();
 
                 var accountService = new AccountService(
-                    loggerFactory.CreateLogger<AccountService>(),
+                    loggerFactory,
                     sqliteMemoryWrapper.DbContext);
 
                 var transactionService = new TransactionService(
-                    loggerFactory.CreateLogger<TransactionService>(),
+                    loggerFactory,
                     sqliteMemoryWrapper.DbContext);
 
                 var mockViewModelFactory = new Mock<IAccountLinkViewModelFactory>();
@@ -110,11 +110,11 @@ namespace Financier.Desktop.Tests
                 sqliteMemoryWrapper.DbContext.SaveChanges();
 
                 var accountService = new AccountService(
-                    loggerFactory.CreateLogger<AccountService>(),
+                    loggerFactory,
                     sqliteMemoryWrapper.DbContext);
 
                 var transactionService = new TransactionService(
-                    loggerFactory.CreateLogger<TransactionService>(),
+                    loggerFactory,
                     sqliteMemoryWrapper.DbContext);
 
                 var mockViewModelFactory = new Mock<IAccountLinkViewModelFactory>();

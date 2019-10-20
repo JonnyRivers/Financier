@@ -55,16 +55,16 @@ namespace Financier.Desktop.Tests
                 sqliteMemoryWrapper.DbContext.SaveChanges();
 
                 var accountRelationshipService = new AccountRelationshipService(
-                    loggerFactory.CreateLogger<AccountRelationshipService>(),
+                    loggerFactory,
                     sqliteMemoryWrapper.DbContext
                 );
 
                 var accountService = new AccountService(
-                    loggerFactory.CreateLogger<AccountService>(),
+                    loggerFactory,
                     sqliteMemoryWrapper.DbContext);
 
                 var transactionService = new TransactionService(
-                    loggerFactory.CreateLogger<TransactionService>(),
+                    loggerFactory,
                     sqliteMemoryWrapper.DbContext);
 
                 var viewModel = new AccountRelationshipListViewModel(

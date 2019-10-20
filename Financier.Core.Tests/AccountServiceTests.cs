@@ -16,7 +16,6 @@ namespace Financier.Core.Tests
         public void TestGetAllAccounts()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<AccountService> logger = loggerFactory.CreateLogger<AccountService>();
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
@@ -30,7 +29,7 @@ namespace Financier.Core.Tests
                 accountFactory.Add(sqliteMemoryWrapper.DbContext, incomeAccountEntity);
                 accountFactory.Add(sqliteMemoryWrapper.DbContext, checkingAccountEntity);
 
-                var accountService = new AccountService(logger, sqliteMemoryWrapper.DbContext);
+                var accountService = new AccountService(loggerFactory, sqliteMemoryWrapper.DbContext);
 
                 List<Account> accounts = accountService.GetAll().ToList();
 
@@ -58,7 +57,6 @@ namespace Financier.Core.Tests
         public void TestGetLogicalAccountIds()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<AccountService> logger = loggerFactory.CreateLogger<AccountService>();
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
@@ -97,7 +95,7 @@ namespace Financier.Core.Tests
                 sqliteMemoryWrapper.DbContext.AccountRelationships.Add(checkingToRentPrepaymentRelationship);
                 sqliteMemoryWrapper.DbContext.SaveChanges();
 
-                var accountService = new AccountService(logger, sqliteMemoryWrapper.DbContext);
+                var accountService = new AccountService(loggerFactory, sqliteMemoryWrapper.DbContext);
 
                 var incomeAccountLogicalAccountIds = new HashSet<int>(accountService.GetLogicalAccountIds(incomeAccountEntity.AccountId));
                 var checkingAccountLogicalAccountIds = new HashSet<int>(accountService.GetLogicalAccountIds(checkingAccountEntity.AccountId));
@@ -116,11 +114,10 @@ namespace Financier.Core.Tests
         public void TestGetAccountFailInvalidId()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<AccountService> logger = loggerFactory.CreateLogger<AccountService>();
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
-                var accountService = new AccountService(logger, sqliteMemoryWrapper.DbContext);
+                var accountService = new AccountService(loggerFactory, sqliteMemoryWrapper.DbContext);
 
                 Account account = accountService.Get(666);
             }
@@ -130,7 +127,6 @@ namespace Financier.Core.Tests
         public void TestGetAllAccountLinks()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<AccountService> logger = loggerFactory.CreateLogger<AccountService>();
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
@@ -159,7 +155,7 @@ namespace Financier.Core.Tests
                 sqliteMemoryWrapper.DbContext.AccountRelationships.Add(checkingToRentPrepaymentRelationship);
                 sqliteMemoryWrapper.DbContext.SaveChanges();
 
-                var accountService = new AccountService(logger, sqliteMemoryWrapper.DbContext);
+                var accountService = new AccountService(loggerFactory, sqliteMemoryWrapper.DbContext);
 
                 List<AccountLink> accountLinks = accountService.GetAllAsLinks().ToList();
 
@@ -180,7 +176,6 @@ namespace Financier.Core.Tests
         public void TestGetAccount()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<AccountService> logger = loggerFactory.CreateLogger<AccountService>();
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
@@ -192,7 +187,7 @@ namespace Financier.Core.Tests
                 Entities.Account checkingAccountEntity = accountFactory.Create(AccountPrefab.Checking, usdCurrencyEntity);
                 accountFactory.Add(sqliteMemoryWrapper.DbContext, checkingAccountEntity);
 
-                var accountService = new AccountService(logger, sqliteMemoryWrapper.DbContext);
+                var accountService = new AccountService(loggerFactory, sqliteMemoryWrapper.DbContext);
 
                 Account checkingAccount = accountService.Get(checkingAccountEntity.AccountId);
 
@@ -211,7 +206,6 @@ namespace Financier.Core.Tests
         public void TestGetAccountAsLink()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<AccountService> logger = loggerFactory.CreateLogger<AccountService>();
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
@@ -223,7 +217,7 @@ namespace Financier.Core.Tests
                 Entities.Account checkingAccountEntity = accountFactory.Create(AccountPrefab.Checking, usdCurrencyEntity);
                 accountFactory.Add(sqliteMemoryWrapper.DbContext, checkingAccountEntity);
 
-                var accountService = new AccountService(logger, sqliteMemoryWrapper.DbContext);
+                var accountService = new AccountService(loggerFactory, sqliteMemoryWrapper.DbContext);
 
                 AccountLink checkingAccountLink = accountService.GetAsLink(checkingAccountEntity.AccountId);
 
@@ -237,7 +231,6 @@ namespace Financier.Core.Tests
         public void TestCreateAccount()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<AccountService> logger = loggerFactory.CreateLogger<AccountService>();
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
@@ -245,7 +238,7 @@ namespace Financier.Core.Tests
                 var usdCurrencyEntity = currencyFactory.Create(CurrencyPrefab.Usd, true);
                 currencyFactory.Add(sqliteMemoryWrapper.DbContext, usdCurrencyEntity);
 
-                var accountService = new AccountService(logger, sqliteMemoryWrapper.DbContext);
+                var accountService = new AccountService(loggerFactory, sqliteMemoryWrapper.DbContext);
 
                 var account = new Account
                 {
@@ -279,7 +272,6 @@ namespace Financier.Core.Tests
         public void TestUpdateAccount()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<AccountService> logger = loggerFactory.CreateLogger<AccountService>();
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
@@ -297,7 +289,7 @@ namespace Financier.Core.Tests
                 accountFactory.Add(sqliteMemoryWrapper.DbContext, incomeAccountEntity);
                 accountFactory.Add(sqliteMemoryWrapper.DbContext, checkingAccountEntity);
 
-                var accountService = new AccountService(logger, sqliteMemoryWrapper.DbContext);
+                var accountService = new AccountService(loggerFactory, sqliteMemoryWrapper.DbContext);
                 Account checkingAccount = accountService.Get(checkingAccountEntity.AccountId);
                 checkingAccount.Name = "Updated";
                 checkingAccount.Type = AccountType.Expense;
