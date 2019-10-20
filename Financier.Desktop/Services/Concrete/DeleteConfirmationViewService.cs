@@ -7,9 +7,9 @@ namespace Financier.Desktop.Services
     {
         private readonly ILogger<DeleteConfirmationViewService> m_logger;
 
-        public DeleteConfirmationViewService(ILogger<DeleteConfirmationViewService> logger)
+        public DeleteConfirmationViewService(ILoggerFactory loggerFactory)
         {
-            m_logger = logger;
+            m_logger = loggerFactory.CreateLogger<DeleteConfirmationViewService>();
         }
 
         // TODO - this is duplicated with IDatabaseConnectionViewService

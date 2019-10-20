@@ -17,11 +17,10 @@ namespace Financier.Core.Tests
         public void TestLoadValid()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<DatabaseSerializationXmlService> logger = loggerFactory.CreateLogger<DatabaseSerializationXmlService>();
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
-                var service = new DatabaseSerializationXmlService(logger, sqliteMemoryWrapper.DbContext);
+                var service = new DatabaseSerializationXmlService(loggerFactory, sqliteMemoryWrapper.DbContext);
                 service.Load("TestData/Valid.xml");
 
                 List<Entities.Account> accounts = sqliteMemoryWrapper.DbContext.Accounts.ToList();
@@ -228,11 +227,10 @@ namespace Financier.Core.Tests
         {
             const string path = "TestData/EmptySaved.xml";
             ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<DatabaseSerializationXmlService> logger = loggerFactory.CreateLogger<DatabaseSerializationXmlService>();
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
-                var service = new DatabaseSerializationXmlService(logger, sqliteMemoryWrapper.DbContext);
+                var service = new DatabaseSerializationXmlService(loggerFactory, sqliteMemoryWrapper.DbContext);
                 service.Save(path);
             }
 
@@ -245,7 +243,6 @@ namespace Financier.Core.Tests
         {
             const string path = "TestData/CurrencySaved.xml";
             ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<DatabaseSerializationXmlService> logger = loggerFactory.CreateLogger<DatabaseSerializationXmlService>();
 
             var currencyFactory = new CurrencyFactory();
             Entities.Currency usdCurrencyEntity = currencyFactory.Create(CurrencyPrefab.Usd, true);
@@ -254,13 +251,13 @@ namespace Financier.Core.Tests
             {
                 currencyFactory.Add(sqliteMemoryWrapper.DbContext, usdCurrencyEntity);
 
-                var service = new DatabaseSerializationXmlService(logger, sqliteMemoryWrapper.DbContext);
+                var service = new DatabaseSerializationXmlService(loggerFactory, sqliteMemoryWrapper.DbContext);
                 service.Save(path);
             }
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
-                var service = new DatabaseSerializationXmlService(logger, sqliteMemoryWrapper.DbContext);
+                var service = new DatabaseSerializationXmlService(loggerFactory, sqliteMemoryWrapper.DbContext);
                 service.Load(path);
 
                 List<Entities.Account> accounts = sqliteMemoryWrapper.DbContext.Accounts.ToList();
@@ -284,7 +281,6 @@ namespace Financier.Core.Tests
         {
             const string path = "TestData/AccountReload.xml";
             ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<DatabaseSerializationXmlService> logger = loggerFactory.CreateLogger<DatabaseSerializationXmlService>();
 
             var currencyFactory = new CurrencyFactory();
             Entities.Currency usdCurrencyEntity = currencyFactory.Create(CurrencyPrefab.Usd, true);
@@ -299,13 +295,13 @@ namespace Financier.Core.Tests
 
                 accountFactory.Add(sqliteMemoryWrapper.DbContext, checkingAccountEntity);
 
-                var service = new DatabaseSerializationXmlService(logger, sqliteMemoryWrapper.DbContext);
+                var service = new DatabaseSerializationXmlService(loggerFactory, sqliteMemoryWrapper.DbContext);
                 service.Save(path);
             }
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
-                var service = new DatabaseSerializationXmlService(logger, sqliteMemoryWrapper.DbContext);
+                var service = new DatabaseSerializationXmlService(loggerFactory, sqliteMemoryWrapper.DbContext);
                 service.Load(path);
 
                 List<Entities.Account> accounts = sqliteMemoryWrapper.DbContext.Accounts.ToList();
@@ -328,7 +324,6 @@ namespace Financier.Core.Tests
         {
             const string path = "TestData/AccountRelationshipReload.xml";
             ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<DatabaseSerializationXmlService> logger = loggerFactory.CreateLogger<DatabaseSerializationXmlService>();
 
             var currencyFactory = new CurrencyFactory();
             var usdCurrencyEntity = currencyFactory.Create(CurrencyPrefab.Usd, true);
@@ -356,13 +351,13 @@ namespace Financier.Core.Tests
                 sqliteMemoryWrapper.DbContext.AccountRelationships.Add(accountRelationship);
                 sqliteMemoryWrapper.DbContext.SaveChanges();
 
-                var service = new DatabaseSerializationXmlService(logger, sqliteMemoryWrapper.DbContext);
+                var service = new DatabaseSerializationXmlService(loggerFactory, sqliteMemoryWrapper.DbContext);
                 service.Save(path);
             }
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
-                var service = new DatabaseSerializationXmlService(logger, sqliteMemoryWrapper.DbContext);
+                var service = new DatabaseSerializationXmlService(loggerFactory, sqliteMemoryWrapper.DbContext);
                 service.Load(path);
 
                 List<Entities.Account> accounts = sqliteMemoryWrapper.DbContext.Accounts.ToList();
@@ -386,7 +381,6 @@ namespace Financier.Core.Tests
         {
             const string path = "TestData/TransactionReload.xml";
             ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<DatabaseSerializationXmlService> logger = loggerFactory.CreateLogger<DatabaseSerializationXmlService>();
 
             var currencyFactory = new CurrencyFactory();
             Entities.Currency usdCurrencyEntity = currencyFactory.Create(CurrencyPrefab.Usd, true);
@@ -424,13 +418,13 @@ namespace Financier.Core.Tests
                 sqliteMemoryWrapper.DbContext.Transactions.Add(transaction);
                 sqliteMemoryWrapper.DbContext.SaveChanges();
 
-                var service = new DatabaseSerializationXmlService(logger, sqliteMemoryWrapper.DbContext);
+                var service = new DatabaseSerializationXmlService(loggerFactory, sqliteMemoryWrapper.DbContext);
                 service.Save(path);
             }
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
-                var service = new DatabaseSerializationXmlService(logger, sqliteMemoryWrapper.DbContext);
+                var service = new DatabaseSerializationXmlService(loggerFactory, sqliteMemoryWrapper.DbContext);
                 service.Load(path);
 
                 List<Entities.Account> accounts = sqliteMemoryWrapper.DbContext.Accounts.ToList();
@@ -455,7 +449,6 @@ namespace Financier.Core.Tests
         {
             const string path = "TestData/BudgetReload.xml";
             ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<DatabaseSerializationXmlService> logger = loggerFactory.CreateLogger<DatabaseSerializationXmlService>();
 
             var currencyFactory = new CurrencyFactory();
             Entities.Currency usdCurrencyEntity = currencyFactory.Create(CurrencyPrefab.Usd, true);
@@ -520,13 +513,13 @@ namespace Financier.Core.Tests
                 sqliteMemoryWrapper.DbContext.Budgets.Add(budget);
                 sqliteMemoryWrapper.DbContext.SaveChanges();
 
-                var service = new DatabaseSerializationXmlService(logger, sqliteMemoryWrapper.DbContext);
+                var service = new DatabaseSerializationXmlService(loggerFactory, sqliteMemoryWrapper.DbContext);
                 service.Save(path);
             }
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
-                var service = new DatabaseSerializationXmlService(logger, sqliteMemoryWrapper.DbContext);
+                var service = new DatabaseSerializationXmlService(loggerFactory, sqliteMemoryWrapper.DbContext);
                 service.Load(path);
 
                 List<Entities.Account> accounts = sqliteMemoryWrapper.DbContext.Accounts.ToList();
@@ -570,11 +563,10 @@ namespace Financier.Core.Tests
         private void TestLoadFailure(string path)
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<DatabaseSerializationXmlService> logger = loggerFactory.CreateLogger<DatabaseSerializationXmlService>();
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
-                var service = new DatabaseSerializationXmlService(logger, sqliteMemoryWrapper.DbContext);
+                var service = new DatabaseSerializationXmlService(loggerFactory, sqliteMemoryWrapper.DbContext);
                 service.Load(path);
             }
         }

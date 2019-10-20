@@ -45,7 +45,7 @@ namespace Financier.Core.Tests
             IHttpClientFactory httpClientFactory = new MockHttpClientFactory(httpClientHandler);
 
             var service = new FixerIOCurrencyExchangeService(
-                loggerFactory.CreateLogger<FixerIOCurrencyExchangeService>(),
+                loggerFactory,
                 environmentServiceMock.Object,
                 httpClientFactory
             );

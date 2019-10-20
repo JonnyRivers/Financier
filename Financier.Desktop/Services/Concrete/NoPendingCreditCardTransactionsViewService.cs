@@ -7,9 +7,9 @@ namespace Financier.Desktop.Services
     {
         private readonly ILogger<NoPendingCreditCardTransactionsViewService> m_logger;
 
-        public NoPendingCreditCardTransactionsViewService(ILogger<NoPendingCreditCardTransactionsViewService> logger)
+        public NoPendingCreditCardTransactionsViewService(ILoggerFactory loggerFactory)
         {
-            m_logger = logger;
+            m_logger = loggerFactory.CreateLogger<NoPendingCreditCardTransactionsViewService>();
         }
 
 

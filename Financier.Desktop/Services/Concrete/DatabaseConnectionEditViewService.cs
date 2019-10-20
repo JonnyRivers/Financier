@@ -11,10 +11,10 @@ namespace Financier.Desktop.Services
         private readonly IDatabaseConnectionDetailsViewModelFactory m_databaseConnectionDetailsViewModelFactory;
 
         public DatabaseConnectionEditViewService(
-            ILogger<DatabaseConnectionEditViewService> logger,
+            ILoggerFactory loggerFactory,
             IDatabaseConnectionDetailsViewModelFactory databaseConnectionDetailsViewModelFactory)
         {
-            m_logger = logger;
+            m_logger = loggerFactory.CreateLogger<DatabaseConnectionEditViewService>();
             m_databaseConnectionDetailsViewModelFactory = databaseConnectionDetailsViewModelFactory;
         }
 

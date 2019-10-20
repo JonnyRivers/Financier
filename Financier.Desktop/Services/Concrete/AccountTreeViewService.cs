@@ -9,9 +9,9 @@ namespace Financier.Desktop.Services
         private readonly ILogger<AccountTreeViewService> m_logger;
         private readonly IAccountTreeViewModelFactory m_accountTreeViewModelFactory;
 
-        public AccountTreeViewService(ILogger<AccountTreeViewService> logger, IAccountTreeViewModelFactory accountTreeViewModelFactory)
+        public AccountTreeViewService(ILoggerFactory loggerFactory, IAccountTreeViewModelFactory accountTreeViewModelFactory)
         {
-            m_logger = logger;
+            m_logger = loggerFactory.CreateLogger<AccountTreeViewService>();
             m_accountTreeViewModelFactory = accountTreeViewModelFactory;
         }
 

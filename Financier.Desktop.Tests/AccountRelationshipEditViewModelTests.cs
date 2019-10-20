@@ -42,11 +42,11 @@ namespace Financier.Desktop.Tests
                 sqliteMemoryWrapper.DbContext.SaveChanges();
 
                 var accountService = new AccountService(
-                    loggerFactory.CreateLogger<AccountService>(),
+                    loggerFactory,
                     sqliteMemoryWrapper.DbContext);
 
                 var accountRelationshipService = new AccountRelationshipService(
-                    loggerFactory.CreateLogger<AccountRelationshipService>(),
+                    loggerFactory,
                     sqliteMemoryWrapper.DbContext);
 
                 var viewModel = new AccountRelationshipEditViewModel(
@@ -101,11 +101,11 @@ namespace Financier.Desktop.Tests
                 sqliteMemoryWrapper.DbContext.SaveChanges();
 
                 var accountService = new AccountService(
-                    loggerFactory.CreateLogger<AccountService>(),
+                    loggerFactory,
                     sqliteMemoryWrapper.DbContext);
 
                 var accountRelationshipService = new AccountRelationshipService(
-                    loggerFactory.CreateLogger<AccountRelationshipService>(),
+                    loggerFactory,
                     sqliteMemoryWrapper.DbContext);
 
                 var viewModel = new AccountRelationshipEditViewModel(

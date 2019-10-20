@@ -2,8 +2,6 @@
 using Financier.Desktop.Views;
 using Financier.Services;
 using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
-using System.Windows;
 
 namespace Financier.Desktop.Services
 {
@@ -12,9 +10,9 @@ namespace Financier.Desktop.Services
         private readonly ILogger<BudgetCreateViewService> m_logger;
         private readonly IBudgetDetailsViewModelFactory m_budgetDetailsViewModelFactory;
 
-        public BudgetCreateViewService(ILogger<BudgetCreateViewService> logger, IBudgetDetailsViewModelFactory budgetDetailsViewModelFactory)
+        public BudgetCreateViewService(ILoggerFactory loggerFactory, IBudgetDetailsViewModelFactory budgetDetailsViewModelFactory)
         {
-            m_logger = logger;
+            m_logger = loggerFactory.CreateLogger<BudgetCreateViewService>();
             m_budgetDetailsViewModelFactory = budgetDetailsViewModelFactory;
         }
 

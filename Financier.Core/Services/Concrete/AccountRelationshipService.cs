@@ -12,9 +12,9 @@ namespace Financier.Services
         private ILogger<AccountRelationshipService> m_logger;
         private FinancierDbContext m_dbContext;
 
-        public AccountRelationshipService(ILogger<AccountRelationshipService> logger, FinancierDbContext dbContext)
+        public AccountRelationshipService(ILoggerFactory loggerFactory, FinancierDbContext dbContext)
         {
-            m_logger = logger;
+            m_logger = loggerFactory.CreateLogger<AccountRelationshipService>();
             m_dbContext = dbContext;
         }
 

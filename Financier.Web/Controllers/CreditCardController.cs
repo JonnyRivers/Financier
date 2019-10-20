@@ -17,9 +17,9 @@ namespace Financier.Web.Controllers
         private ILogger<CreditCardController> m_logger;
         private Entities.FinancierDbContext m_dbContext;
 
-        public CreditCardController(ILogger<CreditCardController> logger, Entities.FinancierDbContext dbContext)
+        public CreditCardController(ILoggerFactory loggerFactory, Entities.FinancierDbContext dbContext)
         {
-            m_logger = logger;
+            m_logger = loggerFactory.CreateLogger<CreditCardController>();
             m_dbContext = dbContext;
         }
 

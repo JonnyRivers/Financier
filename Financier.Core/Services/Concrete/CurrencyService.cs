@@ -9,9 +9,9 @@ namespace Financier.Services
         private ILogger<CurrencyService> m_logger;
         private Entities.FinancierDbContext m_dbContext;
 
-        public CurrencyService(ILogger<CurrencyService> logger, Entities.FinancierDbContext dbContext)
+        public CurrencyService(ILoggerFactory loggerFactory, Entities.FinancierDbContext dbContext)
         {
-            m_logger = logger;
+            m_logger = loggerFactory.CreateLogger<CurrencyService>();
             m_dbContext = dbContext;
         }
 

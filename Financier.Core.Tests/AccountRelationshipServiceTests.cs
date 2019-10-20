@@ -16,7 +16,6 @@ namespace Financier.Core.Tests
         public void TestCreateAccountRelationship()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<AccountRelationshipService> logger = loggerFactory.CreateLogger<AccountRelationshipService>();
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
@@ -39,7 +38,7 @@ namespace Financier.Core.Tests
                 accountFactory.Add(sqliteMemoryWrapper.DbContext, rentPrepaymentAccountEntity);
 
                 var accountService = new AccountService(
-                    loggerFactory.CreateLogger<AccountService>(), 
+                    loggerFactory, 
                     sqliteMemoryWrapper.DbContext
                 );
 
@@ -47,7 +46,7 @@ namespace Financier.Core.Tests
                 AccountLink rentPrepaymentAccountLink = accountService.GetAsLink(rentPrepaymentAccountEntity.AccountId);
 
                 var accountRelationshipService = new AccountRelationshipService(
-                    loggerFactory.CreateLogger<AccountRelationshipService>(),
+                    loggerFactory,
                     sqliteMemoryWrapper.DbContext
                 );
 
@@ -75,7 +74,6 @@ namespace Financier.Core.Tests
         public void TestDeleteAccountRelationship()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<AccountRelationshipService> logger = loggerFactory.CreateLogger<AccountRelationshipService>();
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
@@ -114,7 +112,7 @@ namespace Financier.Core.Tests
                 sqliteMemoryWrapper.DbContext.AccountRelationships.Add(checkingToRentPrepaymentRelationship);
                 sqliteMemoryWrapper.DbContext.SaveChanges();
 
-                var accountRelationshipService = new AccountRelationshipService(logger, sqliteMemoryWrapper.DbContext);
+                var accountRelationshipService = new AccountRelationshipService(loggerFactory, sqliteMemoryWrapper.DbContext);
 
                 accountRelationshipService.Delete(checkingToRentPrepaymentRelationship.AccountRelationshipId);
 
@@ -135,11 +133,10 @@ namespace Financier.Core.Tests
         public void TestDeleteAccountRelationshipInvalidId()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<AccountRelationshipService> logger = loggerFactory.CreateLogger<AccountRelationshipService>();
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
-                var accountRelationshipService = new AccountRelationshipService(logger, sqliteMemoryWrapper.DbContext);
+                var accountRelationshipService = new AccountRelationshipService(loggerFactory, sqliteMemoryWrapper.DbContext);
 
                 accountRelationshipService.Delete(666);
             }
@@ -149,7 +146,6 @@ namespace Financier.Core.Tests
         public void TestGetAllAccountRelationships()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<AccountRelationshipService> logger = loggerFactory.CreateLogger<AccountRelationshipService>();
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
@@ -188,7 +184,7 @@ namespace Financier.Core.Tests
                 sqliteMemoryWrapper.DbContext.AccountRelationships.Add(checkingToRentPrepaymentRelationship);
                 sqliteMemoryWrapper.DbContext.SaveChanges();
 
-                var accountRelationshipService = new AccountRelationshipService(logger, sqliteMemoryWrapper.DbContext);
+                var accountRelationshipService = new AccountRelationshipService(loggerFactory, sqliteMemoryWrapper.DbContext);
 
                 List<AccountRelationship> accountRelationships = accountRelationshipService.GetAll().ToList();
 
@@ -210,7 +206,6 @@ namespace Financier.Core.Tests
         public void TestGetAccountRelationship()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<AccountRelationshipService> logger = loggerFactory.CreateLogger<AccountRelationshipService>();
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
@@ -249,7 +244,7 @@ namespace Financier.Core.Tests
                 sqliteMemoryWrapper.DbContext.AccountRelationships.Add(checkingToRentPrepaymentRelationship);
                 sqliteMemoryWrapper.DbContext.SaveChanges();
 
-                var accountRelationshipService = new AccountRelationshipService(logger, sqliteMemoryWrapper.DbContext);
+                var accountRelationshipService = new AccountRelationshipService(loggerFactory, sqliteMemoryWrapper.DbContext);
 
                 AccountRelationship accountRelationship = accountRelationshipService.Get(
                     checkingToRentPrepaymentRelationship.AccountRelationshipId);
@@ -267,11 +262,10 @@ namespace Financier.Core.Tests
         public void TestGetAccountRelationshipInvalidId()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<AccountRelationshipService> logger = loggerFactory.CreateLogger<AccountRelationshipService>();
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
-                 var accountRelationshipService = new AccountRelationshipService(logger, sqliteMemoryWrapper.DbContext);
+                 var accountRelationshipService = new AccountRelationshipService(loggerFactory, sqliteMemoryWrapper.DbContext);
 
                 accountRelationshipService.Get(666);
             }
@@ -323,7 +317,7 @@ namespace Financier.Core.Tests
                 sqliteMemoryWrapper.DbContext.SaveChanges();
 
                 var accountService = new AccountService(
-                    loggerFactory.CreateLogger<AccountService>(),
+                    loggerFactory,
                     sqliteMemoryWrapper.DbContext
                 );
 
@@ -331,7 +325,7 @@ namespace Financier.Core.Tests
                 AccountLink rentExpenseAccountLink = accountService.GetAsLink(rentExpenseAccountEntity.AccountId);
 
                 var accountRelationshipService = new AccountRelationshipService(
-                    loggerFactory.CreateLogger<AccountRelationshipService>(),
+                    loggerFactory,
                     sqliteMemoryWrapper.DbContext
                 );
 

@@ -11,10 +11,10 @@ namespace Financier.Desktop.Services
         private readonly IReconcileBalanceViewModelFactory m_reconcileBalanceViewModelFactory;
 
         public ReconcileBalanceViewService(
-            ILogger<ReconcileBalanceViewService> logger,
+            ILoggerFactory loggerFactory,
             IReconcileBalanceViewModelFactory reconcileBalanceViewModelFactory)
         {
-            m_logger = logger;
+            m_logger = loggerFactory.CreateLogger<ReconcileBalanceViewService>();
             m_reconcileBalanceViewModelFactory = reconcileBalanceViewModelFactory;
         }
 

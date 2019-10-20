@@ -10,9 +10,9 @@ namespace Financier.Desktop.Services
         private Dictionary<Type, List<Object>> m_actionsByType;
         private ILogger<MessageService> m_logger;
 
-        public MessageService(ILogger<MessageService> logger)
+        public MessageService(ILoggerFactory loggerFactory)
         {
-            m_logger = logger;
+            m_logger = loggerFactory.CreateLogger<MessageService>();
             m_actionsByType = new Dictionary<Type, List<Object>>();
         }
 

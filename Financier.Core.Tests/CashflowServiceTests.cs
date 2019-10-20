@@ -156,23 +156,23 @@ namespace Financier.Core.Tests
                 sqliteMemoryWrapper.DbContext.SaveChanges();
 
                 var accountRelationshipService = new AccountRelationshipService(
-                    loggerFactory.CreateLogger<AccountRelationshipService>(),
+                    loggerFactory,
                     sqliteMemoryWrapper.DbContext
                 );
                 var accountService = new AccountService(
-                    loggerFactory.CreateLogger<AccountService>(),
+                    loggerFactory,
                     sqliteMemoryWrapper.DbContext
                 );
                 var currencyService = new CurrencyService(
-                    loggerFactory.CreateLogger<CurrencyService>(),
+                    loggerFactory,
                     sqliteMemoryWrapper.DbContext
                 );
                 var transactionService = new TransactionService(
-                    loggerFactory.CreateLogger<TransactionService>(),
+                    loggerFactory,
                     sqliteMemoryWrapper.DbContext
                 );
                 var cashflowService = new CashflowService(
-                    loggerFactory.CreateLogger<CashflowService>(),
+                    loggerFactory,
                     accountRelationshipService,
                     accountService,
                     currencyService,
@@ -421,23 +421,23 @@ namespace Financier.Core.Tests
                 sqliteMemoryWrapper.DbContext.SaveChanges();
 
                 var accountRelationshipService = new AccountRelationshipService(
-                    loggerFactory.CreateLogger<AccountRelationshipService>(),
+                    loggerFactory,
                     sqliteMemoryWrapper.DbContext
                 );
                 var accountService = new AccountService(
-                    loggerFactory.CreateLogger<AccountService>(),
+                    loggerFactory,
                     sqliteMemoryWrapper.DbContext
                 );
                 var currencyService = new CurrencyService(
-                    loggerFactory.CreateLogger<CurrencyService>(),
+                    loggerFactory,
                     sqliteMemoryWrapper.DbContext
                 );
                 var transactionService = new TransactionService(
-                    loggerFactory.CreateLogger<TransactionService>(),
+                    loggerFactory,
                     sqliteMemoryWrapper.DbContext
                 );
                 var cashflowService = new CashflowService(
-                    loggerFactory.CreateLogger<CashflowService>(),
+                    loggerFactory,
                     accountRelationshipService,
                     accountService,
                     currencyService,

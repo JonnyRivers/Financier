@@ -22,7 +22,6 @@ namespace Financier.Desktop.Tests
         public void TestRegister()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<MessageService> logger = loggerFactory.CreateLogger<MessageService>();
 
             int numCalls = 0;
             Action<TestMessage> testAction = (testMessage) =>
@@ -30,7 +29,7 @@ namespace Financier.Desktop.Tests
                 ++numCalls;
             };
 
-            var messageService = new MessageService(logger);
+            var messageService = new MessageService(loggerFactory);
             messageService.Register<TestMessage>(testAction);
 
             Assert.AreEqual(0, numCalls);
@@ -40,7 +39,6 @@ namespace Financier.Desktop.Tests
         public void TestSendOneRecipient()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<MessageService> logger = loggerFactory.CreateLogger<MessageService>();
 
             string testMessageContent = "This is a test";
             int numCalls = 0;
@@ -51,7 +49,7 @@ namespace Financier.Desktop.Tests
                     throw new InvalidOperationException();
             };
 
-            var messageService = new MessageService(logger);
+            var messageService = new MessageService(loggerFactory);
             messageService.Register<TestMessage>(testAction);
             var message = new TestMessage(testMessageContent);
             messageService.Send(message);
@@ -81,7 +79,7 @@ namespace Financier.Desktop.Tests
                     throw new InvalidOperationException();
             };
 
-            var messageService = new MessageService(logger);
+            var messageService = new MessageService(loggerFactory);
             messageService.Register<TestMessage>(testAction1);
             messageService.Register<TestMessage>(testAction2);
             var message = new TestMessage(testMessageContent);
@@ -95,7 +93,6 @@ namespace Financier.Desktop.Tests
         public void TestSendMultipleSends()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<MessageService> logger = loggerFactory.CreateLogger<MessageService>();
 
             string testMessageContent = "This is a test";
             int numCalls = 0;
@@ -106,7 +103,7 @@ namespace Financier.Desktop.Tests
                     throw new InvalidOperationException();
             };
 
-            var messageService = new MessageService(logger);
+            var messageService = new MessageService(loggerFactory);
             messageService.Register<TestMessage>(testAction);
             var message = new TestMessage(testMessageContent);
             messageService.Send(message);
@@ -120,7 +117,6 @@ namespace Financier.Desktop.Tests
         public void TestUnregister()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<MessageService> logger = loggerFactory.CreateLogger<MessageService>();
 
             string testMessageContent = "This is a test";
             int numCalls1 = 0;
@@ -138,7 +134,7 @@ namespace Financier.Desktop.Tests
                     throw new InvalidOperationException();
             };
 
-            var messageService = new MessageService(logger);
+            var messageService = new MessageService(loggerFactory);
             messageService.Register<TestMessage>(testAction1);
             messageService.Register<TestMessage>(testAction2);
             messageService.Unregister<TestMessage>(testAction1);

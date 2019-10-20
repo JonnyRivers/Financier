@@ -24,15 +24,15 @@ namespace Financier.Core.Tests
                 currencyFactory.Add(sqliteMemoryWrapper.DbContext, usdCurrencyEntity);
 
                 var accountService = new AccountService(
-                    loggerFactory.CreateLogger<AccountService>(),
+                    loggerFactory,
                     sqliteMemoryWrapper.DbContext
                 );
                 var currencyService = new CurrencyService(
-                    loggerFactory.CreateLogger<CurrencyService>(),
+                    loggerFactory,
                     sqliteMemoryWrapper.DbContext
                 );
                 var balanceSheetService = new BalanceSheetService(
-                    loggerFactory.CreateLogger<BalanceSheetService>(), 
+                    loggerFactory,
                     accountService, 
                     currencyService
                 );
@@ -77,15 +77,15 @@ namespace Financier.Core.Tests
                 accountFactory.Add(sqliteMemoryWrapper.DbContext, creditCardAccountEntity);
 
                 var accountService = new AccountService(
-                    loggerFactory.CreateLogger<AccountService>(),
+                    loggerFactory,
                     sqliteMemoryWrapper.DbContext
                 );
                 var currencyService = new CurrencyService(
-                    loggerFactory.CreateLogger<CurrencyService>(),
+                    loggerFactory,
                     sqliteMemoryWrapper.DbContext
                 );
                 var balanceSheetService = new BalanceSheetService(
-                    loggerFactory.CreateLogger<BalanceSheetService>(),
+                    loggerFactory,
                     accountService,
                     currencyService
                 );
@@ -170,15 +170,15 @@ namespace Financier.Core.Tests
                 sqliteMemoryWrapper.DbContext.SaveChanges();
 
                 var accountService = new AccountService(
-                    loggerFactory.CreateLogger<AccountService>(),
+                    loggerFactory,
                     sqliteMemoryWrapper.DbContext
                 );
                 var currencyService = new CurrencyService(
-                    loggerFactory.CreateLogger<CurrencyService>(),
+                    loggerFactory,
                     sqliteMemoryWrapper.DbContext
                 );
                 var balanceSheetService = new BalanceSheetService(
-                    loggerFactory.CreateLogger<BalanceSheetService>(),
+                    loggerFactory,
                     accountService,
                     currencyService
                 );
@@ -300,15 +300,15 @@ namespace Financier.Core.Tests
                 sqliteMemoryWrapper.DbContext.SaveChanges();
 
                 var accountService = new AccountService(
-                    loggerFactory.CreateLogger<AccountService>(),
+                    loggerFactory,
                     sqliteMemoryWrapper.DbContext
                 );
                 var currencyService = new CurrencyService(
-                    loggerFactory.CreateLogger<CurrencyService>(),
+                    loggerFactory,
                     sqliteMemoryWrapper.DbContext
                 );
                 var balanceSheetService = new BalanceSheetService(
-                    loggerFactory.CreateLogger<BalanceSheetService>(),
+                    loggerFactory,
                     accountService,
                     currencyService
                 );

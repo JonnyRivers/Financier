@@ -10,10 +10,10 @@ namespace Financier.Desktop.Services
         private readonly IDatabaseConnectionPasswordViewModelFactory m_databaseConnectionPasswordViewModelFactory;
 
         public DatabaseConnectionPasswordViewService(
-            ILogger<DatabaseConnectionPasswordViewService> logger,
+            ILoggerFactory loggerFactory,
             IDatabaseConnectionPasswordViewModelFactory databaseConnectionPasswordViewModelFactory)
         {
-            m_logger = logger;
+            m_logger = loggerFactory.CreateLogger<DatabaseConnectionPasswordViewService>();
             m_databaseConnectionPasswordViewModelFactory = databaseConnectionPasswordViewModelFactory;
         }
 

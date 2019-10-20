@@ -11,10 +11,10 @@ namespace Financier.Desktop.Services
         private readonly IAccountRelationshipDetailsViewModelFactory m_accountRelationshipDetailsViewModelFactory;
 
         public AccountRelationshipCreateViewService(
-            ILogger<AccountRelationshipCreateViewService> logger, 
+            ILoggerFactory loggerFactory,
             IAccountRelationshipDetailsViewModelFactory accountRelationshipDetailsViewModelFactory)
         {
-            m_logger = logger;
+            m_logger = loggerFactory.CreateLogger<AccountRelationshipCreateViewService>();
             m_accountRelationshipDetailsViewModelFactory = accountRelationshipDetailsViewModelFactory;
         }
 

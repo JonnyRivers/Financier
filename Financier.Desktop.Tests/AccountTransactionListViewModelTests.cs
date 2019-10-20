@@ -35,11 +35,11 @@ namespace Financier.Desktop.Tests
                 accountFactory.Add(sqliteMemoryWrapper.DbContext, checkingAccountEntity);
 
                 var accountService = new AccountService(
-                    loggerFactory.CreateLogger<AccountService>(), 
+                    loggerFactory, 
                     sqliteMemoryWrapper.DbContext);
 
                 var transactionService = new TransactionService(
-                    loggerFactory.CreateLogger<TransactionService>(),
+                    loggerFactory,
                     sqliteMemoryWrapper.DbContext);
 
                 IAccountTransactionItemViewModelFactory accountTransactionViewModelFactory = 
@@ -132,11 +132,11 @@ namespace Financier.Desktop.Tests
                 sqliteMemoryWrapper.DbContext.SaveChanges();
 
                 var accountService = new AccountService(
-                    loggerFactory.CreateLogger<AccountService>(),
+                    loggerFactory,
                     sqliteMemoryWrapper.DbContext);
 
                 var transactionService = new TransactionService(
-                    loggerFactory.CreateLogger<TransactionService>(),
+                    loggerFactory,
                     sqliteMemoryWrapper.DbContext);
 
 
@@ -214,11 +214,11 @@ namespace Financier.Desktop.Tests
                 sqliteMemoryWrapper.DbContext.SaveChanges();
 
                 var accountService = new AccountService(
-                    loggerFactory.CreateLogger<AccountService>(),
+                    loggerFactory,
                     sqliteMemoryWrapper.DbContext);
 
                 var transactionService = new TransactionService(
-                    loggerFactory.CreateLogger<TransactionService>(),
+                    loggerFactory,
                     sqliteMemoryWrapper.DbContext);
 
                 IAccountTransactionItemViewModelFactory accountTransactionViewModelFactory =

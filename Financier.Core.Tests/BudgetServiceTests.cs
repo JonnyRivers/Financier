@@ -17,11 +17,10 @@ namespace Financier.Core.Tests
         public void TestBudgetCreateFailNullInitialTransaction()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<BudgetService> logger = loggerFactory.CreateLogger<BudgetService>();
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
-                var budgetService = new BudgetService(logger, sqliteMemoryWrapper.DbContext);
+                var budgetService = new BudgetService(loggerFactory, sqliteMemoryWrapper.DbContext);
 
                 var budget = new Budget
                 {
@@ -44,11 +43,10 @@ namespace Financier.Core.Tests
         public void TestBudgetCreateFailNullSurplusTransaction()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<BudgetService> logger = loggerFactory.CreateLogger<BudgetService>();
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
-                var budgetService = new BudgetService(logger, sqliteMemoryWrapper.DbContext);
+                var budgetService = new BudgetService(loggerFactory, sqliteMemoryWrapper.DbContext);
 
                 var budget = new Budget
                 {
@@ -112,11 +110,11 @@ namespace Financier.Core.Tests
                 sqliteMemoryWrapper.DbContext.SaveChanges();
 
                 var accountService = new AccountService(
-                    loggerFactory.CreateLogger<AccountService>(),
+                    loggerFactory,
                     sqliteMemoryWrapper.DbContext
                 );
                 var budgetService = new BudgetService(
-                    loggerFactory.CreateLogger<BudgetService>(), 
+                    loggerFactory,
                     sqliteMemoryWrapper.DbContext
                 );
 
@@ -209,11 +207,10 @@ namespace Financier.Core.Tests
         public void TestBudgetDeleteFailInvalidId()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<BudgetService> logger = loggerFactory.CreateLogger<BudgetService>();
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
-                var budgetService = new BudgetService(logger, sqliteMemoryWrapper.DbContext);
+                var budgetService = new BudgetService(loggerFactory, sqliteMemoryWrapper.DbContext);
 
                 budgetService.Delete(666);
             }
@@ -223,7 +220,6 @@ namespace Financier.Core.Tests
         public void TestBudgetDelete()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<BudgetService> logger = loggerFactory.CreateLogger<BudgetService>();
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
@@ -369,7 +365,7 @@ namespace Financier.Core.Tests
                 sqliteMemoryWrapper.DbContext.BudgetTransactions.AddRange(budget2TransactionEntities);
                 sqliteMemoryWrapper.DbContext.SaveChanges();
 
-                var budgetService = new BudgetService(logger, sqliteMemoryWrapper.DbContext);
+                var budgetService = new BudgetService(loggerFactory, sqliteMemoryWrapper.DbContext);
 
                 List<Entities.Budget> budgetEntitiesBeforeDelete = sqliteMemoryWrapper.DbContext.Budgets.ToList();
                 List<Entities.BudgetTransaction> budgetTransactionEntitiesBeforeDelete = sqliteMemoryWrapper.DbContext.BudgetTransactions.ToList();
@@ -391,11 +387,10 @@ namespace Financier.Core.Tests
         public void TestBudgetGetAllEmpty()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<BudgetService> logger = loggerFactory.CreateLogger<BudgetService>();
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
-                var budgetService = new BudgetService(logger, sqliteMemoryWrapper.DbContext);
+                var budgetService = new BudgetService(loggerFactory, sqliteMemoryWrapper.DbContext);
 
                 IEnumerable<Budget> budgets = budgetService.GetAll();
 
@@ -407,7 +402,6 @@ namespace Financier.Core.Tests
         public void TestBudgetGetAllMany()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<BudgetService> logger = loggerFactory.CreateLogger<BudgetService>();
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
@@ -553,7 +547,7 @@ namespace Financier.Core.Tests
                 sqliteMemoryWrapper.DbContext.BudgetTransactions.AddRange(budget2TransactionEntities);
                 sqliteMemoryWrapper.DbContext.SaveChanges();
 
-                var budgetService = new BudgetService(logger, sqliteMemoryWrapper.DbContext);
+                var budgetService = new BudgetService(loggerFactory, sqliteMemoryWrapper.DbContext);
 
                 List<Budget> budgets = budgetService.GetAll().ToList();
 
@@ -627,11 +621,10 @@ namespace Financier.Core.Tests
         public void TestBudgetGetFailInvalidId()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<BudgetService> logger = loggerFactory.CreateLogger<BudgetService>();
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
-                var budgetService = new BudgetService(logger, sqliteMemoryWrapper.DbContext);
+                var budgetService = new BudgetService(loggerFactory, sqliteMemoryWrapper.DbContext);
 
                 Budget budgets = budgetService.Get(666);
             }
@@ -641,7 +634,6 @@ namespace Financier.Core.Tests
         public void TestBudgetGet()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<BudgetService> logger = loggerFactory.CreateLogger<BudgetService>();
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
@@ -720,7 +712,7 @@ namespace Financier.Core.Tests
                 sqliteMemoryWrapper.DbContext.BudgetTransactions.AddRange(budgetTransactionEntities);
                 sqliteMemoryWrapper.DbContext.SaveChanges();
 
-                var budgetService = new BudgetService(logger, sqliteMemoryWrapper.DbContext);
+                var budgetService = new BudgetService(loggerFactory, sqliteMemoryWrapper.DbContext);
 
                 Budget budget = budgetService.Get(budget1Entity.BudgetId);
 
@@ -755,7 +747,6 @@ namespace Financier.Core.Tests
         public void TestBudgetUpdate()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<BudgetService> logger = loggerFactory.CreateLogger<BudgetService>();
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
@@ -834,7 +825,7 @@ namespace Financier.Core.Tests
                 sqliteMemoryWrapper.DbContext.BudgetTransactions.AddRange(budgetTransactionEntities);
                 sqliteMemoryWrapper.DbContext.SaveChanges();
 
-                var budgetService = new BudgetService(logger, sqliteMemoryWrapper.DbContext);
+                var budgetService = new BudgetService(loggerFactory, sqliteMemoryWrapper.DbContext);
 
                 Budget budget = budgetService.Get(budgetEntity.BudgetId);
 
@@ -886,7 +877,6 @@ namespace Financier.Core.Tests
         public void TestBudgetUpdateRemoveTransactions()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<BudgetService> logger = loggerFactory.CreateLogger<BudgetService>();
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
@@ -965,7 +955,7 @@ namespace Financier.Core.Tests
                 sqliteMemoryWrapper.DbContext.BudgetTransactions.AddRange(budgetTransactionEntities);
                 sqliteMemoryWrapper.DbContext.SaveChanges();
 
-                var budgetService = new BudgetService(logger, sqliteMemoryWrapper.DbContext);
+                var budgetService = new BudgetService(loggerFactory, sqliteMemoryWrapper.DbContext);
 
                 Budget budget = budgetService.Get(budgetEntity.BudgetId);
 
@@ -1001,7 +991,6 @@ namespace Financier.Core.Tests
         public void TestBudgetUpdateAddTransactions()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<BudgetService> logger = loggerFactory.CreateLogger<BudgetService>();
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
@@ -1080,7 +1069,7 @@ namespace Financier.Core.Tests
                 sqliteMemoryWrapper.DbContext.BudgetTransactions.AddRange(budgetTransactionEntities);
                 sqliteMemoryWrapper.DbContext.SaveChanges();
 
-                var budgetService = new BudgetService(logger, sqliteMemoryWrapper.DbContext);
+                var budgetService = new BudgetService(loggerFactory, sqliteMemoryWrapper.DbContext);
 
                 Budget budget = budgetService.Get(budgetEntity.BudgetId);
 
@@ -1137,7 +1126,6 @@ namespace Financier.Core.Tests
         public void TestBudgetMakePaydayTransactions()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<BudgetService> logger = loggerFactory.CreateLogger<BudgetService>();
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
@@ -1216,7 +1204,7 @@ namespace Financier.Core.Tests
                 sqliteMemoryWrapper.DbContext.BudgetTransactions.AddRange(budgetTransactionEntities);
                 sqliteMemoryWrapper.DbContext.SaveChanges();
 
-                var budgetService = new BudgetService(logger, sqliteMemoryWrapper.DbContext);
+                var budgetService = new BudgetService(loggerFactory, sqliteMemoryWrapper.DbContext);
 
                 var paydayStart = new PaydayStart
                 {

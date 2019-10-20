@@ -9,9 +9,9 @@ namespace Financier.Desktop.Services
         private readonly ILogger<BudgetListViewService> m_logger;
         private readonly IBudgetListViewModelFactory m_budgetListViewModelFactory;
 
-        public BudgetListViewService(ILogger<BudgetListViewService> logger, IBudgetListViewModelFactory budgetListViewModelFactory)
+        public BudgetListViewService(ILoggerFactory loggerFactory, IBudgetListViewModelFactory budgetListViewModelFactory)
         {
-            m_logger = logger;
+            m_logger = loggerFactory.CreateLogger<BudgetListViewService>();
             m_budgetListViewModelFactory = budgetListViewModelFactory;
         }
 

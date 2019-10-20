@@ -11,9 +11,9 @@ namespace Financier.Services
         private ILogger<BudgetService> m_logger;
         private Entities.FinancierDbContext m_dbContext;
 
-        public BudgetService(ILogger<BudgetService> logger, Entities.FinancierDbContext dbContext)
+        public BudgetService(ILoggerFactory loggerFactory, Entities.FinancierDbContext dbContext)
         {
-            m_logger = logger;
+            m_logger = loggerFactory.CreateLogger<BudgetService>();
             m_dbContext = dbContext;
         }
 
