@@ -7,18 +7,16 @@ namespace Financier.Desktop.ViewModels
 {
     public class ExceptionViewModelFactory : IExceptionViewModelFactory
     {
-        private readonly ILogger<ExceptionViewModelFactory> m_logger;
-        private readonly IServiceProvider m_serviceProvider;
+        private readonly ILoggerFactory m_loggerFactory;
 
-        public ExceptionViewModelFactory(ILogger<ExceptionViewModelFactory> logger, IServiceProvider serviceProvider)
+        public ExceptionViewModelFactory(ILoggerFactory loggerFactory)
         {
-            m_logger = logger;
-            m_serviceProvider = serviceProvider;
+            m_loggerFactory = loggerFactory;
         }
 
         public IExceptionViewModel Create(Exception ex)
         {
-            return m_serviceProvider.CreateInstance<ExceptionViewModel>(ex);
+            return new ExceptionViewModel(m_loggerFactory, ex);
         }
     }
 
@@ -27,10 +25,10 @@ namespace Financier.Desktop.ViewModels
         private ILogger<ExceptionViewModel> m_logger;
 
         public ExceptionViewModel(
-            ILogger<ExceptionViewModel> logger,
+            ILoggerFactory loggerFactory,
             Exception ex)
         {
-            m_logger = logger;
+            m_logger = loggerFactory.CreateLogger<ExceptionViewModel>();
 
             Message = ex.Message;
             Details = ex.ToString();

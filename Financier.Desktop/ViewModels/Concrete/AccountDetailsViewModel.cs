@@ -10,23 +10,32 @@ namespace Financier.Desktop.ViewModels
 {
     public class AccountDetailsViewModelFactory : IAccountDetailsViewModelFactory
     {
-        private readonly ILogger<AccountDetailsViewModelFactory> m_logger;
-        private readonly IServiceProvider m_serviceProvider;
+        private readonly ILoggerFactory m_loggerFactory;
+        private readonly IAccountService m_accountService;
+        private readonly ICurrencyService m_currencyService;
 
-        public AccountDetailsViewModelFactory(ILogger<AccountDetailsViewModelFactory> logger, IServiceProvider serviceProvider)
+        public AccountDetailsViewModelFactory(ILoggerFactory loggerFactory, IAccountService accountService, ICurrencyService currencyService)
         {
-            m_logger = logger;
-            m_serviceProvider = serviceProvider;
+            m_loggerFactory = loggerFactory;
+            m_accountService = accountService;
+            m_currencyService = currencyService;
         }
 
         public IAccountDetailsViewModel Create()
         {
-            return m_serviceProvider.CreateInstance<AccountCreateViewModel>();
+            return new AccountCreateViewModel(
+                m_loggerFactory,
+                m_accountService,
+                m_currencyService);
         }
 
         public IAccountDetailsViewModel Create(int accountId)
         {
-            return m_serviceProvider.CreateInstance<AccountEditViewModel>(accountId);
+            return new AccountEditViewModel(
+                m_loggerFactory,
+                m_accountService,
+                m_currencyService,
+                accountId);
         }
     }
 
@@ -89,11 +98,11 @@ namespace Financier.Desktop.ViewModels
         private ILogger<AccountCreateViewModel> m_logger;
 
         public AccountCreateViewModel(
-            ILogger<AccountCreateViewModel> logger,
+            ILoggerFactory loggerFactory,
             IAccountService accountService,
             ICurrencyService currencyService) : base(accountService, currencyService, 0)
         {
-            m_logger = logger;
+            m_logger = loggerFactory.CreateLogger<AccountCreateViewModel>();
 
             Name = "New Account";
             SelectedAccountType = AccountType.Asset;
@@ -107,6 +116,8 @@ namespace Financier.Desktop.ViewModels
 
             m_accountService.Create(account);
             m_accountId = account.AccountId;
+
+            m_logger.LogInformation($"Created new account '{account.Name}' with id {account.AccountId}");
         }
     }
 
@@ -115,12 +126,12 @@ namespace Financier.Desktop.ViewModels
         private ILogger<AccountEditViewModel> m_logger;
 
         public AccountEditViewModel(
-            ILogger<AccountEditViewModel> logger,
+            ILoggerFactory loggerFactory,
             IAccountService accountService,
             ICurrencyService currencyService,
             int accountId) : base(accountService, currencyService, accountId)
         {
-            m_logger = logger;
+            m_logger = loggerFactory.CreateLogger<AccountEditViewModel>();
 
             Account account = m_accountService.Get(m_accountId);
 
@@ -135,6 +146,8 @@ namespace Financier.Desktop.ViewModels
             Account account = ToAccount();
 
             m_accountService.Update(account);
+
+            m_logger.LogInformation($"Updated account '{account.Name}' with id {account.AccountId}");
         }
     }
 }

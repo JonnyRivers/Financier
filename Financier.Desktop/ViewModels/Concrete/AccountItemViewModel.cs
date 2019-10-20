@@ -1,23 +1,20 @@
 ﻿using Financier.Services;
 using Microsoft.Extensions.Logging;
-using System;
 
 namespace Financier.Desktop.ViewModels
 {
     public class AccountItemViewModelFactory : IAccountItemViewModelFactory
     {
-        private readonly ILogger<AccountItemViewModelFactory> m_logger;
-        private readonly IServiceProvider m_serviceProvider;
+        private readonly ILoggerFactory m_loggerFactory;
 
-        public AccountItemViewModelFactory(ILogger<AccountItemViewModelFactory> logger, IServiceProvider serviceProvider)
+        public AccountItemViewModelFactory(ILoggerFactory loggerFactory)
         {
-            m_logger = logger;
-            m_serviceProvider = serviceProvider;
+            m_loggerFactory = loggerFactory;
         }
 
         public IAccountItemViewModel Create(Account account)
         {
-            return m_serviceProvider.CreateInstance<AccountItemViewModel>(account);
+            return new AccountItemViewModel(m_loggerFactory, account);
         }
     }
 
@@ -31,10 +28,10 @@ namespace Financier.Desktop.ViewModels
         private string m_currencyName;
 
         public AccountItemViewModel(
-            ILogger<AccountItemViewModel> logger,
+            ILoggerFactory loggerFactory,
             Account account)
         {
-            m_logger = logger;
+            m_logger = loggerFactory.CreateLogger< AccountItemViewModel>();
 
             AccountId = account.AccountId;
             m_name = account.Name;

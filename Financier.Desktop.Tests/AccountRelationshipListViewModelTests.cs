@@ -68,10 +68,8 @@ namespace Financier.Desktop.Tests
                     sqliteMemoryWrapper.DbContext);
 
                 var viewModel = new AccountRelationshipListViewModel(
-                    loggerFactory.CreateLogger<AccountRelationshipListViewModel>(),
-                    accountService,
+                    loggerFactory,
                     accountRelationshipService,
-                    new Mock<IAccountRelationshipDetailsViewModelFactory>().Object,
                     new Concrete.StubAccountRelationshipItemViewModelFactory(),
                     new Mock<IAccountRelationshipCreateViewService>().Object,
                     new Mock<IAccountRelationshipEditViewService>().Object,

@@ -1,23 +1,20 @@
 ﻿using Financier.Services;
 using Microsoft.Extensions.Logging;
-using System;
 
 namespace Financier.Desktop.ViewModels
 {
     public class AccountLinkViewModelFactory : IAccountLinkViewModelFactory
     {
-        private readonly ILogger<AccountLinkViewModelFactory> m_logger;
-        private readonly IServiceProvider m_serviceProvider;
+        private readonly ILoggerFactory m_loggerFactory;
 
-        public AccountLinkViewModelFactory(ILogger<AccountLinkViewModelFactory> logger, IServiceProvider serviceProvider)
+        public AccountLinkViewModelFactory(ILoggerFactory loggerFactory)
         {
-            m_logger = logger;
-            m_serviceProvider = serviceProvider;
+            m_loggerFactory = loggerFactory;
         }
 
         public IAccountLinkViewModel Create(AccountLink accountLink)
         {
-            return m_serviceProvider.CreateInstance<AccountLinkViewModel>(accountLink);
+            return new AccountLinkViewModel(m_loggerFactory, accountLink);
         }
     }
 
@@ -30,10 +27,10 @@ namespace Financier.Desktop.ViewModels
         private AccountSubType m_subType;
 
         public AccountLinkViewModel(
-            ILogger<AccountLinkViewModel> logger,
+            ILoggerFactory loggerFactory,
             AccountLink accountLink)
         {
-            m_logger = logger;
+            m_logger = loggerFactory.CreateLogger<AccountLinkViewModel>();
 
             AccountId = accountLink.AccountId;
             m_name = accountLink.Name;

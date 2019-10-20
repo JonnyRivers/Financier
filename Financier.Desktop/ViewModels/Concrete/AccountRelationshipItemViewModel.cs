@@ -1,23 +1,27 @@
 ﻿using Financier.Services;
 using Microsoft.Extensions.Logging;
-using System;
 
 namespace Financier.Desktop.ViewModels
 {
     public class AccountRelationshipItemViewModelFactory : IAccountRelationshipItemViewModelFactory
     {
-        private readonly ILogger<AccountRelationshipItemViewModelFactory> m_logger;
-        private readonly IServiceProvider m_serviceProvider;
+        private readonly ILoggerFactory m_loggerFactory;
+        private IAccountLinkViewModelFactory m_accountLinkViewModelFactory;
 
-        public AccountRelationshipItemViewModelFactory(ILogger<AccountRelationshipItemViewModelFactory> logger, IServiceProvider serviceProvider)
+        public AccountRelationshipItemViewModelFactory(
+            ILoggerFactory loggerFactory,
+            IAccountLinkViewModelFactory accountLinkViewModelFactory)
         {
-            m_logger = logger;
-            m_serviceProvider = serviceProvider;
+            m_loggerFactory = loggerFactory;
+            m_accountLinkViewModelFactory = accountLinkViewModelFactory;
         }
 
         public IAccountRelationshipItemViewModel Create(AccountRelationship accountRelationship)
         {
-            return m_serviceProvider.CreateInstance<AccountRelationshipItemViewModel>(accountRelationship);
+            return new AccountRelationshipItemViewModel(
+                m_loggerFactory,
+                m_accountLinkViewModelFactory,
+                accountRelationship);
         }
     }
 
@@ -27,11 +31,11 @@ namespace Financier.Desktop.ViewModels
         private IAccountLinkViewModelFactory m_accountLinkViewModelFactory;
 
         public AccountRelationshipItemViewModel(
-            ILogger<AccountRelationshipItemViewModel> logger,
+            ILoggerFactory loggerFactory,
             IAccountLinkViewModelFactory accountlinkViewModelFactory,
             AccountRelationship accountRelationship)
         {
-            m_logger = logger;
+            m_logger = loggerFactory.CreateLogger<AccountRelationshipItemViewModel>();
             m_accountLinkViewModelFactory = accountlinkViewModelFactory;
 
             AccountRelationshipId = accountRelationship.AccountRelationshipId;

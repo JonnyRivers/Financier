@@ -144,7 +144,7 @@ namespace Financier.Desktop.Tests
                         BudgetTransactionType type) =>
                         {
                             return new BudgetTransactionItemViewModel(
-                                loggerFactory.CreateLogger<BudgetTransactionItemViewModel>(),
+                                loggerFactory,
                                 accountLinks,
                                 budgetTransaction,
                                 type);
@@ -156,7 +156,7 @@ namespace Financier.Desktop.Tests
                     .Returns((int budgetId) =>
                     {
                         return new BudgetTransactionListViewModel(
-                            loggerFactory.CreateLogger<BudgetTransactionListViewModel>(),
+                            loggerFactory,
                             accountService,
                             budgetService,
                             new Concrete.StubAccountLinkViewModelFactory(),
@@ -167,7 +167,7 @@ namespace Financier.Desktop.Tests
                     });
 
                 var viewModel = new BudgetEditViewModel(
-                    loggerFactory.CreateLogger<BudgetEditViewModel>(),
+                    loggerFactory,
                     budgetService,
                     mockTransactionListViewModelFactory.Object,
                     budget.BudgetId
@@ -320,7 +320,7 @@ namespace Financier.Desktop.Tests
                         BudgetTransactionType type) =>
                         {
                             return new BudgetTransactionItemViewModel(
-                                loggerFactory.CreateLogger<BudgetTransactionItemViewModel>(),
+                                loggerFactory,
                                 accountLinks,
                                 budgetTransaction,
                                 type);
@@ -332,7 +332,7 @@ namespace Financier.Desktop.Tests
                     .Returns((int budgetId) =>
                     {
                         return new BudgetTransactionListViewModel(
-                            loggerFactory.CreateLogger<BudgetTransactionListViewModel>(),
+                            loggerFactory,
                             accountService,
                             budgetService,
                             new Concrete.StubAccountLinkViewModelFactory(),
@@ -343,7 +343,7 @@ namespace Financier.Desktop.Tests
                     });
 
                 var viewModel = new BudgetEditViewModel(
-                    loggerFactory.CreateLogger<BudgetEditViewModel>(),
+                    loggerFactory,
                     budgetService,
                     mockTransactionListViewModelFactory.Object,
                     budget.BudgetId

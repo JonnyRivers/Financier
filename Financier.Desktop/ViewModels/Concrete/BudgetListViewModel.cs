@@ -2,7 +2,6 @@
 using Financier.Desktop.Services;
 using Financier.Services;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -12,39 +11,19 @@ namespace Financier.Desktop.ViewModels
 {
     public class BudgetListViewModelFactory : IBudgetListViewModelFactory
     {
-        private readonly ILogger<BudgetListViewModelFactory> m_logger;
-        private readonly IServiceProvider m_serviceProvider;
+        private readonly ILoggerFactory m_loggerFactory;
+        private readonly IBudgetService m_budgetService;
+        private readonly ICurrencyService m_currencyService;
+        private readonly ITransactionService m_transactionService;
+        private readonly IDeleteConfirmationViewService m_deleteConfirmationViewService;
+        private readonly IBudgetItemViewModelFactory m_budgetItemViewModelFactory;
+        private readonly IBudgetCreateViewService m_budgetCreateViewService;
+        private readonly IBudgetEditViewService m_budgetEditViewService;
+        private readonly IPaydayEventViewService m_paydayEventViewService;
+        private readonly ITransactionBatchCreateConfirmViewService m_transactionBatchCreateConfirmViewService;
 
-        public BudgetListViewModelFactory(ILogger<BudgetListViewModelFactory> logger, IServiceProvider serviceProvider)
-        {
-            m_logger = logger;
-            m_serviceProvider = serviceProvider;
-        }
-
-        public IBudgetListViewModel Create()
-        {
-            return m_serviceProvider.CreateInstance<BudgetListViewModel>();
-        }
-    }
-
-    public class BudgetListViewModel : BaseViewModel, IBudgetListViewModel
-    {
-        private ILogger<BudgetListViewModel> m_logger;
-        private IBudgetService m_budgetService;
-        private ICurrencyService m_currencyService;
-        private ITransactionService m_transactionService;
-        private IDeleteConfirmationViewService m_deleteConfirmationViewService;
-        private IBudgetItemViewModelFactory m_budgetItemViewModelFactory;
-        private IBudgetCreateViewService m_budgetCreateViewService;
-        private IBudgetEditViewService m_budgetEditViewService;
-        private IPaydayEventViewService m_paydayEventViewService;
-        private ITransactionBatchCreateConfirmViewService m_transactionBatchCreateConfirmViewService;
-
-        private ObservableCollection<IBudgetItemViewModel> m_budgets;
-        private IBudgetItemViewModel m_selectedBudget;
-
-        public BudgetListViewModel(
-            ILogger<BudgetListViewModel> logger,
+        public BudgetListViewModelFactory(
+            ILoggerFactory loggerFactory,
             IBudgetService budgetService,
             ICurrencyService currencyService,
             ITransactionService transactionService,
@@ -53,10 +32,65 @@ namespace Financier.Desktop.ViewModels
             IBudgetCreateViewService budgetCreateViewService,
             IBudgetEditViewService budgetEditViewService,
             IPaydayEventViewService paydayEventViewService,
-            ITransactionBatchCreateConfirmViewService transactionBatchCreateConfirmViewService
-            )
+            ITransactionBatchCreateConfirmViewService transactionBatchCreateConfirmViewService)
         {
-            m_logger = logger;
+            m_loggerFactory = loggerFactory;
+            m_budgetService = budgetService;
+            m_currencyService = currencyService;
+            m_transactionService = transactionService;
+            m_deleteConfirmationViewService = deleteConfirmationViewService;
+            m_budgetItemViewModelFactory = budgetItemViewModelFactory;
+            m_budgetCreateViewService = budgetCreateViewService;
+            m_budgetEditViewService = budgetEditViewService;
+            m_paydayEventViewService = paydayEventViewService;
+            m_transactionBatchCreateConfirmViewService = transactionBatchCreateConfirmViewService;
+        }
+
+        public IBudgetListViewModel Create()
+        {
+            return new BudgetListViewModel(
+                m_loggerFactory,
+                m_budgetService,
+                m_currencyService,
+                m_transactionService,
+                m_deleteConfirmationViewService,
+                m_budgetItemViewModelFactory,
+                m_budgetCreateViewService,
+                m_budgetEditViewService,
+                m_paydayEventViewService,
+                m_transactionBatchCreateConfirmViewService);
+        }
+    }
+
+    public class BudgetListViewModel : BaseViewModel, IBudgetListViewModel
+    {
+        private readonly ILogger<BudgetListViewModel> m_logger;
+        private readonly IBudgetService m_budgetService;
+        private readonly ICurrencyService m_currencyService;
+        private readonly ITransactionService m_transactionService;
+        private readonly IDeleteConfirmationViewService m_deleteConfirmationViewService;
+        private readonly IBudgetItemViewModelFactory m_budgetItemViewModelFactory;
+        private readonly IBudgetCreateViewService m_budgetCreateViewService;
+        private readonly IBudgetEditViewService m_budgetEditViewService;
+        private readonly IPaydayEventViewService m_paydayEventViewService;
+        private readonly ITransactionBatchCreateConfirmViewService m_transactionBatchCreateConfirmViewService;
+
+        private ObservableCollection<IBudgetItemViewModel> m_budgets;
+        private IBudgetItemViewModel m_selectedBudget;
+
+        public BudgetListViewModel(
+            ILoggerFactory loggerFactory,
+            IBudgetService budgetService,
+            ICurrencyService currencyService,
+            ITransactionService transactionService,
+            IDeleteConfirmationViewService deleteConfirmationViewService,
+            IBudgetItemViewModelFactory budgetItemViewModelFactory,
+            IBudgetCreateViewService budgetCreateViewService,
+            IBudgetEditViewService budgetEditViewService,
+            IPaydayEventViewService paydayEventViewService,
+            ITransactionBatchCreateConfirmViewService transactionBatchCreateConfirmViewService)
+        {
+            m_logger = loggerFactory.CreateLogger<BudgetListViewModel>();
             m_budgetService = budgetService;
             m_currencyService = currencyService;
             m_transactionService = transactionService;

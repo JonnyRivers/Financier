@@ -32,7 +32,7 @@ namespace Financier.Desktop.Tests
                     sqliteMemoryWrapper.DbContext);
 
                 var viewModel = new BudgetCreateViewModel(
-                    loggerFactory.CreateLogger<BudgetCreateViewModel>(),
+                    loggerFactory,
                     budgetService,
                     new Mock<IBudgetTransactionListViewModelFactory>().Object
                 );
@@ -82,7 +82,7 @@ namespace Financier.Desktop.Tests
                     .Returns((AccountLink accountLink) =>
                     {
                         return new AccountLinkViewModel(
-                            loggerFactory.CreateLogger<AccountLinkViewModel>(),
+                            loggerFactory,
                             accountLink);
                     });
 
@@ -98,7 +98,7 @@ namespace Financier.Desktop.Tests
                         BudgetTransactionType type) =>
                     {
                         return new BudgetTransactionItemViewModel(
-                            loggerFactory.CreateLogger<BudgetTransactionItemViewModel>(),
+                            loggerFactory,
                             accountLinks,
                             budgetTransaction,
                             type);
@@ -110,7 +110,7 @@ namespace Financier.Desktop.Tests
                     .Returns((int budgetId) =>
                     {
                         return new BudgetTransactionListViewModel(
-                            loggerFactory.CreateLogger<BudgetTransactionListViewModel>(),
+                            loggerFactory,
                             accountService,
                             budgetService,
                             mockAccountLinkViewModelFactory.Object,
@@ -121,7 +121,7 @@ namespace Financier.Desktop.Tests
                     });
 
                 var viewModel = new BudgetCreateViewModel(
-                    loggerFactory.CreateLogger<BudgetCreateViewModel>(),
+                    loggerFactory,
                     budgetService,
                     mockTransactionListViewModelFactory.Object
                 );

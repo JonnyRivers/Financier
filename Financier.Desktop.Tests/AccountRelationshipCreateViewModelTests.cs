@@ -46,7 +46,7 @@ namespace Financier.Desktop.Tests
                     Type = AccountRelationshipType.PhysicalToLogical
                 };
                 var viewModel = new AccountRelationshipCreateViewModel(
-                    loggerFactory.CreateLogger<AccountRelationshipCreateViewModel>(),
+                    loggerFactory,
                     accountService,
                     accountRelationshipService,
                     hint
@@ -95,7 +95,7 @@ namespace Financier.Desktop.Tests
                     Type = AccountRelationshipType.PrepaymentToExpense
                 };
                 var viewModel = new AccountRelationshipCreateViewModel(
-                    loggerFactory.CreateLogger<AccountRelationshipCreateViewModel>(),
+                    loggerFactory,
                     accountService,
                     accountRelationshipService,
                     hint

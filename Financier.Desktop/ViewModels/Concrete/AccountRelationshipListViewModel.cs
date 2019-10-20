@@ -2,7 +2,6 @@
 using Financier.Desktop.Services;
 using Financier.Services;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -12,18 +11,38 @@ namespace Financier.Desktop.ViewModels
 {
     public class AccountRelationshipListViewModelFactory : IAccountRelationshipListViewModelFactory
     {
-        private readonly ILogger<AccountRelationshipListViewModelFactory> m_logger;
-        private readonly IServiceProvider m_serviceProvider;
+        private readonly ILoggerFactory m_loggerFactory;
+        private readonly IAccountRelationshipService m_accountRelationshipService;
+        private readonly IAccountRelationshipItemViewModelFactory m_accountRelationshipItemViewModelFactory;
+        private readonly IAccountRelationshipCreateViewService m_accountRelationshipCreateViewService;
+        private readonly IAccountRelationshipEditViewService m_accountRelationshipEditViewService;
+        private readonly IDeleteConfirmationViewService m_deleteConfirmationViewService;
 
-        public AccountRelationshipListViewModelFactory(ILogger<AccountRelationshipListViewModelFactory> logger, IServiceProvider serviceProvider)
+        public AccountRelationshipListViewModelFactory(
+            ILoggerFactory loggerFactory,
+            IAccountRelationshipService accountRelationshipService,
+            IAccountRelationshipItemViewModelFactory accountRelationshipItemViewModelFactory,
+            IAccountRelationshipCreateViewService accountRelationshipCreateViewService,
+            IAccountRelationshipEditViewService accountRelationshipEditViewService,
+            IDeleteConfirmationViewService deleteConfirmationViewService)
         {
-            m_logger = logger;
-            m_serviceProvider = serviceProvider;
+            m_loggerFactory = loggerFactory;
+            m_accountRelationshipService = accountRelationshipService;
+            m_accountRelationshipItemViewModelFactory = accountRelationshipItemViewModelFactory;
+            m_accountRelationshipCreateViewService = accountRelationshipCreateViewService;
+            m_accountRelationshipEditViewService = accountRelationshipEditViewService;
+            m_deleteConfirmationViewService = deleteConfirmationViewService;
         }
 
         public IAccountRelationshipListViewModel Create()
         {
-            return m_serviceProvider.CreateInstance<AccountRelationshipListViewModel>();
+            return new AccountRelationshipListViewModel(
+                m_loggerFactory,
+                m_accountRelationshipService,
+                m_accountRelationshipItemViewModelFactory,
+                m_accountRelationshipCreateViewService,
+                m_accountRelationshipEditViewService,
+                m_deleteConfirmationViewService);
         }
     }
 
@@ -32,28 +51,22 @@ namespace Financier.Desktop.ViewModels
         private const int AllAccountsId = -1;
 
         private ILogger<AccountRelationshipListViewModel> m_logger;
-        private IAccountService m_accountService;
         private IAccountRelationshipService m_accountRelationshipService;
-        private IAccountRelationshipDetailsViewModelFactory m_accountRelationshipDetailsViewModelFactory;
         private IAccountRelationshipItemViewModelFactory m_accountRelationshipItemViewModelFactory;
         private IAccountRelationshipCreateViewService m_accountRelationshipCreateViewService;
         private IAccountRelationshipEditViewService m_accountRelationshipEditViewService;
         private IDeleteConfirmationViewService m_deleteConfirmationViewService;
 
         public AccountRelationshipListViewModel(
-            ILogger<AccountRelationshipListViewModel> logger,
-            IAccountService accountService,
+            ILoggerFactory loggerFactory,
             IAccountRelationshipService accountRelationshipService,
-            IAccountRelationshipDetailsViewModelFactory accountRelationshipDetailsViewModelFactory,
             IAccountRelationshipItemViewModelFactory accountRelationshipItemViewModelFactory,
             IAccountRelationshipCreateViewService accountRelationshipCreateViewService,
             IAccountRelationshipEditViewService accountRelationshipEditViewService,
             IDeleteConfirmationViewService deleteConfirmationViewService)
         {
-            m_logger = logger;
-            m_accountService = accountService;
+            m_logger = loggerFactory.CreateLogger<AccountRelationshipListViewModel>();
             m_accountRelationshipService = accountRelationshipService;
-            m_accountRelationshipDetailsViewModelFactory = accountRelationshipDetailsViewModelFactory;
             m_accountRelationshipItemViewModelFactory = accountRelationshipItemViewModelFactory;
             m_accountRelationshipCreateViewService = accountRelationshipCreateViewService;
             m_accountRelationshipEditViewService = accountRelationshipEditViewService;

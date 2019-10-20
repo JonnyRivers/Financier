@@ -1,24 +1,21 @@
 ﻿using Financier.Services;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Linq;
 
 namespace Financier.Desktop.ViewModels
 {
     public class BudgetItemViewModelFactory : IBudgetItemViewModelFactory
     {
-        private readonly ILogger<BudgetItemViewModelFactory> m_logger;
-        private readonly IServiceProvider m_serviceProvider;
+        private readonly ILoggerFactory m_loggerFactory;
 
-        public BudgetItemViewModelFactory(ILogger<BudgetItemViewModelFactory> logger, IServiceProvider serviceProvider)
+        public BudgetItemViewModelFactory(ILoggerFactory loggerFactory)
         {
-            m_logger = logger;
-            m_serviceProvider = serviceProvider;
+            m_loggerFactory = loggerFactory;
         }
 
         public IBudgetItemViewModel Create(Budget budget, Currency currency)
         {
-            return m_serviceProvider.CreateInstance<BudgetItemViewModel>(budget, currency);
+            return new BudgetItemViewModel(m_loggerFactory, budget, currency);
         }
     }
 
@@ -27,11 +24,11 @@ namespace Financier.Desktop.ViewModels
         private ILogger<BudgetItemViewModel> m_logger;
 
         public BudgetItemViewModel(
-            ILogger<BudgetItemViewModel> logger,
+            ILoggerFactory loggerFactory,
             Budget budget, 
             Currency currency)
         {
-            m_logger = logger;
+            m_logger = loggerFactory.CreateLogger<BudgetItemViewModel>();
 
             BudgetId = budget.BudgetId;
             Name = budget.Name;

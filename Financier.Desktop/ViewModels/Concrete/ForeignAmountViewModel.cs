@@ -6,13 +6,15 @@ namespace Financier.Desktop.ViewModels
 {
     public class ForeignAmountViewModelFactory : IForeignAmountViewModelFactory
     {
-        private readonly ILogger<ForeignAmountViewModelFactory> m_logger;
-        private readonly IServiceProvider m_serviceProvider;
+        private readonly ILoggerFactory m_loggerFactory;
+        private ICurrencyExchangeService m_currencyExchangeService;
 
-        public ForeignAmountViewModelFactory(ILogger<ForeignAmountViewModelFactory> logger, IServiceProvider serviceProvider)
+        public ForeignAmountViewModelFactory(
+            ILoggerFactory loggerFactory,
+            ICurrencyExchangeService currencyExchangeService)
         {
-            m_logger = logger;
-            m_serviceProvider = serviceProvider;
+            m_loggerFactory = loggerFactory;
+            m_currencyExchangeService = currencyExchangeService;
         }
 
         public IForeignAmountViewModel Create(
@@ -20,7 +22,12 @@ namespace Financier.Desktop.ViewModels
             string nativeCurrencyCode,
             string foreignCurrencyCode)
         {
-            return m_serviceProvider.CreateInstance<ForeignAmountViewModel>(nativeAmount, nativeCurrencyCode, foreignCurrencyCode);
+            return new ForeignAmountViewModel(
+                m_loggerFactory,
+                m_currencyExchangeService,
+                nativeAmount, 
+                nativeCurrencyCode, 
+                foreignCurrencyCode);
         }
     }
 
@@ -36,13 +43,13 @@ namespace Financier.Desktop.ViewModels
         private string m_nativeCurrencyCode;
 
         public ForeignAmountViewModel(
-            ILogger<ForeignAmountViewModel> logger,
+            ILoggerFactory loggerFactory,
             ICurrencyExchangeService currencyExchangeService,
             decimal nativeAmount,
             string nativeCurrencyCode,
             string foreignCurrencyCode)
         {
-            m_logger = logger;
+            m_logger = loggerFactory.CreateLogger<ForeignAmountViewModel>();
             m_currencyExchangeService = currencyExchangeService;
 
             m_foreignCurrencyCode = foreignCurrencyCode;

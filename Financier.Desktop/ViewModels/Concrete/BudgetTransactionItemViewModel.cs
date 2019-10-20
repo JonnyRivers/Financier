@@ -1,25 +1,17 @@
-﻿using System;
+﻿using Financier.Services;
+using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
 using System.Linq;
-using Financier.Services;
-using Microsoft.Extensions.Logging;
 
 namespace Financier.Desktop.ViewModels
 {
     public class BudgetTransactionItemViewModelFactory : IBudgetTransactionItemViewModelFactory
     {
-        private readonly ILogger<BudgetTransactionItemViewModelFactory> m_logger;
-        private readonly IServiceProvider m_serviceProvider;
+        private readonly ILoggerFactory m_loggerFactory;
 
-        public BudgetTransactionItemViewModelFactory(ILogger<BudgetTransactionItemViewModelFactory> logger, IServiceProvider serviceProvider)
+        public BudgetTransactionItemViewModelFactory(ILoggerFactory loggerFactory)
         {
-            m_logger = logger;
-            m_serviceProvider = serviceProvider;
-        }
-
-        public IBudgetTransactionItemViewModel Create()
-        {
-            return m_serviceProvider.CreateInstance<BudgetTransactionItemViewModel>();
+            m_loggerFactory = loggerFactory;
         }
 
         public IBudgetTransactionItemViewModel Create(
@@ -27,7 +19,11 @@ namespace Financier.Desktop.ViewModels
             BudgetTransaction budgetTransaction, 
             BudgetTransactionType type)
         {
-            return m_serviceProvider.CreateInstance<BudgetTransactionItemViewModel>(accountLinks, budgetTransaction, type);
+            return new BudgetTransactionItemViewModel(
+                m_loggerFactory,
+                accountLinks, 
+                budgetTransaction, 
+                type);
         }
     }
 
@@ -38,12 +34,12 @@ namespace Financier.Desktop.ViewModels
         private decimal m_amount;
 
         public BudgetTransactionItemViewModel(
-            ILogger<BudgetTransactionItemViewModel> logger,
+            ILoggerFactory loggerFactory,
             ObservableCollection<IAccountLinkViewModel> accountLinks,
             BudgetTransaction budgetTransaction,
             BudgetTransactionType type)
         {
-            m_logger = logger;
+            m_logger = loggerFactory.CreateLogger<BudgetTransactionItemViewModel>();
 
             AccountLinks = accountLinks;
             m_amount = budgetTransaction.Amount;

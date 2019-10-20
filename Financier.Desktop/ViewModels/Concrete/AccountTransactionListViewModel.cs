@@ -12,20 +12,47 @@ namespace Financier.Desktop.ViewModels
 {
     public class AccountTransactionListViewModelFactory : IAccountTransactionListViewModelFactory
     {
-        private readonly ILogger<AccountTransactionListViewModelFactory> m_logger;
-        private readonly IServiceProvider m_serviceProvider;
+        private readonly ILoggerFactory m_loggerFactory;
+        private IAccountService m_accountService;
+        private ITransactionService m_transactionService;
+        private IAccountTransactionItemViewModelFactory m_accountTransactionItemViewModelFactory;
+        private IDeleteConfirmationViewService m_deleteConfirmationViewService;
+        private ITransactionCreateViewService m_transactionCreateViewService;
+        private ITransactionEditViewService m_transactionEditViewService;
+        private IReconcileBalanceViewService m_reconcileBalanceViewService;
 
         public AccountTransactionListViewModelFactory(
-            ILogger<AccountTransactionListViewModelFactory> logger, 
-            IServiceProvider serviceProvider)
+            ILoggerFactory loggerFactory,
+            IAccountService accountService,
+            ITransactionService transactionService,
+            IAccountTransactionItemViewModelFactory accountTransactionItemViewModelFactory,
+            IDeleteConfirmationViewService deleteConfirmationViewService,
+            ITransactionCreateViewService transactionCreateViewService,
+            ITransactionEditViewService transactionEditViewService,
+            IReconcileBalanceViewService reconcileBalanceViewService)
         {
-            m_logger = logger;
-            m_serviceProvider = serviceProvider;
+            m_loggerFactory = loggerFactory;
+            m_accountService = accountService;
+            m_transactionService = transactionService;
+            m_accountTransactionItemViewModelFactory = accountTransactionItemViewModelFactory;
+            m_deleteConfirmationViewService = deleteConfirmationViewService;
+            m_transactionCreateViewService = transactionCreateViewService;
+            m_transactionEditViewService = transactionEditViewService;
+            m_reconcileBalanceViewService = reconcileBalanceViewService;
         }
 
         public IAccountTransactionListViewModel Create(int accountId)
         {
-            return m_serviceProvider.CreateInstance<AccountTransactionListViewModel>(accountId);
+            return new AccountTransactionListViewModel(
+                m_loggerFactory,
+                m_accountService,
+                m_transactionService,
+                m_accountTransactionItemViewModelFactory,
+                m_deleteConfirmationViewService,
+                m_transactionCreateViewService,
+                m_transactionEditViewService,
+                m_reconcileBalanceViewService,
+                accountId);
         }
     }
 
@@ -50,7 +77,7 @@ namespace Financier.Desktop.ViewModels
         private IAccountTransactionItemViewModel m_selectedTransaction;
 
         public AccountTransactionListViewModel(
-            ILogger<AccountTransactionListViewModel> logger,
+            ILoggerFactory loggerFactory,
             IAccountService accountService,
             ITransactionService transactionService,
             IAccountTransactionItemViewModelFactory accountTransactionItemViewModelFactory,
@@ -60,7 +87,7 @@ namespace Financier.Desktop.ViewModels
             IReconcileBalanceViewService reconcileBalanceViewService,
             int accountId)
         {
-            m_logger = logger;
+            m_logger = loggerFactory.CreateLogger<AccountTransactionListViewModel>();
             m_accountService = accountService;
             m_transactionService = transactionService;
             m_accountTransactionItemViewModelFactory = accountTransactionItemViewModelFactory;
