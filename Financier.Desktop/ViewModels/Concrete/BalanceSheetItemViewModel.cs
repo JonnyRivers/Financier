@@ -1,23 +1,22 @@
 ﻿using Financier.Services;
 using Microsoft.Extensions.Logging;
-using System;
 
 namespace Financier.Desktop.ViewModels
 {
     public class BalanceSheetItemViewModelFactory : IBalanceSheetItemViewModelFactory
     {
-        private readonly ILogger<BalanceSheetItemViewModelFactory> m_logger;
-        private readonly IServiceProvider m_serviceProvider;
+        private readonly ILoggerFactory m_loggerFactory;
 
-        public BalanceSheetItemViewModelFactory(ILogger<BalanceSheetItemViewModelFactory> logger, IServiceProvider serviceProvider)
+        public BalanceSheetItemViewModelFactory(ILoggerFactory loggerFactory)
         {
-            m_logger = logger;
-            m_serviceProvider = serviceProvider;
+            m_loggerFactory = loggerFactory;
         }
 
         public IBalanceSheetItemViewModel Create(BalanceSheetItem balanceSheetItem)
         {
-            return m_serviceProvider.CreateInstance<BalanceSheetItemViewModel>(balanceSheetItem);
+            return new BalanceSheetItemViewModel(
+                m_loggerFactory,
+                balanceSheetItem);
         }
     }
 
@@ -26,10 +25,10 @@ namespace Financier.Desktop.ViewModels
         private ILogger<BalanceSheetItemViewModel> m_logger;
 
         public BalanceSheetItemViewModel(
-            ILogger<BalanceSheetItemViewModel> logger,
+            ILoggerFactory loggerFactory,
             BalanceSheetItem balanceSheetItem)
         {
-            m_logger = logger;
+            m_logger = loggerFactory.CreateLogger<BalanceSheetItemViewModel>();
 
             Name = balanceSheetItem.Name;
             Balance = balanceSheetItem.Balance;

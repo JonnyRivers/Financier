@@ -1,23 +1,22 @@
 ﻿using Financier.Services;
 using Microsoft.Extensions.Logging;
-using System;
 
 namespace Financier.Desktop.ViewModels
 {
     public class DatabaseConnectionItemViewModelFactory : IDatabaseConnectionItemViewModelFactory
     {
-        private readonly ILogger<DatabaseConnectionItemViewModelFactory> m_logger;
-        private readonly IServiceProvider m_serviceProvider;
+        private readonly ILoggerFactory m_loggerFactory;
 
-        public DatabaseConnectionItemViewModelFactory(ILogger<DatabaseConnectionItemViewModelFactory> logger, IServiceProvider serviceProvider)
+        public DatabaseConnectionItemViewModelFactory(ILoggerFactory loggerFactory)
         {
-            m_logger = logger;
-            m_serviceProvider = serviceProvider;
+            m_loggerFactory = loggerFactory;
         }
 
         public IDatabaseConnectionItemViewModel Create(DatabaseConnection databaseConnection)
         {
-            return m_serviceProvider.CreateInstance<DatabaseConnectionItemViewModel>(databaseConnection);
+            return new DatabaseConnectionItemViewModel(
+                m_loggerFactory,
+                databaseConnection);
         }
     }
 
@@ -26,10 +25,10 @@ namespace Financier.Desktop.ViewModels
         private ILogger<DatabaseConnectionItemViewModel> m_logger;
 
         public DatabaseConnectionItemViewModel(
-            ILogger<DatabaseConnectionItemViewModel> logger,
+            ILoggerFactory loggerFactory,
             DatabaseConnection databaseConnection)
         {
-            m_logger = logger;
+            m_logger = loggerFactory.CreateLogger<DatabaseConnectionItemViewModel>();
 
             DatabaseConnectionId = databaseConnection.DatabaseConnectionId;
             Name = databaseConnection.Name;

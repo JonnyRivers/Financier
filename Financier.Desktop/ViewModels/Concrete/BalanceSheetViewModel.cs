@@ -1,5 +1,4 @@
-﻿using Financier.Desktop.Services;
-using Financier.Services;
+﻿using Financier.Services;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.ObjectModel;
@@ -9,26 +8,34 @@ namespace Financier.Desktop.ViewModels
 {
     public class BalanceSheetViewModelFactory : IBalanceSheetViewModelFactory
     {
-        private readonly ILogger<BalanceSheetViewModelFactory> m_logger;
-        private readonly IServiceProvider m_serviceProvider;
+        private readonly ILoggerFactory m_loggerFactory;
+        private readonly IBalanceSheetService m_balanceSheetService;
+        private readonly IBalanceSheetItemViewModelFactory m_balanceSheetItemViewModelFactory;
 
-        public BalanceSheetViewModelFactory(ILogger<BalanceSheetViewModelFactory> logger, IServiceProvider serviceProvider)
+        public BalanceSheetViewModelFactory(
+            ILoggerFactory loggerFactory,
+            IBalanceSheetService balanceSheetService,
+            IBalanceSheetItemViewModelFactory balanceSheetItemViewModelFactory)
         {
-            m_logger = logger;
-            m_serviceProvider = serviceProvider;
+            m_loggerFactory = loggerFactory;
+            m_balanceSheetService = balanceSheetService;
+            m_balanceSheetItemViewModelFactory = balanceSheetItemViewModelFactory;
         }
 
         public IBalanceSheetViewModel Create()
         {
-            return m_serviceProvider.CreateInstance<BalanceSheetViewModel>();
+            return new BalanceSheetViewModel(
+                m_loggerFactory,
+                m_balanceSheetService,
+                m_balanceSheetItemViewModelFactory);
         }
     }
 
     public class BalanceSheetViewModel : BaseViewModel, IBalanceSheetViewModel
     {
-        private ILogger<BalanceSheetViewModel> m_logger;
-        private IBalanceSheetService m_balanceSheetService;
-        private IBalanceSheetItemViewModelFactory m_balanceSheetItemViewModelFactory;
+        private readonly ILogger<BalanceSheetViewModel> m_logger;
+        private readonly IBalanceSheetService m_balanceSheetService;
+        private readonly IBalanceSheetItemViewModelFactory m_balanceSheetItemViewModelFactory;
 
         private DateTime m_at;
         private ObservableCollection<IBalanceSheetItemViewModel> m_assets;
@@ -38,11 +45,11 @@ namespace Financier.Desktop.ViewModels
         private decimal m_netWorth;
 
         public BalanceSheetViewModel(
-            ILogger<BalanceSheetViewModel> logger,
+            ILoggerFactory loggerFactory,
             IBalanceSheetService balanceSheetService,
             IBalanceSheetItemViewModelFactory balanceSheetItemViewModelFactory)
         {
-            m_logger = logger;
+            m_logger = loggerFactory.CreateLogger<BalanceSheetViewModel>();
             m_balanceSheetService = balanceSheetService;
             m_balanceSheetItemViewModelFactory = balanceSheetItemViewModelFactory;
 

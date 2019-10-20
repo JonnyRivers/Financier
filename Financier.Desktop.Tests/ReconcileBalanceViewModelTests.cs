@@ -57,7 +57,7 @@ namespace Financier.Desktop.Tests
                     sqliteMemoryWrapper.DbContext);
 
                 var viewModel = new ReconcileBalanceViewModel(
-                    loggerFactory.CreateLogger<ReconcileBalanceViewModel>(),
+                    loggerFactory,
                     accountService,
                     currencyService,
                     transactionService,

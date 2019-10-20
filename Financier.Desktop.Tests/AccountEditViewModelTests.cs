@@ -42,7 +42,7 @@ namespace Financier.Desktop.Tests
                 accountService.Create(account);
 
                 var viewModel = new AccountEditViewModel(
-                    loggerFactory.CreateLogger<AccountEditViewModel>(),
+                    loggerFactory,
                     accountService,
                     currencyService,
                     account.AccountId
@@ -93,7 +93,7 @@ namespace Financier.Desktop.Tests
                 accountService.Create(account);
 
                 var viewModel = new AccountEditViewModel(
-                    loggerFactory.CreateLogger<AccountEditViewModel>(),
+                    loggerFactory,
                     accountService,
                     currencyService,
                     account.AccountId

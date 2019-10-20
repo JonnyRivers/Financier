@@ -10,23 +10,30 @@ namespace Financier.Desktop.ViewModels
 {
     public class DatabaseConnectionDetailsViewModelFactory : IDatabaseConnectionDetailsViewModelFactory
     {
-        private readonly ILogger<DatabaseConnectionDetailsViewModelFactory> m_logger;
-        private readonly IServiceProvider m_serviceProvider;
+        private readonly ILoggerFactory m_loggerFactory;
+        protected readonly IDatabaseConnectionService m_databaseConnectionService;
 
-        public DatabaseConnectionDetailsViewModelFactory(ILogger<DatabaseConnectionDetailsViewModelFactory> logger, IServiceProvider serviceProvider)
+        public DatabaseConnectionDetailsViewModelFactory(
+            ILoggerFactory loggerFactory,
+            IDatabaseConnectionService databaseConnectionService)
         {
-            m_logger = logger;
-            m_serviceProvider = serviceProvider;
+            m_loggerFactory = loggerFactory;
+            m_databaseConnectionService = databaseConnectionService;
         }
 
         public IDatabaseConnectionDetailsViewModel Create()
         {
-            return m_serviceProvider.CreateInstance<DatabaseConnectionCreateViewModel>();
+            return new DatabaseConnectionCreateViewModel(
+                m_loggerFactory,
+                m_databaseConnectionService);
         }
 
         public IDatabaseConnectionDetailsViewModel Create(int databaseConnectionId)
         {
-            return m_serviceProvider.CreateInstance<DatabaseConnectionEditViewModel>(databaseConnectionId);
+            return new DatabaseConnectionEditViewModel(
+                m_loggerFactory,
+                m_databaseConnectionService,
+                databaseConnectionId);
         }
     }
 
@@ -86,10 +93,10 @@ namespace Financier.Desktop.ViewModels
         private readonly ILogger<DatabaseConnectionCreateViewModel> m_logger;
 
         public DatabaseConnectionCreateViewModel(
-            ILogger<DatabaseConnectionCreateViewModel> logger,
+            ILoggerFactory loggerFactory,
             IDatabaseConnectionService databaseConnectionService) : base(databaseConnectionService, 0)
         {
-            m_logger = logger;
+            m_logger = loggerFactory.CreateLogger<DatabaseConnectionCreateViewModel>();
 
             Name = "New Connection";
             SelectedType = DatabaseConnectionType.SqlServerLocalDB;
@@ -112,11 +119,11 @@ namespace Financier.Desktop.ViewModels
         private readonly ILogger<DatabaseConnectionEditViewModel> m_logger;
 
         public DatabaseConnectionEditViewModel(
-            ILogger<DatabaseConnectionEditViewModel> logger,
+            ILoggerFactory loggerFactory,
             IDatabaseConnectionService databaseConnectionService,
             int databaseConnectionId) : base(databaseConnectionService, databaseConnectionId)
         {
-            m_logger = logger;
+            m_logger = loggerFactory.CreateLogger<DatabaseConnectionEditViewModel>();
 
             DatabaseConnection databaseConnection = m_databaseConnectionService.Get(m_databaseConnectionId);
 

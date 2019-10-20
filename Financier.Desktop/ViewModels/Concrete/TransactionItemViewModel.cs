@@ -6,37 +6,42 @@ namespace Financier.Desktop.ViewModels
 {
     public class TransactionItemViewModelFactory : ITransactionItemViewModelFactory
     {
-        private readonly ILogger<TransactionItemViewModelFactory> m_logger;
-        private readonly IServiceProvider m_serviceProvider;
+        private readonly ILoggerFactory m_loggerFactory;
+        private readonly IAccountLinkViewModelFactory m_accountLinkViewModelFactory;
 
-        public TransactionItemViewModelFactory(ILogger<TransactionItemViewModelFactory> logger, IServiceProvider serviceProvider)
+        public TransactionItemViewModelFactory(
+            ILoggerFactory loggerFactory,
+            IAccountLinkViewModelFactory accountLinkViewModelFactory)
         {
-            m_logger = logger;
-            m_serviceProvider = serviceProvider;
+            m_loggerFactory = loggerFactory;
+            m_accountLinkViewModelFactory = accountLinkViewModelFactory;
         }
 
         public ITransactionItemViewModel Create(Transaction transaction)
         {
-            return m_serviceProvider.CreateInstance<TransactionItemViewModel>(transaction);
+            return new TransactionItemViewModel(
+                m_loggerFactory,
+                m_accountLinkViewModelFactory,
+                transaction);
         }
     }
 
     public class TransactionItemViewModel : BaseViewModel, ITransactionItemViewModel
     {
-        private ILogger<TransactionItemViewModel> m_logger;
-        private IAccountLinkViewModelFactory m_acountLinkViewModelFactory;
+        private readonly ILogger<TransactionItemViewModel> m_logger;
+        private readonly IAccountLinkViewModelFactory m_accountLinkViewModelFactory;
 
         public TransactionItemViewModel(
-            ILogger<TransactionItemViewModel> logger,
-            IAccountLinkViewModelFactory acountLinkViewModelFactory,
+            ILoggerFactory loggerFactory,
+            IAccountLinkViewModelFactory accountLinkViewModelFactory,
             Transaction transaction)
         {
-            m_logger = logger;
-            m_acountLinkViewModelFactory = acountLinkViewModelFactory;
+            m_logger = loggerFactory.CreateLogger<TransactionItemViewModel>();
+            m_accountLinkViewModelFactory = accountLinkViewModelFactory;
 
             TransactionId = transaction.TransactionId;
-            CreditAccount = m_acountLinkViewModelFactory.Create(transaction.CreditAccount);
-            DebitAccount = m_acountLinkViewModelFactory.Create(transaction.DebitAccount);
+            CreditAccount = m_accountLinkViewModelFactory.Create(transaction.CreditAccount);
+            DebitAccount = m_accountLinkViewModelFactory.Create(transaction.DebitAccount);
             At = transaction.At;
             Amount = transaction.Amount;
         }

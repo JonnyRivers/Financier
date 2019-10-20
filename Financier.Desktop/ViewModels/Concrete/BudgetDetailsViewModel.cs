@@ -1,5 +1,4 @@
 ﻿using Financier.Desktop.Commands;
-using Financier.Desktop.Services;
 using Financier.Services;
 using Microsoft.Extensions.Logging;
 using System;
@@ -11,25 +10,35 @@ namespace Financier.Desktop.ViewModels
 {
     public class BudgetDetailsViewModelFactory : IBudgetDetailsViewModelFactory
     {
-        private readonly ILogger<BudgetDetailsViewModelFactory> m_logger;
-        private readonly IServiceProvider m_serviceProvider;
+        private readonly ILoggerFactory m_loggerFactory;
+        private readonly IBudgetService m_budgetService;
+        private readonly IBudgetTransactionListViewModelFactory m_budgetTransactionListViewModelFactory;
 
         public BudgetDetailsViewModelFactory(
-            ILogger<BudgetDetailsViewModelFactory> logger,
-            IServiceProvider serviceProvider)
+            ILoggerFactory loggerFactory,
+            IBudgetService budgetService,
+            IBudgetTransactionListViewModelFactory budgetTransactionListViewModelFactory)
         {
-            m_logger = logger;
-            m_serviceProvider = serviceProvider;
+            m_loggerFactory = loggerFactory;
+            m_budgetService = budgetService;
+            m_budgetTransactionListViewModelFactory = budgetTransactionListViewModelFactory;
         }
 
         public IBudgetDetailsViewModel Create()
         {
-            return m_serviceProvider.CreateInstance<BudgetCreateViewModel>();
+            return new BudgetCreateViewModel(
+                m_loggerFactory,
+                m_budgetService,
+                m_budgetTransactionListViewModelFactory);
         }
 
         public IBudgetDetailsViewModel Create(int budgetId)
         {
-            return m_serviceProvider.CreateInstance<BudgetEditViewModel>(budgetId);
+            return new BudgetEditViewModel(
+                m_loggerFactory,
+                m_budgetService,
+                m_budgetTransactionListViewModelFactory,
+                budgetId);
         }
     }
 
@@ -99,11 +108,11 @@ namespace Financier.Desktop.ViewModels
         private ILogger<BudgetCreateViewModel> m_logger;
 
         public BudgetCreateViewModel(
-            ILogger<BudgetCreateViewModel> logger,
+            ILoggerFactory loggerFactory,
             IBudgetService budgetService,
             IBudgetTransactionListViewModelFactory budgetTransactionListViewModelFactory) : base(budgetService, budgetTransactionListViewModelFactory, 0)
         {
-            m_logger = logger;
+            m_logger = loggerFactory.CreateLogger<BudgetCreateViewModel>();
 
             Name = "New Budget";
             SelectedPeriod = BudgetPeriod.Fortnightly;
@@ -123,12 +132,12 @@ namespace Financier.Desktop.ViewModels
         private ILogger<BudgetEditViewModel> m_logger;
 
         public BudgetEditViewModel(
-            ILogger<BudgetEditViewModel> logger,
+            ILoggerFactory loggerFactory,
             IBudgetService budgetService,
             IBudgetTransactionListViewModelFactory budgetTransactionListViewModelFactory,
             int budgetId) : base(budgetService, budgetTransactionListViewModelFactory, budgetId)
         {
-            m_logger = logger;
+            m_logger = loggerFactory.CreateLogger<BudgetEditViewModel>();
 
             Budget budget = m_budgetService.Get(m_budgetId);
 

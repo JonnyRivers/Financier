@@ -12,44 +12,64 @@ namespace Financier.Desktop.ViewModels
 {
     public class TransactionListViewModelFactory : ITransactionListViewModelFactory
     {
-        private readonly ILogger<TransactionListViewModelFactory> m_logger;
-        private readonly IServiceProvider m_serviceProvider;
+        private readonly ILoggerFactory m_loggerFactory;
+        private readonly ITransactionService m_transactionService;
+        private readonly ITransactionItemViewModelFactory m_transactionItemViewModelFactory;
+        private readonly IDeleteConfirmationViewService m_deleteConfirmationViewService;
+        private readonly ITransactionCreateViewService m_transactionCreateViewService;
+        private readonly ITransactionEditViewService m_transactionEditViewService;
 
-        public TransactionListViewModelFactory(ILogger<TransactionListViewModelFactory> logger, IServiceProvider serviceProvider)
-        {
-            m_logger = logger;
-            m_serviceProvider = serviceProvider;
-        }
-
-        public ITransactionListViewModel Create()
-        {
-            return m_serviceProvider.CreateInstance<TransactionListViewModel>();
-        }
-    }
-
-    public class TransactionListViewModel : BaseViewModel, ITransactionListViewModel
-    {
-        // Dependencies
-        private ILogger<TransactionListViewModel> m_logger;
-        private ITransactionService m_transactionService;
-        private ITransactionItemViewModelFactory m_transactionItemViewModelFactory;
-        private IDeleteConfirmationViewService m_deleteConfirmationViewService;
-        private ITransactionCreateViewService m_transactionCreateViewService;
-        private ITransactionEditViewService m_transactionEditViewService;
-
-        // Private data
-        private ObservableCollection<ITransactionItemViewModel> m_transactions;
-        private ITransactionItemViewModel m_selectedTransaction;
-
-        public TransactionListViewModel(
-            ILogger<TransactionListViewModel> logger,
+        public TransactionListViewModelFactory(
+            ILoggerFactory loggerFactory,
             ITransactionService transactionService,
             ITransactionItemViewModelFactory transactionItemViewModelFactory,
             IDeleteConfirmationViewService deleteConfirmationViewService,
             ITransactionCreateViewService transactionCreateViewService,
             ITransactionEditViewService transactionEditViewService)
         {
-            m_logger = logger;
+            m_loggerFactory = loggerFactory;
+            m_transactionService = transactionService;
+            m_transactionItemViewModelFactory = transactionItemViewModelFactory;
+            m_deleteConfirmationViewService = deleteConfirmationViewService;
+            m_transactionCreateViewService = transactionCreateViewService;
+            m_transactionEditViewService = transactionEditViewService;
+        }
+
+        public ITransactionListViewModel Create()
+        {
+            return new TransactionListViewModel(
+                m_loggerFactory,
+                m_transactionService,
+                m_transactionItemViewModelFactory,
+                m_deleteConfirmationViewService,
+                m_transactionCreateViewService,
+                m_transactionEditViewService);
+        }
+    }
+
+    public class TransactionListViewModel : BaseViewModel, ITransactionListViewModel
+    {
+        // Dependencies
+        private readonly ILogger<TransactionListViewModel> m_logger;
+        private readonly ITransactionService m_transactionService;
+        private readonly ITransactionItemViewModelFactory m_transactionItemViewModelFactory;
+        private readonly IDeleteConfirmationViewService m_deleteConfirmationViewService;
+        private readonly ITransactionCreateViewService m_transactionCreateViewService;
+        private readonly ITransactionEditViewService m_transactionEditViewService;
+
+        // Private data
+        private ObservableCollection<ITransactionItemViewModel> m_transactions;
+        private ITransactionItemViewModel m_selectedTransaction;
+
+        public TransactionListViewModel(
+            ILoggerFactory loggerFactory,
+            ITransactionService transactionService,
+            ITransactionItemViewModelFactory transactionItemViewModelFactory,
+            IDeleteConfirmationViewService deleteConfirmationViewService,
+            ITransactionCreateViewService transactionCreateViewService,
+            ITransactionEditViewService transactionEditViewService)
+        {
+            m_logger = loggerFactory.CreateLogger<TransactionListViewModel>();
             m_transactionService = transactionService;
             m_transactionItemViewModelFactory = transactionItemViewModelFactory;
             m_deleteConfirmationViewService = deleteConfirmationViewService;

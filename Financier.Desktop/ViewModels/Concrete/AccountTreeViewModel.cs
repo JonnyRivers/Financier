@@ -2,7 +2,6 @@
 using Financier.Desktop.Services;
 using Financier.Services;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -12,43 +11,20 @@ namespace Financier.Desktop.ViewModels
 {
     public class AccountTreeViewModelFactory : IAccountTreeViewModelFactory
     {
-        private readonly ILogger<AccountRelationshipListViewModelFactory> m_logger;
-        private readonly IServiceProvider m_serviceProvider;
+        private readonly ILoggerFactory m_loggerFactory;
+        private readonly IAccountService m_accountService;
+        private readonly IAccountRelationshipService m_accountRelationshipService;
+        private readonly ITransactionService m_transactionService;
+        private readonly ITransactionRelationshipService m_transactionRelationshipService;
+        private readonly IAccountTreeItemViewModelFactory m_accountTreeItemViewModelFactory;
+        private readonly IAccountCreateViewService m_accountCreateViewService;
+        private readonly IAccountEditViewService m_accountEditViewService;
+        private readonly IAccountTransactionsEditViewService m_accountTransactionsEditViewService;
+        private readonly INoPendingCreditCardTransactionsViewService m_noPendingCreditCardTrasnactionsViewService;
+        private readonly ITransactionBatchCreateConfirmViewService m_transactionBatchCreateConfirmViewService;
 
-        public AccountTreeViewModelFactory(ILogger<AccountRelationshipListViewModelFactory> logger, IServiceProvider serviceProvider)
-        {
-            m_logger = logger;
-            m_serviceProvider = serviceProvider;
-        }
-
-        public IAccountTreeViewModel Create()
-        {
-            return m_serviceProvider.CreateInstance<AccountTreeViewModel>();
-        }
-    }
-
-    public class AccountTreeViewModel : BaseViewModel, IAccountTreeViewModel
-    {
-        private ILogger<AccountTreeViewModel> m_logger;
-        private IAccountService m_accountService;
-        private IAccountRelationshipService m_accountRelationshipService;
-        private ITransactionService m_transactionService;
-        private ITransactionRelationshipService m_transactionRelationshipService;
-        private IAccountTreeItemViewModelFactory m_accountTreeItemViewModelFactory;
-        private IAccountCreateViewService m_accountCreateViewService;
-        private IAccountEditViewService m_accountEditViewService;
-        private IAccountTransactionsEditViewService m_accountTransactionsEditViewService;
-        private INoPendingCreditCardTransactionsViewService m_noPendingCreditCardTrasnactionsViewService;
-        private ITransactionBatchCreateConfirmViewService m_transactionBatchCreateConfirmViewService;
-
-        private bool m_showAssets;
-        private bool m_showLiabilities;
-        private bool m_showIncome;
-        private bool m_showExpenses;
-        private bool m_showCapital;
-
-        public AccountTreeViewModel(
-            ILogger<AccountTreeViewModel> logger,
+        public AccountTreeViewModelFactory(
+            ILoggerFactory loggerFactory,
             IAccountService accountService,
             IAccountRelationshipService accountRelationshipService,
             ITransactionService transactionService,
@@ -59,8 +35,71 @@ namespace Financier.Desktop.ViewModels
             IAccountTransactionsEditViewService accountTransactionsEditViewService,
             INoPendingCreditCardTransactionsViewService noPendingCreditCardTrasnactionsViewService,
             ITransactionBatchCreateConfirmViewService transactionBatchCreateConfirmViewService)
-        {   
-            m_logger = logger;
+        {
+            m_loggerFactory = loggerFactory;
+            m_accountService = accountService;
+            m_accountRelationshipService = accountRelationshipService;
+            m_transactionService = transactionService;
+            m_transactionRelationshipService = transactionRelationshipService;
+            m_accountTreeItemViewModelFactory = accountTreeItemViewModelFactory;
+            m_accountCreateViewService = accountCreateViewService;
+            m_accountEditViewService = accountEditViewService;
+            m_accountTransactionsEditViewService = accountTransactionsEditViewService;
+            m_noPendingCreditCardTrasnactionsViewService = noPendingCreditCardTrasnactionsViewService;
+            m_transactionBatchCreateConfirmViewService = transactionBatchCreateConfirmViewService;
+        }
+
+        public IAccountTreeViewModel Create()
+        {
+            return new AccountTreeViewModel(
+                m_loggerFactory,
+                m_accountService,
+                m_accountRelationshipService,
+                m_transactionService,
+                m_transactionRelationshipService,
+                m_accountTreeItemViewModelFactory,
+                m_accountCreateViewService,
+                m_accountEditViewService,
+                m_accountTransactionsEditViewService,
+                m_noPendingCreditCardTrasnactionsViewService,
+                m_transactionBatchCreateConfirmViewService);
+        }
+    }
+
+    public class AccountTreeViewModel : BaseViewModel, IAccountTreeViewModel
+    {
+        private readonly ILogger<AccountTreeViewModel> m_logger;
+        private readonly IAccountService m_accountService;
+        private readonly IAccountRelationshipService m_accountRelationshipService;
+        private readonly ITransactionService m_transactionService;
+        private readonly ITransactionRelationshipService m_transactionRelationshipService;
+        private readonly IAccountTreeItemViewModelFactory m_accountTreeItemViewModelFactory;
+        private readonly IAccountCreateViewService m_accountCreateViewService;
+        private readonly IAccountEditViewService m_accountEditViewService;
+        private readonly IAccountTransactionsEditViewService m_accountTransactionsEditViewService;
+        private readonly INoPendingCreditCardTransactionsViewService m_noPendingCreditCardTrasnactionsViewService;
+        private readonly ITransactionBatchCreateConfirmViewService m_transactionBatchCreateConfirmViewService;
+
+        private bool m_showAssets;
+        private bool m_showLiabilities;
+        private bool m_showIncome;
+        private bool m_showExpenses;
+        private bool m_showCapital;
+
+        public AccountTreeViewModel(
+            ILoggerFactory loggerFactory,
+            IAccountService accountService,
+            IAccountRelationshipService accountRelationshipService,
+            ITransactionService transactionService,
+            ITransactionRelationshipService transactionRelationshipService,
+            IAccountTreeItemViewModelFactory accountTreeItemViewModelFactory,
+            IAccountCreateViewService accountCreateViewService,
+            IAccountEditViewService accountEditViewService,
+            IAccountTransactionsEditViewService accountTransactionsEditViewService,
+            INoPendingCreditCardTransactionsViewService noPendingCreditCardTrasnactionsViewService,
+            ITransactionBatchCreateConfirmViewService transactionBatchCreateConfirmViewService)
+        {
+            m_logger = loggerFactory.CreateLogger<AccountTreeViewModel>();
             m_accountService = accountService;
             m_accountRelationshipService = accountRelationshipService;
             m_transactionService = transactionService;

@@ -21,7 +21,6 @@ namespace Financier.Desktop.Tests
         public void TestAccountTransactionListViewModelNoTransactions()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<AccountTransactionListViewModel> logger = loggerFactory.CreateLogger<AccountTransactionListViewModel>();
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
@@ -47,7 +46,7 @@ namespace Financier.Desktop.Tests
                     new Concrete.StubAccountTransactionItemViewModelFactory();
 
                 var viewModel = new AccountTransactionListViewModel(
-                    logger,
+                    loggerFactory,
                     accountService,
                     transactionService,
                     accountTransactionViewModelFactory,
@@ -66,7 +65,6 @@ namespace Financier.Desktop.Tests
         public void TestAccountTransactionListViewModelAccountWithLogicalsAndTransactions()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<AccountTransactionListViewModel> logger = loggerFactory.CreateLogger<AccountTransactionListViewModel>();
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
@@ -146,7 +144,7 @@ namespace Financier.Desktop.Tests
                     new Concrete.StubAccountTransactionItemViewModelFactory();
 
                 var viewModel = new AccountTransactionListViewModel(
-                    logger,
+                    loggerFactory,
                     accountService,
                     transactionService,
                     accountTransactionViewModelFactory,
@@ -168,7 +166,6 @@ namespace Financier.Desktop.Tests
         public void TestAccountTransactionListViewModelPostDeleteBalanceRefresh()
         {
             ILoggerFactory loggerFactory = new LoggerFactory();
-            ILogger<AccountTransactionListViewModel> logger = loggerFactory.CreateLogger<AccountTransactionListViewModel>();
 
             using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
             {
@@ -234,7 +231,7 @@ namespace Financier.Desktop.Tests
                     .Returns(true);
 
                 var viewModel = new AccountTransactionListViewModel(
-                    logger,
+                    loggerFactory,
                     accountService,
                     transactionService,
                     accountTransactionViewModelFactory,

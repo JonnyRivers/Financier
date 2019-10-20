@@ -5,18 +5,16 @@ namespace Financier.Desktop.ViewModels
 {
     public class DatabaseConnectionPasswordViewModelFactory : IDatabaseConnectionPasswordViewModelFactory
     {
-        private readonly ILogger<DatabaseConnectionPasswordViewModelFactory> m_logger;
-        private readonly IServiceProvider m_serviceProvider;
+        private readonly ILoggerFactory m_loggerFactory;
 
-        public DatabaseConnectionPasswordViewModelFactory(ILogger<DatabaseConnectionPasswordViewModelFactory> logger, IServiceProvider serviceProvider)
+        public DatabaseConnectionPasswordViewModelFactory(ILoggerFactory loggerFactory)
         {
-            m_logger = logger;
-            m_serviceProvider = serviceProvider;
+            m_loggerFactory = loggerFactory;
         }
 
         public IDatabaseConnectionPasswordViewModel Create(string userId)
         {
-            return m_serviceProvider.CreateInstance<DatabaseConnectionPasswordViewModel>(userId);
+            return new DatabaseConnectionPasswordViewModel(m_loggerFactory, userId);
         }
     }
 
@@ -25,10 +23,10 @@ namespace Financier.Desktop.ViewModels
         private ILogger<DatabaseConnectionPasswordViewModel> m_logger;
 
         public DatabaseConnectionPasswordViewModel(
-            ILogger<DatabaseConnectionPasswordViewModel> logger,
+            ILoggerFactory loggerFactory,
             string userId)
         {
-            m_logger = logger;
+            m_logger = loggerFactory.CreateLogger<DatabaseConnectionPasswordViewModel>();
 
             UserId = userId;
             Password = string.Empty;

@@ -45,7 +45,7 @@ namespace Financier.Desktop.Tests
                     .Returns((AccountLink accountLink) =>
                     {
                         return new AccountLinkViewModel(
-                            loggerFactory.CreateLogger<AccountLinkViewModel>(),
+                            loggerFactory,
                             accountLink);
                     });
 
@@ -58,7 +58,7 @@ namespace Financier.Desktop.Tests
                 };
 
                 var viewModel = new TransactionCreateViewModel(
-                    loggerFactory.CreateLogger<TransactionCreateViewModel>(),
+                    loggerFactory,
                     accountService,
                     transactionService,
                     mockViewModelFactory.Object,
@@ -104,7 +104,7 @@ namespace Financier.Desktop.Tests
                     .Returns((AccountLink accountLink) =>
                     {
                         return new AccountLinkViewModel(
-                            loggerFactory.CreateLogger<AccountLinkViewModel>(),
+                            loggerFactory,
                             accountLink);
                     });
 
@@ -117,7 +117,7 @@ namespace Financier.Desktop.Tests
                 };
 
                 var viewModel = new TransactionCreateViewModel(
-                    loggerFactory.CreateLogger<TransactionCreateViewModel>(),
+                    loggerFactory,
                     accountService,
                     transactionService,
                     mockViewModelFactory.Object,

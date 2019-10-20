@@ -1,6 +1,5 @@
 ﻿using Financier.Services;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -9,29 +8,35 @@ namespace Financier.Desktop.ViewModels
 {
     public class AccountTreeItemViewModelFactory : IAccountTreeItemViewModelFactory
     {
-        private readonly ILogger<AccountTreeItemViewModelFactory> m_logger;
-        private readonly IServiceProvider m_serviceProvider;
+        private readonly ILoggerFactory m_loggerFactory;
 
-        public AccountTreeItemViewModelFactory(ILogger<AccountTreeItemViewModelFactory> logger, IServiceProvider serviceProvider)
+        public AccountTreeItemViewModelFactory(ILoggerFactory loggerFactory)
         {
-            m_logger = logger;
-            m_serviceProvider = serviceProvider;
+            m_loggerFactory = loggerFactory;
         }
 
         public IAccountTreeItemViewModel Create(Account account, IEnumerable<Transaction> transactions)
         {
-            return m_serviceProvider.CreateInstance<AccountTreeItemViewModel>(account, transactions, new IAccountTreeItemViewModel[0]);
+            return new AccountTreeItemViewModel(
+                m_loggerFactory,
+                account, 
+                transactions, 
+                new IAccountTreeItemViewModel[0]);
         }
 
         public IAccountTreeItemViewModel Create(Account account, IEnumerable<Transaction> transactions, IEnumerable<IAccountTreeItemViewModel> childAccountVMs)
         {
-            return m_serviceProvider.CreateInstance<AccountTreeItemViewModel>(account, transactions, childAccountVMs);
+            return new AccountTreeItemViewModel(
+                m_loggerFactory,
+                account,
+                transactions,
+                childAccountVMs);
         }
     }
 
     public class AccountTreeItemViewModel : BaseViewModel, IAccountTreeItemViewModel
     {
-        private ILogger<AccountItemViewModel> m_logger;
+        private ILogger<AccountTreeItemViewModel> m_logger;
 
         private string m_name;
         private AccountType m_type;
@@ -39,12 +44,12 @@ namespace Financier.Desktop.ViewModels
         private string m_currencyName;
 
         public AccountTreeItemViewModel(
-            ILogger<AccountItemViewModel> logger,
+            ILoggerFactory loggerFactory,
             Account account,
             IEnumerable<Transaction> transactions,
             IEnumerable<IAccountTreeItemViewModel> childAccountVMs)
         {
-            m_logger = logger;
+            m_logger = loggerFactory.CreateLogger<AccountTreeItemViewModel>();
 
             AccountId = account.AccountId;
             m_name = account.Name;

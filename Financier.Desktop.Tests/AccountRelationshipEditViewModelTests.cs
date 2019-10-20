@@ -50,7 +50,7 @@ namespace Financier.Desktop.Tests
                     sqliteMemoryWrapper.DbContext);
 
                 var viewModel = new AccountRelationshipEditViewModel(
-                    loggerFactory.CreateLogger<AccountRelationshipEditViewModel>(),
+                    loggerFactory,
                     accountService,
                     accountRelationshipService,
                     checkingToRentPrepaymentRelationship.AccountRelationshipId
@@ -109,7 +109,7 @@ namespace Financier.Desktop.Tests
                     sqliteMemoryWrapper.DbContext);
 
                 var viewModel = new AccountRelationshipEditViewModel(
-                    loggerFactory.CreateLogger<AccountRelationshipEditViewModel>(),
+                    loggerFactory,
                     accountService,
                     accountRelationshipService,
                     checkingToRentPrepaymentRelationship.AccountRelationshipId

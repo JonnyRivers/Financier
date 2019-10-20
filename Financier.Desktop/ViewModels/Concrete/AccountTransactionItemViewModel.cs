@@ -6,20 +6,23 @@ namespace Financier.Desktop.ViewModels
 {
     public class AccountTransactionItemViewModelFactory : IAccountTransactionItemViewModelFactory
     {
-        private readonly ILogger<AccountTransactionItemViewModelFactory> m_logger;
-        private readonly IServiceProvider m_serviceProvider;
+        private readonly ILoggerFactory m_loggerFactory;
+        private IAccountLinkViewModelFactory m_accountLinkViewModelFactory;
 
         public AccountTransactionItemViewModelFactory(
-            ILogger<AccountTransactionItemViewModelFactory> logger, 
-            IServiceProvider serviceProvider)
+            ILoggerFactory loggerFactory,
+            IAccountLinkViewModelFactory accountLinkViewModelFactory)
         {
-            m_logger = logger;
-            m_serviceProvider = serviceProvider;
+            m_loggerFactory = loggerFactory;
+            m_accountLinkViewModelFactory = accountLinkViewModelFactory;
         }
 
         public IAccountTransactionItemViewModel Create(Transaction transaction)
         {
-            return m_serviceProvider.CreateInstance<AccountTransactionItemViewModel>(transaction);
+            return new AccountTransactionItemViewModel(
+                m_loggerFactory,
+                m_accountLinkViewModelFactory,
+                transaction);
         }
     }
 
@@ -31,11 +34,11 @@ namespace Financier.Desktop.ViewModels
         private decimal m_balance;
 
         public AccountTransactionItemViewModel(
-            ILogger<AccountTransactionItemViewModel> logger,
+            ILoggerFactory loggerFactory,
             IAccountLinkViewModelFactory accountLinkViewModelFactory,
             Transaction transaction)
         {
-            m_logger = logger;
+            m_logger = loggerFactory.CreateLogger<AccountTransactionItemViewModel>();
             m_accountLinkViewModelFactory = accountLinkViewModelFactory;
 
             m_balance = 0;

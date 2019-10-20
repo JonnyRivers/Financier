@@ -1,47 +1,65 @@
 ﻿using Financier.Desktop.Commands;
 using Financier.Desktop.Services;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Windows.Input;
 
 namespace Financier.Desktop.ViewModels
 {
     public class MainViewModelFactory : IMainViewModelFactory
     {
-        private readonly ILogger<MainViewModelFactory> m_logger;
-        private readonly IServiceProvider m_serviceProvider;
+        private readonly ILoggerFactory m_loggerFactory;
+        private readonly IAccountRelationshipListViewService m_accountRelationshipListViewService;
+        private readonly IAccountTreeViewService m_accountTreeViewService;
+        private readonly IBalanceSheetViewService m_balanceSheetViewService;
+        private readonly IBudgetListViewService m_budgetListViewService;
+        private readonly ITransactionListViewService m_transactionListViewService;
 
-        public MainViewModelFactory(ILogger<MainViewModelFactory> logger, IServiceProvider serviceProvider)
+        public MainViewModelFactory(
+            ILoggerFactory loggerFactory,
+            IAccountRelationshipListViewService accountRelationshipListViewService,
+            IAccountTreeViewService accountTreeViewService,
+            IBalanceSheetViewService balanceSheetViewService,
+            IBudgetListViewService budgetListViewService,
+            ITransactionListViewService transactionListViewService)
         {
-            m_logger = logger;
-            m_serviceProvider = serviceProvider;
+            m_loggerFactory = loggerFactory;
+            m_accountRelationshipListViewService = accountRelationshipListViewService;
+            m_accountTreeViewService = accountTreeViewService;
+            m_balanceSheetViewService = balanceSheetViewService;
+            m_budgetListViewService = budgetListViewService;
+            m_transactionListViewService = transactionListViewService;
         }
 
         public IMainViewModel Create()
         {
-            return m_serviceProvider.CreateInstance<MainViewModel>();
+            return new MainViewModel(
+                m_loggerFactory,
+                m_accountRelationshipListViewService,
+                m_accountTreeViewService,
+                m_balanceSheetViewService,
+                m_budgetListViewService,
+                m_transactionListViewService);
         }
     }
 
     public class MainViewModel : BaseViewModel, IMainViewModel
     {
-        private ILogger<MainViewModel> m_logger;
-        private IAccountRelationshipListViewService m_accountRelationshipListViewService;
-        private IAccountTreeViewService m_accountTreeViewService;
-        private IBalanceSheetViewService m_balanceSheetViewService;
-        private IBudgetListViewService m_budgetListViewService;
-        private ITransactionListViewService m_transactionListViewService;
+        private readonly ILogger<MainViewModel> m_logger;
+        private readonly IAccountRelationshipListViewService m_accountRelationshipListViewService;
+        private readonly IAccountTreeViewService m_accountTreeViewService;
+        private readonly IBalanceSheetViewService m_balanceSheetViewService;
+        private readonly IBudgetListViewService m_budgetListViewService;
+        private readonly ITransactionListViewService m_transactionListViewService;
 
         public MainViewModel(
-            ILogger<MainViewModel> logger,
+            ILoggerFactory loggerFactory,
             IAccountRelationshipListViewService accountRelationshipListViewService,
             IAccountTreeViewService accountTreeViewService,
             IBalanceSheetViewService balanceSheetViewService,
             IBudgetListViewService budgetListViewService,
-            ITransactionListViewService transactionListViewService
-        )
+            ITransactionListViewService transactionListViewService)
         {
-            m_logger = logger;
+            m_logger = loggerFactory.CreateLogger<MainViewModel>();
             m_accountRelationshipListViewService = accountRelationshipListViewService;
             m_accountTreeViewService = accountTreeViewService;
             m_balanceSheetViewService = balanceSheetViewService;

@@ -8,34 +8,37 @@ namespace Financier.Desktop.ViewModels
 {
     public class PaydayEventStartViewModelFactory : IPaydayEventStartViewModelFactory
     {
-        private readonly ILogger<PaydayEventStartViewModelFactory> m_logger;
-        private readonly IServiceProvider m_serviceProvider;
+        private readonly ILoggerFactory m_loggerFactory;
+        private readonly IBudgetService m_budgetService;
 
         public PaydayEventStartViewModelFactory(
-            ILogger<PaydayEventStartViewModelFactory> logger,
-            IServiceProvider serviceProvider)
+            ILoggerFactory loggerFactory,
+            IBudgetService budgetService)
         {
-            m_logger = logger;
-            m_serviceProvider = serviceProvider;
+            m_loggerFactory = loggerFactory;
+            m_budgetService = budgetService;
         }
 
         public IPaydayEventStartViewModel Create(int budgetId)
         {
-            return m_serviceProvider.CreateInstance<PaydayEventStartViewModel>(budgetId);
+            return new PaydayEventStartViewModel(
+                m_loggerFactory,
+                m_budgetService,
+                budgetId);
         }
     }
 
     public class PaydayEventStartViewModel : IPaydayEventStartViewModel
     {
-        private ILogger<PaydayEventStartViewModel> m_logger;
-        private IBudgetService m_budgetService;
+        private readonly ILogger<PaydayEventStartViewModel> m_logger;
+        private readonly IBudgetService m_budgetService;
 
         public PaydayEventStartViewModel(
-            ILogger<PaydayEventStartViewModel> logger,
+            ILoggerFactory loggerFactory,
             IBudgetService budgetService,
             int budgetId)
         {
-            m_logger = logger;
+            m_logger = loggerFactory.CreateLogger<PaydayEventStartViewModel>();
             m_budgetService = budgetService;
 
             Budget budget = m_budgetService.Get(budgetId);

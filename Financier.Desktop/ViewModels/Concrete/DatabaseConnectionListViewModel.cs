@@ -12,37 +12,16 @@ namespace Financier.Desktop.ViewModels
 {
     public class DatabaseConnectionListViewModelFactory : IDatabaseConnectionListViewModelFactory
     {
-        private readonly ILogger<DatabaseConnectionListViewModelFactory> m_logger;
-        private readonly IServiceProvider m_serviceProvider;
+        private readonly ILoggerFactory m_loggerFactory;
+        private readonly IDatabaseConnectionService m_databaseConnectionService;
+        private readonly IDatabaseConnectionItemViewModelFactory m_databaseConnectionItemViewModelFactory;
+        private readonly IDatabaseConnectionCreateViewService m_databaseConnectionCreateViewService;
+        private readonly IDatabaseConnectionEditViewService m_databaseConnectionEditViewService;
+        private readonly IDatabaseConnectionPasswordViewService m_databaseConnectionPasswordViewService;
+        private readonly IDeleteConfirmationViewService m_deleteConfirmationViewService;
 
-        public DatabaseConnectionListViewModelFactory(ILogger<DatabaseConnectionListViewModelFactory> logger, IServiceProvider serviceProvider)
-        {
-            m_logger = logger;
-            m_serviceProvider = serviceProvider;
-        }
-
-        public IDatabaseConnectionListViewModel Create()
-        {
-            return m_serviceProvider.CreateInstance<DatabaseConnectionListViewModel>();
-        }
-    }
-
-    public class DatabaseConnectionListViewModel : BaseViewModel, IDatabaseConnectionListViewModel
-    {
-        private ILogger<DatabaseConnectionListViewModel> m_logger;
-        private IDatabaseConnectionService m_databaseConnectionService;
-        private IDatabaseConnectionItemViewModelFactory m_databaseConnectionItemViewModelFactory;
-        private IDatabaseConnectionCreateViewService m_databaseConnectionCreateViewService;
-        private IDatabaseConnectionEditViewService m_databaseConnectionEditViewService;
-        private IDatabaseConnectionPasswordViewService m_databaseConnectionPasswordViewService;
-        private IDeleteConfirmationViewService m_deleteConfirmationViewService;
-
-        private ObservableCollection<IDatabaseConnectionItemViewModel> m_databaseConnections;
-        private IDatabaseConnectionItemViewModel m_selectedDatabaseConnection;
-        private string m_password;
-
-        public DatabaseConnectionListViewModel(
-            ILogger<DatabaseConnectionListViewModel> logger,
+        public DatabaseConnectionListViewModelFactory(
+            ILoggerFactory loggerFactory,
             IDatabaseConnectionService databaseConnectionService,
             IDatabaseConnectionItemViewModelFactory databaseConnectionItemViewModelFactory,
             IDatabaseConnectionCreateViewService databaseConnectionCreateViewService,
@@ -50,7 +29,52 @@ namespace Financier.Desktop.ViewModels
             IDatabaseConnectionPasswordViewService databaseConnectionPasswordViewService,
             IDeleteConfirmationViewService deleteConfirmationViewService)
         {
-            m_logger = logger;
+            m_loggerFactory = loggerFactory;
+            m_databaseConnectionService = databaseConnectionService;
+            m_databaseConnectionItemViewModelFactory = databaseConnectionItemViewModelFactory;
+            m_databaseConnectionCreateViewService = databaseConnectionCreateViewService;
+            m_databaseConnectionEditViewService = databaseConnectionEditViewService;
+            m_databaseConnectionPasswordViewService = databaseConnectionPasswordViewService;
+            m_deleteConfirmationViewService = deleteConfirmationViewService;
+        }
+
+        public IDatabaseConnectionListViewModel Create()
+        {
+            return new DatabaseConnectionListViewModel(
+                m_loggerFactory,
+                m_databaseConnectionService,
+                m_databaseConnectionItemViewModelFactory,
+                m_databaseConnectionCreateViewService,
+                m_databaseConnectionEditViewService,
+                m_databaseConnectionPasswordViewService,
+                m_deleteConfirmationViewService);
+        }
+    }
+
+    public class DatabaseConnectionListViewModel : BaseViewModel, IDatabaseConnectionListViewModel
+    {
+        private readonly ILogger<DatabaseConnectionListViewModel> m_logger;
+        private readonly IDatabaseConnectionService m_databaseConnectionService;
+        private readonly IDatabaseConnectionItemViewModelFactory m_databaseConnectionItemViewModelFactory;
+        private readonly IDatabaseConnectionCreateViewService m_databaseConnectionCreateViewService;
+        private readonly IDatabaseConnectionEditViewService m_databaseConnectionEditViewService;
+        private readonly IDatabaseConnectionPasswordViewService m_databaseConnectionPasswordViewService;
+        private readonly IDeleteConfirmationViewService m_deleteConfirmationViewService;
+
+        private ObservableCollection<IDatabaseConnectionItemViewModel> m_databaseConnections;
+        private IDatabaseConnectionItemViewModel m_selectedDatabaseConnection;
+        private string m_password;
+
+        public DatabaseConnectionListViewModel(
+            ILoggerFactory loggerFactory,
+            IDatabaseConnectionService databaseConnectionService,
+            IDatabaseConnectionItemViewModelFactory databaseConnectionItemViewModelFactory,
+            IDatabaseConnectionCreateViewService databaseConnectionCreateViewService,
+            IDatabaseConnectionEditViewService databaseConnectionEditViewService,
+            IDatabaseConnectionPasswordViewService databaseConnectionPasswordViewService,
+            IDeleteConfirmationViewService deleteConfirmationViewService)
+        {
+            m_logger = loggerFactory.CreateLogger<DatabaseConnectionListViewModel>();
             m_databaseConnectionService = databaseConnectionService;
             m_databaseConnectionItemViewModelFactory = databaseConnectionItemViewModelFactory;
             m_databaseConnectionCreateViewService = databaseConnectionCreateViewService;

@@ -32,7 +32,7 @@ namespace Financier.Desktop.Tests
                     sqliteMemoryWrapper.DbContext);
 
                 var viewModel = new AccountCreateViewModel(
-                    loggerFactory.CreateLogger<AccountCreateViewModel>(),
+                    loggerFactory,
                     accountService,
                     currencyService
                 );
@@ -68,7 +68,7 @@ namespace Financier.Desktop.Tests
                     sqliteMemoryWrapper.DbContext);
 
                 var viewModel = new AccountCreateViewModel(
-                    loggerFactory.CreateLogger<AccountCreateViewModel>(),
+                    loggerFactory,
                     accountService,
                     currencyService
                 );

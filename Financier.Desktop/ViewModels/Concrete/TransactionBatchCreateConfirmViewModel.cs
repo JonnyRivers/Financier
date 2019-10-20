@@ -1,46 +1,48 @@
-﻿using System;
+﻿using Financier.Desktop.Commands;
+using Financier.Services;
+using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
-using Financier.Desktop.Commands;
-using Financier.Services;
-using Microsoft.Extensions.Logging;
 
 namespace Financier.Desktop.ViewModels
 {
     public class TransactionBatchCreateConfirmViewModelFactory : ITransactionBatchCreateConfirmViewModelFactory
     {
-        private readonly ILogger<TransactionBatchCreateConfirmViewModelFactory> m_logger;
-        private readonly IServiceProvider m_serviceProvider;
+        private readonly ILoggerFactory m_loggerFactory;
+        private readonly ITransactionItemViewModelFactory m_transactionItemViewModelFactory;
 
         public TransactionBatchCreateConfirmViewModelFactory(
-            ILogger<TransactionBatchCreateConfirmViewModelFactory> logger,
-            IServiceProvider serviceProvider)
+            ILoggerFactory loggerFactory,
+            ITransactionItemViewModelFactory transactionItemViewModelFactory)
         {
-            m_logger = logger;
-            m_serviceProvider = serviceProvider;
+            m_loggerFactory = loggerFactory;
+            m_transactionItemViewModelFactory = transactionItemViewModelFactory;
         }
 
         public ITransactionBatchCreateConfirmViewModel Create(IEnumerable<Transaction> transactions)
         {
-            return m_serviceProvider.CreateInstance<TransactionBatchCreateConfirmViewModel>(transactions);
+            return new TransactionBatchCreateConfirmViewModel(
+                m_loggerFactory,
+                m_transactionItemViewModelFactory,
+                transactions);
         }
     }
 
     public class TransactionBatchCreateConfirmViewModel : BaseViewModel, ITransactionBatchCreateConfirmViewModel
     {
-        private ILogger<TransactionBatchCreateConfirmViewModel> m_logger;
-        private ITransactionItemViewModelFactory m_transactionItemViewModelFactory;
+        private readonly ILogger<TransactionBatchCreateConfirmViewModel> m_logger;
+        private readonly ITransactionItemViewModelFactory m_transactionItemViewModelFactory;
 
         private ObservableCollection<ITransactionItemViewModel> m_transactions;
 
         public TransactionBatchCreateConfirmViewModel(
-            ILogger<TransactionBatchCreateConfirmViewModel> logger,
+            ILoggerFactory loggerFactory,
             ITransactionItemViewModelFactory transactionItemViewModelFactory,
             IEnumerable<Transaction> transactions)
         {
-            m_logger = logger;
+            m_logger = loggerFactory.CreateLogger<TransactionBatchCreateConfirmViewModel>();
             m_transactionItemViewModelFactory = transactionItemViewModelFactory;
 
             IEnumerable<ITransactionItemViewModel> transactionViewModels =

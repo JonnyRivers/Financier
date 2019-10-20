@@ -12,31 +12,50 @@ namespace Financier.Desktop.ViewModels
 {
     public class ReconcileBalanceViewModelFactory : IReconcileBalanceViewModelFactory
     {
-        private readonly ILogger<ReconcileBalanceViewModelFactory> m_logger;
-        private readonly IServiceProvider m_serviceProvider;
+        private readonly ILoggerFactory m_loggerFactory;
+        private readonly IAccountService m_accountService;
+        private readonly ICurrencyService m_currencyService;
+        private readonly ITransactionService m_transactionService;
+        private readonly IAccountLinkViewModelFactory m_accountLinkViewModelFactory;
+        private readonly IForeignAmountViewService m_foreignAmountViewService;
 
         public ReconcileBalanceViewModelFactory(
-            ILogger<ReconcileBalanceViewModelFactory> logger,
-            IServiceProvider serviceProvider)
+            ILoggerFactory loggerFactory,
+            IAccountService accountService,
+            ICurrencyService currencyService,
+            ITransactionService transactionService,
+            IAccountLinkViewModelFactory accountLinkViewModelFactory,
+            IForeignAmountViewService foreignAmountViewService)
         {
-            m_logger = logger;
-            m_serviceProvider = serviceProvider;
+            m_loggerFactory = loggerFactory;
+            m_accountService = accountService;
+            m_currencyService = currencyService;
+            m_transactionService = transactionService;
+            m_accountLinkViewModelFactory = accountLinkViewModelFactory;
+            m_foreignAmountViewService = foreignAmountViewService;
         }
 
         public IReconcileBalanceViewModel Create(int accountId)
         {
-            return m_serviceProvider.CreateInstance<ReconcileBalanceViewModel>(accountId);
+            return new ReconcileBalanceViewModel(
+                m_loggerFactory,
+                m_accountService,
+                m_currencyService,
+                m_transactionService,
+                m_accountLinkViewModelFactory,
+                m_foreignAmountViewService,
+                accountId);
         }
     }
 
     public class ReconcileBalanceViewModel : BaseViewModel, IReconcileBalanceViewModel
     {
-        private ILogger<ReconcileBalanceViewModel> m_logger;
-        private IAccountService m_accountService;
-        private ICurrencyService m_currencyService;
-        private ITransactionService m_transactionService;
-        private IAccountLinkViewModelFactory m_accountLinkViewModelFactory;
-        private IForeignAmountViewService m_foreignAmountViewService;
+        private readonly ILogger<ReconcileBalanceViewModel> m_logger;
+        private readonly IAccountService m_accountService;
+        private readonly ICurrencyService m_currencyService;
+        private readonly ITransactionService m_transactionService;
+        private readonly IAccountLinkViewModelFactory m_accountLinkViewModelFactory;
+        private readonly IForeignAmountViewService m_foreignAmountViewService;
 
         private int m_accountId;
         private string m_primaryCurrencyCode;
@@ -49,7 +68,7 @@ namespace Financier.Desktop.ViewModels
         private Transaction m_newTransaction;
 
         public ReconcileBalanceViewModel(
-            ILogger<ReconcileBalanceViewModel> logger,
+            ILoggerFactory loggerFactory,
             IAccountService accountService,
             ICurrencyService currencyService,
             ITransactionService transactionService,
@@ -57,7 +76,7 @@ namespace Financier.Desktop.ViewModels
             IForeignAmountViewService foreignAmountViewService,
             int accountId)
         {
-            m_logger = logger;
+            m_logger = loggerFactory.CreateLogger<ReconcileBalanceViewModel>();
             m_accountService = accountService;
             m_currencyService = currencyService;
             m_transactionService = transactionService;

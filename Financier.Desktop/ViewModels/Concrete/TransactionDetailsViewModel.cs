@@ -11,33 +11,49 @@ namespace Financier.Desktop.ViewModels
 {
     public class TransactionDetailsViewModelFactory : ITransactionDetailsViewModelFactory
     {
-        private readonly ILogger<TransactionDetailsViewModelFactory> m_logger;
-        private readonly IServiceProvider m_serviceProvider;
+        private readonly ILoggerFactory m_loggerFactory;
+        private readonly IAccountService m_accountService;
+        private readonly ITransactionService m_transactionService;
+        private readonly IAccountLinkViewModelFactory m_accountLinkViewModelFactory;
 
         public TransactionDetailsViewModelFactory(
-            ILogger<TransactionDetailsViewModelFactory> logger,
-            IServiceProvider serviceProvider)
+            ILoggerFactory loggerFactory,
+            IAccountService accountService,
+            ITransactionService transactionService,
+            IAccountLinkViewModelFactory accountLinkViewModelFactory)
         {
-            m_logger = logger;
-            m_serviceProvider = serviceProvider;
+            m_loggerFactory = loggerFactory;
+            m_accountService = accountService;
+            m_transactionService = transactionService;
+            m_accountLinkViewModelFactory = accountLinkViewModelFactory;
         }
 
         public ITransactionDetailsViewModel Create(Transaction hint)
         {
-            return m_serviceProvider.CreateInstance<TransactionCreateViewModel>(hint);
+            return new TransactionCreateViewModel(
+                m_loggerFactory,
+                m_accountService,
+                m_transactionService,
+                m_accountLinkViewModelFactory,
+                hint);
         }
 
         public ITransactionDetailsViewModel Create(int transactionId)
         {
-            return m_serviceProvider.CreateInstance<TransactionEditViewModel>(transactionId);
+            return new TransactionEditViewModel(
+                m_loggerFactory,
+                m_accountService,
+                m_transactionService,
+                m_accountLinkViewModelFactory,
+                transactionId);
         }
     }
 
     public abstract class TransactionDetailsBaseViewModel : BaseViewModel, ITransactionDetailsViewModel
     {
-        protected IAccountService m_accountService;
-        protected ITransactionService m_transactionService;
-        protected IAccountLinkViewModelFactory m_accountLinkViewModelFactory;
+        protected readonly IAccountService m_accountService;
+        protected readonly ITransactionService m_transactionService;
+        protected readonly IAccountLinkViewModelFactory m_accountLinkViewModelFactory;
 
         protected int m_transactionId;
 
@@ -160,13 +176,13 @@ namespace Financier.Desktop.ViewModels
         private ILogger<TransactionCreateViewModel> m_logger;
 
         public TransactionCreateViewModel(
-            ILogger<TransactionCreateViewModel> logger,
+            ILoggerFactory loggerFactory,
             IAccountService accountService,
             ITransactionService transactionService,
             IAccountLinkViewModelFactory accountLinkViewModelFactory,
             Transaction hint) : base(accountService, transactionService, accountLinkViewModelFactory, 0)
         {
-            m_logger = logger;
+            m_logger = loggerFactory.CreateLogger<TransactionCreateViewModel>();
 
             if (hint != null)
             {
@@ -201,13 +217,13 @@ namespace Financier.Desktop.ViewModels
         private ILogger<TransactionEditViewModel> m_logger;
 
         public TransactionEditViewModel(
-            ILogger<TransactionEditViewModel> logger,
+            ILoggerFactory loggerFactory,
             IAccountService accountService,
             ITransactionService transactionService,
             IAccountLinkViewModelFactory accountLinkViewModelFactory,
             int transactionId) : base(accountService, transactionService, accountLinkViewModelFactory, transactionId)
         {
-            m_logger = logger;
+            m_logger = loggerFactory.CreateLogger<TransactionEditViewModel>();
 
             Transaction transaction = m_transactionService.Get(m_transactionId);
 
