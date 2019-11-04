@@ -5,14 +5,14 @@
 <table class='table' *ngIf="creditCards">
   <thead>
     <tr>
-      <th>Id</th>
       <th>Name</th>
+      <th>Balance ($)</th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let creditCard of creditCards">
-      <td>{{ creditCard.id }}</td>
       <td>{{ creditCard.name }}</td>
+      <td>{{ creditCard.balance | number : '1.2-2' }}</td>
     </tr>
   </tbody>
 </table>
