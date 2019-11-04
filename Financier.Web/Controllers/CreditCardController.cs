@@ -32,11 +32,37 @@ namespace Financier.Web.Controllers
                 .OrderBy(a => a.AccountId)
                 .ToListAsync();
 
-            List<CreditCard> apiResponse = accountEntities.Select(a => new CreditCard
+            List<int> accountIds = accountEntities.Select(a => a.AccountId).ToList();
+
+            List<Entities.Transaction> transactionEntities = await m_dbContext.Transactions
+                .Include(t => t.CreditAccount)
+                .Include(t => t.DebitAccount)
+                .Where(t => accountIds.Contains(t.CreditAccountId) || accountIds.Contains(t.DebitAccountId))
+                .ToListAsync();
+
+            List<CreditCard> apiResponse = new List<CreditCard>();
+            foreach (Entities.Account accountEntity in accountEntities)
             {
-                Id = a.AccountId,
-                Name = a.Name
-            }).ToList();
+                List<Entities.Transaction> accountTransactionEntities = transactionEntities
+                    .Where(t => t.CreditAccountId == accountEntity.AccountId || t.DebitAccountId == accountEntity.AccountId)
+                    .ToList();
+
+                decimal balance = 0;
+                foreach (Entities.Transaction accountTransactionEntity in accountTransactionEntities.OrderBy(t => t.At))
+                {
+                    if (accountTransactionEntity.CreditAccountId == accountEntity.AccountId)
+                        balance += accountTransactionEntity.Amount;
+                    else if (accountTransactionEntity.DebitAccountId == accountEntity.AccountId)
+                        balance -= accountTransactionEntity.Amount;
+                }
+
+                apiResponse.Add(new CreditCard
+                {
+                    Id = accountEntity.AccountId,
+                    Name = accountEntity.Name,
+                    Balance = balance
+                });
+            }
 
             return apiResponse;
         }
