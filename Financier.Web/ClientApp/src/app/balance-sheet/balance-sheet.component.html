@@ -1,0 +1,54 @@
+<h1>Balance Sheet</h1>
+
+<p *ngIf="!balanceSheet"><em>Loading...</em></p>
+
+<div *ngIf="balanceSheet">
+  <table class="table">
+    <tbody>
+      <tr class="total">
+        <td width="80%"> Net Worth </td>
+        <td width="20%">{{ balanceSheet.netWorth | number : '1.2-2' }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <p></p>
+  <p></p>
+  <table class="table">
+    <thead>
+      <tr>
+        <th width="80%">Asset</th>
+        <th width="20%">Balance ({{balanceSheet.currencySymbol}})</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="total">
+        <td> Total </td>
+        <td>{{ balanceSheet.totalAssets | number : '1.2-2' }}</td>
+      </tr>
+      <tr *ngFor="let asset of balanceSheet.assets">
+        <td>{{ asset.name }}</td>
+        <td>{{ asset.balance | number : '1.2-2' }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <p></p>
+  <p></p>
+  <table class="table">
+    <thead>
+      <tr>
+        <th width="80%">Liability</th>
+        <th width="20%">Balance ({{balanceSheet.currencySymbol}})</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="total">
+        <td> Total </td>
+        <td>{{ balanceSheet.totalLiabilities | number : '1.2-2' }}</td>
+      </tr>
+      <tr *ngFor="let liability of balanceSheet.liabilities">
+        <td>{{ liability.name }}</td>
+        <td>{{ liability.balance | number : '1.2-2' }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

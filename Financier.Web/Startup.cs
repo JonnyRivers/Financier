@@ -1,4 +1,5 @@
 using Financier.Entities;
+using Financier.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -28,6 +29,11 @@ namespace Financier.Web
             services.AddDbContext<FinancierDbContext>(opt =>
                 opt.UseSqlServer(connectionString)
             );
+
+            services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<ICurrencyService, CurrencyService>();
+
+            services.AddScoped<IBalanceSheetService, BalanceSheetService>();
 
             services.AddMvc(option => option.EnableEndpointRouting = false).SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
