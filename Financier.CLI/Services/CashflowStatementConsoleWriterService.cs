@@ -24,6 +24,9 @@ namespace Financier.CLI.Services
             Console.WriteLine();
             foreach(CashflowAccount account in cashflowStatement.Accounts.OrderBy(a => a.Name))
             {
+                if (account.Inflow == 0 && account.Outflow == 0)
+                    continue;
+
                 Console.WriteLine($"{account.Name}");
                 Console.WriteLine();
                 Console.WriteLine("Period           Inflow     Outflow    Cashflow");
