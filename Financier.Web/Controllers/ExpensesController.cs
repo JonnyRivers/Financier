@@ -16,8 +16,7 @@ namespace Financier.Web.Controllers
         private readonly ILogger<ExpensesController> m_logger;
         private readonly Entities.FinancierDbContext m_dbContext;
 
-        // TODO: put this back!
-        private readonly DateTime m_minTransactionAt = new DateTime(2000, 2, 13, 8, 48, 0, DateTimeKind.Utc);
+        private readonly DateTime m_minTransactionAt = new DateTime(2020, 2, 13, 8, 48, 0, DateTimeKind.Utc);
 
         public ExpensesController(ILoggerFactory loggerFactory, Entities.FinancierDbContext dbContext)
         {
@@ -118,7 +117,6 @@ namespace Financier.Web.Controllers
                         Entities.Transaction expenseTransaction = transactionEntities
                             .Single(e => e.TransactionId == expenseTransactionIdsByPrepaymentTransactionId[accountTransactionEntity.TransactionId]);
 
-                        // TODO: update At & update 'other account'
                         if (expenseTransaction.DebitAccountId == expenseAccountId)
                         {
                             id = expenseTransaction.TransactionId;
@@ -133,7 +131,7 @@ namespace Financier.Web.Controllers
                         }
                         else
                         {
-                            // Something very strange happened...
+                            // we should never get here
                         }
                     }
 
