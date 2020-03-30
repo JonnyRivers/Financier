@@ -16,7 +16,8 @@ namespace Financier.Web.Controllers
         private readonly ILogger<ExpensesController> m_logger;
         private readonly Entities.FinancierDbContext m_dbContext;
 
-        private readonly DateTime m_minTransactionAt = new DateTime(2020, 2, 13, 8, 48, 0, DateTimeKind.Utc);
+        // TODO: put this back!
+        private readonly DateTime m_minTransactionAt = new DateTime(2000, 2, 13, 8, 48, 0, DateTimeKind.Utc);
 
         public ExpensesController(ILoggerFactory loggerFactory, Entities.FinancierDbContext dbContext)
         {
@@ -49,8 +50,8 @@ namespace Financier.Web.Controllers
             List<Entities.TransactionRelationship> creditCardPaymentRelationships = await m_dbContext.TransactionRelationships
                 .Where(tr => tr.Type == TransactionRelationshipType.CreditCardPayment)
                 .ToListAsync();
-            
-            var prepaymentTransactionIdsToIgnore = new HashSet<int>(creditCardPaymentRelationships.Select(ccp => ccp.DestinationTransactionId));
+            Dictionary<int, int> expenseTransactionIdsByPrepaymentTransactionId =
+                creditCardPaymentRelationships.ToDictionary(p => p.DestinationTransactionId, p => p.SourceTransactionId);
 
             var interestingAccountIds = new List<int>();
             interestingAccountIds.AddRange(expenseAccountIdByPrepaymentAccountId.Keys);
@@ -69,19 +70,17 @@ namespace Financier.Web.Controllers
                 int expenseAccountId = expenseAccountIdByPrepaymentAccountId[prepaymentAccountId];
                 int physicalAccountId = physicalAccountIdByLogicalAccountId[prepaymentAccountId];
 
-                List<Entities.Transaction> accountTransactionEntities = transactionEntities
-                    .Where(t => t.CreditAccountId == prepaymentAccountId || t.DebitAccountId == prepaymentAccountId ||
-                                t.CreditAccountId == expenseAccountId || t.DebitAccountId == expenseAccountId)
+                List<Entities.Transaction> prepaymentAccountTransactionEntities = transactionEntities
+                    .Where(t => t.CreditAccountId == prepaymentAccountId || t.DebitAccountId == prepaymentAccountId)
                     .ToList();
 
-                decimal balance = 0;
-                var recentTransactions = new List<ExpenseTransaction>();
-                foreach (Entities.Transaction accountTransactionEntity in accountTransactionEntities.OrderBy(t => t.At))
+                // Process prepayment transactions
+                
+                var expenseTransactions = new List<ExpenseTransaction>();
+                foreach (Entities.Transaction accountTransactionEntity in prepaymentAccountTransactionEntities)
                 {
-                    // we must prevent paid off expenses showing up twice!
-                    if (prepaymentTransactionIdsToIgnore.Contains(accountTransactionEntity.TransactionId))
-                        continue;
-
+                    int id = accountTransactionEntity.TransactionId;
+                    DateTime at = accountTransactionEntity.At;
                     decimal amount = 0;
                     int otherAccountId = 0;
                     
@@ -100,18 +99,6 @@ namespace Financier.Web.Controllers
                         otherAccountId = physicalAccountId;
                         amount = accountTransactionEntity.Amount;
                     }
-                    else if (accountTransactionEntity.DebitAccountId == expenseAccountId)
-                    {
-                        // an expense payment
-                        otherAccountId = accountTransactionEntity.CreditAccountId;
-                        amount = -accountTransactionEntity.Amount;
-                    }
-                    else if (accountTransactionEntity.CreditAccountId == expenseAccountId)
-                    {
-                        // an expense payment  (rare but must be handled)
-                        otherAccountId = accountTransactionEntity.DebitAccountId;
-                        amount = accountTransactionEntity.Amount;
-                    }
                     else if (accountTransactionEntity.DebitAccountId == prepaymentAccountId)
                     {
                         // a prepament account transaction
@@ -125,32 +112,67 @@ namespace Financier.Web.Controllers
                         amount = -accountTransactionEntity.Amount;
                     }
 
-                    balance += amount;
-
-                    if (accountTransactionEntity.At >= m_minTransactionAt)
+                    // lookup matching expense transaction & substitute details (as they are typically more accurate)
+                    if(expenseTransactionIdsByPrepaymentTransactionId.ContainsKey(accountTransactionEntity.TransactionId))
                     {
-                        recentTransactions.Add(
-                            new ExpenseTransaction
-                            {
-                                Id = accountTransactionEntity.TransactionId,
-                                At = accountTransactionEntity.At,
-                                Amount = amount,
-                                Balance = balance,
-                                OtherAccountName = accountEntitiesById[otherAccountId].Name
-                            }
-                        );
+                        Entities.Transaction expenseTransaction = transactionEntities
+                            .Single(e => e.TransactionId == expenseTransactionIdsByPrepaymentTransactionId[accountTransactionEntity.TransactionId]);
+
+                        // TODO: update At & update 'other account'
+                        if (expenseTransaction.DebitAccountId == expenseAccountId)
+                        {
+                            id = expenseTransaction.TransactionId;
+                            at = expenseTransaction.At;
+                            otherAccountId = expenseTransaction.CreditAccountId;
+                        }
+                        else if (accountTransactionEntity.CreditAccountId == expenseAccountId)
+                        {
+                            id = expenseTransaction.TransactionId;
+                            at = expenseTransaction.At;
+                            otherAccountId = expenseTransaction.DebitAccountId;
+                        }
+                        else
+                        {
+                            // Something very strange happened...
+                        }
                     }
+
+                    expenseTransactions.Add(
+                        new ExpenseTransaction
+                        {
+                            Id = id,
+                            At = at,
+                            Amount = amount,
+                            Balance = -666,// to make it clear this is wrong
+                            OtherAccountName = accountEntitiesById[otherAccountId].Name
+                        }
+                    );
                 }
 
-                if (balance == 0 && recentTransactions.Count == 0)
+                // TODO: look for recent expense only transactions
+
+                IEnumerable<Entities.Transaction> orderedPrepaymentAccountTransactionEntities =
+                    prepaymentAccountTransactionEntities.OrderBy(t => t.At).ThenBy(t => t.TransactionId);
+
+                // TODO: calculate balance
+                decimal balance = 0;
+                foreach(ExpenseTransaction expenseTransaction in expenseTransactions.OrderBy(t => t.At).ThenBy(t => t.Id))
+                {
+                    balance += expenseTransaction.Amount;
+                    expenseTransaction.Balance = balance;
+                }
+
+                if (balance == 0 && expenseTransactions.Count == 0)
                     continue;
+
+                List<ExpenseTransaction> recentTransactions = expenseTransactions.Where(et => et.At >= m_minTransactionAt).ToList();
 
                 apiResponse.Add(new ExpenseAccount
                 {
                     Id = accountEntity.AccountId,
                     Name = accountEntity.Name,
                     Balance = balance,
-                    RecentTransactions = recentTransactions.OrderByDescending(t => t.At).ToList()
+                    RecentTransactions = recentTransactions
                 });
             }
 
