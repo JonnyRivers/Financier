@@ -10,6 +10,6 @@ namespace Financier.Web.Model
         public int Id { get; set; }
         public string Name { get; set; }
         public decimal Balance { get; set; }
-        public IEnumerable<ExpenseTransaction> RecentTransactions { get; set; }
+        public IEnumerable<ExpenseTransaction> Transactions { get; set; }
     }
 }

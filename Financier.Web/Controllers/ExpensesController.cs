@@ -208,7 +208,7 @@ namespace Financier.Web.Controllers
                     Id = accountEntity.AccountId,
                     Name = accountEntity.Name,
                     Balance = balance,
-                    RecentTransactions = recentTransactions
+                    Transactions = recentTransactions
                 });
             }
 
