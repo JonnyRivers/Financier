@@ -12,12 +12,15 @@
         <div class='clearfix'></div>
         <div class='navbar-collapse collapse' [ngClass]='{ "in": isExpanded }'>
             <ul class='nav navbar-nav'>
-              <li [routerLinkActive]='["link-active"]'>
-                <a [routerLink]='["/balance-sheet"]' (click)='collapse()'>
+              <li>
+                <a [routerLink]='["/balance-sheet"]' [routerLinkActive]='["link-active"]' (click)='collapse()'>
                   <span class='glyphicon glyphicon-list-alt'></span> Balance sheet
                 </a>
-                <a [routerLink]='["/credit-cards"]' (click)='collapse()'>
+                <a [routerLink]='["/credit-cards"]' [routerLinkActive]='["link-active"]' (click)='collapse()'>
                   <span class='glyphicon glyphicon-th-list'></span> Credit cards
+                </a>
+                <a [routerLink]='["/expenses"]' [routerLinkActive]='["link-active"]' (click)='collapse()'>
+                  <span class='glyphicon glyphicon-signal'></span> Expenses
                 </a>
               </li>
             </ul>
