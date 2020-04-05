@@ -1,1 +1,27 @@
-<p>expenses works!</p>
+<h1>Expenses</h1>
+
+<p *ngIf="!expenseAccounts"><em>Loading...</em></p>
+
+<div *ngIf="expenseAccounts">
+  <ul class="list-group" *ngFor="let expenseAccount of expenseAccounts">
+    <li class="list-group-item">
+      <div class="d-flex w-100 justify-content-between">
+        <h5 class="mb-1">{{ expenseAccount.name }}</h5>
+        <small>$ {{ expenseAccount.balance | number : '1.2-2' }}</small>
+      </div>
+      <div *ngIf="expenseAccount.recentTransactions">
+        <ul class="list-group" *ngFor="let recentTransaction of expenseAccount.recentTransactions">
+          <li class="list-group-item">
+            <div class="d-flex w-100 justify-content-between">
+              <h5 class="mb-1">{{ recentTransaction.otherAccountName }}</h5>
+              <small>$ {{ recentTransaction.amount | number : '1.2-2' }}</small>
+              <small>$ {{ recentTransaction.balance | number : '1.2-2' }}</small>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </li>
+  </ul>
+</div>
+
+
