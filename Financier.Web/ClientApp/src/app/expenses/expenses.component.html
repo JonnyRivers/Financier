@@ -16,7 +16,10 @@
       <div *ngIf="expenseAccount.recentTransactions">
         <div *ngFor="let recentTransaction of expenseAccount.recentTransactions">
           <div class='row'>
-            <div class='col-sm-8'>
+            <div class='col-sm-2'>
+              <h5>{{ recentTransaction.at | date : 'medium' }}</h5>
+            </div>
+            <div class='col-sm-6'>
               <h5>{{ recentTransaction.otherAccountName }}</h5>
             </div>
             <div class='col-sm-2'>
