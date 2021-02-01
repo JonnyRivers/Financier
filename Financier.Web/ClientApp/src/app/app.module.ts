@@ -25,11 +25,11 @@ import { HomeComponent } from './home/home.component';
     HttpClientModule,
     FormsModule,
     RouterModule.forRoot([
-      { path: '', component: HomeComponent },
-      { path: 'balance-sheet', component: BalanceSheetComponent },
-      { path: 'credit-cards', component: CreditCardsComponent },
-      { path: 'expenses', component: ExpensesComponent },
-    ])
+    { path: '', component: HomeComponent },
+    { path: 'balance-sheet', component: BalanceSheetComponent },
+    { path: 'credit-cards', component: CreditCardsComponent },
+    { path: 'expenses', component: ExpensesComponent },
+], { relativeLinkResolution: 'legacy' })
   ],
   providers: [],
   bootstrap: [AppComponent]
