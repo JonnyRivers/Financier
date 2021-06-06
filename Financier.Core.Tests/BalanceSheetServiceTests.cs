@@ -33,8 +33,7 @@ namespace Financier.Core.Tests
                 );
                 var balanceSheetService = new BalanceSheetService(
                     loggerFactory,
-                    accountService, 
-                    currencyService
+                    sqliteMemoryWrapper.DbContext
                 );
 
                 BalanceSheet balanceSheet = balanceSheetService.Generate(new DateTime(2018,1, 1));
@@ -86,8 +85,7 @@ namespace Financier.Core.Tests
                 );
                 var balanceSheetService = new BalanceSheetService(
                     loggerFactory,
-                    accountService,
-                    currencyService
+                    sqliteMemoryWrapper.DbContext
                 );
 
                 BalanceSheet balanceSheet = balanceSheetService.Generate(new DateTime(2018, 1, 1));
@@ -97,12 +95,8 @@ namespace Financier.Core.Tests
                 Assert.AreEqual(usdCurrencyEntity.Symbol, balanceSheet.CurrencySymbol);
                 Assert.AreEqual(0, balanceSheet.TotalAssets);
                 Assert.AreEqual(0, balanceSheet.TotalLiabilities);
-                Assert.AreEqual(1, balanceSheetAssets.Count);
-                Assert.AreEqual(1, balanceSheetLiabilities.Count);
-                Assert.AreEqual(checkingAccountEntity.Name, balanceSheetAssets[0].Name);
-                Assert.AreEqual(0, balanceSheetAssets[0].Balance);
-                Assert.AreEqual(creditCardAccountEntity.Name, balanceSheetLiabilities[0].Name);
-                Assert.AreEqual(0, balanceSheetLiabilities[0].Balance);
+                Assert.AreEqual(0, balanceSheetAssets.Count);
+                Assert.AreEqual(0, balanceSheetLiabilities.Count);
             }
         }
 
@@ -179,8 +173,7 @@ namespace Financier.Core.Tests
                 );
                 var balanceSheetService = new BalanceSheetService(
                     loggerFactory,
-                    accountService,
-                    currencyService
+                    sqliteMemoryWrapper.DbContext
                 );
 
                 BalanceSheet balanceSheetBeforeTransactions = balanceSheetService.Generate(new DateTime(2017, 1, 1));
@@ -191,12 +184,8 @@ namespace Financier.Core.Tests
                 Assert.AreEqual(0, balanceSheetBeforeTransactions.TotalAssets);
                 Assert.AreEqual(0, balanceSheetBeforeTransactions.TotalLiabilities);
                 Assert.AreEqual(0, balanceSheetBeforeTransactions.NetWorth);
-                Assert.AreEqual(1, balanceSheetBeforeTransactionsAssets.Count);
-                Assert.AreEqual(1, balanceSheetBeforeTransactionsLiabilities.Count);
-                Assert.AreEqual(checkingAccountEntity.Name, balanceSheetBeforeTransactionsAssets[0].Name);
-                Assert.AreEqual(0, balanceSheetBeforeTransactionsAssets[0].Balance);
-                Assert.AreEqual(creditCardAccountEntity.Name, balanceSheetBeforeTransactionsLiabilities[0].Name);
-                Assert.AreEqual(0, balanceSheetBeforeTransactionsLiabilities[0].Balance);
+                Assert.AreEqual(0, balanceSheetBeforeTransactionsAssets.Count);
+                Assert.AreEqual(0, balanceSheetBeforeTransactionsLiabilities.Count);
 
                 BalanceSheet balanceSheetTwoTransactions = balanceSheetService.Generate(new DateTime(2018, 1, 2));
                 List<BalanceSheetItem> balanceSheetTwoTransactionsAssets = balanceSheetTwoTransactions.Assets.ToList();
@@ -309,8 +298,7 @@ namespace Financier.Core.Tests
                 );
                 var balanceSheetService = new BalanceSheetService(
                     loggerFactory,
-                    accountService,
-                    currencyService
+                    sqliteMemoryWrapper.DbContext
                 );
 
                 BalanceSheet balanceSheet = balanceSheetService.Generate(new DateTime(2018, 1, 1));

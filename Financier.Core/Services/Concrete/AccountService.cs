@@ -44,8 +44,6 @@ namespace Financier.Services
             return FromEntity(accountEntity);
         }
 
-        
-
         public AccountLink GetAsLink(int accountId)
         {
             Entities.Account accountEntity = m_dbContext.Accounts
@@ -145,32 +143,6 @@ namespace Financier.Services
             decimal balance = debitBalance - creditBalance;
 
             return balance;
-        }
-
-        public IEnumerable<AccountExtended> GetExtended(IEnumerable<Account> accounts, DateTime at)
-        {
-            // TODO - we need to to this better than O(n) wrt the # of accounts
-            var accountsExtended = new List<AccountExtended>();
-            foreach (Account account in accounts)
-            {
-                decimal balance = GetBalanceAt(account.AccountId, at, true);
-                DateTime? lastTransactionAt = GetLastTransactionAt(account.AccountId, at, true);
-
-                accountsExtended.Add(
-                    new AccountExtended
-                    {
-                        AccountId = account.AccountId,
-                        Name = account.Name,
-                        Type = account.Type,
-                        SubType = account.SubType,
-                        Currency = account.Currency,
-                        Balance = balance,
-                        LastTransactionAt = lastTransactionAt
-                    }
-                );
-            }
-
-            return accountsExtended;
         }
 
         private Account FromEntity(Entities.Account accountEntity)

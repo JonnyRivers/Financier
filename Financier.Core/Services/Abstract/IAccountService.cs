@@ -16,7 +16,5 @@ namespace Financier.Services
 
         decimal GetBalance(int accountId, bool includeLogical);
         decimal GetBalanceAt(int accountId, DateTime at, bool includeLogical);
-
-        IEnumerable<AccountExtended> GetExtended(IEnumerable<Account> accounts, DateTime at);
     }
 }
