@@ -178,34 +178,5 @@ namespace Financier.Services
                 SubType = accountEntity.SubType
             };
         }
-
-        private DateTime? GetLastTransactionAt(int accountId, DateTime at, bool includeLogical)
-        {
-            var allAccountIds = new HashSet<int>();
-            allAccountIds.Add(accountId);
-            if (includeLogical)
-            {
-                IEnumerable<int> logicalAccountIds = m_dbContext.AccountRelationships
-                    .Where(r => r.SourceAccountId == accountId &&
-                                r.Type == AccountRelationshipType.PhysicalToLogical)
-                    .Select(r => r.DestinationAccountId);
-                foreach (int logicalAccountId in logicalAccountIds)
-                {
-                    allAccountIds.Add(logicalAccountId);
-                }
-            }
-
-            Entities.Transaction mostRecentTransaction =
-                m_dbContext.Transactions
-                    .Where(t => (allAccountIds.ToList().Contains(t.CreditAccountId) || allAccountIds.ToList().Contains(t.DebitAccountId)) &&
-                                t.At <= at)
-                    .OrderByDescending(t => t.At)
-                    .FirstOrDefault();
-
-            if (mostRecentTransaction == null)
-                return null;
-
-            return mostRecentTransaction.At;
-        }
     }
 }
