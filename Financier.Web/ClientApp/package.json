@@ -22,7 +22,7 @@
     "@angular/platform-browser-dynamic": "^12.0.3",
     "@angular/platform-server": "^12.0.3",
     "@angular/router": "^12.0.3",
-    "@nguniversal/aspnetcore-engine": "^11.1.1",
+    "@nguniversal/aspnetcore-engine": "^12.0.1",
     "aspnet-prerendering": "^3.0.1",
     "bootstrap": "^3.4.1",
     "component": "^1.1.0",
