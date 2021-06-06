@@ -43,60 +43,50 @@ namespace Financier.Web.Controllers
             List<CreditCard> apiResponse = new List<CreditCard>();
             foreach (Entities.Account accountEntity in accountEntities)
             {
-                List<Entities.Transaction> accountTransactionEntities = transactionEntities
-                    .Where(t => t.CreditAccountId == accountEntity.AccountId || t.DebitAccountId == accountEntity.AccountId)
-                    .ToList();
+                IEnumerable<Entities.Transaction> accountTransactionEntities = transactionEntities
+                    .Where(t => t.CreditAccountId == accountEntity.AccountId || t.DebitAccountId == accountEntity.AccountId);
 
+                var creditCardTrasactions = new List<CreditCardTransaction>();
                 decimal balance = 0;
-                foreach (Entities.Transaction accountTransactionEntity in accountTransactionEntities.OrderBy(t => t.At))
+                foreach (Entities.Transaction accountTransactionEntity in accountTransactionEntities.OrderBy(t => t.At).ThenBy(t => t.TransactionId))
                 {
+                    decimal amount = 0;
+                    string otherAccountName = String.Empty;
                     if (accountTransactionEntity.CreditAccountId == accountEntity.AccountId)
-                        balance += accountTransactionEntity.Amount;
+                    {
+                        amount = accountTransactionEntity.Amount;
+                        otherAccountName = accountTransactionEntity.DebitAccount.Name;
+                    }
                     else if (accountTransactionEntity.DebitAccountId == accountEntity.AccountId)
-                        balance -= accountTransactionEntity.Amount;
+                    {
+                        amount = -accountTransactionEntity.Amount; 
+                        otherAccountName = accountTransactionEntity.CreditAccount.Name;
+                    }
+
+                    balance += amount;
+
+                    creditCardTrasactions.Add(
+                        new CreditCardTransaction
+                        {
+                            Id = accountTransactionEntity.TransactionId,
+                            At = accountTransactionEntity.At,
+                            OtherAccountName = otherAccountName,
+                            Amount = accountTransactionEntity.Amount,
+                            RunningBalance = balance
+                        }
+                    );
                 }
 
                 apiResponse.Add(new CreditCard
                 {
                     Id = accountEntity.AccountId,
                     Name = accountEntity.Name,
-                    Balance = balance
+                    Balance = balance,
+                    Transactions = creditCardTrasactions.OrderByDescending(t => t.At).ThenByDescending(t => t.Id)
                 });
             }
 
             return apiResponse;
-        }
-
-        // GET api/creditcard/{id}/transactions
-        [HttpGet("{id}/transactions")]
-        public async Task<ActionResult<IEnumerable<AccountTransaction>>> GetTransactions(int id)
-        {
-            List<Entities.Transaction> transactionEntities = await m_dbContext.Transactions
-                .Include(t => t.CreditAccount)
-                .Include(t => t.DebitAccount)
-                .Where(t => t.CreditAccountId == id || t.DebitAccountId == id)
-                .ToListAsync();
-
-            decimal balance = 0;
-            List<AccountTransaction> accountTransactions = new List<AccountTransaction>();
-            foreach (Entities.Transaction transactionEntity in transactionEntities.OrderBy(t => t.At))
-            {
-                if (transactionEntity.CreditAccountId == id)
-                    balance += transactionEntity.Amount;
-                else if (transactionEntity.DebitAccountId == id)
-                    balance -= transactionEntity.Amount;
-
-                accountTransactions.Add(new AccountTransaction
-                {
-                    DebitAccountName = transactionEntity.DebitAccount.Name,
-                    CreditAccountName = transactionEntity.CreditAccount.Name,
-                    At = transactionEntity.At,
-                    Amount = transactionEntity.Amount,
-                    Balance = balance
-                });
-            }
-
-            return accountTransactions.OrderByDescending(t => t.At).ToList();
         }
     }
 }
