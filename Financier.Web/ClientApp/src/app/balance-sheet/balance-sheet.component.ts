@@ -11,9 +11,15 @@ export class BalanceSheetComponent {
 
     constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
         http.get<BalanceSheet>(baseUrl + 'api/BalanceSheet').subscribe(result => {
-            this.balanceSheet = result;
-            this.balanceSheet.assets.sort((a, b) => b.balance - a.balance);
-            this.balanceSheet.liabilities.sort((a, b) => b.balance - a.balance);
+          this.balanceSheet = result;
+
+          var oldAccountThreshold = new Date();
+          oldAccountThreshold.setDate(oldAccountThreshold.getDate() - 90);
+
+          this.balanceSheet.assets = this.balanceSheet.assets.filter((a) => a.balance != 0 || new Date(a.lastTransactionAt) >= oldAccountThreshold)
+          this.balanceSheet.assets.sort((a, b) => b.balance - a.balance);
+          this.balanceSheet.liabilities = this.balanceSheet.liabilities.filter((a) => a.balance != 0 || new Date(a.lastTransactionAt) >= oldAccountThreshold)
+          this.balanceSheet.liabilities.sort((a, b) => b.balance - a.balance);
         }, error => console.error(error));
     }
 }
@@ -21,6 +27,7 @@ export class BalanceSheetComponent {
 interface BalanceSheetItem {
     name: string;
     balance: number;
+    lastTransactionAt: Date;
 }
 
 interface BalanceSheet {

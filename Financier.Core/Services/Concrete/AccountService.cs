@@ -44,6 +44,8 @@ namespace Financier.Services
             return FromEntity(accountEntity);
         }
 
+        
+
         public AccountLink GetAsLink(int accountId)
         {
             Entities.Account accountEntity = m_dbContext.Accounts
@@ -145,6 +147,32 @@ namespace Financier.Services
             return balance;
         }
 
+        public IEnumerable<AccountExtended> GetExtended(IEnumerable<Account> accounts, DateTime at)
+        {
+            // TODO - we need to to this better than O(n) wrt the # of accounts
+            var accountsExtended = new List<AccountExtended>();
+            foreach (Account account in accounts)
+            {
+                decimal balance = GetBalanceAt(account.AccountId, at, true);
+                DateTime? lastTransactionAt = GetLastTransactionAt(account.AccountId, at, true);
+
+                accountsExtended.Add(
+                    new AccountExtended
+                    {
+                        AccountId = account.AccountId,
+                        Name = account.Name,
+                        Type = account.Type,
+                        SubType = account.SubType,
+                        Currency = account.Currency,
+                        Balance = balance,
+                        LastTransactionAt = lastTransactionAt
+                    }
+                );
+            }
+
+            return accountsExtended;
+        }
+
         private Account FromEntity(Entities.Account accountEntity)
         {
             var currency = new Currency
@@ -177,6 +205,35 @@ namespace Financier.Services
                 Type = accountEntity.Type,
                 SubType = accountEntity.SubType
             };
+        }
+
+        private DateTime? GetLastTransactionAt(int accountId, DateTime at, bool includeLogical)
+        {
+            var allAccountIds = new HashSet<int>();
+            allAccountIds.Add(accountId);
+            if (includeLogical)
+            {
+                IEnumerable<int> logicalAccountIds = m_dbContext.AccountRelationships
+                    .Where(r => r.SourceAccountId == accountId &&
+                                r.Type == AccountRelationshipType.PhysicalToLogical)
+                    .Select(r => r.DestinationAccountId);
+                foreach (int logicalAccountId in logicalAccountIds)
+                {
+                    allAccountIds.Add(logicalAccountId);
+                }
+            }
+
+            Entities.Transaction mostRecentTransaction =
+                m_dbContext.Transactions
+                    .Where(t => (allAccountIds.ToList().Contains(t.CreditAccountId) || allAccountIds.ToList().Contains(t.DebitAccountId)) &&
+                                t.At <= at)
+                    .OrderByDescending(t => t.At)
+                    .FirstOrDefault();
+
+            if (mostRecentTransaction == null)
+                return null;
+
+            return mostRecentTransaction.At;
         }
     }
 }
