@@ -3,7 +3,8 @@ import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-credit-cards',
-  templateUrl: './credit-cards.component.html'
+  templateUrl: './credit-cards.component.html',
+  styleUrls: ['./credit-cards.component.css']
 })
 export class CreditCardsComponent {
   public creditCards: CreditCard[];
