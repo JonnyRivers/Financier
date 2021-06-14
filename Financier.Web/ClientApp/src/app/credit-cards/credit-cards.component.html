@@ -1,31 +1,9 @@
 <h1>Credit cards</h1>
 
-<p *ngIf="!creditCards"><em>Loading...</em></p>
+<p *ngIf="!apiCreditCards"><em>Loading...</em></p>
 
-<div *ngIf="creditCards">
-  <div *ngFor="let creditCard of creditCards">
-    <div class="credit-card">
-      <h3 (click)="creditCard.toggleTransactionsVisibility()">
-        {{ creditCard.name }} @ ${{ creditCard.balance | number : '1.2-2' }}
-      </h3>
-      <table class='table' *ngIf="creditCard.areTransactionsVisible">
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Description</th>
-            <th>Amount</th>
-            <th>Running Balance</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let transaction of creditCard.visibleTransactions">
-            <td>{{ transaction.at | date : 'mediumDate' }}</td>
-            <td>{{ transaction.otherAccountName }}</td>
-            <td>{{ transaction.amount | number : '1.2-2' }}</td>
-            <td>{{ transaction.runningBalance | number : '1.2-2' }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+<div *ngIf="apiCreditCards">
+  <div *ngFor="let apiCreditCard of apiCreditCards">
+    <app-credit-card [apiCreditCard]=apiCreditCard></app-credit-card>
   </div>
 </div>

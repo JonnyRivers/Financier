@@ -1,71 +1,24 @@
-import { Component, Inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
+
+import { ApiCreditCard } from '../credit-card'
+import { CreditCardService } from '../credit-card.service'
 
 @Component({
   selector: 'app-credit-cards',
   templateUrl: './credit-cards.component.html',
   styleUrls: ['./credit-cards.component.css']
 })
-export class CreditCardsComponent {
-  public creditCards: CreditCard[];
+export class CreditCardsComponent implements OnInit {
+  apiCreditCards: ApiCreditCard[] = [];
 
-  constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
-    http.get<ApiCreditCard[]>(baseUrl + 'api/CreditCard').subscribe(result => {
-      let creditCards: CreditCard[] = new Array();
-      for (let apiCreditCard of result) {
-        creditCards.push(new CreditCard(apiCreditCard));
-      }
-      this.creditCards = creditCards.sort((a, b) => a.name > b.name ? 1 : -1);
-    }, error => console.error(error));
-  }
-}
+  constructor(private creditCardService: CreditCardService) { }
 
-class CreditCard {
-  constructor(apiCreditCard: ApiCreditCard) {
-    this.id = apiCreditCard.id;
-    this.name = apiCreditCard.name;
-    this.balance = apiCreditCard.balance;
-    this.transactions = apiCreditCard.transactions;
-
-    this.areTransactionsVisible = false;
-    this.visibleTransactions = new Array();
-    let recentTransactionCutoff = new Date();
-    recentTransactionCutoff.setDate(recentTransactionCutoff.getDate() - 14);
-    this.recentTransactions = this.transactions.filter(t => new Date(t.at) > recentTransactionCutoff);
+  ngOnInit() {
+    this.getCreditCards();
   }
 
-  public toggleTransactionsVisibility() {
-    this.areTransactionsVisible = !this.areTransactionsVisible;
-
-    if (this.areTransactionsVisible) {
-      this.visibleTransactions = this.recentTransactions;
-    }
-    else {
-      this.visibleTransactions = new Array();
-    }
+  getCreditCards(): void {
+    this.creditCardService.getCreditCards()
+      .subscribe(apiCreditCards => this.apiCreditCards = apiCreditCards)
   }
-
-  public id: number;
-  public name: string;
-  public balance: number;
-  public transactions: ApiCreditCardTransaction[];
-
-  public areTransactionsVisible: boolean;
-  private recentTransactions: ApiCreditCardTransaction[];
-  public visibleTransactions: ApiCreditCardTransaction[];
-}
-
-interface ApiCreditCardTransaction {
-  id: number;
-  at: Date;
-  otherAccountName: string;
-  amount: number;
-  runningBalance: number;
-}
-
-interface ApiCreditCard {
-  id: number;
-  name: string;
-  balance: number;
-  transactions: ApiCreditCardTransaction[];
 }

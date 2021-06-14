@@ -10,6 +10,7 @@ import { CreditCardsComponent } from './credit-cards/credit-cards.component';
 import { BalanceSheetComponent } from './balance-sheet/balance-sheet.component';
 import { ExpensesComponent } from './expenses/expenses.component';
 import { HomeComponent } from './home/home.component';
+import { CreditCardComponent } from './credit-card/credit-card.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { HomeComponent } from './home/home.component';
     CreditCardsComponent,
     BalanceSheetComponent,
     ExpensesComponent,
-    HomeComponent
+    HomeComponent,
+    CreditCardComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
