@@ -6,21 +6,21 @@ import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
-import { CreditCardsComponent } from './credit-cards/credit-cards.component';
+import { CreditCardSummaryListComponent } from './credit-card-summary-list/credit-card-summary-list.component';
 import { BalanceSheetComponent } from './balance-sheet/balance-sheet.component';
 import { ExpensesComponent } from './expenses/expenses.component';
 import { HomeComponent } from './home/home.component';
-import { CreditCardComponent } from './credit-card/credit-card.component';
+import { CreditCardSummaryComponent } from './credit-card-summary/credit-card-summary.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavMenuComponent,
-    CreditCardsComponent,
+    CreditCardSummaryListComponent,
     BalanceSheetComponent,
     ExpensesComponent,
     HomeComponent,
-    CreditCardComponent
+    CreditCardSummaryComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -29,7 +29,7 @@ import { CreditCardComponent } from './credit-card/credit-card.component';
     RouterModule.forRoot([
     { path: '', component: HomeComponent },
     { path: 'balance-sheet', component: BalanceSheetComponent },
-    { path: 'credit-cards', component: CreditCardsComponent },
+    { path: 'credit-card-summary-list', component: CreditCardSummaryListComponent },
     { path: 'expenses', component: ExpensesComponent },
 ], { relativeLinkResolution: 'legacy' })
   ],

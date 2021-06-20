@@ -1,0 +1,12 @@
+.credit-card {
+  border-top: 1px solid lightgrey;
+  margin: 15px;
+}
+
+.account-header {
+  font-size: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}

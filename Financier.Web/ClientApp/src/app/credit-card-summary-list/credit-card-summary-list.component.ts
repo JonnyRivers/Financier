@@ -4,11 +4,11 @@ import { ApiCreditCard } from '../credit-card'
 import { CreditCardService } from '../credit-card.service'
 
 @Component({
-  selector: 'app-credit-cards',
-  templateUrl: './credit-cards.component.html',
-  styleUrls: ['./credit-cards.component.css']
+  selector: 'app-credit-card-summary-list',
+  templateUrl: './credit-card-summary-list.component.html',
+  styleUrls: ['./credit-card-summary-list.component.css']
 })
-export class CreditCardsComponent implements OnInit {
+export class CreditCardSummaryListComponent implements OnInit {
   apiCreditCards: ApiCreditCard[] = [];
 
   constructor(private creditCardService: CreditCardService) { }
