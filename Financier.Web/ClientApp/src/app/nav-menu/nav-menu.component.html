@@ -1,29 +1,30 @@
-<div class='main-nav'>
-    <div class='navbar navbar-inverse'>
-        <div class='navbar-header'>
-            <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse' [attr.aria-expanded]='isExpanded' (click)='toggle()'>
-                <span class='sr-only'>Toggle navigation</span>
-                <span class='icon-bar'></span>
-                <span class='icon-bar'></span>
-                <span class='icon-bar'></span>
-            </button>
-            <a class='navbar-brand' [routerLink]='["/"]'>Financier</a>
-        </div>
-        <div class='clearfix'></div>
-        <div class='navbar-collapse collapse' [ngClass]='{ "in": isExpanded }'>
-            <ul class='nav navbar-nav'>
-              <li>
-                <a [routerLink]='["/balance-sheet"]' [routerLinkActive]='["link-active"]' (click)='collapse()'>
-                  <span class='glyphicon glyphicon-list-alt'></span> Balance sheet
-                </a>
-                <a [routerLink]='["/credit-cards"]' [routerLinkActive]='["link-active"]' (click)='collapse()'>
-                  <span class='glyphicon glyphicon-th-list'></span> Credit cards
-                </a>
-                <a [routerLink]='["/expenses"]' [routerLinkActive]='["link-active"]' (click)='collapse()'>
-                  <span class='glyphicon glyphicon-signal'></span> Expenses
-                </a>
-              </li>
-            </ul>
-        </div>
+<header>
+  <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+    <div class="container">
+      <a class="navbar-brand" [routerLink]="['/']">Financier</a>
+      <button class="navbar-toggler"
+              type="button"
+              data-toggle="collapse"
+              data-target=".navbar-collapse"
+              aria-label="Toggle navigation"
+              [attr.aria-expanded]="isExpanded"
+              (click)="toggle()">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="navbar-collapse collapse d-sm-inline-flex justify-content-end"
+           [ngClass]="{ show: isExpanded }">
+        <ul class="navbar-nav flex-grow">
+          <li class="nav-item" [routerLinkActive]="['link-active']">
+            <a class="nav-link text-dark" [routerLink]="['/balance-sheet']">Balance sheet</a>
+          </li>
+          <li class="nav-item" [routerLinkActive]="['link-active']">
+            <a class="nav-link text-dark" [routerLink]="['/credit-cards']">Credit cards</a>
+          </li>
+          <li class="nav-item" [routerLinkActive]="['link-active']">
+            <a class="nav-link text-dark" [routerLink]="['/expenses']">Expenses</a>
+          </li>
+        </ul>
+      </div>
     </div>
-</div>
+  </nav>
+</header>
