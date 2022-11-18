@@ -18,7 +18,7 @@
         <div *ngFor="let transaction of expenseAccount.visibleTransactions">
           <div class='row'>
             <div class='col-sm-2'>
-              <h5>{{ transaction.at | date : 'medium' }}</h5>
+              <h5>{{ transaction.at | date : 'short' }}</h5>
             </div>
             <div class='col-sm-6'>
               <h5>{{ transaction.otherAccountName }}</h5>
