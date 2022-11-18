@@ -19,6 +19,7 @@ namespace Financier.CLI
             app.Command("balance-sheet", Commands.BalanceSheetCommand.Configure);
             app.Command("cashflow", Commands.CashflowCommand.Configure);
             app.Command("income-expense", Commands.IncomeExpenseCommand.Configure);
+            app.Command("balance-sheet-history", Commands.BalanceSheetHistoryCommand.Configure);
 
             return app.Execute(args);
         }
