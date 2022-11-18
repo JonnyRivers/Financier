@@ -29,7 +29,7 @@ import { HomeComponent } from './home/home.component';
     { path: 'balance-sheet', component: BalanceSheetComponent },
     { path: 'credit-cards', component: CreditCardsComponent },
     { path: 'expenses', component: ExpensesComponent },
-], { relativeLinkResolution: 'legacy' })
+], {})
   ],
   providers: [],
   bootstrap: [AppComponent]

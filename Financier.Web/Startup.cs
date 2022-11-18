@@ -35,7 +35,7 @@ namespace Financier.Web
 
             services.AddScoped<IBalanceSheetService, BalanceSheetService>();
 
-            services.AddMvc(option => option.EnableEndpointRouting = false).SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+            services.AddMvc(option => option.EnableEndpointRouting = false);
 
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>

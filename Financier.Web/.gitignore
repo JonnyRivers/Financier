@@ -232,4 +232,8 @@ _Pvt_Extensions
 # FAKE - F# Make
 .fake/
 
+# angular cache
+ClientApp/.angular
+
+# no secrets on GitHub thanks
 appsettings.Development.json
