@@ -1,5 +1,5 @@
 ﻿using Financier.Services;
-using Microsoft.Extensions.CommandLineUtils;
+using McMaster.Extensions.CommandLineUtils;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
