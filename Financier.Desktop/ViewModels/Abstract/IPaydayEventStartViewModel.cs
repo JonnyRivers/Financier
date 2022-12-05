@@ -15,6 +15,7 @@ namespace Financier.Desktop.ViewModels
 
         decimal AmountPaid { get; set; }
         DateTime At { get; set; }
+        bool IncludeSurplus { get; set; }
 
         ICommand OKCommand { get; }
         ICommand CancelCommand { get; }

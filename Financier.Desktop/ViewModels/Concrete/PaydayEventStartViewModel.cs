@@ -45,10 +45,12 @@ namespace Financier.Desktop.ViewModels
 
             AmountPaid = budget.InitialTransaction.Amount;
             At = DateTime.Now;
+            IncludeSurplus = false;
         }
 
         public decimal AmountPaid { get; set; }
         public DateTime At { get; set; }
+        public bool IncludeSurplus { get; set; }
 
         public ICommand OKCommand => new RelayCommand(OKExecute);
         public ICommand CancelCommand => new RelayCommand(CancelExecute);
