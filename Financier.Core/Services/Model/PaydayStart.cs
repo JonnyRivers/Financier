@@ -6,5 +6,6 @@ namespace Financier.Services
     {
         public decimal AmountPaid { get; set; }
         public DateTime At { get; set; }
+        public bool IncludeSurplus { get; set; }
     }
 }

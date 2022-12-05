@@ -188,24 +188,27 @@ namespace Financier.Services
                 paydayTransactions.Add(paydayTransaction);
             }
 
-            IEnumerable<BudgetTransaction> initialDebitOutgoingTransactions = 
+            if(paydayStart.IncludeSurplus)
+            {
+                IEnumerable<BudgetTransaction> initialDebitOutgoingTransactions =
                 budget.Transactions
                     .Where(t => t.CreditAccount.AccountId == initialTransaction.DebitAccount.AccountId);
-            IEnumerable<BudgetTransaction> initialDebitIncomingTransactions =
-                budget.Transactions
-                    .Where(t => t.DebitAccount.AccountId == initialTransaction.DebitAccount.AccountId);
-            decimal surplusAmount = 
-                paydayStart.AmountPaid + 
-                initialDebitIncomingTransactions.Select(t => t.Amount).Sum() - 
-                initialDebitOutgoingTransactions.Select(t => t.Amount).Sum();
-            Transaction surplusTransaction = new Transaction
-            {
-                CreditAccount = budget.SurplusTransaction.CreditAccount,
-                DebitAccount = budget.SurplusTransaction.DebitAccount,
-                Amount = surplusAmount,
-                At = paydayStart.At
-            };
-            paydayTransactions.Add(surplusTransaction);
+                IEnumerable<BudgetTransaction> initialDebitIncomingTransactions =
+                    budget.Transactions
+                        .Where(t => t.DebitAccount.AccountId == initialTransaction.DebitAccount.AccountId);
+                decimal surplusAmount =
+                    paydayStart.AmountPaid +
+                    initialDebitIncomingTransactions.Select(t => t.Amount).Sum() -
+                    initialDebitOutgoingTransactions.Select(t => t.Amount).Sum();
+                Transaction surplusTransaction = new Transaction
+                {
+                    CreditAccount = budget.SurplusTransaction.CreditAccount,
+                    DebitAccount = budget.SurplusTransaction.DebitAccount,
+                    Amount = surplusAmount,
+                    At = paydayStart.At
+                };
+                paydayTransactions.Add(surplusTransaction);
+            }
 
             return paydayTransactions;
         }
