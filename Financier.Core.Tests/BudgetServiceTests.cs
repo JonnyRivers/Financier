@@ -1209,7 +1209,8 @@ namespace Financier.Core.Tests
                 var paydayStart = new PaydayStart
                 {
                     AmountPaid = 180m,
-                    At = new DateTime(2018, 1, 1, 9, 0, 0)
+                    At = new DateTime(2018, 1, 1, 9, 0, 0),
+                    IncludeSurplus = true
                 };
                 List<Transaction> transactions = 
                     budgetService.MakePaydayTransactions(
@@ -1231,6 +1232,115 @@ namespace Financier.Core.Tests
                 Assert.AreEqual(budgetTransactionEntities[2].DebitAccountId, transactions[2].DebitAccount.AccountId);
                 Assert.AreEqual(transactions[0].Amount - transactions[1].Amount, transactions[2].Amount);
                 Assert.AreEqual(paydayStart.At, transactions[2].At);
+            }
+        }
+
+        [TestMethod]
+        public void TestBudgetMakePaydayTransactionsSkipSurplus()
+        {
+            ILoggerFactory loggerFactory = new LoggerFactory();
+
+            using (var sqliteMemoryWrapper = new SqliteMemoryWrapper())
+            {
+                var currencyFactory = new CurrencyFactory();
+                var usdCurrencyEntity = currencyFactory.Create(CurrencyPrefab.Usd, true);
+                currencyFactory.Add(sqliteMemoryWrapper.DbContext, usdCurrencyEntity);
+
+                var accountFactory = new AccountFactory();
+                Entities.Account incomeAccountEntity =
+                    accountFactory.Create(AccountPrefab.Income, usdCurrencyEntity);
+                Entities.Account checkingAccountEntity =
+                    accountFactory.Create(AccountPrefab.Checking, usdCurrencyEntity);
+                Entities.Account savingsAccountEntity =
+                    accountFactory.Create(AccountPrefab.Savings, usdCurrencyEntity);
+                Entities.Account rentPrepaymentAccountEntity =
+                    accountFactory.Create(AccountPrefab.RentPrepayment, usdCurrencyEntity);
+                Entities.Account rentExpenseAccountEntity =
+                    accountFactory.Create(AccountPrefab.RentExpense, usdCurrencyEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, incomeAccountEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, checkingAccountEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, savingsAccountEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, rentPrepaymentAccountEntity);
+                accountFactory.Add(sqliteMemoryWrapper.DbContext, rentExpenseAccountEntity);
+
+                var checkingToRentPrepaymentRelationshipEntity = new Entities.AccountRelationship
+                {
+                    SourceAccount = checkingAccountEntity,
+                    DestinationAccount = rentPrepaymentAccountEntity,
+                    Type = AccountRelationshipType.PhysicalToLogical
+                };
+                var rentPrepaymentToExpenseRelationshipEntity = new Entities.AccountRelationship
+                {
+                    SourceAccount = rentPrepaymentAccountEntity,
+                    DestinationAccount = rentExpenseAccountEntity,
+                    Type = AccountRelationshipType.PrepaymentToExpense
+                };
+
+                sqliteMemoryWrapper.DbContext.AccountRelationships.Add(checkingToRentPrepaymentRelationshipEntity);
+                sqliteMemoryWrapper.DbContext.AccountRelationships.Add(rentPrepaymentToExpenseRelationshipEntity);
+                sqliteMemoryWrapper.DbContext.SaveChanges();
+
+                var budget1Entity = new Entities.Budget
+                {
+                    Name = "Full Budget",
+                    Period = BudgetPeriod.Fortnightly
+                };
+                sqliteMemoryWrapper.DbContext.Budgets.Add(budget1Entity);
+                sqliteMemoryWrapper.DbContext.SaveChanges();
+
+                var budgetTransactionEntities = new Entities.BudgetTransaction[3]
+                {
+                    new Entities.BudgetTransaction
+                    {
+                        CreditAccount = incomeAccountEntity,
+                        DebitAccount = checkingAccountEntity,
+                        Amount = 200m,
+                        IsInitial = true,
+                        Budget = budget1Entity
+                    },
+                    new Entities.BudgetTransaction
+                    {
+                        CreditAccount = checkingAccountEntity,
+                        DebitAccount = rentPrepaymentAccountEntity,
+                        Amount = 100m,
+                        Budget = budget1Entity
+                    },
+                    new Entities.BudgetTransaction
+                    {
+                        CreditAccount = checkingAccountEntity,
+                        DebitAccount = savingsAccountEntity,
+                        IsSurplus = true,
+                        Budget = budget1Entity
+                    }
+                };
+
+                sqliteMemoryWrapper.DbContext.BudgetTransactions.AddRange(budgetTransactionEntities);
+                sqliteMemoryWrapper.DbContext.SaveChanges();
+
+                var budgetService = new BudgetService(loggerFactory, sqliteMemoryWrapper.DbContext);
+
+                var paydayStart = new PaydayStart
+                {
+                    AmountPaid = 180m,
+                    At = new DateTime(2018, 1, 1, 9, 0, 0),
+                    IncludeSurplus = false
+                };
+                List<Transaction> transactions =
+                    budgetService.MakePaydayTransactions(
+                        budget1Entity.BudgetId,
+                        paydayStart)
+                    .ToList();
+
+                Assert.AreEqual(2, transactions.Count);
+
+                Assert.AreEqual(budgetTransactionEntities[0].CreditAccountId, transactions[0].CreditAccount.AccountId);
+                Assert.AreEqual(budgetTransactionEntities[0].DebitAccountId, transactions[0].DebitAccount.AccountId);
+                Assert.AreEqual(paydayStart.AmountPaid, transactions[0].Amount);
+                Assert.AreEqual(paydayStart.At, transactions[0].At);
+                Assert.AreEqual(budgetTransactionEntities[1].CreditAccountId, transactions[1].CreditAccount.AccountId);
+                Assert.AreEqual(budgetTransactionEntities[1].DebitAccountId, transactions[1].DebitAccount.AccountId);
+                Assert.AreEqual(budgetTransactionEntities[1].Amount, transactions[1].Amount);
+                Assert.AreEqual(paydayStart.At, transactions[1].At);
             }
         }
     }
