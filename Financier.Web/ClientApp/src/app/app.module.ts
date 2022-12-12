@@ -6,10 +6,13 @@ import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
-import { CreditCardsComponent } from './credit-cards/credit-cards.component';
-import { BalanceSheetComponent } from './balance-sheet/balance-sheet.component';
-import { ExpensesComponent } from './expenses/expenses.component';
 import { HomeComponent } from './home/home.component';
+
+import { BalanceSheetComponent } from './balance-sheet/balance-sheet.component';
+import { CreditCardComponent } from './credit-card/credit-card.component';
+import { CreditCardsComponent } from './credit-cards/credit-cards.component';
+import { ExpensesComponent } from './expenses/expenses.component';
+
 
 @NgModule({
   declarations: [
@@ -18,7 +21,8 @@ import { HomeComponent } from './home/home.component';
     CreditCardsComponent,
     BalanceSheetComponent,
     ExpensesComponent,
-    HomeComponent
+    HomeComponent,
+    CreditCardComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -27,6 +31,7 @@ import { HomeComponent } from './home/home.component';
     RouterModule.forRoot([
     { path: '', component: HomeComponent },
     { path: 'balance-sheet', component: BalanceSheetComponent },
+    { path: 'credit-card/:id', component: CreditCardComponent },
     { path: 'credit-cards', component: CreditCardsComponent },
     { path: 'expenses', component: ExpensesComponent },
 ], {})

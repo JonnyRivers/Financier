@@ -16,6 +16,7 @@ export class CreditCardsComponent {
 }
 
 interface CreditCard {
-    name: string;
-    balance: number;
+  id: number;
+  name: string;
+  balance: number;
 }

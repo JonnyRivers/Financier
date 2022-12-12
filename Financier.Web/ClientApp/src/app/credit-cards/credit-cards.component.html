@@ -5,13 +5,13 @@
 <table class='table' *ngIf="creditCards">
   <thead>
     <tr>
-      <th>Name</th>
+      <th>Account</th>
       <th>Balance ($)</th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let creditCard of creditCards">
-      <td>{{ creditCard.name }}</td>
+      <td><a [routerLink]="['/credit-card/', creditCard.id]">{{ creditCard.name }}</a></td>
       <td>{{ creditCard.balance | number : '1.2-2' }}</td>
     </tr>
   </tbody>
