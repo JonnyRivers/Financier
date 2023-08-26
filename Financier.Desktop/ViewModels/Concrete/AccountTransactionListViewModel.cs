@@ -133,7 +133,7 @@ namespace Financier.Desktop.ViewModels
             }
 
             decimal balance = 0;
-            foreach (IAccountTransactionItemViewModel transactionViewModel in Transactions.OrderBy(t => t.At))
+            foreach (IAccountTransactionItemViewModel transactionViewModel in Transactions.OrderBy(t => t.At).ThenBy(t => t.TransactionId))
             {
                 // For physical<->logical trasactions, we add *and* subtract
                 if (relevantAccountIds.Contains(transactionViewModel.DebitAccount.AccountId))
