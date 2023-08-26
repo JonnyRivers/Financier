@@ -243,10 +243,10 @@ namespace Financier.Desktop.Tests
                 );
 
                 // Delete the first transaction
-                viewModel.SelectedTransaction = viewModel.Transactions.OrderBy(t => t.At).First();
+                viewModel.SelectedTransaction = viewModel.Transactions.OrderBy(t => t.At).ThenBy(t => t.TransactionId).First();
                 viewModel.DeleteCommand.Execute(this);
 
-                var transactionViewModels = new List<IAccountTransactionItemViewModel>(viewModel.Transactions.OrderBy(t => t.At));
+                var transactionViewModels = new List<IAccountTransactionItemViewModel>(viewModel.Transactions.OrderBy(t => t.At).ThenBy(t => t.TransactionId));
 
                 Assert.AreEqual(2, transactionViewModels.Count);
                 Assert.AreEqual(transactionEntities[1].CreditAccount.AccountId, transactionViewModels[0].CreditAccount.AccountId);
