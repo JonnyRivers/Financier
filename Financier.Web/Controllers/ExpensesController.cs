@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Financier.Web.Model;
@@ -28,11 +29,12 @@ namespace Financier.Web.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ExpenseAccount>>> Get()
         {
-            List<Entities.Account> accountEntities = await m_dbContext.Accounts.ToListAsync();
-            Dictionary<int, Entities.Account> accountEntitiesById = accountEntities.ToDictionary(a => a.AccountId, a => a);
+            var queryStopwatch = new Stopwatch();
 
+            queryStopwatch.Start();
             List<Entities.AccountRelationship> accountRelationships = await m_dbContext.AccountRelationships
                 .ToListAsync();
+            queryStopwatch.Stop();
             List<Entities.AccountRelationship> prepaymentExpenseRelationships = accountRelationships
                 .Where(ar => ar.Type == AccountRelationshipType.PrepaymentToExpense)
                 .ToList();
@@ -46,21 +48,33 @@ namespace Financier.Web.Controllers
                 physicalToLogicalRelationships.ToDictionary(p => p.DestinationAccountId, p => p.SourceAccountId);
 
             // cache all prepayment transactions that were credit card payoff transactions
+            queryStopwatch.Start();
             List<Entities.TransactionRelationship> creditCardPaymentRelationships = await m_dbContext.TransactionRelationships
                 .Where(tr => tr.Type == TransactionRelationshipType.CreditCardPayment)
                 .ToListAsync();
+            queryStopwatch.Stop();
             Dictionary<int, int> expenseTransactionIdsByPrepaymentTransactionId =
                 creditCardPaymentRelationships.ToDictionary(p => p.DestinationTransactionId, p => p.SourceTransactionId);
+
+            queryStopwatch.Start();
+            List<Entities.Transaction> allTransactionEntities = await m_dbContext.Transactions.ToListAsync();
+            queryStopwatch.Stop();
 
             var interestingAccountIds = new List<int>();
             interestingAccountIds.AddRange(expenseAccountIdByPrepaymentAccountId.Keys);
             interestingAccountIds.AddRange(expenseAccountIdByPrepaymentAccountId.Values);
 
-            List<Entities.Transaction> transactionEntities = await m_dbContext.Transactions
-                .Include(t => t.CreditAccount)
-                .Include(t => t.DebitAccount)
+            List<Entities.Transaction> transactionEntities = allTransactionEntities
                 .Where(t => interestingAccountIds.Contains(t.CreditAccountId) || interestingAccountIds.Contains(t.DebitAccountId))
-                .ToListAsync();
+                .ToList();
+
+            queryStopwatch.Start();
+            List<Entities.Account> accountEntities = await m_dbContext.Accounts.ToListAsync();
+            queryStopwatch.Stop();
+            Dictionary<int, Entities.Account> accountEntitiesById = accountEntities.ToDictionary(a => a.AccountId, a => a);
+
+            var buildExpensesStopwatch = new Stopwatch();
+            buildExpensesStopwatch.Start();
 
             var apiResponse = new List<ExpenseAccount>();
             foreach (Entities.Account accountEntity in accountEntities.Where(a => expenseAccountIdByPrepaymentAccountId.ContainsKey(a.AccountId)))
@@ -211,6 +225,8 @@ namespace Financier.Web.Controllers
                     Transactions = recentTransactions
                 });
             }
+
+            buildExpensesStopwatch.Stop();
 
             return apiResponse;
         }
