@@ -13,6 +13,15 @@ export class ExpensesComponent {
         http.get<ApiExpenseAccount[]>(baseUrl + 'api/expenses').subscribe(result => {
             let accounts: ExpenseAccount[] = new Array();
             for (let apiAccount of result) {
+                if (apiAccount.transactions.length == 0)
+                    continue;
+                if (apiAccount.balance === 0) {
+                    let oldTransactionCutoff = new Date();
+                    oldTransactionCutoff.setDate(oldTransactionCutoff.getDate() - 90);
+                    if (new Date(apiAccount.transactions[0].at) < oldTransactionCutoff)
+                        continue;
+                }
+                
                 accounts.push(new ExpenseAccount(apiAccount));
             }
             this.expenseAccounts = accounts.sort((a, b) => (a.name > b.name ? 1 : -1));
