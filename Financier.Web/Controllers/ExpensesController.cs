@@ -67,6 +67,7 @@ namespace Financier.Web.Controllers
             List<Entities.Transaction> transactionEntities = allTransactionEntities
                 .Where(t => interestingAccountIds.Contains(t.CreditAccountId) || interestingAccountIds.Contains(t.DebitAccountId))
                 .ToList();
+            Dictionary<int, Entities.Transaction> transactionEntitiesById = transactionEntities.ToDictionary(t => t.TransactionId, t => t);
 
             queryStopwatch.Start();
             List<Entities.Account> accountEntities = await m_dbContext.Accounts.ToListAsync();
@@ -128,8 +129,8 @@ namespace Financier.Web.Controllers
                     // lookup matching expense transaction & substitute details (as they are typically more accurate)
                     if(expenseTransactionIdsByPrepaymentTransactionId.ContainsKey(accountTransactionEntity.TransactionId))
                     {
-                        Entities.Transaction expenseTransaction = transactionEntities
-                            .Single(e => e.TransactionId == expenseTransactionIdsByPrepaymentTransactionId[accountTransactionEntity.TransactionId]);
+                        int expenseTransactionId = expenseTransactionIdsByPrepaymentTransactionId[accountTransactionEntity.TransactionId];
+                        Entities.Transaction expenseTransaction = transactionEntitiesById[expenseTransactionId];
 
                         if (expenseTransaction.DebitAccountId == expenseAccountId)
                         {
