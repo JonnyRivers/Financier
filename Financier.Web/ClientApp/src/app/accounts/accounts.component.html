@@ -1,0 +1,18 @@
+<h1>Accounts</h1>
+
+<p *ngIf="!accounts"><em>Loading...</em></p>
+
+<table class='table' *ngIf="accounts">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Balance ($)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let account of accounts">
+      <td>{{ account.name }}</td>
+      <td>{{ 0 | number : '1.2-2' }}</td>
+    </tr>
+  </tbody>
+</table>
