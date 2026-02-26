@@ -8,7 +8,7 @@
         Title="Financier for Windows™ - Balance Sheet" 
         SizeToContent="Height"
         MinHeight="200" MinWidth="400"
-        MaxHeight="1000" 
+        MaxHeight="1400" 
         Width="400">
     <Window.Resources>
         <ResourceDictionary>
